@@ -34,7 +34,7 @@ export default function Icon() {
           style={{
             fontSize: "11px",
             fontWeight: "bold",
-            color: "#3b82f6",
+            color: "#60a5fa",
             fontFamily: "system-ui",
             lineHeight: "1",
           }}
@@ -44,7 +44,7 @@ export default function Icon() {
         <span
           style={{
             fontSize: "6px",
-            color: "#9ca3af",
+            color: "#ffffff",
             fontFamily: "system-ui",
             lineHeight: "1",
           }}
