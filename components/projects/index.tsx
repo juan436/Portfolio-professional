@@ -13,22 +13,34 @@ export default function Projects() {
   const { content, isLoading } = useContent()
   const { translatedContent } = useTranslatedContent()
 
-  // Combinar proyectos traducidos con las etiquetas del contenido original
+  // Combinar proyectos traducidos con las etiquetas e imágenes del contenido original
   const combinedProjects = {
     fullstack: translatedContent.projects?.fullstack?.map(project => {
-      // Buscar el proyecto original por id para obtener las etiquetas
       const originalProject = content.projects.fullstack.find(p => p.id === project.id);
+
+      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
+      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
+        imageUrl = `https://${imageUrl}`;
+      }
+
       return {
         ...project,
-        tags: originalProject?.tags || []
+        tags: originalProject?.tags || [],
+        image: imageUrl
       };
     }) || [],
     backend: translatedContent.projects?.backend?.map(project => {
-      // Buscar el proyecto original por id para obtener las etiquetas
       const originalProject = content.projects.backend.find(p => p.id === project.id);
+
+      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
+      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
+        imageUrl = `https://${imageUrl}`;
+      }
+
       return {
         ...project,
-        tags: originalProject?.tags || []
+        tags: originalProject?.tags || [],
+        image: imageUrl
       };
     }) || []
   };
@@ -60,6 +72,7 @@ export default function Projects() {
     })
   }, [t, language])
 
+  console.log("combinedProjects", combinedProjects)
   return (
     <section id="projects" className="py-20 relative">
       <div className="absolute inset-0 z-0">
@@ -80,7 +93,7 @@ export default function Projects() {
           <p className="text-slate-400 max-w-2xl mx-auto">{translatedTexts.subtitle}</p>
         </motion.div>
 
-        <ProjectsTabs 
+        <ProjectsTabs
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           localProjects={combinedProjects}

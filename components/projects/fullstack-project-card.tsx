@@ -16,6 +16,9 @@ interface FullStackProjectCardProps {
 export function FullStackProjectCard({ project, index }: FullStackProjectCardProps) {
   const { t } = useLanguage();
 
+  // Usar una imagen de respaldo si project.image es undefined
+  const imageUrl = project.image || "/placeholder.svg?height=400&width=600";
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -25,7 +28,7 @@ export function FullStackProjectCard({ project, index }: FullStackProjectCardPro
       <Card className="overflow-hidden bg-black/40 border-blue-700/20 hover:border-blue-700/50 transition-all duration-300 h-full">
         <div className="relative h-48 overflow-hidden">
           <Image
-            src={project.image || "/placeholder.svg?height=400&width=600"}
+            src={imageUrl}
             alt={project.title}
             fill
             className="object-cover transition-transform duration-500 hover:scale-110"
