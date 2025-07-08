@@ -1,0 +1,206 @@
+# Portafolio Profesional – Juan Villegas
+
+¡Bienvenido al repositorio del portafolio profesional de **Juan Villegas**!  
+Este proyecto es una plataforma moderna, multilingüe y dinámica, diseñada para mostrar mis habilidades, proyectos y experiencia como **Desarrollador Full Stack**.
+
+---
+
+## Tecnologías Utilizadas
+
+- **Next.js 13+ (App Router)**: Framework React con renderizado del lado del servidor y generación estática
+- **React 18**: Biblioteca para interfaces de usuario
+- **TypeScript**: Tipado estático para JavaScript
+- **Tailwind CSS**: Framework CSS utility-first para diseño rápido y responsivo
+- **Framer Motion**: Biblioteca para animaciones fluidas
+- **i18next**: Sistema de internacionalización
+- **Node.js**: Entorno de ejecución para JavaScript del lado del servidor
+- **Docker**: Contenedores para despliegue consistente
+- **LibreTranslate**: API open source para traducción automática
+- **pnpm**: Gestor de paquetes rápido y eficiente
+- **Lucide Icons**: Conjunto de iconos SVG
+- **MongoDB**: Base de datos NoSQL para almacenamiento de datos
+
+---
+
+## Características Principales
+
+### 1. **Arquitectura Moderna**
+- Implementación completa del **App Router de Next.js 13+**
+- Estructura de carpetas organizada y escalable
+- Componentes reutilizables y modulares
+- Hooks personalizados para lógica compartida
+- **Sistema de autenticación con Context API** para gestión de usuarios
+
+### 2. **Internacionalización avanzada**
+- Soporte multilenguaje (español, inglés, francés, italiano)
+- Traducción dinámica de textos y rutas
+- **API de traducción con LibreTranslate:**  
+  Sistema de traducción autoalojado en VPS propio (jvserver.com) usando Docker  
+  Traducción en tiempo real de proyectos, descripciones y contenido dinámico
+
+### 3. **Panel Administrativo**
+- **Gestión de Contenido**: Permite actualizar proyectos, habilidades y otra información sin modificar el código
+- **Autenticación Segura**: Sistema de login con protección de rutas
+- **Editor en Tiempo Real**: Vista previa de los cambios antes de publicar
+- **Gestión de Proyectos**: Añadir, editar o eliminar proyectos fácilmente
+- **Gestión de Usuarios**: Control de acceso y permisos
+
+### 4. **Experiencia de Usuario**
+- Diseño responsivo y moderno con Tailwind CSS
+- Animaciones suaves con Framer Motion
+- Modo oscuro/claro
+- Navegación intuitiva y accesible
+- Carga progresiva de imágenes
+
+### 5. **Gestión de Proyectos**
+- Proyectos organizados por categorías (Full Stack, Backend)
+- Sistema de filtrado por tecnologías y tags
+- Manejo robusto de URLs de imágenes (locales y externas)
+- Estructura escalable para agregar más proyectos fácilmente
+
+### 6. **Infraestructura**
+- **Despliegue completo con Docker** en VPS propio (jvserver.com)
+- Configuración optimizada para rendimiento
+- Caché y optimización de recursos estáticos
+
+---
+
+## Arquitectura y Desarrollo
+
+1. **Frontend (Next.js + React)**
+   - Componentes modulares y reutilizables
+   - Sistema de routing avanzado con App Router
+   - Optimización de imágenes con next/image
+   - Estilos con Tailwind CSS y CSS Modules
+   - Animaciones con Framer Motion
+
+2. **Backend y API**
+   - API Routes de Next.js para endpoints del servidor
+   - Integración con LibreTranslate para traducciones
+   - Conexión a MongoDB para almacenamiento de datos
+   - Manejo de formularios y contacto
+
+3. **Internacionalización**
+   - Sistema i18next para traducciones
+   - Detección automática de idioma del navegador
+   - Traducciones dinámicas de contenido
+
+4. **Optimización y Rendimiento**
+   - Lazy loading de componentes e imágenes
+   - Optimización de fuentes y recursos estáticos
+   - Implementación de Server Components de Next.js
+
+5. **Despliegue**
+   - Configuración Docker multi-etapa
+   - Orquestación con Docker Compose
+   - Servidor Nginx como proxy inverso
+
+---
+
+## Estructura del Proyecto
+
+```
+portfolio/
+├── app/                    # App Router de Next.js
+│   ├── api/                # API Routes
+│   ├── components/         # Componentes específicos de App Router
+│   ├── layout.tsx          # Layout principal
+│   └── ...
+├── public/                 # Archivos estáticos
+├── components/             # Componentes compartidos
+│   ├── ui/                 # Componentes de UI reutilizables
+│   ├── projects/           # Componentes de proyectos
+│   │   ├── fullstack-project-card.tsx
+│   │   ├── backend-project-card.tsx
+│   │   └── projects-tabs.tsx
+│   └── ...
+├── contexts/               # Contextos de React
+├── hooks/                  # Hooks personalizados
+├── lib/                    # Utilidades y funciones
+│   ├── db/                 # Conexión a base de datos
+│   └── ...
+├── styles/                 # Estilos globales
+├── types/                  # Definiciones de TypeScript
+├── Dockerfile              # Configuración de Docker
+├── docker-compose.yml      # Orquestación de servicios
+└── ...
+```
+
+---
+
+## Cómo ejecutar el proyecto localmente
+
+1. **Clona el repositorio:**
+   ```bash
+   git clone https://github.com/juan436/Portfolio-professional.git
+   cd Portfolio-professional
+   ```
+
+2. **Instala dependencias usando pnpm:**
+   ```bash
+   pnpm install
+   ```
+
+3. **Configura las variables de entorno:**
+   ```bash
+   cp .env.example .env.local
+   # Edita .env.local con tus configuraciones
+   ```
+
+4. **Ejecuta en desarrollo:**
+   ```bash
+   pnpm dev
+   ```
+
+5. **Abre en tu navegador:**  
+   [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Despliegue en Producción (Docker)
+
+1. **Asegúrate de tener Docker y Docker Compose instalados en tu VPS.**
+
+2. **Configura las variables de entorno para producción:**
+   ```bash
+   cp .env.example .env.production
+   # Edita .env.production con las configuraciones de producción
+   ```
+
+3. **Ejecuta:**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+4. **El portafolio y la API de traducción LibreTranslate estarán corriendo en tu VPS.**
+
+---
+
+## Características Técnicas Destacadas
+
+- **Server Components**: Uso de los nuevos React Server Components para mejor rendimiento
+- **Streaming SSR**: Renderizado por streaming para mejor experiencia de usuario
+- **API Routes**: Endpoints de API integrados en la misma aplicación
+- **Optimización de imágenes**: Uso de next/image para optimización automática
+- **TypeScript estricto**: Configuración estricta de TypeScript para mejor calidad de código
+- **Manejo de estado**: Uso de React Context y hooks personalizados
+- **Formularios**: Validación y manejo de formularios con React Hook Form
+- **Animaciones**: Transiciones y animaciones suaves con Framer Motion
+- **Optimización SEO Avanzada**:
+  - Metadatos dinámicos para cada página
+  - Sitemap XML generado automáticamente
+  - Estructura de datos JSON-LD para rich snippets
+  - Configuración de OpenGraph para redes sociales
+  - Generación automática de robots.txt
+  - URLs canónicas para evitar contenido duplicado
+  - Mejoras en el rendimiento Core Web Vitals
+
+---
+
+## Autor
+
+- **Juan Villegas**
+- [LinkedIn](https://www.linkedin.com/in/juan-villegas-aaa05b20a/)
+- [GitHub](https://github.com/juan436)
+
+---
