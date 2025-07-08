@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://jvillegas-portafolio.jvserver.com/sitemap.xml
