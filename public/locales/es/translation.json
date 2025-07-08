@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Sobre Mí",
+    "projects": "Proyectos",
+    "skills": "Habilidades",
+    "contact": "Contacto",
+    "experience": "Experiencia"
+  },
+  "hero": {
+    "title": "Juan Villegas",
+    "subtitle": "Desarrollador Full Stack",
+    "projects": "Ver Proyectos",
+    "contact": "Contáctame"
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "role": "Desarrollador Full Stack",
+    "engineer": "Ingeniero en Telemática",
+    "university": "Universidad Centroccidental \"Lisandro Alvarado\"",
+    "downloadCV": "Descargar CV"
+  },
+  "projects": {
+    "title": "Mis Proyectos",
+    "subtitle": "Una selección de mis proyectos más recientes y destacados. Cada proyecto refleja mi enfoque en la calidad, experiencia de usuario y código limpio.",
+    "fullstack": "Full Stack",
+    "backend": "Backend",
+    "code": "Código",
+    "demo": "Demo",
+    "repo": "Repositorio",
+    "docs": "Documentación",
+    "viewMore_general": "Ver más proyectos",
+    "backToHome": "Volver",
+    "noProjects": "No hay proyectos disponibles en este momento."
+  },
+  "skills": {
+    "title": "Mis Habilidades",
+    "subtitle": "Tecnologías y herramientas que utilizo para crear soluciones web completas y eficientes. Mi experiencia está respaldada por los proyectos que he desarrollado.",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "database": "Bases de Datos",
+    "devops": "DevOps",
+    "other": "Otras Habilidades",
+    "experience": "Las habilidades mostradas están respaldadas por proyectos reales y experiencia práctica. Puedes ver ejemplos de mi trabajo en la sección de proyectos."
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "¿Tienes un proyecto en mente? ¡Hablemos! Estoy disponible para proyectos freelance o posiciones a tiempo completo.",
+    "info": "Información de Contacto",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "location": "Ubicación",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "send": "Enviar Mensaje"
+    }
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "role": "Desarrollador Full Stack"
+  },
+  "experience": {
+    "title": "Experiencia Laboral",
+    "subtitle": "Mi trayectoria profesional y los roles que he desempeñado en diferentes empresas.",
+    "autoplay": "Reproducir automáticamente",
+    "pause": "Pausar presentación",
+    "viewExperience": "Ver experiencia",
+    "technologies": "Tecnologías"
+  },
+  "common": {
+    "seeMore": "Ver más",
+    "seeLess": "Ver menos"
+  },
+  "wolf": {
+    "welcome": "¡Hola! Soy Juan Villegas. Bienvenido a mi espacio virtual donde la tecnología y la creatividad se encuentran.",
+    "about": "¡Hola de nuevo! Soy Juan, apasionado por el desarrollo y la tecnología. Aquí descubrirás un poco sobre mi historia.",
+    "skills": "¡Mira todo lo que puedo hacer! Desde backend sólido hasta magia full-stack, esta sección destaca mis fortalezas.",
+    "projects": "¡Aquí están mis creaciones! Explora mis proyectos full-stack y backend, diseñados con pasión y precisión.",
+    "contact": "¿Trabajamos juntos? Escríbeme. Estoy a un mensaje de distancia para transformar tus ideas en realidad.",
+    "welcome_short": "¡Hola! Bienvenido",
+    "about_short": "¡Sobre mí!",
+    "skills_short": "Mis habilidades",
+    "projects_short": "Mis proyectos",
+    "contact_short": "¡Contáctame!",
+    "experience": "¡Echa un vistazo a mi trayectoria profesional! Aquí encontrarás mi experiencia y los roles que he desempeñado a lo largo de mi carrera.",
+    "experience_short": "¡Mi experiencia!"
+  },
+  "social": {
+    "whatsapp_message": "Hola Ingeniero Villegas, quiero hacerle una consulta sobre sus servicios."
+  }
+}
