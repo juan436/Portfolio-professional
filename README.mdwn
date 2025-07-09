@@ -154,7 +154,7 @@ portfolio/
 
 5. **Abre en tu navegador:**  
    [http://localhost:3000](http://localhost:3000)
-
+    Ruta administrativa: http://localhost:3000/admin/login
 ---
 
 ## Despliegue en Producción (Docker)
