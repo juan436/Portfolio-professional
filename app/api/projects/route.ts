@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       query = { category };
     }
     
-    const projects = await Project.find(query).sort({ createdAt: -1 });
+    const projects = await Project.find(query).sort({ createdAt: 1 });
     
     return NextResponse.json({ 
       success: true, 
