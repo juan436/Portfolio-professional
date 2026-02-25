@@ -8,10 +8,10 @@ export async function POST(request: Request) {
 
   try {
     let username, password;
-    
+
     try {
       const text = await request.text();
-      
+
       if (!text || text.trim() === '') {
         return NextResponse.json(
           { success: false, message: 'Cuerpo de solicitud vacío' },
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    
+
     if (!username || !password) {
       return NextResponse.json(
         { success: false, message: 'Usuario y contraseña son requeridos' },
@@ -37,17 +37,11 @@ export async function POST(request: Request) {
     }
 
     const user = await User.findOne({ username })
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: 'Usuario no existe' },
-        { status: 401 }
-      )
-    }
+    const isValid = user ? await user.comparePassword(password) : false
 
-    const isValid = await user.comparePassword(password)
-    if (!isValid) {
+    if (!user || !isValid) {
       return NextResponse.json(
-        { success: false, message: 'Contraseña incorrecta' },
+        { success: false, message: 'Credenciales inválidas' },
         { status: 401 }
       )
     }
@@ -67,31 +61,31 @@ export async function POST(request: Request) {
       },
       { status: 200 }
     );
-    
+
     response.cookies.set('authToken', token, {
       path: '/',
-      maxAge: 60 * 60 * 2, 
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: 'lax', 
+      maxAge: 60 * 60 * 2,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
     });
-    
+
     response.cookies.set('isLoggedIn', 'true', {
       path: '/',
       maxAge: 60 * 60 * 2,
-      httpOnly: false, 
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: 'lax', 
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
     });
-    
+
     response.cookies.set('adminUser', username, {
       path: '/',
       maxAge: 60 * 60 * 2,
-      httpOnly: false, 
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: 'lax', 
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
     });
-    
+
     return response;
   } catch (err) {
     console.error('❌ [auth] Error en autenticación:', err)
