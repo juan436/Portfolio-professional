@@ -29,3 +29,7 @@ next-env.d.ts
 # docker
 docker-compose.yml
 Dockerfile
+# ia
+.agents/
+skills-lock.json
+desing.mermaid
