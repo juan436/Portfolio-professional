@@ -40,7 +40,7 @@ const emptyContent: Content = {
   hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
   about: { paragraph1: "", paragraph2: "", paragraph3: "", translations: {} },
   services: [],
-  projects: { fullstack: [], backend: [] },
+  projects: { systems: [], mobile: [], automation: [], backend: [] },
   skills: { frontend: [], backend: [], database: [], devops: [] },
   otherSkills: [],
   contact: { email: "", phone: "", location: "", translations: {} },
@@ -62,36 +62,32 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
 
       try {
         const contentData = await fetchContent()
-        const fullstackProjects = await fetchProjects('fullstack')
+        const systemsProjects = await fetchProjects('systems')
+        const mobileProjects = await fetchProjects('mobile')
+        const automationProjects = await fetchProjects('automation')
         const backendProjects = await fetchProjects('backend')
         const experienceData = await fetchExperiences()
         const skillsData = await fetchSkills()
         const otherSkillsData = await fetchOtherSkills()
 
         if (contentData) {
+          const mapProject = (p: any) => ({
+            id: p._id,
+            title: p.title,
+            description: p.description,
+            image: p.image,
+            tags: p.tags || [],
+            github: p.github || "#",
+            demo: p.demo || "#",
+            createdAt: p.createdAt,
+            translations: p.translations || {}
+          });
+
           const projectsData = {
-            fullstack: fullstackProjects.map((p: any) => ({
-              id: p._id,
-              title: p.title,
-              description: p.description,
-              image: p.image,
-              tags: p.tags || [],
-              github: p.github || "#",
-              demo: p.demo || "#",
-              createdAt: p.createdAt,
-              translations: p.translations || {}
-            })),
-            backend: backendProjects.map((p: any) => ({
-              id: p._id,
-              title: p.title,
-              description: p.description,
-              image: p.image,
-              tags: p.tags || [],
-              github: p.github || "#",
-              demo: p.demo || "#",
-              createdAt: p.createdAt,
-              translations: p.translations || {}
-            }))
+            systems: systemsProjects.map(mapProject),
+            mobile: mobileProjects.map(mapProject),
+            automation: automationProjects.map(mapProject),
+            backend: backendProjects.map(mapProject)
           }
 
           setContent({

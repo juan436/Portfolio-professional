@@ -29,7 +29,7 @@ export default function Contact() {
   useEffect(() => {
     setTranslatedTexts({
       title: String(t("contact.title")),
-      subtitle: String(t("contact.subtitle")),
+      subtitle: String(t("ctas.contact.hook")),
       info: String(t("contact.info")),
       email: String(t("contact.email")),
       phone: String(t("contact.phone")),
@@ -37,7 +37,7 @@ export default function Contact() {
       formName: String(t("contact.form.name")),
       formSubject: String(t("contact.form.subject")),
       formMessage: String(t("contact.form.message")),
-      formSend: String(t("contact.form.send"))
+      formSend: String(t("ctas.contact.submit"))
     })
   }, [t])
 
@@ -57,8 +57,8 @@ export default function Contact() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{translatedTexts.title}</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8 text-lg leading-relaxed">{translatedTexts.subtitle}</p>
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
-          <p className="text-slate-400 max-w-2xl mx-auto">{translatedTexts.subtitle}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -96,7 +96,9 @@ export const useTranslatedContent = () => {
 
   // Traducir proyectos
   const translatedProjects = {
-    fullstack: content.projects.fullstack.map(translateProject),
+    systems: content.projects.systems.map(translateProject),
+    mobile: content.projects.mobile.map(translateProject),
+    automation: content.projects.automation.map(translateProject),
     backend: content.projects.backend.map(translateProject),
   };
 

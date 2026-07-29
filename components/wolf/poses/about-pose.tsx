@@ -10,21 +10,22 @@ export const AboutPose = () => {
 
         {/* Chest core - pulsing */}
         <circle cx="55" cy="60" r="6" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-        <motion.circle
-          cx="55"
-          cy="60"
-          r="4"
-          fill="#F39C12"
+        <motion.g
           animate={{ scale: [1, 1.2, 1] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-        />
+          originX={55}
+          originY={60}
+        >
+          <circle cx="55" cy="60" r="4" fill="#F39C12" />
+        </motion.g>
         <circle cx="55" cy="60" r="2" fill="#F5B041" />
 
         {/* Head - slightly tilted */}
         <motion.g
           animate={{ rotate: [-5, 5, -5] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3 }}
-          transformOrigin="55 36"
+          originX={55}
+          originY={36}
         >
           <rect x="42" y="25" width="26" height="22" rx="8" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
 
@@ -37,22 +38,22 @@ export const AboutPose = () => {
           {/* Eyes - blinking */}
           <circle cx="48" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
           <circle cx="62" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-          <motion.circle
-            cx="48"
-            cy="35"
-            r="3"
-            fill="white"
+          <motion.g
             animate={{ scaleY: [1, 0.2, 1] }}
             transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3, repeatType: "reverse" }}
-          />
-          <motion.circle
-            cx="62"
-            cy="35"
-            r="3"
-            fill="white"
+            originX={48}
+            originY={35}
+          >
+            <circle cx="48" cy="35" r="3" fill="white" />
+          </motion.g>
+          <motion.g
             animate={{ scaleY: [1, 0.2, 1] }}
             transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3, repeatType: "reverse" }}
-          />
+            originX={62}
+            originY={35}
+          >
+            <circle cx="62" cy="35" r="3" fill="white" />
+          </motion.g>
 
           {/* Snout - smiling */}
           <rect x="48" y="40" width="14" height="10" rx="5" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -69,7 +70,8 @@ export const AboutPose = () => {
         <motion.g
           animate={{ rotate: [0, -20, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-          transformOrigin="75 55"
+          originX="75"
+          originY="55"
         >
           <rect x="70" y="55" width="10" height="15" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
           <rect x="70" y="70" width="10" height="8" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -94,7 +96,8 @@ export const AboutPose = () => {
         <motion.g
           animate={{ rotate: [0, 30, 0, -30, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-          style={{ transformOrigin: "30px 65px" }}
+          originX="30"
+          originY="65"
         >
           <path
             d="M30,65 C25,60 15,65 10,60"

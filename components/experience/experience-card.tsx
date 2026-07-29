@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { Building2, Calendar, ChevronDown, ChevronUp } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { Experience } from "@/contexts/content/types"
-import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 
 interface ExperienceCardProps {
@@ -20,12 +19,6 @@ interface ExperienceCardProps {
 // Número máximo de caracteres para mostrar en la descripción resumida
 const MAX_DESCRIPTION_LENGTH = 350;
 
-// Altura base de la tarjeta (altura cuando está contraída)
-const BASE_CARD_HEIGHT = {
-  default: 480, 
-  md: 420      
-};
-
 export function ExperienceCard({
   sortedExperience,
   activeIndex,
@@ -33,11 +26,26 @@ export function ExperienceCard({
   handleMouseMove,
   handleMouseUp,
 }: ExperienceCardProps) {
-  const { language } = useLanguage()
-  const { t } = useTranslation()
+  const { t, language } = useLanguage()
+  const [isMounted, setIsMounted] = useState(false)
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
   const contentRef = useRef<HTMLDivElement>(null)
   const techContainerRef = useRef<HTMLDivElement>(null)
+  const [translatedTexts, setTranslatedTexts] = useState({
+    seeMore: "",
+    seeLess: "",
+    technologies: ""
+  })
+
+  // Cargar traducciones después de la hidratación
+  useEffect(() => {
+    setIsMounted(true)
+    setTranslatedTexts({
+      seeMore: String(t("common.seeMore")),
+      seeLess: String(t("common.seeLess")),
+      technologies: String(t("experience.technologies") || "Technologies")
+    })
+  }, [t, language])
 
   // Función para obtener el texto traducido o el original si no hay traducción
   const getTranslatedField = (experience: Experience, field: "position" | "description" | "location") => {
@@ -164,7 +172,7 @@ export function ExperienceCard({
                           {getFormattedDescription(experience)}
                         </motion.p>
 
-                        {shouldTruncate(getTranslatedField(experience, "description")) && (
+                        {shouldTruncate(getTranslatedField(experience, "description")) && isMounted && (
                           <motion.div
                             layout
                             transition={{
@@ -180,12 +188,12 @@ export function ExperienceCard({
                             >
                               {expandedDescriptions[experience._id || ""] ? (
                                 <>
-                                  <span className="text-sm mr-1">{t('common.seeLess') || "Ver menos"}</span>
+                                  <span className="text-sm mr-1">{translatedTexts.seeLess || "Ver menos"}</span>
                                   <ChevronUp className="h-4 w-4" />
                                 </>
                               ) : (
                                 <>
-                                  <span className="text-sm mr-1">{t('common.seeMore') || "Ver más"}</span>
+                                  <span className="text-sm mr-1">{translatedTexts.seeMore || "Ver más"}</span>
                                   <ChevronDown className="h-4 w-4" />
                                 </>
                               )}
@@ -204,7 +212,7 @@ export function ExperienceCard({
                       className="px-6 sm:px-8 pb-6 sm:pb-8"
                     >
                       <h4 className="text-xs sm:text-sm uppercase tracking-wider text-slate-400 mb-4 font-medium">
-                        {String(t("experience.technologies") || "Technologies")}
+                        {isMounted ? translatedTexts.technologies : ""}
                       </h4>
                       <motion.div
                         className="flex flex-wrap gap-2"

@@ -29,14 +29,14 @@ export function RobotWolf() {
 
             {/* Chest core - pulsing */}
             <circle cx="55" cy="60" r="6" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-            <motion.circle
-              cx="55"
-              cy="60"
-              r="4"
-              fill="#F39C12"
+            <motion.g
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ repeat: 2, duration: 1 }}
-            />
+              originX={55}
+              originY={60}
+            >
+              <circle cx="55" cy="60" r="4" fill="#F39C12" />
+            </motion.g>
             <circle cx="55" cy="60" r="2" fill="#F5B041" />
 
             {/* Head */}
@@ -51,40 +51,44 @@ export function RobotWolf() {
             {/* Eyes - blinking */}
             <circle cx="48" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
             <circle cx="62" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-            <motion.circle
-              cx="48"
-              cy="35"
-              r="3"
-              fill="white"
+            <motion.g
               animate={{ scaleY: [1, 0.2, 1] }}
               transition={{ repeat: 1, duration: 1.5, delay: 1 }}
-            />
-            <motion.circle
-              cx="62"
-              cy="35"
-              r="3"
-              fill="white"
+              originX={48}
+              originY={35}
+            >
+              <circle cx="48" cy="35" r="3" fill="white" />
+            </motion.g>
+            <motion.g
               animate={{ scaleY: [1, 0.2, 1] }}
               transition={{ repeat: 1, duration: 1.5, delay: 1 }}
-            />
+              originX={62}
+              originY={35}
+            >
+              <circle cx="62" cy="35" r="3" fill="white" />
+            </motion.g>
 
             {/* Snout - smiling */}
             <rect x="47" y="40" width="16" height="10" rx="5" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
-            <motion.path
-              d="M50,45 Q55,48 60,45"
-              stroke="#1A3E4C"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              animate={{ d: ["M50,45 Q55,48 60,45", "M50,46 Q55,49 60,46", "M50,45 Q55,48 60,45"] }}
+            <motion.g
+              animate={{ y: [0, 0.5, 0] }}
               transition={{ duration: 2, repeat: 1 }}
-            />
+            >
+              <path
+                d="M50,45 Q55,48 60,45"
+                stroke="#1A3E4C"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </motion.g>
 
             {/* Right Arm */}
             <motion.g
               animate={{ rotate: [0, -20, 0, -20, 0] }}
               transition={{ duration: 2, times: [0, 0.25, 0.5, 0.75, 1], repeat: 1 }}
-              style={{ transformOrigin: "75px 75px" }}
+              originX={75}
+              originY={75}
             >
               <rect x="70" y="55" width="10" height="15" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
               <rect x="70" y="70" width="10" height="8" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -109,7 +113,8 @@ export function RobotWolf() {
             <motion.g
               animate={{ rotate: [0, 30, 0, -30, 0] }}
               transition={{ repeat: 2, duration: 1 }}
-              style={{ transformOrigin: "30px 65px" }}
+              originX="30"
+              originY="65"
             >
               <path
                 d="M30,65 C25,60 15,65 10,60"

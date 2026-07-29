@@ -5,9 +5,10 @@ export interface IProject extends Document {
   title: string;
   description: string;
   image?: string;
+  video?: string;
   github: string;
   demo: string;
-  category: 'fullstack' | 'backend';
+  category: 'systems' | 'mobile' | 'automation' | 'backend' | 'laboratory';
   tags: string[];
   createdAt: Date;
   translations?: {
@@ -36,11 +37,12 @@ const ProjectSchema = new mongoose.Schema({
     required: true 
   },
   image: String,
+  video: String,
   github: String,
   demo: String,
   category: { 
     type: String, 
-    enum: ['fullstack', 'backend'], 
+    enum: ['systems', 'mobile', 'automation', 'backend', 'laboratory'], 
     required: true 
   },
   tags: {

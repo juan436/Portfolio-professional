@@ -67,7 +67,9 @@ export type Project = {
 }
 
 export type Projects = {
-  fullstack: Project[]
+  systems: Project[]
+  mobile: Project[]
+  automation: Project[]
   backend: Project[]
 }
 

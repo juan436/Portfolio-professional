@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/language-context"
 import { ContentProvider } from "@/contexts/content"
 import WolfGuide from "@/components/wolf"
 import { Toaster } from "@/components/ui/toaster"
+import JsonLd from "@/app/components/json-ld"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -52,6 +53,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
       </head>
       <body className={`${inter.className} bg-[#0a0a0a] text-slate-200`}>
+        <JsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <ContentProvider>
             <LanguageProvider>

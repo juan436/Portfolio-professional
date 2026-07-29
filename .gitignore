@@ -30,6 +30,17 @@ next-env.d.ts
 docker-compose.yml
 Dockerfile
 # ia
-.agents/
-skills-lock.json
 desing.mermaid
+
+# agentes IA (config/tooling local, no fuente del proyecto)
+.claude/
+.agents/
+.gemini/
+
+# db dumps / tools (no deben vivir en el repo)
+mongorestore.exe
+portfolio_prod.gz
+
+# docs internos de estrategia/roadmap - viven solo en dev-local, no en production (repo público)
+docs/roadmap/
+docs/seo-marketing/

@@ -15,9 +15,11 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home")
   const [translatedTexts, setTranslatedTexts] = useState({
     home: "",
+    services: "",
+    projects: "",
+    laboratory: "",
     about: "",
     experience: "",
-    projects: "",
     skills: "",
     contact: ""
   })
@@ -27,9 +29,11 @@ export default function Navbar() {
   useEffect(() => {
     setTranslatedTexts({
       home: String(t("nav.home")),
+      services: String(t("nav.services")),
+      projects: String(t("nav.projects")),
+      laboratory: String(t("nav.laboratory") || "Lab"),
       about: String(t("nav.about")),
       experience: String(t("nav.experience")),
-      projects: String(t("nav.projects")),
       skills: String(t("nav.skills")),
       contact: String(t("nav.contact"))
     })
@@ -39,9 +43,11 @@ export default function Navbar() {
   useEffect(() => {
     setNavItems([
       { name: translatedTexts.home, href: "#home" },
+      { name: translatedTexts.services, href: "#services" },
+      { name: translatedTexts.projects, href: "#projects" },
+      { name: translatedTexts.laboratory, href: "#laboratory" },
       { name: translatedTexts.about, href: "#about" },
       { name: translatedTexts.experience, href: "#experience" },
-      { name: translatedTexts.projects, href: "#projects" },
       { name: translatedTexts.skills, href: "#skills" },
       { name: translatedTexts.contact, href: "#contact" },
     ])
@@ -57,7 +63,7 @@ export default function Navbar() {
       }
 
       // También detectar qué sección está activa
-      const sections = ["home", "about", "experience", "projects", "skills", "contact"]
+      const sections = ["home", "services", "projects", "laboratory", "about", "experience", "skills", "contact"]
       const scrollPosition = window.scrollY + window.innerHeight / 3
 
       for (const section of sections) {

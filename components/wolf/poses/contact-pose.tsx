@@ -10,12 +10,14 @@ export const ContactPose = () => {
 
         {/* Chest core - message indicator */}
         <circle cx="55" cy="60" r="6" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-        <motion.path
-          d="M51,60 L55,62 L59,60 L55,58 Z"
-          fill="#F39C12"
-          animate={{ scale: [1, 1.2, 1], fill: ["#F39C12", "#F5B041", "#F39C12"] }}
+        <motion.g
+          animate={{ scale: [1, 1.2, 1] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-        />
+          originX={55}
+          originY={60}
+        >
+          <path d="M51,60 L55,62 L59,60 L55,58 Z" fill="#F39C12" />
+        </motion.g>
 
         {/* Head */}
         <rect x="42" y="25" width="26" height="22" rx="8" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -29,22 +31,18 @@ export const ContactPose = () => {
         {/* Eyes - friendly */}
         <circle cx="48" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
         <circle cx="62" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-        <motion.path
-          d="M46,33 Q48,37 50,33"
-          stroke="white"
-          strokeWidth="2"
-          fill="none"
+        <motion.g
           animate={{ y: [0, 1, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-        />
-        <motion.path
-          d="M60,33 Q62,37 64,33"
-          stroke="white"
-          strokeWidth="2"
-          fill="none"
+        >
+          <path d="M46,33 Q48,37 50,33" stroke="white" strokeWidth="2" fill="none" />
+        </motion.g>
+        <motion.g
           animate={{ y: [0, 1, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-        />
+        >
+          <path d="M60,33 Q62,37 64,33" stroke="white" strokeWidth="2" fill="none" />
+        </motion.g>
 
         {/* Snout - friendly smile */}
         <rect x="48" y="40" width="14" height="10" rx="5" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -69,7 +67,8 @@ export const ContactPose = () => {
         <motion.g
           animate={{ rotate: [-5, 5, -5] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-          transformOrigin="80 74"
+          originX="80"
+          originY="74"
         >
           <rect x="80" y="70" width="12" height="8" rx="1" fill="white" stroke="#1A3E4C" strokeWidth="1" />
           <path d="M82,72 L90,72 M82,74 L88,74 M82,76 L86,76" stroke="#3B82F6" strokeWidth="1" />
@@ -89,7 +88,8 @@ export const ContactPose = () => {
         <motion.g
           animate={{ rotate: [0, 20, 0, -20, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-          style={{ transformOrigin: "30px 65px" }}
+          originX="30"
+          originY="65"
         >
           <path
             d="M30,65 C25,60 15,65 10,60"

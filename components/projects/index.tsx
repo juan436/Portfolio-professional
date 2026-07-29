@@ -8,15 +8,43 @@ import { ProjectsTabs } from "./projects-tabs"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
 
 export default function Projects() {
-  const [activeTab, setActiveTab] = useState("fullstack")
+  const [activeTab, setActiveTab] = useState("systems")
   const { t, language } = useLanguage()
   const { content, isLoading } = useContent()
   const { translatedContent } = useTranslatedContent()
 
   // Combinar proyectos traducidos con las etiquetas e imágenes del contenido original
   const combinedProjects = {
-    fullstack: translatedContent.projects?.fullstack?.map(project => {
-      const originalProject = content.projects.fullstack.find(p => p.id === project.id);
+    systems: translatedContent.projects?.systems?.map(project => {
+      const originalProject = content.projects.systems.find(p => p.id === project.id);
+
+      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
+      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
+        imageUrl = `https://${imageUrl}`;
+      }
+
+      return {
+        ...project,
+        tags: originalProject?.tags || [],
+        image: imageUrl
+      };
+    }) || [],
+    mobile: translatedContent.projects?.mobile?.map(project => {
+      const originalProject = content.projects.mobile.find(p => p.id === project.id);
+
+      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
+      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
+        imageUrl = `https://${imageUrl}`;
+      }
+
+      return {
+        ...project,
+        tags: originalProject?.tags || [],
+        image: imageUrl
+      };
+    }) || [],
+    automation: translatedContent.projects?.automation?.map(project => {
+      const originalProject = content.projects.automation.find(p => p.id === project.id);
 
       let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
       if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
@@ -48,7 +76,9 @@ export default function Projects() {
   const [translatedTexts, setTranslatedTexts] = useState({
     title: "",
     subtitle: "",
-    fullstack: "",
+    systems: "",
+    mobile: "",
+    automation: "",
     backend: "",
     code: "",
     demo: "",
@@ -62,7 +92,9 @@ export default function Projects() {
     setTranslatedTexts({
       title: String(t("projects.title")),
       subtitle: String(t("projects.subtitle")),
-      fullstack: String(t("projects.fullstack")),
+      systems: String(t("projects.systems")),
+      mobile: String(t("projects.mobile")),
+      automation: String(t("projects.automation")),
       backend: String(t("projects.backend")),
       code: String(t("projects.code")),
       demo: String(t("projects.demo")),
@@ -89,8 +121,8 @@ export default function Projects() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{translatedTexts.title}</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8">{translatedTexts.subtitle}</p>
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
-          <p className="text-slate-400 max-w-2xl mx-auto">{translatedTexts.subtitle}</p>
         </motion.div>
 
         <ProjectsTabs

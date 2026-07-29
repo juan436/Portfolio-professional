@@ -2,14 +2,42 @@
   "nav": {
     "home": "Inizio",
     "about": "Chi Sono",
+    "services": "Servizi",
     "projects": "Progetti",
     "skills": "Competenze",
     "contact": "Contatto",
     "experience": "Esperienza"
   },
+  "services": {
+    "title": "Servizi",
+    "subtitle": "Soluzioni tecnologiche complete per potenziare la tua presenza digitale."
+  },
+  "methodology": {
+    "title": "Metodologia",
+    "subtitle": "La Tabella di Marcia verso la Crescita",
+    "phases": {
+      "phase1": {
+        "title": "DIAGNOSI STRATEGICA",
+        "description": "Analizzo i tuoi colli di bottiglia tecnici per progettare il percorso più rapido verso la redditività."
+      },
+      "phase2": {
+        "title": "ARCHITETTURA DI ALTO LIVELLO",
+        "description": "Costruisco una base tecnica robusta, scalabile e preparata per il futuro del tuo business."
+      },
+      "phase3": {
+        "title": "AUTOMAZIONE INTELLIGENTE",
+        "description": "Integro l'IA e flussi di lavoro autonomi affinché il sistema lavori per te, non il contrario."
+      },
+      "phase4": {
+        "title": "SCALABILITÀ CONTINUA",
+        "description": "Distribuzione con monitoraggio costante e ottimizzazione per garantire una crescita senza limiti."
+      }
+    }
+  },
   "hero": {
     "title": "Juan Villegas",
     "subtitle": "Sviluppatore Full Stack",
+    "consultantBadge": "Consulente Tecnologico 360°",
     "projects": "Vedi Progetti",
     "contact": "Contattami"
   },
@@ -17,12 +45,12 @@
     "title": "Chi Sono",
     "role": "Sviluppatore Full Stack",
     "engineer": "Ingegnere in Telematica",
-    "university": "Università Centroccidentale \"Lisandro Alvarado\"",
+    "university": "Università Centroccidental \"Lisandro Alvarado\"",
     "downloadCV": "Scarica CV"
   },
   "projects": {
     "title": "I Miei Progetti",
-    "subtitle": "Una selezione dei miei progetti più recenti e importanti. Ogni progetto riflette la mia attenzione alla qualità, all'esperienza utente e al codice pulito.",
+    "subtitle": "Una selección dei miei progetti più recenti e importanti. Ogni progetto riflette la mia attenzione alla qualità, all'esperienza utente e al codice pulito.",
     "fullstack": "Full Stack",
     "backend": "Backend",
     "code": "Codice",
@@ -79,7 +107,7 @@
     "about": "Ciao di nuovo! Sono Juan, appassionato di sviluppo e tecnologia. Qui scoprirai un po' della mia storia.",
     "skills": "Guarda tutto ciò che so fare! Dal backend solido alla magia full-stack, questa sezione evidenzia i miei punti di forza.",
     "projects": "Ecco le mie creazioni! Esplora i miei progetti full-stack e backend, progettati con passione e precisione.",
-    "contact": "Lavoriamo insieme? Scrivimi. Sono a un messaggio di distanza per trasformare le tue idee in realtà.",
+    "contact": "Lavoriamo insieme? Scrivimi. Sono a un mensaje di distanza per trasformare le tue idee in realtà.",
     "welcome_short": "Ciao! Benvenuto",
     "about_short": "Chi sono!",
     "skills_short": "Le mie abilità",
@@ -90,5 +118,27 @@
   },
   "social": {
     "whatsapp_message": "Buongiorno Ingegnere Villegas, vorrei chiedere informazioni sui vostri servizi."
+  },
+  "metrics": {
+    "HOURS_SAVED": "ORE MANUALI RISPARMIATE",
+    "PROCESS_ACCELERATION": "ACCELERAZIONE DEI PROCESSI",
+    "SYSTEM_AVAILABILITY": "DISPONIBILITÀ DEL SISTEMA",
+    "AUTONOMOUS_OPERATION": "FUNZIONAMENTO AUTONOMO"
+  },
+  "ctas": {
+    "hero": {
+      "primary": "Richiedi Diagnosi Tecnica",
+      "secondary": "Vedi Casi di Successo"
+    },
+    "services": {
+      "web": "Costruire la mia piattaforma web",
+      "mobile": "Creare la mia App",
+      "ai": "Voglio automatizzare la mia azienda",
+      "cloud": "Ottimizzare la mia infrastruttura"
+    },
+    "contact": {
+      "submit": "Invia la mia proposta",
+      "hook": "Pronto a costruire qualcosa di scalabile? Rispondo in meno di 24 ore."
+    }
   }
 }

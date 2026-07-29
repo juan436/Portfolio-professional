@@ -31,7 +31,7 @@ export function ExperienceTimeline({
         <motion.div
           className="h-full bg-blue-500 rounded-full"
           initial={{ width: "0%" }}
-          animate={{ width: `${((activeIndex + 1) / experienceLength) * 100}%` }}
+          animate={{ width: `${experienceLength > 0 ? ((activeIndex + 1) / experienceLength) * 100 : 0}%` }}
           transition={{ duration: 0.5 }}
         />
       </div>

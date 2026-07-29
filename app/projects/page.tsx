@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Code2, Server, ArrowLeft } from "lucide-react"
+import { Code2, Server, ArrowLeft, Smartphone, Zap, Layers } from "lucide-react"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
@@ -11,20 +11,26 @@ import LanguageSwitcher from "@/components/language-switcher"
 import Footer from "@/components/footer"
 import { FullStackProjectCard } from "@/components/projects/fullstack-project-card"
 import { BackendProjectCard } from "@/components/projects/backend-project-card"
+import type { Project } from "@/contexts/content/types"
+
 export default function ProjectsPage() {
   const { t } = useLanguage()
   const { content } = useContent()
-  const [activeTab, setActiveTab] = useState("fullstack")
+  const [activeTab, setActiveTab] = useState("systems")
   const [projects, setProjects] = useState({
-    fullstack: content.projects.fullstack || [],
-    backend: content.projects.backend || [],
+    systems: [] as Project[],
+    mobile: [] as Project[],
+    automation: [] as Project[],
+    backend: [] as Project[],
   })
   const [isLoading, setIsLoading] = useState(true)
 
   // Cargar proyectos desde el contexto
   useEffect(() => {
     setProjects({
-      fullstack: content.projects.fullstack || [],
+      systems: content.projects.systems || [],
+      mobile: content.projects.mobile || [],
+      automation: content.projects.automation || [],
       backend: content.projects.backend || [],
     })
     setIsLoading(false)
@@ -32,13 +38,13 @@ export default function ProjectsPage() {
 
   // Usar el parámetro de consulta o localStorage para determinar la pestaña activa
   useEffect(() => {
-    // Verificar si estamos en el navegador
     if (typeof window !== "undefined") {
+      const validTabs = ["systems", "mobile", "automation", "backend"];
+      
       // Primero intentar leer desde localStorage
       const savedTab = localStorage.getItem("activeProjectTab")
-      if (savedTab && (savedTab === "fullstack" || savedTab === "backend")) {
+      if (savedTab && validTabs.includes(savedTab)) {
         setActiveTab(savedTab)
-        // Limpiar después de usar
         localStorage.removeItem("activeProjectTab")
         return
       }
@@ -46,15 +52,21 @@ export default function ProjectsPage() {
       // Si no hay valor en localStorage, intentar leer desde URL
       const params = new URLSearchParams(window.location.search)
       const tabParam = params.get("tab")
-      if (tabParam && (tabParam === "fullstack" || tabParam === "backend")) {
+      if (tabParam && validTabs.includes(tabParam)) {
         setActiveTab(tabParam)
       }
     }
   }, [])
 
+  const categories = [
+    { id: "systems", icon: Layers, label: String(t("projects.systems")) },
+    { id: "mobile", icon: Smartphone, label: String(t("projects.mobile")) },
+    { id: "automation", icon: Zap, label: String(t("projects.automation")) },
+    { id: "backend", icon: Server, label: String(t("projects.backend")) },
+  ]
+
   return (
     <main className="min-h-screen bg-black flex flex-col">
-      {/* Simplified Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md shadow-lg">
         <nav className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -65,7 +77,6 @@ export default function ProjectsPage() {
                 viewBox="0 0 50 30"
                 className="hover:scale-105 transition-transform duration-300"
               >
-                {/* Background shape */}
                 <rect
                   x="1"
                   y="1"
@@ -77,8 +88,6 @@ export default function ProjectsPage() {
                   strokeWidth="1.5"
                   strokeOpacity="0.3"
                 />
-
-                {/* J letter */}
                 <path
                   d="M12 7v10c0 2-1 3-3 3s-3-1-3-3"
                   stroke="#3b82f6"
@@ -86,8 +95,6 @@ export default function ProjectsPage() {
                   strokeLinecap="round"
                   fill="none"
                 />
-
-                {/* V letter */}
                 <path
                   d="M18 7l4 13 4-13"
                   stroke="#3b82f6"
@@ -96,21 +103,15 @@ export default function ProjectsPage() {
                   strokeLinejoin="round"
                   fill="none"
                 />
-
-                {/* Underscore and DEV */}
                 <path d="M30 17h12" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
                 <text x="30" y="13" fontFamily="monospace" fontSize="7" fontWeight="bold" fill="#e2e8f0">
                   DEV
                 </text>
-
-                {/* Tech circuit lines */}
                 <path d="M3 15h2 M45 15h2" stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.6" />
                 <circle cx="5" cy="15" r="1" fill="#3b82f6" />
                 <circle cx="45" cy="15" r="1" fill="#3b82f6" />
               </svg>
             </Link>
-
-            {/* Language Switcher */}
             <LanguageSwitcher />
           </div>
         </nav>
@@ -134,71 +135,50 @@ export default function ProjectsPage() {
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
         </motion.div>
 
-        <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="flex justify-center mb-12">
-            <TabsList className="bg-black/40 border border-blue-700/20">
-              <TabsTrigger
-                value="fullstack"
-                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500"
-              >
-                <Code2 className="mr-2 h-4 w-4" />
-                {String(t("projects.fullstack"))}
-              </TabsTrigger>
-              <TabsTrigger
-                value="backend"
-                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500"
-              >
-                <Server className="mr-2 h-4 w-4" />
-                {String(t("projects.backend"))}
-              </TabsTrigger>
+            <TabsList className="bg-black/40 border border-blue-700/20 h-auto flex-wrap p-1">
+              {categories.map((cat) => (
+                <TabsTrigger
+                  key={cat.id}
+                  value={cat.id}
+                  className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 py-2 px-4"
+                >
+                  <cat.icon className="mr-2 h-4 w-4" />
+                  {cat.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
           </div>
 
-          <TabsContent value="fullstack" className="mt-0">
-            {isLoading ? (
-              <div className="text-center py-12">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
-                <p className="mt-4 text-slate-400">{String(t("projects.loading"))}</p>
-              </div>
-            ) : projects.fullstack.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.fullstack
-                  .sort((a, b) => b.id - a.id) // Ordenar por ID descendente
-                  .map((project, index) => (
-                    <FullStackProjectCard key={project.id} project={project} index={index} />
-                  ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-slate-400">{String(t("projects.noProjects"))}</p>
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="backend" className="mt-0">
-            {isLoading ? (
-              <div className="text-center py-12">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
-                <p className="mt-4 text-slate-400">{String(t("projects.loading"))}</p>
-              </div>
-            ) : projects.backend.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.backend
-                  .sort((a, b) => b.id - a.id) // Ordenar por ID descendente
-                  .map((project, index) => (
-                    <BackendProjectCard key={project.id} project={project} index={index} />
-                  ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-slate-400">{String(t("projects.noProjects"))}</p>
-              </div>
-            )}
-          </TabsContent>
+          {categories.map((cat) => (
+            <TabsContent key={cat.id} value={cat.id} className="mt-0">
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
+                  <p className="mt-4 text-slate-400">{String(t("projects.loading"))}</p>
+                </div>
+              ) : projects[cat.id as keyof typeof projects].length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {projects[cat.id as keyof typeof projects]
+                    .sort((a, b) => b.id - a.id)
+                    .map((project, index) => (
+                      cat.id === "systems" || cat.id === "mobile" ? (
+                        <FullStackProjectCard key={project.id} project={project} index={index} />
+                      ) : (
+                        <BackendProjectCard key={project.id} project={project} index={index} />
+                      )
+                    ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-slate-400">{String(t("projects.noProjects"))}</p>
+                </div>
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
-
-      {/* Footer */}
       <Footer />
     </main>
   )

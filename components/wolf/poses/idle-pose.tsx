@@ -17,7 +17,8 @@ export const IdlePose = () => {
         <motion.g
           animate={{ rotate: [-2, 2, -2] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 4 }}
-          transformOrigin="55 36"
+          originX="55"
+          originY="36"
         >
           <rect x="42" y="25" width="26" height="22" rx="8" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
 
@@ -30,22 +31,18 @@ export const IdlePose = () => {
           {/* Eyes - focused on screen */}
           <circle cx="48" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
           <circle cx="62" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-          <motion.circle
-            cx="48"
-            cy="35"
-            r="3"
-            fill="white"
+          <motion.g
             animate={{ opacity: [1, 0.7, 1] }}
             transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-          />
-          <motion.circle
-            cx="62"
-            cy="35"
-            r="3"
-            fill="white"
+          >
+            <circle cx="48" cy="35" r="3" fill="white" />
+          </motion.g>
+          <motion.g
             animate={{ opacity: [1, 0.7, 1] }}
             transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-          />
+          >
+            <circle cx="62" cy="35" r="3" fill="white" />
+          </motion.g>
 
           {/* Snout */}
           <rect x="48" y="40" width="14" height="10" rx="5" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -82,11 +79,12 @@ export const IdlePose = () => {
         <rect x="38" y="90" width="14" height="6" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
         <rect x="58" y="90" width="14" height="6" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
 
-        {/* Tail */}
+        {/* Tail - gentle wagging */}
         <motion.g
-          animate={{ rotate: [0, 5, 0, -5, 0] }}
+          animate={{ rotate: [0, 10, 0, -10, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3 }}
-          style={{ transformOrigin: "30px 65px" }}
+          originX={30}
+          originY={65}
         >
           <path
             d="M30,65 C25,60 15,65 10,60"
@@ -108,22 +106,18 @@ export const IdlePose = () => {
         {/* Laptop */}
         <rect x="40" y="75" width="30" height="2" fill="#1A3E4C" />
         <rect x="40" y="65" width="30" height="10" rx="1" fill="#3B82F6" />
-        <motion.rect
-          x="42"
-          y="67"
-          width="26"
-          height="6"
-          fill="#0F172A"
+        <motion.g
           animate={{ opacity: [1, 0.8, 1] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
-        />
-        <motion.path
-          d="M45,70 L48,70 M50,70 L55,70 M57,70 L60,70"
-          stroke="#3B82F6"
-          strokeWidth="0.5"
+        >
+          <rect x="42" y="67" width="26" height="6" fill="#0F172A" />
+        </motion.g>
+        <motion.g
           animate={{ opacity: [1, 0.5, 1] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-        />
+        >
+          <path d="M45,70 L48,70 M50,70 L55,70 M57,70 L60,70" stroke="#3B82F6" strokeWidth="0.5" />
+        </motion.g>
 
         {/* Details - rivets and panels */}
         <circle cx="42" cy="55" r="1" fill="#1A3E4C" />

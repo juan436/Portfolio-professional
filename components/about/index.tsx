@@ -6,7 +6,6 @@ import { useContent } from "@/contexts/content/use-content"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
 import { useEffect, useState } from "react"
 import { AboutProfile } from "./about-profile"
-import { AboutServices } from "./about-services"
 
 export default function About() {
   const { t, language } = useLanguage()
@@ -152,8 +151,6 @@ export default function About() {
             </div>
           </motion.div>
         </div>
-
-        <AboutServices services={translatedContent.services} />
       </div>
     </section>
   )

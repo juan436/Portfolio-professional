@@ -29,13 +29,16 @@ export function QuantumRays() {
         return (
           <motion.g key={`quantum-ray-${i}`}>
             <motion.line
-              x1={centerX + innerRadius * Math.cos(angle)}
-              y1={centerY + innerRadius * Math.sin(angle)}
-              x2={centerX + outerRadius * Math.cos(angle)}
-              y2={centerY + outerRadius * Math.sin(angle)}
               stroke="rgba(59, 130, 246, 0.8)"
               strokeWidth="2"
-              initial={{ opacity: 0, pathLength: 0 }}
+              initial={{
+                x1: centerX + innerRadius * Math.cos(angle),
+                y1: centerY + innerRadius * Math.sin(angle),
+                x2: centerX + outerRadius * Math.cos(angle),
+                y2: centerY + outerRadius * Math.sin(angle),
+                opacity: 0,
+                pathLength: 0
+              }}
               animate={{
                 opacity: [0, 1, 0],
                 pathLength: [0, 1, 0],
@@ -49,11 +52,14 @@ export function QuantumRays() {
             />
             {/* Nodos de energía en los extremos */}
             <motion.circle
-              cx={centerX + outerRadius * Math.cos(angle)}
-              cy={centerY + outerRadius * Math.sin(angle)}
-              r="3"
               fill="rgba(59, 130, 246, 0.9)"
-              initial={{ scale: 0, opacity: 0 }}
+              initial={{
+                cx: centerX + outerRadius * Math.cos(angle),
+                cy: centerY + outerRadius * Math.sin(angle),
+                r: 3,
+                scale: 0,
+                opacity: 0
+              }}
               animate={{
                 scale: [0, 1.5, 0],
                 opacity: [0, 1, 0],

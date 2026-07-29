@@ -171,12 +171,14 @@ export function ContactForm({ translatedTexts }: ContactFormProps) {
           <Button
             type="submit"
             disabled={status === 'loading'}
-            className="w-full bg-blue-700 hover:bg-blue-800 disabled:bg-blue-700/50"
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-widest shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-all duration-300 disabled:opacity-50 h-12"
           >
             {status === 'loading' ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Enviando...
+                {language.code === 'es' ? 'Enviando...' : 
+                 language.code === 'it' ? 'Invio...' :
+                 language.code === 'fr' ? 'Envoi...' : 'Sending...'}
               </>
             ) : (
               <>

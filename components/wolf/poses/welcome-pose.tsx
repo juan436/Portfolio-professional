@@ -61,7 +61,8 @@ export const WelcomePose = () => {
         <motion.g
           animate={{ rotate: [0, 15, 0, -15, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
-          style={{ transformOrigin: "30px 65px" }}
+          originX={30}
+          originY={65}
         >
           <path
             d="M30,65 C25,60 15,65 10,60"

@@ -1,4 +1,5 @@
 import React from 'react';
+import Script from 'next/script';
 
 export default function JsonLd() {
   const jsonLd = {
@@ -25,8 +26,10 @@ export default function JsonLd() {
   };
 
   return (
-    <script
+    <Script
+      id="json-ld"
       type="application/ld+json"
+      strategy="afterInteractive"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );

@@ -154,11 +154,11 @@ export default function Experience() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold text-white mb-4">{translatedTexts.title}</h2>
-          <div className="w-24 h-1 bg-blue-500 mx-auto mb-6"></div>
-          <p className="text-blue-300 max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">{translatedTexts.title}</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8">
             {translatedTexts.subtitle}
           </p>
+          <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
         </motion.div>
 
         {/* Línea de tiempo horizontal con animación */}

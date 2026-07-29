@@ -1,0 +1,242 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { useLanguage } from "@/hooks/use-language"
+import { useTranslatedContent } from "@/hooks/use-translated-content"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Code2, Database, Server, Cpu, Globe, Smartphone, Monitor, Cloud, Shield,
+  LineChart, Settings, Layers, Briefcase, PenTool, FileCode, Zap, Check, ArrowRight
+} from "lucide-react"
+
+export default function Services() {
+  const { t } = useLanguage()
+  const { translatedContent } = useTranslatedContent()
+  const [isMounted, setIsMounted] = useState(false)
+  const [translatedTexts, setTranslatedTexts] = useState({
+    title: "",
+    subtitle: "",
+    consultSolution: "",
+    webCTA: "",
+    mobileCTA: "",
+    aiCTA: "",
+    cloudCTA: ""
+  })
+
+  // Cargar traducciones después de la hidratación
+  useEffect(() => {
+    setIsMounted(true)
+    setTranslatedTexts({
+      title: String(t("services.title")),
+      subtitle: String(t("services.subtitle")),
+      consultSolution: String(t("services.consultSolution")),
+      webCTA: String(t("ctas.services.web")),
+      mobileCTA: String(t("ctas.services.mobile")),
+      aiCTA: String(t("ctas.services.ai")),
+      cloudCTA: String(t("ctas.services.cloud"))
+    })
+  }, [t])
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const fadeIn = {
+    initial: { opacity: 0, y: 20 },
+    animate: (index: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, delay: 0.1 * index },
+    }),
+  }
+
+  const getServiceIcon = (iconName: string) => {
+    const iconClass = "h-10 w-10 text-blue-500 filter drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
+    switch (iconName) {
+      case "Code":
+        return <Code2 className={iconClass} />
+      case "Server":
+        return <Server className={iconClass} />
+      case "Database":
+        return <Database className={iconClass} />
+      case "Cpu":
+        return <Cpu className={iconClass} />
+      case "Globe":
+        return <Globe className={iconClass} />
+      case "Smartphone":
+        return <Smartphone className={iconClass} />
+      case "Monitor":
+        return <Monitor className={iconClass} />
+      case "Cloud":
+        return <Cloud className={iconClass} />
+      case "Shield":
+        return <Shield className={iconClass} />
+      case "LineChart":
+        return <LineChart className={iconClass} />
+      case "Settings":
+        return <Settings className={iconClass} />
+      case "Layers":
+        return <Layers className={iconClass} />
+      case "Briefcase":
+        return <Briefcase className={iconClass} />
+      case "PenTool":
+        return <PenTool className={iconClass} />
+      case "FileCode":
+        return <FileCode className={iconClass} />
+      case "Zap":
+        return <Zap className={iconClass} />
+      default:
+        return <Code2 className={iconClass} />
+    }
+  }
+
+  // Si no está montado, renderizamos una estructura vacía o con placeholders para evitar mismatch
+  if (!isMounted) {
+    return (
+      <section id="services" className="py-20 bg-black relative">
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 opacity-0">Title</h2>
+            <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+            <p className="text-slate-400 max-w-2xl mx-auto mb-8 opacity-0">Subtitle</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section id="services" className="py-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black relative overflow-hidden">
+      {/* Decorative background element */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-6xl pointer-events-none -z-10 opacity-30">
+        <div className="w-full h-full bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 blur-3xl rounded-full" />
+      </div>
+
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-center mb-16 relative z-10"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">{translatedTexts.title}</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8">
+            {translatedTexts.subtitle}
+          </p>
+          <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+        </motion.div>
+
+        <div className="relative">
+          {/* SVG Connection Line */}
+          <div className="absolute top-1/2 left-0 w-full h-1 z-0 hidden lg:block pointer-events-none -translate-y-1/2 mt-10">
+            <svg className="w-full h-24 overflow-visible">
+              <path 
+                d="M 12.5% 40 Q 50% -20 87.5% 40"
+                stroke="url(#glow-gradient)" 
+                strokeWidth="2" 
+                fill="none" 
+                className="animate-pulse"
+                style={{ animationDuration: "3s" }}
+              />
+              <defs>
+                <linearGradient id="glow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="transparent" />
+                  <stop offset="50%" stopColor="#3b82f6" />
+                  <stop offset="100%" stopColor="transparent" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+            {translatedContent.services.map((service, index) => {
+              const parts = service.description.split('|');
+              const promise = parts[0]?.trim();
+              const benefits = parts.slice(1);
+              const isLast = index === translatedContent.services.length - 1;
+
+              return (
+                <motion.div
+                  key={service._id || `service-${index}-${service.title}`}
+                  custom={index}
+                  variants={fadeIn}
+                  initial="initial"
+                  whileInView="animate"
+                  whileHover={{ 
+                    scale: 1.02,
+                    rotateX: 5, 
+                    rotateY: -5,
+                    transition: { duration: 0.2 } 
+                  }}
+                  style={{ perspective: 1000 }}
+                  viewport={{ once: true }}
+                  className="h-full relative group"
+                >
+                  <Card className="bg-zinc-900/40 border border-white/10 backdrop-blur-md hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all duration-300 flex flex-col h-full relative z-10 overflow-visible">
+                    <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-colors duration-300 -z-10 rounded-xl" />
+                    <CardContent className="pt-6 flex flex-col h-full">
+                      <div className="flex flex-col items-center text-center h-full">
+                        <div className="mb-4 p-3 rounded-lg bg-blue-500/10 flex-shrink-0 relative group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-shadow duration-300">{getServiceIcon(service.icon)}</div>
+                        
+                        <div className="min-h-[64px] flex items-center justify-center text-center w-full mb-2">
+                          <h3 className="text-xl font-bold text-blue-400">{service.title}</h3>
+                        </div>
+                        
+                        <p className="text-sm font-medium mb-4 text-white/90 italic">"{promise}"</p>
+                        
+                        <ul className="text-left space-y-2 mb-6 w-full">
+                          {benefits.map((benefit, i) => (
+                            <li key={i} className="text-xs text-slate-400 flex items-start">
+                              <Check className="text-blue-500 mr-2 h-3 w-3 flex-shrink-0 mt-0.5" />
+                              {benefit.trim()}
+                            </li>
+                          ))}
+                        </ul>
+                        
+                        <button 
+                          onClick={() => scrollToSection('contact')}
+                          className="mt-auto w-full py-3 px-2 bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-400 text-blue-400 hover:text-white text-[11px] font-black uppercase tracking-wider transition-all duration-300 rounded flex items-center justify-center group/btn"
+                        >
+                          {(() => {
+                            const title = service.title.toLowerCase();
+                            if (title.includes('ia') || title.includes('inteligencia') || title.includes('ai') || title.includes('automatización') || title.includes('automation')) {
+                              return translatedTexts.aiCTA;
+                            } else if (title.includes('móvil') || title.includes('mobile') || title.includes('app')) {
+                              return translatedTexts.mobileCTA;
+                            } else if (title.includes('infraestructura') || title.includes('infrastructure') || title.includes('cloud') || title.includes('ops') || title.includes('backend')) {
+                              return translatedTexts.cloudCTA;
+                            } else {
+                              return translatedTexts.webCTA;
+                            }
+                          })()}
+                          <ArrowRight className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
+                        </button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Flecha indicadora de flujo */}
+                  {!isLast && (
+                    <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 bg-blue-500 rounded-full p-1 border-4 border-black group-hover:scale-125 transition-transform hidden lg:flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.5)]">
+                      <ArrowRight className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

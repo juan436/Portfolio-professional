@@ -2,14 +2,44 @@
   "nav": {
     "home": "Inicio",
     "about": "Sobre Mí",
+    "services": "Servicios",
     "projects": "Proyectos",
+    "laboratory": "Laboratorio",
     "skills": "Habilidades",
     "contact": "Contacto",
     "experience": "Experiencia"
   },
+  "services": {
+    "title": "Servicios",
+    "subtitle": "Soluciones tecnológicas integrales para potenciar tu presencia digital.",
+    "consultSolution": "Consultar Solución →"
+  },
+  "methodology": {
+    "title": "Metodología",
+    "subtitle": "Ingeniería en 4 fases: Del diagnóstico para eliminar cuellos de botella, al escalamiento automatizado.",
+    "phases": {
+      "phase1": {
+        "title": "DIAGNÓSTICO ESTRATÉGICO",
+        "description": "Analizo tus cuellos de botella técnicos para diseñar el camino más rápido hacia la rentabilidad."
+      },
+      "phase2": {
+        "title": "ARQUITECTURA DE ALTO NIVEL",
+        "description": "Construyo una base técnica robusta, escalable y preparada para el futuro de tu negocio."
+      },
+      "phase3": {
+        "title": "AUTOMATIZACIÓN INTELLIGENTE",
+        "description": "Integro IA y flujos de trabajo autónomos para que el sistema trabaje para ti, no al revés."
+      },
+      "phase4": {
+        "title": "ESCALAMIENTO CONTINUO",
+        "description": "Despliegue con monitoreo constante y optimización para garantizar un crecimiento sin límites."
+      }
+    }
+  },
   "hero": {
     "title": "Juan Villegas",
     "subtitle": "Desarrollador Full Stack",
+    "consultantBadge": "Ingeniero & Consultor Tecnológico 360°",
     "projects": "Ver Proyectos",
     "contact": "Contáctame"
   },
@@ -21,10 +51,12 @@
     "downloadCV": "Descargar CV"
   },
   "projects": {
-    "title": "Mis Proyectos",
-    "subtitle": "Una selección de mis proyectos más recientes y destacados. Cada proyecto refleja mi enfoque en la calidad, experiencia de usuario y código limpio.",
-    "fullstack": "Full Stack",
-    "backend": "Backend",
+    "title": "Casos de Éxito & Software de Alto Nivel",
+    "subtitle": "Soluciones estratégicas diseñadas para escalar negocios y automatizar procesos.",
+    "systems": "Sistemas & E-commerce",
+    "mobile": "Apps Móviles",
+    "automation": "Automatización & IA",
+    "backend": "Infra & Backend",
     "code": "Código",
     "demo": "Demo",
     "repo": "Repositorio",
@@ -90,5 +122,57 @@
   },
   "social": {
     "whatsapp_message": "Hola Ingeniero Villegas, quiero hacerle una consulta sobre sus servicios."
+  },
+  "metrics": {
+    "HOURS_SAVED": "HORAS MANUALES AHORRADAS",
+    "PROCESS_ACCELERATION": "ACELERACIÓN DE PROCESOS",
+    "SYSTEM_AVAILABILITY": "DISPONIBILIDAD DEL SISTEMA",
+    "AUTONOMOUS_OPERATION": "OPERACIÓN AUTÓNOMA"
+  },
+  "ctas": {
+    "hero": {
+      "primary": "Solicita tu Diagnóstico Técnico",
+      "secondary": "Ver Casos de Éxito"
+    },
+    "services": {
+      "web": "Construir mi plataforma web",
+      "mobile": "Crear mi propia App",
+      "ai": "Quiero automatizar mi negocio",
+      "cloud": "Optimizar mi infraestructura"
+    },
+    "contact": {
+      "submit": "Enviar mi propuesta",
+      "hook": "¿Listo para construir algo que escale? Respondo en menos de 24 horas."
+    }
+  },
+  "testimonials": {
+    "title": "CASOS DE ÉXITO VERIFICADOS",
+    "subtitle": "Lo que dicen los líderes que han confiado en mi arquitectura técnica.",
+    "items": [
+      {
+        "content": "Juan transformó nuestra infraestructura legacy en una solución cloud moderna y escalable. Su capacidad para entender el negocio es excepcional.",
+        "author": "Carlos Rodríguez",
+        "role": "CTO en TechFlow",
+        "avatar": ""
+      },
+      {
+        "content": "La automatización de procesos que implementó nos ahorró más de 20 horas semanales. Es un desarrollador que piensa en el ROI.",
+        "author": "Elena Martínez",
+        "role": "Operations Manager en LogiCorp",
+        "avatar": ""
+      },
+      {
+        "content": "Excelente profesional. Entregó nuestra App móvil antes de lo previsto y con una calidad de código impecable. 100% recomendado.",
+        "author": "Roberto Gómez",
+        "role": "Founder en StartUp X",
+        "avatar": ""
+      },
+      {
+        "content": "El sistema de e-commerce que desarrolló para nosotros maneja miles de transacciones diarias sin pestañear. Un trabajo de ingeniería sólido.",
+        "author": "Marina Silva",
+        "role": "E-commerce Director en ModaExpress",
+        "avatar": ""
+      }
+    ]
   }
 }

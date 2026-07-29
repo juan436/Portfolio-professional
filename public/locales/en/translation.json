@@ -2,14 +2,44 @@
   "nav": {
     "home": "Home",
     "about": "About",
+    "services": "Services",
     "projects": "Projects",
+    "laboratory": "Laboratory",
     "skills": "Skills",
     "contact": "Contact",
     "experience": "Experience"
   },
+  "services": {
+    "title": "Services",
+    "subtitle": "Comprehensive technological solutions to boost your digital presence.",
+    "consultSolution": "Consult Solution →"
+  },
+  "methodology": {
+    "title": "Methodology",
+    "subtitle": "4-Phase Engineering: From bottleneck diagnosis to automated scaling.",
+    "phases": {
+      "phase1": {
+        "title": "STRATEGIC DIAGNOSIS",
+        "description": "I analyze your technical bottlenecks to design the fastest path to profitability."
+      },
+      "phase2": {
+        "title": "HIGH-LEVEL ARCHITECTURE",
+        "description": "I build a robust, scalable technical foundation prepared for the future of your business."
+      },
+      "phase3": {
+        "title": "SMART AUTOMATION",
+        "description": "I integrate AI and autonomous workflows so the system works for you, not the other way around."
+      },
+      "phase4": {
+        "title": "CONTINUOUS SCALING",
+        "description": "Deployment with constant monitoring and optimization to guarantee limitless growth."
+      }
+    }
+  },
   "hero": {
     "title": "Juan Villegas",
     "subtitle": "Full Stack Developer",
+    "consultantBadge": "Engineer & 360° Tech Consultant",
     "projects": "View Projects",
     "contact": "Contact Me"
   },
@@ -21,10 +51,12 @@
     "downloadCV": "Download CV"
   },
   "projects": {
-    "title": "My Projects",
-    "subtitle": "A selection of my most recent and outstanding projects. Each project reflects my focus on quality, user experience, and clean code.",
-    "fullstack": "Full Stack",
-    "backend": "Backend",
+    "title": "Success Stories & High-Level Software",
+    "subtitle": "Strategic solutions designed to scale businesses and automate processes.",
+    "systems": "Systems & E-commerce",
+    "mobile": "Mobile Apps",
+    "automation": "Automation & AI",
+    "backend": "Infra & Backend",
     "code": "Code",
     "demo": "Demo",
     "repo": "Repository",
@@ -90,5 +122,57 @@
   },
   "social": {
     "whatsapp_message": "Hello Engineer Villegas, I would like to inquire about your services."
+  },
+  "metrics": {
+    "HOURS_SAVED": "MANUAL HOURS SAVED",
+    "PROCESS_ACCELERATION": "PROCESS ACCELERATION",
+    "SYSTEM_AVAILABILITY": "SYSTEM AVAILABILITY",
+    "AUTONOMOUS_OPERATION": "AUTONOMOUS OPERATION"
+  },
+  "ctas": {
+    "hero": {
+      "primary": "Request Technical Diagnosis",
+      "secondary": "View Success Cases"
+    },
+    "services": {
+      "web": "Build my web platform",
+      "mobile": "Create my own App",
+      "ai": "I want to automate my business",
+      "cloud": "Optimize my infrastructure"
+    },
+    "contact": {
+      "submit": "Submit my proposal",
+      "hook": "Ready to build something that scales? I reply in less than 24 hours."
+    }
+  },
+  "testimonials": {
+    "title": "VERIFIED SUCCESS CASES",
+    "subtitle": "What business leaders say about my technical architecture.",
+    "items": [
+      {
+        "content": "Juan transformed our legacy infrastructure into a modern, scalable cloud solution. His ability to understand the business is exceptional.",
+        "author": "Carlos Rodríguez",
+        "role": "CTO at TechFlow",
+        "avatar": ""
+      },
+      {
+        "content": "The process automation he implemented saved us over 20 hours a week. He's a developer who thinks about ROI.",
+        "author": "Elena Martínez",
+        "role": "Operations Manager at LogiCorp",
+        "avatar": ""
+      },
+      {
+        "content": "Excellent professional. He delivered our mobile App ahead of schedule and with impeccable code quality. 100% recommended.",
+        "author": "Roberto Gómez",
+        "role": "Founder at StartUp X",
+        "avatar": ""
+      },
+      {
+        "content": "The e-commerce system he developed for us handles thousands of daily transactions without a hitch. Solid engineering work.",
+        "author": "Marina Silva",
+        "role": "E-commerce Director at ModaExpress",
+        "avatar": ""
+      }
+    ]
   }
 }

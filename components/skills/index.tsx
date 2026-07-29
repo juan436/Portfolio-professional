@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
-import Script from "next/script"
 import { SkillsTabs } from "./skills-tabs"
 import { OtherSkills } from "./other-skills"
 
@@ -93,9 +92,6 @@ export default function Skills() {
 
   return (
     <section id="skills" className="py-20 bg-black/50 relative">
-      {/* Cargar el script de Devicon */}
-      <Script src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
-
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
@@ -110,8 +106,8 @@ export default function Skills() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{translatedTexts.title}</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8">{translatedTexts.subtitle}</p>
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
-          <p className="text-slate-400 max-w-2xl mx-auto">{translatedTexts.subtitle}</p>
         </motion.div>
 
         <SkillsTabs 

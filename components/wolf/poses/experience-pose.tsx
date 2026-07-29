@@ -13,7 +13,8 @@ export const ExperiencePose = () => {
         <motion.g
           animate={{ rotate: [0, 360] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 5, ease: "linear" }}
-          transformOrigin="55 60"
+          originX="55"
+          originY="60"
         >
           <path d="M55,56 L55,58 M55,62 L55,64 M51,60 L53,60 M57,60 L59,60" stroke="#F39C12" strokeWidth="1" />
           <circle cx="55" cy="60" r="2" fill="#F5B041" />
@@ -31,22 +32,22 @@ export const ExperiencePose = () => {
         {/* Eyes - wise and experienced */}
         <circle cx="48" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
         <circle cx="62" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
-        <motion.path
-          d="M46,35 L50,35"
-          stroke="white"
-          strokeWidth="2"
+        <motion.g
           animate={{ rotate: [0, 10, 0, -10, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3 }}
-          transformOrigin="48 35"
-        />
-        <motion.path
-          d="M60,35 L64,35"
-          stroke="white"
-          strokeWidth="2"
+          originX={48}
+          originY={35}
+        >
+          <path d="M46,35 L50,35" stroke="white" strokeWidth="2" />
+        </motion.g>
+        <motion.g
           animate={{ rotate: [0, 10, 0, -10, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3 }}
-          transformOrigin="62 35"
-        />
+          originX={62}
+          originY={35}
+        >
+          <path d="M60,35 L64,35" stroke="white" strokeWidth="2" />
+        </motion.g>
 
         {/* Snout - wise expression */}
         <rect x="48" y="40" width="14" height="10" rx="5" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -62,7 +63,8 @@ export const ExperiencePose = () => {
         <motion.g
           animate={{ rotate: [0, 15, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 4 }}
-          transformOrigin="75 55"
+          originX={75}
+          originY={55}
         >
           <rect x="70" y="55" width="10" height="15" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
           <rect x="70" y="70" width="10" height="8" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -87,7 +89,8 @@ export const ExperiencePose = () => {
         <motion.g
           animate={{ rotate: [0, 10, 0, -10, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3 }}
-          style={{ transformOrigin: "30px 65px" }}
+          originX={30}
+          originY={65}
         >
           <path
             d="M30,65 C25,60 15,65 10,60"
