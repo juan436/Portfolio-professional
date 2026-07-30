@@ -43,20 +43,6 @@ export default function Projects() {
         image: imageUrl
       };
     }) || [],
-    automation: translatedContent.projects?.automation?.map(project => {
-      const originalProject = content.projects.automation.find(p => p.id === project.id);
-
-      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
-      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
-        imageUrl = `https://${imageUrl}`;
-      }
-
-      return {
-        ...project,
-        tags: originalProject?.tags || [],
-        image: imageUrl
-      };
-    }) || [],
     backend: translatedContent.projects?.backend?.map(project => {
       const originalProject = content.projects.backend.find(p => p.id === project.id);
 
@@ -78,7 +64,6 @@ export default function Projects() {
     subtitle: "",
     systems: "",
     mobile: "",
-    automation: "",
     backend: "",
     code: "",
     demo: "",
@@ -94,7 +79,6 @@ export default function Projects() {
       subtitle: String(t("projects.subtitle")),
       systems: String(t("projects.systems")),
       mobile: String(t("projects.mobile")),
-      automation: String(t("projects.automation")),
       backend: String(t("projects.backend")),
       code: String(t("projects.code")),
       demo: String(t("projects.demo")),

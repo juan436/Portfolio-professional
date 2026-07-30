@@ -80,6 +80,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
             github: p.github || "#",
             demo: p.demo || "#",
             createdAt: p.createdAt,
+            testimonial: p.testimonial,
             translations: p.translations || {}
           });
 

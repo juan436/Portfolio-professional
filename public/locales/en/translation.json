@@ -7,7 +7,8 @@
     "laboratory": "Laboratory",
     "skills": "Skills",
     "contact": "Contact",
-    "experience": "Experience"
+    "experience": "Experience",
+    "automations": "Automations"
   },
   "services": {
     "title": "Services",
@@ -144,6 +145,65 @@
       "submit": "Submit my proposal",
       "hook": "Ready to build something that scales? I reply in less than 24 hours."
     }
+  },
+  "automations": {
+    "title": "Automations",
+    "subtitle": "AI-driven workflows that remove the manual load of repetitive tasks.",
+    "inProgress": "IN PROGRESS",
+    "tryPrompt": "Try it with your own message:",
+    "sendLabel": "Send",
+    "outputLabel": "Result",
+    "stepsWord": "steps",
+    "viewMore": "View all automations",
+    "detail": {
+      "whatItDoes": "What it does",
+      "howItsUsed": "How it's used",
+      "tryLive": "Try it live",
+      "stepsHeading": "How it works, step by step",
+      "notFound": "We couldn't find this automation.",
+      "backToList": "Back to Automations"
+    },
+    "items": [
+      {
+        "icon": "customer-service",
+        "title": "Customer Service Bot",
+        "description": "Automated replies and support, available around the clock.",
+        "useCase": "Built for businesses that get a lot of repeat questions (hours, prices, availability) and can't keep up answering each one by hand. It plugs into WhatsApp or the site chat and replies instantly, escalating to a human only when judgment is needed.",
+        "steps": [
+          "Customer writes (WhatsApp/Web)",
+          "AI interprets and replies",
+          "Escalates to a human when needed"
+        ],
+        "demoPlaceholder": "e.g. Do you offer home delivery?",
+        "demoOutputTemplate": "🤖 AI replies: got your message \"{input}\" — confirming the info or connecting you with an agent."
+      },
+      {
+        "icon": "sales",
+        "title": "Sales Processor",
+        "description": "From order to confirmed sale, no manual steps.",
+        "useCase": "For anyone selling through a catalog or social media who processes orders by hand (writing them down, checking stock, building the order). The bot takes the order, validates it against inventory, and leaves it ready to invoice — no spreadsheets, no copy-pasting.",
+        "steps": [
+          "Order received",
+          "Validates stock and data",
+          "Generates order and notifies"
+        ],
+        "demoPlaceholder": "e.g. I want 2 units of product X",
+        "demoOutputTemplate": "✅ Order registered: \"{input}\" — order generated and notification sent."
+      },
+      {
+        "icon": "social",
+        "title": "Social Media Publisher",
+        "description": "Content prepared and published without friction.",
+        "useCase": "For brands that post often but lose time building and uploading every post by hand. Content gets prepared, AI adjusts the format per network, and it publishes itself according to the defined schedule.",
+        "steps": [
+          "Content prepared",
+          "AI adjusts copy and format",
+          "Publishes on the defined calendar"
+        ],
+        "demoPlaceholder": "e.g. New summer collection photo",
+        "demoOutputTemplate": "📅 Post scheduled: \"{input}\" — ready to go out per the calendar."
+      }
+    ]
   },
   "testimonials": {
     "title": "VERIFIED SUCCESS CASES",

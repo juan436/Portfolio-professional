@@ -11,6 +11,11 @@ export interface IProject extends Document {
   category: 'systems' | 'mobile' | 'automation' | 'backend' | 'laboratory';
   tags: string[];
   createdAt: Date;
+  testimonial?: {
+    author: string;
+    role: string;
+    content: string;
+  };
   translations?: {
     en?: {
       title: string;
@@ -49,9 +54,14 @@ const ProjectSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  testimonial: {
+    author: String,
+    role: String,
+    content: String,
   },
   translations: {
     en: {

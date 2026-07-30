@@ -5,6 +5,7 @@ import Services from "@/components/services"
 import Methodology from "@/components/methodology"
 import Projects from "@/components/projects"
 import Laboratory from "@/components/laboratory"
+import Automations from "@/components/automations"
 import About from "@/components/about"
 import Experience from "@/components/experience"
 import Skills from "@/components/skills"
@@ -24,6 +25,7 @@ export default function Home() {
       <MetricsSection />
       <Projects />
       <Laboratory />
+      <Automations />
       <About />
       <Experience />
       <Skills />

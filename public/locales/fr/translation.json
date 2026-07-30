@@ -6,7 +6,8 @@
     "projects": "Projets",
     "skills": "Compétences",
     "contact": "Contact",
-    "experience": "Expérience"
+    "experience": "Expérience",
+    "automations": "Automatisations"
   },
   "services": {
     "title": "Services",
@@ -140,5 +141,64 @@
       "submit": "Envoyer ma proposition",
       "hook": "Prêt à construire quelque chose d'évolutif? Je réponds en moins de 24 heures."
     }
+  },
+  "automations": {
+    "title": "Automatisations",
+    "subtitle": "Des flux de travail pilotés par l'IA qui éliminent la charge manuelle des tâches répétitives.",
+    "inProgress": "EN CONSTRUCTION",
+    "tryPrompt": "Essayez avec votre propre message :",
+    "sendLabel": "Envoyer",
+    "outputLabel": "Résultat",
+    "stepsWord": "étapes",
+    "viewMore": "Voir toutes les automatisations",
+    "detail": {
+      "whatItDoes": "Ce qu'il fait",
+      "howItsUsed": "Comment il est utilisé",
+      "tryLive": "Essayez-le en direct",
+      "stepsHeading": "Comment ça marche, étape par étape",
+      "notFound": "Nous n'avons pas trouvé cette automatisation.",
+      "backToList": "Retour aux Automatisations"
+    },
+    "items": [
+      {
+        "icon": "customer-service",
+        "title": "Bot de Service Client",
+        "description": "Réponses et support automatisés, disponibles à toute heure.",
+        "useCase": "Conçu pour les entreprises qui reçoivent beaucoup de questions répétitives (horaires, prix, disponibilité) et ne peuvent pas répondre à chacune manuellement. Il se connecte à WhatsApp ou au chat du site et répond instantanément, en escaladant vers un humain seulement quand un jugement est nécessaire.",
+        "steps": [
+          "Le client écrit (WhatsApp/Web)",
+          "L'IA interprète et répond",
+          "Escalade vers un humain si nécessaire"
+        ],
+        "demoPlaceholder": "Ex : Livrez-vous à domicile ?",
+        "demoOutputTemplate": "🤖 L'IA répond : message reçu \"{input}\" — je confirme l'info ou vous mets en relation avec un agent."
+      },
+      {
+        "icon": "sales",
+        "title": "Processeur de Ventes",
+        "description": "De la commande à la vente confirmée, sans intervention manuelle.",
+        "useCase": "Pour ceux qui vendent via un catalogue ou les réseaux sociaux et traitent les commandes à la main (les noter, vérifier le stock, préparer la commande). Le bot prend la commande, la valide par rapport au stock et la laisse prête à facturer — sans tableurs ni copier-coller.",
+        "steps": [
+          "Commande reçue",
+          "Valide le stock et les données",
+          "Génère la commande et notifie"
+        ],
+        "demoPlaceholder": "Ex : Je veux 2 unités du produit X",
+        "demoOutputTemplate": "✅ Commande enregistrée : \"{input}\" — commande générée et notification envoyée."
+      },
+      {
+        "icon": "social",
+        "title": "Publication sur les Réseaux Sociaux",
+        "description": "Contenu préparé et publié sans friction.",
+        "useCase": "Pour les marques qui publient souvent mais perdent du temps à préparer et publier chaque post à la main. Le contenu est préparé, l'IA ajuste le format par réseau, et la publication se fait seule selon le calendrier défini.",
+        "steps": [
+          "Contenu préparé",
+          "L'IA ajuste le texte et le format",
+          "Publie selon le calendrier défini"
+        ],
+        "demoPlaceholder": "Ex : Photo nouvelle collection été",
+        "demoOutputTemplate": "📅 Publication programmée : \"{input}\" — prête à sortir selon le calendrier."
+      }
+    ]
   }
 }

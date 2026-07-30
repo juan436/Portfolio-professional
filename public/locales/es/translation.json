@@ -7,7 +7,8 @@
     "laboratory": "Laboratorio",
     "skills": "Habilidades",
     "contact": "Contacto",
-    "experience": "Experiencia"
+    "experience": "Experiencia",
+    "automations": "Automatizaciones"
   },
   "services": {
     "title": "Servicios",
@@ -144,6 +145,65 @@
       "submit": "Enviar mi propuesta",
       "hook": "¿Listo para construir algo que escale? Respondo en menos de 24 horas."
     }
+  },
+  "automations": {
+    "title": "Automatizaciones",
+    "subtitle": "Flujos de trabajo con IA que elimino la carga manual de tareas repetitivas.",
+    "inProgress": "EN CONSTRUCCIÓN",
+    "tryPrompt": "Probá con tu propio mensaje:",
+    "sendLabel": "Enviar",
+    "outputLabel": "Resultado",
+    "stepsWord": "pasos",
+    "viewMore": "Ver todas las automatizaciones",
+    "detail": {
+      "whatItDoes": "Qué hace",
+      "howItsUsed": "Cómo se usa",
+      "tryLive": "Probalo en vivo",
+      "stepsHeading": "Cómo funciona, paso a paso",
+      "notFound": "No encontramos esta automatización.",
+      "backToList": "Volver a Automatizaciones"
+    },
+    "items": [
+      {
+        "icon": "customer-service",
+        "title": "Bot de Atención al Cliente",
+        "description": "Respuestas y soporte automatizado, disponible todo el día.",
+        "useCase": "Pensado para negocios que reciben muchas consultas repetidas (horarios, precios, disponibilidad) y no dan abasto respondiendo uno por uno. Se integra a WhatsApp o al chat del sitio y responde al instante, escalando a un humano solo cuando hace falta criterio.",
+        "steps": [
+          "Cliente escribe (WhatsApp/Web)",
+          "IA interpreta y responde",
+          "Escala a un humano si hace falta"
+        ],
+        "demoPlaceholder": "Ej: ¿Tienen envíos a domicilio?",
+        "demoOutputTemplate": "🤖 IA responde: recibí tu mensaje \"{input}\" — te confirmo la info o te paso con un asesor."
+      },
+      {
+        "icon": "sales",
+        "title": "Procesador de Ventas",
+        "description": "De pedido a orden confirmada, sin intervención manual.",
+        "useCase": "Para quien vende por catálogo o redes y procesa pedidos a mano (anotar, verificar stock, armar la orden). El bot toma el pedido, valida contra el inventario y deja todo listo para facturar — sin planillas ni copiar y pegar.",
+        "steps": [
+          "Pedido recibido",
+          "Valida stock y datos",
+          "Genera orden y notifica"
+        ],
+        "demoPlaceholder": "Ej: Quiero 2 unidades del producto X",
+        "demoOutputTemplate": "✅ Pedido registrado: \"{input}\" — orden generada y notificación enviada."
+      },
+      {
+        "icon": "social",
+        "title": "Publicación en Redes Sociales",
+        "description": "Contenido preparado y publicado sin fricción.",
+        "useCase": "Para marcas que publican seguido pero pierden tiempo armando y subiendo cada post a mano. Se prepara el contenido, la IA ajusta el formato por red y se publica solo, según el calendario definido.",
+        "steps": [
+          "Contenido preparado",
+          "IA ajusta copy y formato",
+          "Publica según el calendario"
+        ],
+        "demoPlaceholder": "Ej: Foto nueva colección de verano",
+        "demoOutputTemplate": "📅 Publicación programada: \"{input}\" — lista para salir según el calendario."
+      }
+    ]
   },
   "testimonials": {
     "title": "CASOS DE ÉXITO VERIFICADOS",

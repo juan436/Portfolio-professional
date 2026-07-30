@@ -57,6 +57,11 @@ export type Project = {
   demo: string
   tags?: string[]
   createdAt?: string
+  testimonial?: {
+    author: string
+    role: string
+    content: string
+  }
   _modifiedFields?: string[]
   translations?: {
     [key in TranslationLanguages]?: {

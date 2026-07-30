@@ -1,7 +1,7 @@
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Code2, Server, Plus, Smartphone, Zap, Layers } from "lucide-react"
+import { Server, Plus, Smartphone, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -15,14 +15,12 @@ interface ProjectsTabsProps {
   localProjects: {
     systems: Project[]
     mobile: Project[]
-    automation: Project[]
     backend: Project[]
   }
   isLoading: boolean
   translatedTexts: {
     systems: string
     mobile: string
-    automation: string
     backend: string
     viewMore: string
     repo: string
@@ -41,7 +39,6 @@ export function ProjectsTabs({
   const categories = [
     { id: "systems", icon: Layers, label: translatedTexts.systems },
     { id: "mobile", icon: Smartphone, label: translatedTexts.mobile },
-    { id: "automation", icon: Zap, label: translatedTexts.automation },
     { id: "backend", icon: Server, label: translatedTexts.backend },
   ]
 

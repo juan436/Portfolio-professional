@@ -6,7 +6,8 @@
     "projects": "Progetti",
     "skills": "Competenze",
     "contact": "Contatto",
-    "experience": "Esperienza"
+    "experience": "Esperienza",
+    "automations": "Automazioni"
   },
   "services": {
     "title": "Servizi",
@@ -140,5 +141,64 @@
       "submit": "Invia la mia proposta",
       "hook": "Pronto a costruire qualcosa di scalabile? Rispondo in meno di 24 ore."
     }
+  },
+  "automations": {
+    "title": "Automazioni",
+    "subtitle": "Flussi di lavoro basati su IA che eliminano il carico manuale delle attività ripetitive.",
+    "inProgress": "IN COSTRUZIONE",
+    "tryPrompt": "Prova con un tuo messaggio:",
+    "sendLabel": "Invia",
+    "outputLabel": "Risultato",
+    "stepsWord": "passaggi",
+    "viewMore": "Vedi tutte le automazioni",
+    "detail": {
+      "whatItDoes": "Cosa fa",
+      "howItsUsed": "Come si usa",
+      "tryLive": "Provalo dal vivo",
+      "stepsHeading": "Come funziona, passo dopo passo",
+      "notFound": "Non abbiamo trovato questa automazione.",
+      "backToList": "Torna alle Automazioni"
+    },
+    "items": [
+      {
+        "icon": "customer-service",
+        "title": "Bot di Assistenza Clienti",
+        "description": "Risposte e supporto automatizzati, disponibili tutto il giorno.",
+        "useCase": "Pensato per attività che ricevono molte domande ripetitive (orari, prezzi, disponibilità) e non riescono a rispondere una per una. Si collega a WhatsApp o alla chat del sito e risponde all'istante, passando a un operatore umano solo quando serve valutazione.",
+        "steps": [
+          "Il cliente scrive (WhatsApp/Web)",
+          "L'IA interpreta e risponde",
+          "Passa a un operatore umano se necessario"
+        ],
+        "demoPlaceholder": "Es: Fate consegne a domicilio?",
+        "demoOutputTemplate": "🤖 L'IA risponde: ricevuto il tuo messaggio \"{input}\" — confermo l'informazione o ti metto in contatto con un operatore."
+      },
+      {
+        "icon": "sales",
+        "title": "Processore di Vendite",
+        "description": "Dall'ordine alla vendita confermata, senza intervento manuale.",
+        "useCase": "Per chi vende tramite catalogo o social e gestisce gli ordini a mano (annotare, controllare lo stock, preparare l'ordine). Il bot prende l'ordine, lo verifica rispetto al magazzino e lo lascia pronto per la fatturazione — senza fogli di calcolo né copia-incolla.",
+        "steps": [
+          "Ordine ricevuto",
+          "Verifica stock e dati",
+          "Genera l'ordine e notifica"
+        ],
+        "demoPlaceholder": "Es: Voglio 2 unità del prodotto X",
+        "demoOutputTemplate": "✅ Ordine registrato: \"{input}\" — ordine generato e notifica inviata."
+      },
+      {
+        "icon": "social",
+        "title": "Pubblicazione sui Social",
+        "description": "Contenuto preparato e pubblicato senza attrito.",
+        "useCase": "Per i brand che pubblicano spesso ma perdono tempo a preparare e caricare ogni post a mano. Il contenuto viene preparato, l'IA adatta il formato per ogni social e la pubblicazione avviene da sola secondo il calendario definito.",
+        "steps": [
+          "Contenuto preparato",
+          "L'IA adatta testo e formato",
+          "Pubblica secondo il calendario"
+        ],
+        "demoPlaceholder": "Es: Foto nuova collezione estiva",
+        "demoOutputTemplate": "📅 Pubblicazione programmata: \"{input}\" — pronta per uscire secondo il calendario."
+      }
+    ]
   }
 }

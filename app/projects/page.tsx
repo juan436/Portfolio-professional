@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Code2, Server, ArrowLeft, Smartphone, Zap, Layers } from "lucide-react"
+import { Server, ArrowLeft, Smartphone, Layers } from "lucide-react"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
@@ -20,7 +20,6 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState({
     systems: [] as Project[],
     mobile: [] as Project[],
-    automation: [] as Project[],
     backend: [] as Project[],
   })
   const [isLoading, setIsLoading] = useState(true)
@@ -30,7 +29,6 @@ export default function ProjectsPage() {
     setProjects({
       systems: content.projects.systems || [],
       mobile: content.projects.mobile || [],
-      automation: content.projects.automation || [],
       backend: content.projects.backend || [],
     })
     setIsLoading(false)
@@ -39,7 +37,7 @@ export default function ProjectsPage() {
   // Usar el parámetro de consulta o localStorage para determinar la pestaña activa
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const validTabs = ["systems", "mobile", "automation", "backend"];
+      const validTabs = ["systems", "mobile", "backend"];
       
       // Primero intentar leer desde localStorage
       const savedTab = localStorage.getItem("activeProjectTab")
@@ -61,7 +59,6 @@ export default function ProjectsPage() {
   const categories = [
     { id: "systems", icon: Layers, label: String(t("projects.systems")) },
     { id: "mobile", icon: Smartphone, label: String(t("projects.mobile")) },
-    { id: "automation", icon: Zap, label: String(t("projects.automation")) },
     { id: "backend", icon: Server, label: String(t("projects.backend")) },
   ]
 

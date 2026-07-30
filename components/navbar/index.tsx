@@ -18,6 +18,7 @@ export default function Navbar() {
     services: "",
     projects: "",
     laboratory: "",
+    automations: "",
     about: "",
     experience: "",
     skills: "",
@@ -32,6 +33,7 @@ export default function Navbar() {
       services: String(t("nav.services")),
       projects: String(t("nav.projects")),
       laboratory: String(t("nav.laboratory") || "Lab"),
+      automations: String(t("nav.automations") || "Automatizaciones"),
       about: String(t("nav.about")),
       experience: String(t("nav.experience")),
       skills: String(t("nav.skills")),
@@ -46,6 +48,7 @@ export default function Navbar() {
       { name: translatedTexts.services, href: "#services" },
       { name: translatedTexts.projects, href: "#projects" },
       { name: translatedTexts.laboratory, href: "#laboratory" },
+      { name: translatedTexts.automations, href: "#automations" },
       { name: translatedTexts.about, href: "#about" },
       { name: translatedTexts.experience, href: "#experience" },
       { name: translatedTexts.skills, href: "#skills" },
@@ -63,7 +66,7 @@ export default function Navbar() {
       }
 
       // También detectar qué sección está activa
-      const sections = ["home", "services", "projects", "laboratory", "about", "experience", "skills", "contact"]
+      const sections = ["home", "services", "projects", "laboratory", "automations", "about", "experience", "skills", "contact"]
       const scrollPosition = window.scrollY + window.innerHeight / 3
 
       for (const section of sections) {
