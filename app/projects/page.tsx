@@ -130,6 +130,7 @@ export default function ProjectsPage() {
         >
           <h1 className="text-3xl md:text-4xl font-bold mb-4">{String(t("projects.title"))}</h1>
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+          <p className="text-slate-400 max-w-2xl mx-auto">{String(t("projects.subtitle"))}</p>
         </motion.div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

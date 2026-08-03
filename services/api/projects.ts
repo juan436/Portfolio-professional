@@ -26,6 +26,25 @@ export const fetchProjects = async (category?: string) => {
 };
 
 /**
+ * Obtiene un proyecto por su id
+ */
+export const fetchProjectById = async (id: string) => {
+  try {
+    const response = await fetch(`${API_URL}/projects/${id}`);
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.success ? data.data : null;
+  } catch (error) {
+    console.error('Error fetching project by id:', error);
+    return null;
+  }
+};
+
+/**
  * Crea un nuevo proyecto con traducciones automáticas
  */
 export const createProject = async (project: any) => {

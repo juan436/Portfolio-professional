@@ -4,3 +4,6 @@ export { default as Project } from './project.model';
 export { default as Experience } from './experience.model';
 export { default as Skill } from './skill.model';
 export { default as  OtherSkill } from './otherSkills.model';
+export { default as Testimonial } from './testimonial.model';
+export { default as ProjectStats } from './project-stats.model';
+export { default as StatType } from './stat-type.model';

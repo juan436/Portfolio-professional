@@ -98,7 +98,6 @@ export const useTranslatedContent = () => {
   const translatedProjects = {
     systems: content.projects.systems.map(translateProject),
     mobile: content.projects.mobile.map(translateProject),
-    automation: content.projects.automation.map(translateProject),
     backend: content.projects.backend.map(translateProject),
   };
 

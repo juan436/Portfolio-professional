@@ -12,6 +12,7 @@ interface AutomationFlow {
   title: string
   description: string
   steps: string[]
+  subtype?: string
 }
 
 export default function Automations() {
@@ -30,7 +31,6 @@ export default function Automations() {
 
   const title = String(t("automations.title") || "Automatizaciones")
   const subtitle = String(t("automations.subtitle") || "")
-  const inProgressLabel = String(t("automations.inProgress") || "EN CONSTRUCCIÓN")
   const stepsWord = String(t("automations.stepsWord") || "pasos")
   const viewMore = String(t("automations.viewMore") || "Ver todas las automatizaciones")
 
@@ -63,7 +63,7 @@ export default function Automations() {
               description={flow.description}
               stepsCount={flow.steps.length}
               stepsWord={stepsWord}
-              inProgressLabel={inProgressLabel}
+              subtype={flow.subtype}
               index={index}
             />
           ))}

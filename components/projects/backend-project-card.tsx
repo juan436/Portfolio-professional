@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink, Github, Server, Database, Terminal } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/hooks/use-language";
+import { getProjectTechnologies } from "@/lib/utils";
 import type { Project } from "@/contexts/content/types";
 
 interface BackendProjectCardProps {
@@ -14,6 +16,7 @@ interface BackendProjectCardProps {
 
 export function BackendProjectCard({ project, index }: BackendProjectCardProps) {
   const { t } = useLanguage();
+  const technologies = getProjectTechnologies(project);
 
   // Función para obtener el icono según el ID del proyecto
   const getIconForProject = (projectId: number) => {
@@ -39,16 +42,18 @@ export function BackendProjectCard({ project, index }: BackendProjectCardProps) 
         <CardContent className="p-6 relative z-10 flex flex-col h-full">
           <div className="flex items-center mb-4">
             {getIconForProject(project.id)}
-            <h3 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 drop-shadow-sm">
-              {project.title}
-            </h3>
+            <Link href={`/projects/${project.id}`}>
+              <h3 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 drop-shadow-sm hover:from-blue-400 hover:to-blue-200 transition-all">
+                {project.title}
+              </h3>
+            </Link>
           </div>
 
           <p className="text-slate-400 mb-6 line-clamp-3">{project.description}</p>
 
           <div className="flex flex-wrap gap-2 mb-6">
-            {project.tags && project.tags.length > 0 ? (
-              project.tags.map((tag: string) => (
+            {technologies.length > 0 ? (
+              technologies.map((tag: string) => (
                 <span
                   key={tag}
                   className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-tighter"

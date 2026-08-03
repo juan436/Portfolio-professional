@@ -8,7 +8,8 @@
     "skills": "Skills",
     "contact": "Contact",
     "experience": "Experience",
-    "automations": "Automations"
+    "automations": "Automations",
+    "certificates": "Certifications"
   },
   "services": {
     "title": "Services",
@@ -54,7 +55,7 @@
   "projects": {
     "title": "Success Stories & High-Level Software",
     "subtitle": "Strategic solutions designed to scale businesses and automate processes.",
-    "systems": "Systems & E-commerce",
+    "systems": "Web Solutions",
     "mobile": "Mobile Apps",
     "automation": "Automation & AI",
     "backend": "Infra & Backend",
@@ -64,7 +65,48 @@
     "docs": "Documentation",
     "viewMore_general": "View more projects",
     "backToHome": "Back",
-    "noProjects": "No projects available at this time."
+    "noProjects": "No projects available at this time.",
+    "testimonialHeading": "Testimonial",
+    "resultsHeading": "Metrics and Results",
+    "techStackHeading": "Tech Stack",
+    "techStackFrontend": "Frontend",
+    "techStackBackend": "Backend",
+    "techStackDatabase": "Database",
+    "techStackInfra": "Infrastructure",
+    "challengeHeading": "The Challenge",
+    "solutionHeading": "The Solution",
+    "decisionsHeading": "Technical Decisions",
+    "backendBanner": "Infrastructure & Backend",
+    "securityHeading": "What it protects in production",
+    "deploymentHeading": "How it's deployed",
+    "ctaHeading": "Need something similar?",
+    "ctaText": "Let's talk about your project.",
+    "ctaButton": "Let's talk",
+    "infraDetailsHeading": "Infrastructure in production",
+    "systemDetailsHeading": "Business impact",
+    "ecommerceDetailsHeading": "E-commerce",
+    "mobileDetailsHeading": "App details",
+    "durationQuestionLabel": "Development time",
+    "sectorQuestionLabel": "Focused on",
+    "roleHeading": "Role in the project",
+    "workProcessHeading": "How I worked"
+  },
+  "laboratory": {
+    "viewMore": "View all experiments",
+    "detail": {
+      "statusHeading": "Status",
+      "statusTesting": "Testing",
+      "statusCompleted": "Completed",
+      "statusDiscontinued": "Discontinued",
+      "statusEvolved": "Evolved into a real project",
+      "timeInvestedLabel": "Time invested",
+      "motivationHeading": "Why I explored this",
+      "testingHeading": "What I'm testing",
+      "learningsHeading": "What I learned",
+      "comparisonHeading": "Compared to other options",
+      "limitationsHeading": "Known limitations",
+      "nextStepHeading": "Next step"
+    }
   },
   "skills": {
     "title": "My Skills",
@@ -75,6 +117,20 @@
     "devops": "DevOps",
     "other": "Other Skills",
     "experience": "The skills shown are backed by real projects and practical experience. You can see examples of my work in the projects section."
+  },
+  "certificates": {
+    "title": "Certifications",
+    "subtitle": "Continuous learning backed by verifiable credentials.",
+    "verify": "View credential",
+    "viewMore": "View all certifications",
+    "empty": "No certifications published at this time.",
+    "notFound": "We couldn't find this certificate.",
+    "techStackHeading": "Technologies covered",
+    "learnedHeading": "What I learned",
+    "appliedHeading": "How I applied it",
+    "issuerLabel": "Issued by",
+    "dateLabel": "Date",
+    "durationLabel": "Duration"
   },
   "contact": {
     "title": "Contact",
@@ -104,6 +160,7 @@
     "technologies": "Technologies"
   },
   "common": {
+    "back": "Back",
     "seeMore": "See more",
     "seeLess": "See less"
   },
@@ -148,8 +205,7 @@
   },
   "automations": {
     "title": "Automations",
-    "subtitle": "AI-driven workflows that remove the manual load of repetitive tasks.",
-    "inProgress": "IN PROGRESS",
+    "subtitle": "AI that works for you: bots and flows already in production, ready to plug into your business.",
     "tryPrompt": "Try it with your own message:",
     "sendLabel": "Send",
     "outputLabel": "Result",
@@ -161,7 +217,10 @@
       "tryLive": "Try it live",
       "stepsHeading": "How it works, step by step",
       "notFound": "We couldn't find this automation.",
-      "backToList": "Back to Automations"
+      "backToList": "Back to Automations",
+      "toolsHeading": "Built with",
+      "channelsHeading": "Supported channels",
+      "setupTimeHeading": "Setup time"
     },
     "items": [
       {
@@ -175,7 +234,11 @@
           "Escalates to a human when needed"
         ],
         "demoPlaceholder": "e.g. Do you offer home delivery?",
-        "demoOutputTemplate": "🤖 AI replies: got your message \"{input}\" — confirming the info or connecting you with an agent."
+        "demoOutputTemplate": "🤖 AI replies: got your message \"{input}\" — confirming the info or connecting you with an agent.",
+        "tools": ["n8n", "WhatsApp Business API", "LLM (GPT/Claude)"],
+        "channels": ["WhatsApp", "Web"],
+        "setupTime": "3-5 business days",
+        "subtype": "Conversational bot"
       },
       {
         "icon": "sales",
@@ -188,7 +251,11 @@
           "Generates order and notifies"
         ],
         "demoPlaceholder": "e.g. I want 2 units of product X",
-        "demoOutputTemplate": "✅ Order registered: \"{input}\" — order generated and notification sent."
+        "demoOutputTemplate": "✅ Order registered: \"{input}\" — order generated and notification sent.",
+        "tools": ["n8n", "Inventory API", "WhatsApp/Web"],
+        "channels": ["WhatsApp", "Web"],
+        "setupTime": "1 week",
+        "subtype": "Automated flow"
       },
       {
         "icon": "social",
@@ -201,7 +268,11 @@
           "Publishes on the defined calendar"
         ],
         "demoPlaceholder": "e.g. New summer collection photo",
-        "demoOutputTemplate": "📅 Post scheduled: \"{input}\" — ready to go out per the calendar."
+        "demoOutputTemplate": "📅 Post scheduled: \"{input}\" — ready to go out per the calendar.",
+        "tools": ["n8n", "Meta Graph API", "Generative AI (copy)"],
+        "channels": ["Instagram", "Facebook"],
+        "setupTime": "3-5 business days",
+        "subtype": "Automated flow"
       }
     ]
   },

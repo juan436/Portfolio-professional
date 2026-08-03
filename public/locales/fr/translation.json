@@ -7,7 +7,8 @@
     "skills": "Compétences",
     "contact": "Contact",
     "experience": "Expérience",
-    "automations": "Automatisations"
+    "automations": "Automatisations",
+    "certificates": "Certifications"
   },
   "services": {
     "title": "Services",
@@ -60,7 +61,48 @@
     "docs": "Documentation",
     "viewMore_general": "Voir plus de projets",
     "backToHome": "Retour",
-    "noProjects": "Aucun projet disponible pour le moment."
+    "noProjects": "Aucun projet disponible pour le moment.",
+    "testimonialHeading": "Témoignage",
+    "resultsHeading": "Métriques et Résultats",
+    "techStackHeading": "Stack Technique",
+    "techStackFrontend": "Frontend",
+    "techStackBackend": "Backend",
+    "techStackDatabase": "Base de Données",
+    "techStackInfra": "Infrastructure",
+    "challengeHeading": "Le Défi",
+    "solutionHeading": "La Solution",
+    "decisionsHeading": "Décisions Techniques",
+    "backendBanner": "Infrastructure & Backend",
+    "securityHeading": "Ce qui est protégé en production",
+    "deploymentHeading": "Comment c'est déployé",
+    "ctaHeading": "Besoin de quelque chose de similaire ?",
+    "ctaText": "Parlons de votre projet.",
+    "ctaButton": "Parlons-en",
+    "infraDetailsHeading": "Infrastructure en production",
+    "systemDetailsHeading": "Impact sur l'activité",
+    "ecommerceDetailsHeading": "E-commerce",
+    "mobileDetailsHeading": "Détails de l'application",
+    "durationQuestionLabel": "Temps de développement",
+    "sectorQuestionLabel": "Destiné à",
+    "roleHeading": "Rôle dans le projet",
+    "workProcessHeading": "Comment j'ai travaillé"
+  },
+  "laboratory": {
+    "viewMore": "Voir toutes les expériences",
+    "detail": {
+      "statusHeading": "Statut",
+      "statusTesting": "En test",
+      "statusCompleted": "Terminé",
+      "statusDiscontinued": "Abandonné",
+      "statusEvolved": "Devenu un vrai projet",
+      "timeInvestedLabel": "Temps investi",
+      "motivationHeading": "Pourquoi j'ai exploré cela",
+      "testingHeading": "Ce que je teste",
+      "learningsHeading": "Ce que j'ai appris",
+      "comparisonHeading": "Comparé à d'autres options",
+      "limitationsHeading": "Limitations connues",
+      "nextStepHeading": "Prochaine étape"
+    }
   },
   "skills": {
     "title": "Mes Compétences",
@@ -71,6 +113,20 @@
     "devops": "DevOps",
     "other": "Autres Compétences",
     "experience": "Les compétences présentées sont soutenues par des proyectos réels et une expérience pratique. Vous pouvez voir des exemples de mon travail dans la section proyectos."
+  },
+  "certificates": {
+    "title": "Certifications",
+    "subtitle": "Formation continue soutenue par des identifiants vérifiables.",
+    "verify": "Voir le certificat",
+    "viewMore": "Voir toutes les certifications",
+    "empty": "Aucune certification publiée pour le moment.",
+    "notFound": "Nous n'avons pas trouvé ce certificat.",
+    "techStackHeading": "Technologies couvertes",
+    "learnedHeading": "Ce que j'ai appris",
+    "appliedHeading": "Comment je l'ai appliqué",
+    "issuerLabel": "Délivré par",
+    "dateLabel": "Date",
+    "durationLabel": "Durée"
   },
   "contact": {
     "title": "Contact",
@@ -100,6 +156,7 @@
     "technologies": "Technologies"
   },
   "common": {
+    "back": "Retour",
     "seeMore": "Voir plus",
     "seeLess": "Voir moins"
   },
@@ -144,8 +201,7 @@
   },
   "automations": {
     "title": "Automatisations",
-    "subtitle": "Des flux de travail pilotés par l'IA qui éliminent la charge manuelle des tâches répétitives.",
-    "inProgress": "EN CONSTRUCTION",
+    "subtitle": "L'IA qui travaille pour vous : bots et flux déjà en production, prêts à s'intégrer à votre entreprise.",
     "tryPrompt": "Essayez avec votre propre message :",
     "sendLabel": "Envoyer",
     "outputLabel": "Résultat",
@@ -157,7 +213,10 @@
       "tryLive": "Essayez-le en direct",
       "stepsHeading": "Comment ça marche, étape par étape",
       "notFound": "Nous n'avons pas trouvé cette automatisation.",
-      "backToList": "Retour aux Automatisations"
+      "backToList": "Retour aux Automatisations",
+      "toolsHeading": "Construit avec",
+      "channelsHeading": "Canaux pris en charge",
+      "setupTimeHeading": "Délai de mise en place"
     },
     "items": [
       {
@@ -171,7 +230,11 @@
           "Escalade vers un humain si nécessaire"
         ],
         "demoPlaceholder": "Ex : Livrez-vous à domicile ?",
-        "demoOutputTemplate": "🤖 L'IA répond : message reçu \"{input}\" — je confirme l'info ou vous mets en relation avec un agent."
+        "demoOutputTemplate": "🤖 L'IA répond : message reçu \"{input}\" — je confirme l'info ou vous mets en relation avec un agent.",
+        "tools": ["n8n", "WhatsApp Business API", "LLM (GPT/Claude)"],
+        "channels": ["WhatsApp", "Web"],
+        "setupTime": "3-5 jours ouvrés",
+        "subtype": "Bot conversationnel"
       },
       {
         "icon": "sales",
@@ -184,7 +247,11 @@
           "Génère la commande et notifie"
         ],
         "demoPlaceholder": "Ex : Je veux 2 unités du produit X",
-        "demoOutputTemplate": "✅ Commande enregistrée : \"{input}\" — commande générée et notification envoyée."
+        "demoOutputTemplate": "✅ Commande enregistrée : \"{input}\" — commande générée et notification envoyée.",
+        "tools": ["n8n", "API d'inventaire", "WhatsApp/Web"],
+        "channels": ["WhatsApp", "Web"],
+        "setupTime": "1 semaine",
+        "subtype": "Flux automatisé"
       },
       {
         "icon": "social",
@@ -197,7 +264,11 @@
           "Publie selon le calendrier défini"
         ],
         "demoPlaceholder": "Ex : Photo nouvelle collection été",
-        "demoOutputTemplate": "📅 Publication programmée : \"{input}\" — prête à sortir selon le calendrier."
+        "demoOutputTemplate": "📅 Publication programmée : \"{input}\" — prête à sortir selon le calendrier.",
+        "tools": ["n8n", "Meta Graph API", "IA générative (copy)"],
+        "channels": ["Instagram", "Facebook"],
+        "setupTime": "3-5 jours ouvrés",
+        "subtype": "Flux automatisé"
       }
     ]
   }

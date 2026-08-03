@@ -8,7 +8,8 @@
     "skills": "Habilidades",
     "contact": "Contacto",
     "experience": "Experiencia",
-    "automations": "Automatizaciones"
+    "automations": "Automatizaciones",
+    "certificates": "Certificaciones"
   },
   "services": {
     "title": "Servicios",
@@ -54,7 +55,7 @@
   "projects": {
     "title": "Casos de Éxito & Software de Alto Nivel",
     "subtitle": "Soluciones estratégicas diseñadas para escalar negocios y automatizar procesos.",
-    "systems": "Sistemas & E-commerce",
+    "systems": "Soluciones Web",
     "mobile": "Apps Móviles",
     "automation": "Automatización & IA",
     "backend": "Infra & Backend",
@@ -64,7 +65,48 @@
     "docs": "Documentación",
     "viewMore_general": "Ver más proyectos",
     "backToHome": "Volver",
-    "noProjects": "No hay proyectos disponibles en este momento."
+    "noProjects": "No hay proyectos disponibles en este momento.",
+    "testimonialHeading": "Testimonio",
+    "resultsHeading": "Métricas y Resultados",
+    "techStackHeading": "Stack Técnico",
+    "techStackFrontend": "Frontend",
+    "techStackBackend": "Backend",
+    "techStackDatabase": "Base de Datos",
+    "techStackInfra": "Infraestructura",
+    "challengeHeading": "El Reto",
+    "solutionHeading": "La Solución",
+    "decisionsHeading": "Decisiones Técnicas",
+    "backendBanner": "Infraestructura & Backend",
+    "securityHeading": "Qué protege en producción",
+    "deploymentHeading": "Cómo está desplegado",
+    "ctaHeading": "¿Necesitas algo similar?",
+    "ctaText": "Hablemos sobre tu proyecto.",
+    "ctaButton": "Hablemos",
+    "infraDetailsHeading": "Infraestructura en producción",
+    "systemDetailsHeading": "Impacto en el negocio",
+    "ecommerceDetailsHeading": "Comercio electrónico",
+    "mobileDetailsHeading": "Detalles de la app",
+    "durationQuestionLabel": "Tiempo de desarrollo",
+    "sectorQuestionLabel": "Enfocado a",
+    "roleHeading": "Rol en el proyecto",
+    "workProcessHeading": "Cómo trabajé"
+  },
+  "laboratory": {
+    "viewMore": "Ver todos los experimentos",
+    "detail": {
+      "statusHeading": "Estado",
+      "statusTesting": "En pruebas",
+      "statusCompleted": "Completado",
+      "statusDiscontinued": "Descontinuado",
+      "statusEvolved": "Evolucionó a proyecto real",
+      "timeInvestedLabel": "Tiempo invertido",
+      "motivationHeading": "Por qué lo exploré",
+      "testingHeading": "Qué estoy probando",
+      "learningsHeading": "Qué aprendí",
+      "comparisonHeading": "Comparado con otras opciones",
+      "limitationsHeading": "Limitaciones conocidas",
+      "nextStepHeading": "Próximo paso"
+    }
   },
   "skills": {
     "title": "Mis Habilidades",
@@ -75,6 +117,20 @@
     "devops": "DevOps",
     "other": "Otras Habilidades",
     "experience": "Las habilidades mostradas están respaldadas por proyectos reales y experiencia práctica. Puedes ver ejemplos de mi trabajo en la sección de proyectos."
+  },
+  "certificates": {
+    "title": "Certificaciones",
+    "subtitle": "Formación continua respaldada por credenciales verificables.",
+    "verify": "Ver credencial",
+    "viewMore": "Ver todas las certificaciones",
+    "empty": "Sin certificaciones publicadas por el momento.",
+    "notFound": "No encontramos este certificado.",
+    "techStackHeading": "Tecnologías cubiertas",
+    "learnedHeading": "Qué aprendí",
+    "appliedHeading": "Cómo lo apliqué",
+    "issuerLabel": "Emitido por",
+    "dateLabel": "Fecha",
+    "durationLabel": "Duración"
   },
   "contact": {
     "title": "Contacto",
@@ -104,6 +160,7 @@
     "technologies": "Tecnologías"
   },
   "common": {
+    "back": "Volver",
     "seeMore": "Ver más",
     "seeLess": "Ver menos"
   },
@@ -148,8 +205,7 @@
   },
   "automations": {
     "title": "Automatizaciones",
-    "subtitle": "Flujos de trabajo con IA que elimino la carga manual de tareas repetitivas.",
-    "inProgress": "EN CONSTRUCCIÓN",
+    "subtitle": "IA que trabaja por ti: bots y flujos ya en producción, listos para integrarse a tu negocio.",
     "tryPrompt": "Probá con tu propio mensaje:",
     "sendLabel": "Enviar",
     "outputLabel": "Resultado",
@@ -161,7 +217,10 @@
       "tryLive": "Probalo en vivo",
       "stepsHeading": "Cómo funciona, paso a paso",
       "notFound": "No encontramos esta automatización.",
-      "backToList": "Volver a Automatizaciones"
+      "backToList": "Volver a Automatizaciones",
+      "toolsHeading": "Construido con",
+      "channelsHeading": "Canales soportados",
+      "setupTimeHeading": "Tiempo de puesta en marcha"
     },
     "items": [
       {
@@ -175,7 +234,11 @@
           "Escala a un humano si hace falta"
         ],
         "demoPlaceholder": "Ej: ¿Tienen envíos a domicilio?",
-        "demoOutputTemplate": "🤖 IA responde: recibí tu mensaje \"{input}\" — te confirmo la info o te paso con un asesor."
+        "demoOutputTemplate": "🤖 IA responde: recibí tu mensaje \"{input}\" — te confirmo la info o te paso con un asesor.",
+        "tools": ["n8n", "WhatsApp Business API", "LLM (GPT/Claude)"],
+        "channels": ["WhatsApp", "Web"],
+        "setupTime": "3-5 días hábiles",
+        "subtype": "Bot conversacional"
       },
       {
         "icon": "sales",
@@ -188,7 +251,11 @@
           "Genera orden y notifica"
         ],
         "demoPlaceholder": "Ej: Quiero 2 unidades del producto X",
-        "demoOutputTemplate": "✅ Pedido registrado: \"{input}\" — orden generada y notificación enviada."
+        "demoOutputTemplate": "✅ Pedido registrado: \"{input}\" — orden generada y notificación enviada.",
+        "tools": ["n8n", "API de inventario", "WhatsApp/Web"],
+        "channels": ["WhatsApp", "Web"],
+        "setupTime": "1 semana",
+        "subtype": "Flujo automatizado"
       },
       {
         "icon": "social",
@@ -201,7 +268,11 @@
           "Publica según el calendario"
         ],
         "demoPlaceholder": "Ej: Foto nueva colección de verano",
-        "demoOutputTemplate": "📅 Publicación programada: \"{input}\" — lista para salir según el calendario."
+        "demoOutputTemplate": "📅 Publicación programada: \"{input}\" — lista para salir según el calendario.",
+        "tools": ["n8n", "Meta Graph API", "IA generativa (copy)"],
+        "channels": ["Instagram", "Facebook"],
+        "setupTime": "3-5 días hábiles",
+        "subtype": "Flujo automatizado"
       }
     ]
   },

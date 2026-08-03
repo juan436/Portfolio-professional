@@ -5,16 +5,89 @@ export interface IProject extends Document {
   title: string;
   description: string;
   image?: string;
+  images?: string[];
   video?: string;
   github: string;
   demo: string;
-  category: 'systems' | 'mobile' | 'automation' | 'backend' | 'laboratory';
+  category: 'systems' | 'mobile' | 'backend' | 'laboratory';
+  subtype?: string;
   tags: string[];
+  duration?: string;
+  sector?: string;
+  role?: string;
+  workProcess?: {
+    kind: 'paragraph' | 'steps';
+    text?: string;
+    items?: string[];
+  }[];
   createdAt: Date;
   testimonial?: {
     author: string;
     role: string;
     content: string;
+  };
+  techStack?: {
+    frontend?: string[];
+    backend?: string[];
+    database?: string[];
+    infra?: string[];
+  };
+  challenge?: {
+    problem: string;
+    solution: string;
+  };
+  technicalDecisions?: {
+    title: string;
+    description: string;
+  }[];
+  securityHardening?: string[];
+  deploymentDiagram?: {
+    icon: string;
+    label: string;
+  }[];
+  infraDetails?: {
+    uptime?: string;
+    capacity?: string;
+    monitoring?: string[];
+    backupStrategy?: string;
+    costOptimized?: string;
+  };
+  systemDetails?: {
+    timeSaved?: string;
+    usersManaged?: string;
+    capacity?: string;
+    integrations?: string[];
+    reportsGenerated?: string;
+  };
+  ecommerceDetails?: {
+    paymentGateway?: string[];
+    checkoutFlow?: string;
+    inventory?: string;
+    capacity?: string;
+    performanceSeo?: string;
+    paymentMethods?: string[];
+  };
+  mobileDetails?: {
+    platforms?: string[];
+    storeStatus?: string;
+    offlineSupport?: string;
+    pushNotifications?: string;
+    loadPerformance?: string;
+  };
+  labDetails?: {
+    status?: 'testing' | 'completed' | 'discontinued' | 'evolved';
+    testing?: { kind: 'paragraph' | 'steps'; text?: string; items?: string[] }[];
+    learnings?: { kind: 'paragraph' | 'steps'; text?: string; items?: string[] }[];
+    motivation?: string;
+    limitations?: string[];
+    nextStep?: string;
+    comparison?: string;
+    timeInvested?: string;
+    flow?: {
+      steps?: string[];
+      demoPlaceholder?: string;
+      demoOutputTemplate?: string;
+    };
   };
   translations?: {
     en?: {
@@ -42,16 +115,34 @@ const ProjectSchema = new mongoose.Schema({
     required: true 
   },
   image: String,
+  images: {
+    type: [String],
+    default: []
+  },
   video: String,
   github: String,
   demo: String,
   category: { 
     type: String, 
-    enum: ['systems', 'mobile', 'automation', 'backend', 'laboratory'], 
+    enum: ['systems', 'mobile', 'backend', 'laboratory'],
     required: true 
   },
+  subtype: String,
   tags: {
     type: [String],
+    default: []
+  },
+  duration: String,
+  sector: String,
+  role: String,
+  workProcess: {
+    type: [
+      {
+        kind: { type: String, enum: ['paragraph', 'steps'] },
+        text: String,
+        items: { type: [String], default: [] },
+      }
+    ],
     default: []
   },
   createdAt: {
@@ -62,6 +153,100 @@ const ProjectSchema = new mongoose.Schema({
     author: String,
     role: String,
     content: String,
+  },
+  techStack: {
+    frontend: { type: [String], default: [] },
+    backend: { type: [String], default: [] },
+    database: { type: [String], default: [] },
+    infra: { type: [String], default: [] },
+  },
+  challenge: {
+    problem: String,
+    solution: String,
+  },
+  technicalDecisions: {
+    type: [
+      {
+        title: String,
+        description: String,
+      }
+    ],
+    default: []
+  },
+  securityHardening: {
+    type: [String],
+    default: []
+  },
+  deploymentDiagram: {
+    type: [
+      {
+        icon: String,
+        label: String,
+      }
+    ],
+    default: []
+  },
+  infraDetails: {
+    uptime: String,
+    capacity: String,
+    monitoring: { type: [String], default: [] },
+    backupStrategy: String,
+    costOptimized: String,
+  },
+  systemDetails: {
+    timeSaved: String,
+    usersManaged: String,
+    capacity: String,
+    integrations: { type: [String], default: [] },
+    reportsGenerated: String,
+  },
+  ecommerceDetails: {
+    paymentGateway: { type: [String], default: [] },
+    checkoutFlow: String,
+    inventory: String,
+    capacity: String,
+    performanceSeo: String,
+    paymentMethods: { type: [String], default: [] },
+  },
+  mobileDetails: {
+    platforms: { type: [String], default: [] },
+    storeStatus: String,
+    offlineSupport: String,
+    pushNotifications: String,
+    loadPerformance: String,
+  },
+  labDetails: {
+    status: { type: String, enum: ['testing', 'completed', 'discontinued', 'evolved'] },
+    testing: {
+      type: [
+        {
+          kind: { type: String, enum: ['paragraph', 'steps'] },
+          text: String,
+          items: { type: [String], default: [] },
+        }
+      ],
+      default: []
+    },
+    learnings: {
+      type: [
+        {
+          kind: { type: String, enum: ['paragraph', 'steps'] },
+          text: String,
+          items: { type: [String], default: [] },
+        }
+      ],
+      default: []
+    },
+    motivation: String,
+    limitations: { type: [String], default: [] },
+    nextStep: String,
+    comparison: String,
+    timeInvested: String,
+    flow: {
+      steps: { type: [String], default: [] },
+      demoPlaceholder: String,
+      demoOutputTemplate: String,
+    },
   },
   translations: {
     en: {

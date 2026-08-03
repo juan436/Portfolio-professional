@@ -4,12 +4,17 @@ import { useEffect, useMemo, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowLeft, ListChecks } from "lucide-react"
+import { ArrowLeft, ArrowRight, ListChecks, MessageCircle, Radio, Timer, TrendingUp, Wrench } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
+import { fetchTestimonials, type RawTestimonial } from "@/services/api/testimonials"
+import { fetchProjectStats, type ProjectMetric } from "@/services/api/project-stats"
 import { ProjectHeader } from "@/components/projects/project-header"
 import { FlowDiagram } from "@/components/automations/flow-diagram"
 import { flowIconMap } from "@/components/automations/flow-card"
+import { TestimonialCarousel } from "@/components/automations/testimonial-carousel"
+import { TestimonialMetrics } from "@/components/projects/testimonial-metrics"
 
 interface AutomationFlow {
   icon: string
@@ -19,16 +24,24 @@ interface AutomationFlow {
   steps: string[]
   demoPlaceholder: string
   demoOutputTemplate: string
+  tools?: string[]
+  channels?: string[]
+  setupTime?: string
+  subtype?: string
 }
 
 export default function AutomationDetailPage() {
   const params = useParams<{ slug: string }>()
   const { t } = useLanguage()
   const [isMounted, setIsMounted] = useState(false)
+  const [testimonials, setTestimonials] = useState<RawTestimonial[]>([])
+  const [resultsMetrics, setResultsMetrics] = useState<ProjectMetric[]>([])
 
   useEffect(() => {
     setIsMounted(true)
-  }, [])
+    fetchTestimonials({ type: "resultado", ref: params.slug }).then(setTestimonials)
+    fetchProjectStats(params.slug).then(setResultsMetrics)
+  }, [params.slug])
 
   const flows = useMemo(() => {
     if (!isMounted) return []
@@ -47,6 +60,15 @@ export default function AutomationDetailPage() {
   const stepsHeading = String(t("automations.detail.stepsHeading") || "")
   const notFoundLabel = String(t("automations.detail.notFound") || "")
   const backToList = String(t("automations.detail.backToList") || "Volver")
+  const viewMoreLabel = String(t("automations.viewMore") || "Ver todas las automatizaciones")
+  const testimonialHeading = String(t("projects.testimonialHeading") || "Testimonio")
+  const resultsHeading = String(t("projects.resultsHeading") || "Métricas y Resultados")
+  const ctaHeading = String(t("projects.ctaHeading") || "¿Necesitas algo similar?")
+  const ctaText = String(t("projects.ctaText") || "Hablemos sobre tu proyecto.")
+  const ctaButton = String(t("projects.ctaButton") || "Hablemos")
+  const toolsHeading = String(t("automations.detail.toolsHeading") || "Construido con")
+  const channelsHeading = String(t("automations.detail.channelsHeading") || "Canales soportados")
+  const setupTimeHeading = String(t("automations.detail.setupTimeHeading") || "Tiempo de puesta en marcha")
 
   if (isMounted && !flow) {
     return (
@@ -73,17 +95,13 @@ export default function AutomationDetailPage() {
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
-          <ProjectHeader title={flow.title} description={flow.description} />
-
-          <div className="mb-8 -mt-8 flex justify-center">
-            <Link
-              href="/automations"
-              className="inline-flex items-center text-sm text-blue-500 hover:text-blue-400 transition-colors"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {backToList}
-            </Link>
-          </div>
+          <ProjectHeader
+            title={flow.title}
+            description={flow.description}
+            viewMoreHref="/automations"
+            viewMoreLabel={viewMoreLabel}
+            subtype={flow.subtype}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16 max-w-5xl mx-auto">
             <motion.div
@@ -134,10 +152,115 @@ export default function AutomationDetailPage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="w-full"
+            className="w-full mb-16"
           >
             <h2 className="text-2xl font-bold text-center mb-8">{tryLive}</h2>
             <FlowDiagram flow={flow} tryPrompt={tryPrompt} sendLabel={sendLabel} outputLabel={outputLabel} />
+          </motion.div>
+
+          {(flow.tools?.length || flow.channels?.length || flow.setupTime) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="flex flex-wrap items-stretch justify-center gap-4 max-w-5xl mx-auto mb-16"
+            >
+              {flow.tools && flow.tools.length > 0 && (
+                <div className="min-w-[180px] max-w-[220px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5">
+                  <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-2">
+                    <Wrench className="h-3.5 w-3.5 text-blue-500" />
+                    {toolsHeading}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {flow.tools.map((tool) => (
+                      <span
+                        key={tool}
+                        className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-tighter"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {flow.channels && flow.channels.length > 0 && (
+                <div className="min-w-[180px] max-w-[220px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5">
+                  <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-2">
+                    <Radio className="h-3.5 w-3.5 text-blue-500" />
+                    {channelsHeading}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {flow.channels.map((channel) => (
+                      <span
+                        key={channel}
+                        className="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-tighter"
+                      >
+                        {channel}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {flow.setupTime && (
+                <div className="min-w-[180px] max-w-[220px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5">
+                  <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-1.5">
+                    <Timer className="h-3.5 w-3.5 text-blue-500" />
+                    {setupTimeHeading}
+                  </p>
+                  <p className="text-sm font-bold text-white break-words">{flow.setupTime}</p>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {resultsMetrics.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="mt-16"
+            >
+              <h2 className="text-xl font-bold text-center mb-8 flex items-center justify-center gap-2">
+                <TrendingUp className="h-5 w-5 text-blue-500" />
+                {resultsHeading}
+              </h2>
+              <div className="max-w-6xl mx-auto px-6 sm:px-10">
+                <TestimonialMetrics metrics={resultsMetrics} />
+              </div>
+            </motion.div>
+          )}
+
+          {testimonials.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="mt-16"
+            >
+              <h2 className="text-xl font-bold text-center mb-8">{testimonialHeading}</h2>
+              <div className="max-w-6xl mx-auto px-6 sm:px-10">
+                <TestimonialCarousel testimonials={testimonials} />
+              </div>
+            </motion.div>
+          )}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="mt-16 rounded-xl border border-blue-500/20 bg-blue-500/5 p-8 text-center"
+          >
+            <h2 className="text-xl font-bold mb-2">{ctaHeading}</h2>
+            <p className="text-slate-400 mb-6">{ctaText}</p>
+            <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-500">
+              <Link href="/#contact">
+                <MessageCircle className="mr-2 h-4 w-4" />
+                {ctaButton}
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </section>

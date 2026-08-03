@@ -40,7 +40,7 @@ const emptyContent: Content = {
   hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
   about: { paragraph1: "", paragraph2: "", paragraph3: "", translations: {} },
   services: [],
-  projects: { systems: [], mobile: [], automation: [], backend: [] },
+  projects: { systems: [], mobile: [], backend: [] },
   skills: { frontend: [], backend: [], database: [], devops: [] },
   otherSkills: [],
   contact: { email: "", phone: "", location: "", translations: {} },
@@ -64,7 +64,6 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         const contentData = await fetchContent()
         const systemsProjects = await fetchProjects('systems')
         const mobileProjects = await fetchProjects('mobile')
-        const automationProjects = await fetchProjects('automation')
         const backendProjects = await fetchProjects('backend')
         const experienceData = await fetchExperiences()
         const skillsData = await fetchSkills()
@@ -76,18 +75,24 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
             title: p.title,
             description: p.description,
             image: p.image,
+            images: p.images || [],
             tags: p.tags || [],
+            subtype: p.subtype,
             github: p.github || "#",
             demo: p.demo || "#",
             createdAt: p.createdAt,
             testimonial: p.testimonial,
+            techStack: p.techStack,
+            challenge: p.challenge,
+            technicalDecisions: p.technicalDecisions || [],
+            securityHardening: p.securityHardening || [],
+            deploymentDiagram: p.deploymentDiagram || [],
             translations: p.translations || {}
           });
 
           const projectsData = {
             systems: systemsProjects.map(mapProject),
             mobile: mobileProjects.map(mapProject),
-            automation: automationProjects.map(mapProject),
             backend: backendProjects.map(mapProject)
           }
 

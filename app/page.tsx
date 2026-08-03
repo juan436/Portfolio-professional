@@ -9,6 +9,7 @@ import Automations from "@/components/automations"
 import About from "@/components/about"
 import Experience from "@/components/experience"
 import Skills from "@/components/skills"
+import Certificates from "@/components/certificates"
 import Testimonials from "@/components/testimonials"
 import Contact from "@/components/contact"
 import Footer from "@/components/footer"
@@ -29,6 +30,7 @@ export default function Home() {
       <About />
       <Experience />
       <Skills />
+      <Certificates />
       <Testimonials />
       <Contact />
       <Footer />

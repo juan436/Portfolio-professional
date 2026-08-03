@@ -53,15 +53,36 @@ export type Project = {
   title: string
   description: string
   image?: string
+  images?: string[]
   github: string
   demo: string
   tags?: string[]
+  subtype?: string
   createdAt?: string
   testimonial?: {
     author: string
     role: string
     content: string
   }
+  techStack?: {
+    frontend?: string[]
+    backend?: string[]
+    database?: string[]
+    infra?: string[]
+  }
+  challenge?: {
+    problem: string
+    solution: string
+  }
+  technicalDecisions?: {
+    title: string
+    description: string
+  }[]
+  securityHardening?: string[]
+  deploymentDiagram?: {
+    icon: string
+    label: string
+  }[]
   _modifiedFields?: string[]
   translations?: {
     [key in TranslationLanguages]?: {
@@ -74,7 +95,6 @@ export type Project = {
 export type Projects = {
   systems: Project[]
   mobile: Project[]
-  automation: Project[]
   backend: Project[]
 }
 

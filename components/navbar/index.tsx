@@ -22,6 +22,7 @@ export default function Navbar() {
     about: "",
     experience: "",
     skills: "",
+    certificates: "",
     contact: ""
   })
   const [navItems, setNavItems] = useState<Array<{ name: string, href: string }>>([])
@@ -37,6 +38,7 @@ export default function Navbar() {
       about: String(t("nav.about")),
       experience: String(t("nav.experience")),
       skills: String(t("nav.skills")),
+      certificates: String(t("nav.certificates") || "Certificaciones"),
       contact: String(t("nav.contact"))
     })
   }, [t])
@@ -52,6 +54,7 @@ export default function Navbar() {
       { name: translatedTexts.about, href: "#about" },
       { name: translatedTexts.experience, href: "#experience" },
       { name: translatedTexts.skills, href: "#skills" },
+      { name: translatedTexts.certificates, href: "#certificates" },
       { name: translatedTexts.contact, href: "#contact" },
     ])
   }, [translatedTexts])
@@ -66,7 +69,7 @@ export default function Navbar() {
       }
 
       // También detectar qué sección está activa
-      const sections = ["home", "services", "projects", "laboratory", "automations", "about", "experience", "skills", "contact"]
+      const sections = ["home", "services", "projects", "laboratory", "automations", "about", "experience", "skills", "certificates", "contact"]
       const scrollPosition = window.scrollY + window.innerHeight / 3
 
       for (const section of sections) {

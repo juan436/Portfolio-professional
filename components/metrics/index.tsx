@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion"
 import { useRef, useEffect, useState } from "react"
 import { useLanguage } from "@/hooks/use-language"
+import { fetchStatTypesSummary, type StatTypeSummary } from "@/services/api/stat-types"
 
 interface Metric {
   id: string
@@ -19,12 +20,32 @@ const metricsData: Metric[] = [
   { id: "AUTONOMOUS_OPERATION", value: "24/7", gradient: "from-blue-600 to-blue-800" },
 ]
 
+// Combina la data fija de marketing con el total real acumulado (si ya hay
+// alguna métrica de proyecto/automatización marcada con esa categoría) —
+// mientras no haya datos reales, se ve exactamente igual que siempre.
+function applyRealTotals(base: Metric[], summary: StatTypeSummary[]): Metric[] {
+  return base.map((metric) => {
+    const real = summary.find((s) => s.key === metric.id && s.count > 0)
+    if (!real) return metric
+    return {
+      ...metric,
+      value: real.total,
+      prefix: real.prefix || metric.prefix,
+      suffix: real.suffix || metric.suffix,
+    }
+  })
+}
+
 export default function MetricsSection() {
   const { t } = useLanguage()
   const [mounted, setMounted] = useState(false)
+  const [metrics, setMetrics] = useState<Metric[]>(metricsData)
 
   useEffect(() => {
     setMounted(true)
+    fetchStatTypesSummary().then((summary) => {
+      if (summary.length > 0) setMetrics(applyRealTotals(metricsData, summary))
+    })
   }, [])
 
   return (
@@ -34,12 +55,12 @@ export default function MetricsSection() {
 
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {metricsData.map((metric, index) => (
-            <MetricCard 
-              key={metric.id} 
-              metric={metric} 
-              label={mounted ? t(`metrics.${metric.id}`) : `metrics.${metric.id}`} 
-              index={index} 
+          {metrics.map((metric, index) => (
+            <MetricCard
+              key={metric.id}
+              metric={metric}
+              label={mounted ? String(t(`metrics.${metric.id}`)) : `metrics.${metric.id}`}
+              index={index}
             />
           ))}
         </div>

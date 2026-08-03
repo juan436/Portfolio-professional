@@ -16,7 +16,7 @@ interface FlowCardProps {
   description: string
   stepsCount: number
   stepsWord: string
-  inProgressLabel: string
+  subtype?: string
   index: number
 }
 
@@ -26,7 +26,7 @@ export function FlowCard({
   description,
   stepsCount,
   stepsWord,
-  inProgressLabel,
+  subtype,
   index,
 }: FlowCardProps) {
   const Icon = flowIconMap[icon] || MessageCircle
@@ -40,9 +40,11 @@ export function FlowCard({
         viewport={{ once: true }}
         className="relative bg-zinc-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-sm hover:border-blue-500/50 transition-all cursor-pointer group h-full"
       >
-        <div className="absolute top-4 right-4 bg-blue-600/20 text-blue-400 text-[10px] font-mono px-2 py-1 rounded-full border border-blue-600/30">
-          {inProgressLabel}
-        </div>
+        {subtype && (
+          <div className="absolute top-4 right-4 bg-blue-600/20 text-blue-400 text-[10px] font-mono px-2 py-1 rounded-full border border-blue-600/30 uppercase font-bold">
+            {subtype}
+          </div>
+        )}
 
         <div className="mb-4 p-3 rounded-lg bg-blue-500/10 w-fit group-hover:bg-blue-500/20 transition-colors">
           <Icon className="h-8 w-8 text-blue-500" />

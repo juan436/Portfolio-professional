@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#09090b" />
+      <stop offset="100%" stop-color="#18181b" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="675" fill="url(#bg)" />
+
+  <g stroke="#3b82f6" stroke-opacity="0.15" stroke-width="1">
+    <line x1="0" y1="112.5" x2="1200" y2="112.5" />
+    <line x1="0" y1="225" x2="1200" y2="225" />
+    <line x1="0" y1="337.5" x2="1200" y2="337.5" />
+    <line x1="0" y1="450" x2="1200" y2="450" />
+    <line x1="0" y1="562.5" x2="1200" y2="562.5" />
+    <line x1="150" y1="0" x2="150" y2="675" />
+    <line x1="300" y1="0" x2="300" y2="675" />
+    <line x1="450" y1="0" x2="450" y2="675" />
+    <line x1="600" y1="0" x2="600" y2="675" />
+    <line x1="750" y1="0" x2="750" y2="675" />
+    <line x1="900" y1="0" x2="900" y2="675" />
+    <line x1="1050" y1="0" x2="1050" y2="675" />
+  </g>
+
+  <circle cx="600" cy="337" r="260" fill="url(#glow)" />
+
+  <g transform="translate(600 337)">
+    <path
+      d="M-30 -140 L-140 20 L-25 20 L-45 140 L145 -40 L15 -40 Z"
+      fill="none"
+      stroke="#60a5fa"
+      stroke-width="10"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    />
+    <path
+      d="M-30 -140 L-140 20 L-25 20 L-45 140 L145 -40 L15 -40 Z"
+      fill="#3b82f6"
+      fill-opacity="0.18"
+    />
+  </g>
+
+  <g fill="#60a5fa" fill-opacity="0.6">
+    <circle cx="150" cy="112.5" r="4" />
+    <circle cx="1050" cy="112.5" r="4" />
+    <circle cx="150" cy="562.5" r="4" />
+    <circle cx="1050" cy="562.5" r="4" />
+  </g>
+</svg>
