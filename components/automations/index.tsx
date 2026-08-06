@@ -1,40 +1,103 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/use-language"
-import { ArrowRight } from "lucide-react"
-import { FlowCard } from "./flow-card"
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { AutomationShowcaseCard, type ShowcaseAutomation } from "./automation-showcase-card"
 
-interface AutomationFlow {
-  icon: string
+interface RawAutomation {
+  _id: string
   title: string
   description: string
-  steps: string[]
   subtype?: string
+  automationDetails?: {
+    icon?: string
+    flow?: { steps?: string[]; demoPlaceholder?: string; demoOutputTemplate?: string }
+  }
+  translations?: {
+    en?: LocaleContent
+    fr?: LocaleContent
+    it?: LocaleContent
+  }
+}
+
+interface LocaleContent {
+  title?: string
+  description?: string
+  subtype?: string
+  steps?: string[]
+  demoPlaceholder?: string
+  demoOutputTemplate?: string
 }
 
 export default function Automations() {
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
+  const [automations, setAutomations] = useState<RawAutomation[]>([])
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [direction, setDirection] = useState(0)
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
-  }, [])
 
-  const flows = useMemo(() => {
-    if (!isMounted) return []
-    const items = t("automations.items", { returnObjects: true })
-    return Array.isArray(items) ? (items as AutomationFlow[]) : []
-  }, [t, isMounted])
+    const fetchAutomations = async () => {
+      try {
+        const response = await fetch('/api/projects?category=automation')
+        const result = await response.json()
+        if (result.success && Array.isArray(result.data)) {
+          setAutomations(result.data)
+        }
+      } catch (error) {
+        console.error('Error fetching automations:', error)
+      }
+    }
+
+    fetchAutomations()
+  }, [])
 
   const title = String(t("automations.title") || "Automatizaciones")
   const subtitle = String(t("automations.subtitle") || "")
-  const stepsWord = String(t("automations.stepsWord") || "pasos")
   const viewMore = String(t("automations.viewMore") || "Ver todas las automatizaciones")
+  const tryPrompt = String(t("automations.tryPrompt") || "")
+  const sendLabel = String(t("automations.sendLabel") || "")
+  const outputLabel = String(t("automations.outputLabel") || "")
+  const viewDetailLabel = String(t("automations.detail.viewDetail") || "Ver detalle")
 
   if (!isMounted) return null
+
+  const showcaseList: ShowcaseAutomation[] = automations.map((auto) => {
+    const translated = auto.translations?.[language.code as "en" | "fr" | "it"]
+    const isEs = language.code === "es"
+    const details = auto.automationDetails
+
+    return {
+      id: auto._id,
+      icon: details?.icon || "",
+      title: isEs ? auto.title : translated?.title || auto.title,
+      description: isEs ? auto.description : translated?.description || auto.description,
+      subtype: isEs ? auto.subtype : translated?.subtype || auto.subtype,
+      steps: (isEs ? details?.flow?.steps : translated?.steps) || details?.flow?.steps || [],
+      demoPlaceholder: (isEs ? details?.flow?.demoPlaceholder : translated?.demoPlaceholder) || details?.flow?.demoPlaceholder || "",
+      demoOutputTemplate:
+        (isEs ? details?.flow?.demoOutputTemplate : translated?.demoOutputTemplate) || details?.flow?.demoOutputTemplate || "{input}",
+    }
+  })
+
+  const goPrev = () => {
+    setDirection(-1)
+    setActiveIndex((i) => (i - 1 + showcaseList.length) % showcaseList.length)
+  }
+  const goNext = () => {
+    setDirection(1)
+    setActiveIndex((i) => (i + 1) % showcaseList.length)
+  }
+  const goTo = (i: number) => {
+    setDirection(i > activeIndex ? 1 : -1)
+    setActiveIndex(i)
+  }
+  const active = showcaseList[activeIndex]
 
   return (
     <section id="automations" className="py-24 bg-black relative overflow-hidden">
@@ -42,34 +105,78 @@ export default function Automations() {
       <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-cyan-600/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto mb-8">{subtitle}</p>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-8" />
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {flows.map((flow, index) => (
-            <FlowCard
-              key={flow.icon}
-              icon={flow.icon}
-              title={flow.title}
-              description={flow.description}
-              stepsCount={flow.steps.length}
-              stepsWord={stepsWord}
-              subtype={flow.subtype}
-              index={index}
-            />
-          ))}
+        <div className="mb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-3 mb-3"
+          >
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-blue-500 shrink-0">02</span>
+            <div className="h-px flex-1 bg-gradient-to-r from-blue-600/50 to-transparent" />
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 shrink-0">
+              {title} · {showcaseList.length}
+            </span>
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-slate-500 text-sm max-w-xl"
+          >
+            {subtitle}
+          </motion.p>
         </div>
 
-        {flows.length > 0 && (
+        {active && (
+          <div className="max-w-6xl mx-auto">
+            <AutomationShowcaseCard
+              automation={active}
+              direction={direction}
+              tryPrompt={tryPrompt}
+              sendLabel={sendLabel}
+              outputLabel={outputLabel}
+              viewDetailLabel={viewDetailLabel}
+            />
+
+            {showcaseList.length > 1 && (
+              <div className="flex items-center justify-center gap-6 mt-8">
+                <button
+                  onClick={goPrev}
+                  aria-label="Anterior"
+                  className="p-2 rounded-full border border-white/10 text-slate-400 hover:text-blue-500 hover:border-blue-500/50 transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {showcaseList.map((item, i) => (
+                    <button
+                      key={item.id}
+                      onClick={() => goTo(i)}
+                      aria-label={item.title}
+                      className={`h-2 rounded-full transition-all ${
+                        i === activeIndex ? "w-6 bg-blue-500" : "w-2 bg-white/20 hover:bg-white/40"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={goNext}
+                  aria-label="Siguiente"
+                  className="p-2 rounded-full border border-white/10 text-slate-400 hover:text-blue-500 hover:border-blue-500/50 transition-colors"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {showcaseList.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

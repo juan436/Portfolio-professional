@@ -4,11 +4,10 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
-import { ProjectsTabs } from "./projects-tabs"
+import { ProjectsGrid } from "./projects-grid"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
 
 export default function Projects() {
-  const [activeTab, setActiveTab] = useState("systems")
   const { t, language } = useLanguage()
   const { content, isLoading } = useContent()
   const { translatedContent } = useTranslatedContent()
@@ -60,11 +59,13 @@ export default function Projects() {
   };
 
   const [translatedTexts, setTranslatedTexts] = useState({
-    title: "",
     subtitle: "",
+    navLabel: "",
     systems: "",
     mobile: "",
     backend: "",
+    all: "",
+    noProjects: "",
     code: "",
     demo: "",
     repo: "",
@@ -75,11 +76,13 @@ export default function Projects() {
   // Cargar traducciones después de la hidratación
   useEffect(() => {
     setTranslatedTexts({
-      title: String(t("projects.title")),
       subtitle: String(t("projects.subtitle")),
+      navLabel: String(t("nav.projects")),
       systems: String(t("projects.systems")),
       mobile: String(t("projects.mobile")),
       backend: String(t("projects.backend")),
+      all: String(t("projects.all")),
+      noProjects: String(t("projects.noProjects")),
       code: String(t("projects.code")),
       demo: String(t("projects.demo")),
       repo: String(t("projects.repo")),
@@ -88,7 +91,8 @@ export default function Projects() {
     })
   }, [t, language])
 
-  console.log("combinedProjects", combinedProjects)
+  const totalCount = combinedProjects.systems.length + combinedProjects.mobile.length + combinedProjects.backend.length
+
   return (
     <section id="projects" className="py-20 relative">
       <div className="absolute inset-0 z-0">
@@ -97,21 +101,32 @@ export default function Projects() {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{translatedTexts.title}</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto mb-8">{translatedTexts.subtitle}</p>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
-        </motion.div>
+        <div className="mb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-3 mb-3"
+          >
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-blue-500 shrink-0">01</span>
+            <div className="h-px flex-1 bg-gradient-to-r from-blue-600/50 to-transparent" />
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 shrink-0">
+              {translatedTexts.navLabel} · {totalCount}
+            </span>
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-slate-500 text-sm max-w-xl"
+          >
+            {translatedTexts.subtitle}
+          </motion.p>
+        </div>
 
-        <ProjectsTabs
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
+        <ProjectsGrid
           localProjects={combinedProjects}
           isLoading={isLoading}
           translatedTexts={translatedTexts}

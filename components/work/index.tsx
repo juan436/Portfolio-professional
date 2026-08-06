@@ -1,0 +1,86 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Code2, Workflow } from "lucide-react"
+import { useLanguage } from "@/hooks/use-language"
+
+export default function WorkIntro() {
+  const { t, language } = useLanguage()
+  const [isMounted, setIsMounted] = useState(false)
+  const [texts, setTexts] = useState({
+    title: "",
+    subtitle: "",
+    ctaProjects: "",
+    ctaAutomations: "",
+  })
+
+  useEffect(() => {
+    setIsMounted(true)
+    setTexts({
+      title: String(t("work.title")),
+      subtitle: String(t("work.subtitle")),
+      ctaProjects: String(t("work.ctaProjects")),
+      ctaAutomations: String(t("work.ctaAutomations")),
+    })
+  }, [t, language])
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  return (
+    <section className="pt-8 pb-8 md:pt-12 md:pb-10 relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/90 to-black" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10 text-center max-w-3xl">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight text-blue-500"
+        >
+          {isMounted ? texts.title : ""}
+        </motion.h1>
+
+        <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-slate-400 text-lg leading-relaxed mb-6"
+        >
+          {isMounted ? texts.subtitle : ""}
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex flex-wrap items-center justify-center gap-4"
+        >
+          <button
+            onClick={() => scrollToSection("projects")}
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)]"
+          >
+            <Code2 className="h-4 w-4" />
+            {isMounted ? texts.ctaProjects : ""}
+          </button>
+          <button
+            onClick={() => scrollToSection("automations")}
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 border border-blue-600/50 text-blue-400 hover:bg-blue-600/10 font-bold transition-all duration-300"
+          >
+            <Workflow className="h-4 w-4" />
+            {isMounted ? texts.ctaAutomations : ""}
+          </button>
+        </motion.div>
+      </div>
+    </section>
+  )
+}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
@@ -9,6 +10,20 @@ import {
   Code2, Database, Server, Cpu, Globe, Smartphone, Monitor, Cloud, Shield,
   LineChart, Settings, Layers, Briefcase, PenTool, FileCode, Zap, Check, ArrowRight
 } from "lucide-react"
+
+function getServiceKey(title: string): "automation" | "mobile" | "infra" | "web" {
+  const lower = title.toLowerCase()
+  if (lower.includes('ia') || lower.includes('inteligencia') || lower.includes('ai') || lower.includes('automatización') || lower.includes('automation')) {
+    return 'automation'
+  }
+  if (lower.includes('móvil') || lower.includes('mobile') || lower.includes('app')) {
+    return 'mobile'
+  }
+  if (lower.includes('infraestructura') || lower.includes('infrastructure') || lower.includes('cloud') || lower.includes('ops') || lower.includes('backend')) {
+    return 'infra'
+  }
+  return 'web'
+}
 
 export default function Services() {
   const { t } = useLanguage()
@@ -37,13 +52,6 @@ export default function Services() {
       cloudCTA: String(t("ctas.services.cloud"))
     })
   }, [t])
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -203,24 +211,24 @@ export default function Services() {
                           ))}
                         </ul>
                         
-                        <button 
-                          onClick={() => scrollToSection('contact')}
+                        <Link
+                          href={`/contact?servicio=${getServiceKey(service.title)}`}
                           className="mt-auto w-full py-3 px-2 bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-400 text-blue-400 hover:text-white text-[11px] font-black uppercase tracking-wider transition-all duration-300 rounded flex items-center justify-center group/btn"
                         >
                           {(() => {
-                            const title = service.title.toLowerCase();
-                            if (title.includes('ia') || title.includes('inteligencia') || title.includes('ai') || title.includes('automatización') || title.includes('automation')) {
-                              return translatedTexts.aiCTA;
-                            } else if (title.includes('móvil') || title.includes('mobile') || title.includes('app')) {
-                              return translatedTexts.mobileCTA;
-                            } else if (title.includes('infraestructura') || title.includes('infrastructure') || title.includes('cloud') || title.includes('ops') || title.includes('backend')) {
-                              return translatedTexts.cloudCTA;
-                            } else {
-                              return translatedTexts.webCTA;
+                            switch (getServiceKey(service.title)) {
+                              case 'automation':
+                                return translatedTexts.aiCTA;
+                              case 'mobile':
+                                return translatedTexts.mobileCTA;
+                              case 'infra':
+                                return translatedTexts.cloudCTA;
+                              default:
+                                return translatedTexts.webCTA;
                             }
                           })()}
                           <ArrowRight className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
-                        </button>
+                        </Link>
                       </div>
                     </CardContent>
                   </Card>

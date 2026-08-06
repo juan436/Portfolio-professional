@@ -1,123 +1,40 @@
 "use client"
 
-import type React from "react"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { Logo } from "./logo"
 import { DesktopNav } from "./desktop-nav"
 import { MobileNav } from "./mobile-nav"
+import type { NavEntry } from "./types"
 
 export default function Navbar() {
   const { t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState("home")
-  const [translatedTexts, setTranslatedTexts] = useState({
-    home: "",
-    services: "",
-    projects: "",
-    laboratory: "",
-    automations: "",
-    about: "",
-    experience: "",
-    skills: "",
-    certificates: "",
-    contact: ""
-  })
-  const [navItems, setNavItems] = useState<Array<{ name: string, href: string }>>([])
+  const [navItems, setNavItems] = useState<NavEntry[]>([])
 
   // Cargar traducciones después de la hidratación
   useEffect(() => {
-    setTranslatedTexts({
-      home: String(t("nav.home")),
-      services: String(t("nav.services")),
-      projects: String(t("nav.projects")),
-      laboratory: String(t("nav.laboratory") || "Lab"),
-      automations: String(t("nav.automations") || "Automatizaciones"),
-      about: String(t("nav.about")),
-      experience: String(t("nav.experience")),
-      skills: String(t("nav.skills")),
-      certificates: String(t("nav.certificates") || "Certificaciones"),
-      contact: String(t("nav.contact"))
-    })
-  }, [t])
-
-  // Inicializar los elementos de navegación después de la hidratación
-  useEffect(() => {
     setNavItems([
-      { name: translatedTexts.home, href: "#home" },
-      { name: translatedTexts.services, href: "#services" },
-      { name: translatedTexts.projects, href: "#projects" },
-      { name: translatedTexts.laboratory, href: "#laboratory" },
-      { name: translatedTexts.automations, href: "#automations" },
-      { name: translatedTexts.about, href: "#about" },
-      { name: translatedTexts.experience, href: "#experience" },
-      { name: translatedTexts.skills, href: "#skills" },
-      { name: translatedTexts.certificates, href: "#certificates" },
-      { name: translatedTexts.contact, href: "#contact" },
+      { name: String(t("nav.home") || "Inicio"), href: "/" },
+      { name: String(t("nav.work") || "Trabajo"), href: "/work" },
+      { name: String(t("nav.laboratory") || "Laboratorio"), href: "/laboratory" },
+      { name: String(t("nav.certificates") || "Certificaciones"), href: "/certificates" },
+      { name: String(t("nav.blog") || "Blog"), href: "/blog" },
+      { name: String(t("nav.contact") || "Contacto"), href: "/contact" },
     ])
-  }, [translatedTexts])
+  }, [t])
 
   // Detectar scroll para cambiar el estilo de la barra de navegación
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true)
-      } else {
-        setScrolled(false)
-      }
-
-      // También detectar qué sección está activa
-      const sections = ["home", "services", "projects", "laboratory", "automations", "about", "experience", "skills", "certificates", "contact"]
-      const scrollPosition = window.scrollY + window.innerHeight / 3
-
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const { top, bottom } = element.getBoundingClientRect()
-          const elementTop = top + window.scrollY
-          const elementBottom = bottom + window.scrollY
-
-          if (scrollPosition >= elementTop && scrollPosition <= elementBottom) {
-            setActiveSection(section)
-            break
-          }
-        }
-      }
+      setScrolled(window.scrollY > 50)
     }
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault() // Prevenir el comportamiento predeterminado del enlace
-
-    // Cerrar el menú móvil si está abierto
-    if (isOpen) {
-      setIsOpen(false)
-    }
-
-    // Obtener el ID de la sección (eliminar el #)
-    const targetId = href.substring(1)
-    const targetElement = document.getElementById(targetId)
-
-    if (targetElement) {
-      // Calcular la posición de desplazamiento (considerando la altura de la barra de navegación)
-      const navbarHeight = 80 // Altura aproximada de la barra de navegación
-      const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight
-
-      // Desplazarse suavemente a la posición
-      window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth",
-      })
-
-      // Actualizar la sección activa
-      setActiveSection(targetId)
-    }
-  }
 
   return (
     <motion.header
@@ -131,24 +48,16 @@ export default function Navbar() {
       <nav className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
           <Logo />
-          
+
           {/* Desktop Navigation */}
-          <DesktopNav 
-            navItems={navItems} 
-            activeSection={activeSection} 
-            handleNavClick={handleNavClick} 
-          />
+          <DesktopNav navItems={navItems} />
 
           {/* Mobile Navigation Toggle and Menu */}
-          <MobileNav 
-            isOpen={isOpen} 
-            setIsOpen={setIsOpen} 
-            navItems={navItems} 
-            activeSection={activeSection} 
-            handleNavClick={handleNavClick} 
-          />
+          <MobileNav isOpen={isOpen} setIsOpen={setIsOpen} navItems={navItems} />
         </div>
       </nav>
+
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
     </motion.header>
   )
 }

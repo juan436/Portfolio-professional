@@ -169,11 +169,13 @@ export function FlowDiagram({
   tryPrompt,
   sendLabel,
   outputLabel,
+  heightClassName = "h-[560px] sm:h-[680px]",
 }: {
   flow: AutomationFlow
   tryPrompt: string
   sendLabel: string
   outputLabel: string
+  heightClassName?: string
 }) {
   const [input, setInput] = useState("")
   const [activeStep, setActiveStep] = useState(-1)
@@ -284,7 +286,7 @@ export function FlowDiagram({
   }, [flow, activeStep, isRunning, output])
 
   return (
-    <div className="relative h-[560px] sm:h-[680px] w-full rounded-2xl overflow-hidden border border-white/10 bg-black">
+    <div className={`relative ${heightClassName} w-full rounded-2xl overflow-hidden border border-white/10 bg-black`}>
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-600/10 blur-[100px] rounded-full pointer-events-none z-0" />
       <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-cyan-600/10 blur-[100px] rounded-full pointer-events-none z-0" />
       <style>{`

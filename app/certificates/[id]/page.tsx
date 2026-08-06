@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowLeft, Award, Briefcase, Calendar, Clock, ExternalLink, Layers, Lightbulb } from "lucide-react"
+import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
 import { fetchCertificateById } from "@/services/api/certificates"
@@ -64,7 +65,7 @@ export default function CertificateDetailPage() {
     return (
       <main className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
         <p className="text-slate-400 mb-6">{notFoundLabel}</p>
-        <Link href="/#certificates" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
+        <Link href="/certificates" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {backLabel}
         </Link>
@@ -79,6 +80,7 @@ export default function CertificateDetailPage() {
 
   return (
     <main className="min-h-screen bg-black">
+      <Navbar />
       <section className="pt-32 pb-20 relative">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
@@ -86,7 +88,7 @@ export default function CertificateDetailPage() {
         </div>
 
         <div className="container mx-auto px-6 relative z-10 max-w-6xl">
-          <ProjectHeader title={certificate.title} description={certificate.issuer} />
+          <ProjectHeader title={certificate.title} description={certificate.issuer} hideHeader backHref="/certificates" />
 
           <div className="grid grid-cols-1 lg:grid-cols-9 gap-8 mb-12 items-start">
             {certificate.image && (

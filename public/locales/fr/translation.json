@@ -5,10 +5,13 @@
     "services": "Services",
     "projects": "Projets",
     "skills": "Compétences",
-    "contact": "Contact",
+    "contact": "Discutons",
     "experience": "Expérience",
     "automations": "Automatisations",
-    "certificates": "Certifications"
+    "certificates": "Certifications",
+    "laboratory": "Laboratoire",
+    "work": "Travail",
+    "blog": "Blog"
   },
   "services": {
     "title": "Services",
@@ -50,9 +53,16 @@
     "university": "Université Centroccidental \"Lisandro Alvarado\"",
     "downloadCV": "Télécharger CV"
   },
+  "work": {
+    "title": "Je détecte, j'architecture, j'automatise",
+    "subtitle": "Voici les systèmes que j'ai construits de bout en bout —front, back et infrastructure— ainsi que les automatisations IA déjà en production qui éliminent le travail manuel.",
+    "ctaProjects": "Voir les Projets",
+    "ctaAutomations": "Voir les Automatisations"
+  },
   "projects": {
     "title": "Mes Projets",
     "subtitle": "Une sélection de mes proyectos les plus récents et remarquables. Chaque projet reflète mon attention à la qualité, à l'expérience utilisateur et au code propre.",
+    "all": "Tous",
     "fullstack": "Full Stack",
     "backend": "Backend",
     "code": "Code",
@@ -88,7 +98,20 @@
     "workProcessHeading": "Comment j'ai travaillé"
   },
   "laboratory": {
+    "title": "Laboratoire R&D",
+    "subtitle": "Avant qu'une idée n'arrive en production, elle passe par ici. Chaque dossier documente l'hypothèse, la méthode testée et ce que j'ai appris — y compris ce qui n'a pas fonctionné. Ce n'est pas une vitrine de produits finis, c'est de la curiosité réelle consignée telle quelle.",
+    "legendHeading": "Comment lire les statuts",
     "viewMore": "Voir toutes les expériences",
+    "card": {
+      "fileLabel": "Dossier Nº",
+      "stampRing": "EXPÉRIENCE · EN COURS ·",
+      "hipotesis": "Hypothèse",
+      "metodo": "Méthode",
+      "hallazgo": "Constat",
+      "siguiente": "Prochaine étape",
+      "viewFull": "Voir le dossier complet",
+      "notAvailable": "N/D"
+    },
     "detail": {
       "statusHeading": "Statut",
       "statusTesting": "En test",
@@ -114,9 +137,13 @@
     "other": "Autres Compétences",
     "experience": "Les compétences présentées sont soutenues par des proyectos réels et une expérience pratique. Vous pouvez voir des exemples de mon travail dans la section proyectos."
   },
+  "blog": {
+    "title": "Blog",
+    "comingSoon": "Bientôt disponible — je prépare des articles techniques et des leçons réelles tirées de mes projets."
+  },
   "certificates": {
-    "title": "Certifications",
-    "subtitle": "Formation continue soutenue par des identifiants vérifiables.",
+    "title": "Formation Certifiée",
+    "subtitle": "Des certifications réelles et vérifiables — la base technique derrière chaque projet et automatisation de ce portfolio, pas une simple liste de cours.",
     "verify": "Voir le certificat",
     "viewMore": "Voir toutes les certifications",
     "empty": "Aucune certification publiée pour le moment.",
@@ -129,18 +156,94 @@
     "durationLabel": "Durée"
   },
   "contact": {
-    "title": "Contact",
-    "subtitle": "Vous avez un proyecto en tête ? Parlons-en ! Je suis disponible pour des proyectos freelance ou des postes à temps plein.",
+    "title": "Discutons",
+    "subtitle": "Vous avez un projet en tête ? Parlons-en ! Je suis disponible pour des projets freelance ou des postes à temps plein.",
     "info": "Informations de Contact",
     "email": "Email",
     "phone": "Téléphone",
     "location": "Emplacement",
+    "javy": {
+      "windowTitle": "javy@javydev — discutons",
+      "greeting": "Parle-moi de ton projet. Qu'est-ce que tu veux construire ?",
+      "greetingByService": {
+        "web": "J'ai vu que tu veux ta propre plateforme web. Dis-moi comment tu l'imagines.",
+        "mobile": "J'ai vu que tu cherches une application mobile. Dis-moi ce qu'elle doit faire.",
+        "automation": "J'ai vu que tu as besoin d'automatiser quelque chose. Dis-moi quel processus tu veux optimiser.",
+        "infra": "J'ai vu que tu as besoin d'aide pour l'infrastructure. Dis-moi ce que tu as aujourd'hui."
+      },
+      "chips": {
+        "app": "Je veux ma propre application",
+        "automation": "J'ai besoin d'une automatisation",
+        "recruiter": "Je viens te proposer un poste"
+      },
+      "inputPlaceholder": "écris ta réponse",
+      "typing": "en train d'écrire...",
+      "errorFallback": "J'ai eu un problème pour répondre. Réessaie dans un instant.",
+      "about": {
+        "badge": "Assistant IA",
+        "text": "Javy est un agent conversationnel, pas une personne en direct. La conversation dure quelques minutes — à la fin, je te contacte directement par le canal que tu préfères."
+      },
+      "stats": {
+        "heading": "En chiffres",
+        "projectsSuffix": "projets livrés",
+        "ratingSuffix": "témoignages"
+      },
+      "steps": {
+        "heading": "Comment ça marche",
+        "step1": "Tu racontes ton projet à Javy et tu réponds à ce qu'il faut pour le comprendre",
+        "step2": "Il te montre un projet similaire que j'ai déjà réalisé",
+        "step3": "Vous définissez ensemble la portée réelle",
+        "step4": "Je te contacte par le canal que tu préfères, avec un rendez-vous déjà planifié"
+      },
+      "fallback": {
+        "heading": "Tu préfères écrire directement",
+        "text": "Sans chat, sans détour :"
+      }
+    },
     "form": {
       "name": "Nom",
       "email": "Email",
       "subject": "Sujet",
       "message": "Message",
-      "send": "Envoyer le Message"
+      "send": "Envoyer le Message",
+      "sending": "Envoi...",
+      "service": {
+        "label": "Type de service",
+        "web": "Plateforme Web",
+        "mobile": "Application Mobile",
+        "automation": "Automatisation & IA",
+        "infra": "Infrastructure",
+        "other": "Autre"
+      },
+      "idea": {
+        "label": "Parlez-moi de votre idée",
+        "placeholderWeb": "Ex : je veux une plateforme pour vendre mes produits en ligne avec paiements intégrés.",
+        "placeholderMobile": "Ex : je veux une application pour que mes clients réservent depuis leur téléphone.",
+        "placeholderAutomation": "Ex : je veux automatiser l'envoi de rapports hebdomadaires à mes clients.",
+        "placeholderInfra": "Ex : je veux migrer mon système vers un serveur plus sécurisé avec surveillance.",
+        "placeholderOther": "Dites-moi ce dont vous avez besoin, avec le plus de détails possible."
+      },
+      "budget": {
+        "label": "Budget estimé",
+        "under1k": "Moins de 1 000 $",
+        "1kTo3k": "1 000 $ - 3 000 $",
+        "3kTo7k": "3 000 $ - 7 000 $",
+        "over7k": "Plus de 7 000 $",
+        "unsure": "Je ne sais pas encore"
+      },
+      "timeline": {
+        "label": "Délai souhaité",
+        "asap": "Dès que possible",
+        "months": "Dans 1 à 3 mois",
+        "noRush": "Pas de rush, j'explore mes options"
+      },
+      "subjectTemplate": {
+        "web": "Nouvelle demande : Plateforme Web",
+        "mobile": "Nouvelle demande : Application Mobile",
+        "automation": "Nouvelle demande : Automatisation & IA",
+        "infra": "Nouvelle demande : Infrastructure",
+        "other": "Nouvelle demande"
+      }
     }
   },
   "footer": {
@@ -157,6 +260,8 @@
   },
   "common": {
     "back": "Retour",
+    "previous": "Précédent",
+    "next": "Suivant",
     "seeMore": "Voir plus",
     "seeLess": "Voir moins"
   },
@@ -196,7 +301,7 @@
     },
     "contact": {
       "submit": "Envoyer ma proposition",
-      "hook": "Prêt à construire quelque chose d'évolutif? Je réponds en moins de 24 heures."
+      "hook": "Explique ton projet à Javy en détail. Il te guide, te montre quelque chose de similaire si on l'a, et planifie un rendez-vous avec moi avec une proposition claire."
     }
   },
   "automations": {
@@ -214,62 +319,10 @@
       "stepsHeading": "Comment ça marche, étape par étape",
       "notFound": "Nous n'avons pas trouvé cette automatisation.",
       "backToList": "Retour aux Automatisations",
-      "toolsHeading": "Construit avec",
+      "viewDetail": "Voir le détail",
+    "toolsHeading": "Construit avec",
       "channelsHeading": "Canaux pris en charge",
       "setupTimeHeading": "Délai de mise en place"
-    },
-    "items": [
-      {
-        "icon": "customer-service",
-        "title": "Bot de Service Client",
-        "description": "Réponses et support automatisés, disponibles à toute heure.",
-        "useCase": "Conçu pour les entreprises qui reçoivent beaucoup de questions répétitives (horaires, prix, disponibilité) et ne peuvent pas répondre à chacune manuellement. Il se connecte à WhatsApp ou au chat du site et répond instantanément, en escaladant vers un humain seulement quand un jugement est nécessaire.",
-        "steps": [
-          "Le client écrit (WhatsApp/Web)",
-          "L'IA interprète et répond",
-          "Escalade vers un humain si nécessaire"
-        ],
-        "demoPlaceholder": "Ex : Livrez-vous à domicile ?",
-        "demoOutputTemplate": "🤖 L'IA répond : message reçu \"{input}\" — je confirme l'info ou vous mets en relation avec un agent.",
-        "tools": ["n8n", "WhatsApp Business API", "LLM (GPT/Claude)"],
-        "channels": ["WhatsApp", "Web"],
-        "setupTime": "3-5 jours ouvrés",
-        "subtype": "Bot conversationnel"
-      },
-      {
-        "icon": "sales",
-        "title": "Processeur de Ventes",
-        "description": "De la commande à la vente confirmée, sans intervention manuelle.",
-        "useCase": "Pour ceux qui vendent via un catalogue ou les réseaux sociaux et traitent les commandes à la main (les noter, vérifier le stock, préparer la commande). Le bot prend la commande, la valide par rapport au stock et la laisse prête à facturer — sans tableurs ni copier-coller.",
-        "steps": [
-          "Commande reçue",
-          "Valide le stock et les données",
-          "Génère la commande et notifie"
-        ],
-        "demoPlaceholder": "Ex : Je veux 2 unités du produit X",
-        "demoOutputTemplate": "✅ Commande enregistrée : \"{input}\" — commande générée et notification envoyée.",
-        "tools": ["n8n", "API d'inventaire", "WhatsApp/Web"],
-        "channels": ["WhatsApp", "Web"],
-        "setupTime": "1 semaine",
-        "subtype": "Flux automatisé"
-      },
-      {
-        "icon": "social",
-        "title": "Publication sur les Réseaux Sociaux",
-        "description": "Contenu préparé et publié sans friction.",
-        "useCase": "Pour les marques qui publient souvent mais perdent du temps à préparer et publier chaque post à la main. Le contenu est préparé, l'IA ajuste le format par réseau, et la publication se fait seule selon le calendrier défini.",
-        "steps": [
-          "Contenu préparé",
-          "L'IA ajuste le texte et le format",
-          "Publie selon le calendrier défini"
-        ],
-        "demoPlaceholder": "Ex : Photo nouvelle collection été",
-        "demoOutputTemplate": "📅 Publication programmée : \"{input}\" — prête à sortir selon le calendrier.",
-        "tools": ["n8n", "Meta Graph API", "IA générative (copy)"],
-        "channels": ["Instagram", "Facebook"],
-        "setupTime": "3-5 jours ouvrés",
-        "subtype": "Flux automatisé"
-      }
-    ]
+    }
   }
 }

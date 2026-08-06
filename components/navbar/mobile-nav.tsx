@@ -1,26 +1,22 @@
 "use client"
 
-import React from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import LanguageSwitcher from "@/components/language-switcher"
+import type { NavEntry } from "./types"
 
 interface MobileNavProps {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
-  navItems: Array<{ name: string; href: string }>
-  activeSection: string
-  handleNavClick: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void
+  navItems: NavEntry[]
 }
 
-export function MobileNav({ 
-  isOpen, 
-  setIsOpen, 
-  navItems, 
-  activeSection, 
-  handleNavClick 
-}: MobileNavProps) {
+export function MobileNav({ isOpen, setIsOpen, navItems }: MobileNavProps) {
+  const pathname = usePathname()
+
   return (
     <div className="md:hidden flex items-center gap-2">
       <LanguageSwitcher />
@@ -44,17 +40,16 @@ export function MobileNav({
         >
           <div className="flex flex-col space-y-4">
             {navItems.map((item) => (
-              <button
+              <Link
                 key={item.href}
-                onClick={(e) => handleNavClick(e as any, item.href)}
-                className={`py-2 transition-colors duration-300 text-left bg-transparent border-0 cursor-pointer ${
-                  activeSection === item.href.substring(1)
-                    ? "text-blue-500 font-medium"
-                    : "text-slate-300 hover:text-blue-500"
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className={`py-2 transition-colors duration-300 text-left ${
+                  pathname === item.href ? "text-blue-500 font-medium" : "text-slate-300 hover:text-blue-500"
                 }`}
               >
                 {item.name}
-              </button>
+              </Link>
             ))}
           </div>
         </motion.div>

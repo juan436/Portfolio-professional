@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
-import { motion } from "framer-motion"
+import { useState, useMemo, useEffect, useRef } from "react"
+import { motion, useMotionValue, useAnimationFrame } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { Star, Quote } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -17,11 +17,15 @@ export default function Testimonials() {
   const { t } = useLanguage()
   const [isPaused, setIsPaused] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const constraintsRef = useRef(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const halfWidthRef = useRef(0)
+  const x = useMotionValue(0)
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
-  
+
   // Usamos returnObjects: true para obtener el array de testimonios desde i18n
   const testimonials = useMemo(() => {
     if (!isMounted) return [];
@@ -34,6 +38,22 @@ export default function Testimonials() {
 
   // Duplicamos los testimonios para lograr el efecto de carrusel infinito (seamless loop)
   const duplicatedTestimonials = useMemo(() => [...testimonials, ...testimonials], [testimonials])
+
+  useEffect(() => {
+    if (trackRef.current) {
+      halfWidthRef.current = trackRef.current.scrollWidth / 2
+    }
+  }, [duplicatedTestimonials])
+
+  // Auto-scroll continuo sobre el mismo motion value que usa el drag — al soltar
+  // un arrastre, sigue desde ahí en vez de saltar de vuelta al inicio del keyframe.
+  useAnimationFrame((_, delta) => {
+    if (isPaused || halfWidthRef.current === 0) return
+    let next = x.get() - (delta / 1000) * 40
+    if (next <= -halfWidthRef.current) next += halfWidthRef.current
+    if (next > 0) next -= halfWidthRef.current
+    x.set(next)
+  })
 
   const getInitials = (name: string) => {
     return name
@@ -72,23 +92,20 @@ export default function Testimonials() {
       {/* Infinite Marquee Carousel - Solo renderiza si hay testimonios y está montado */}
       {isMounted && testimonials.length > 0 && (
         <div
-          className="container mx-auto px-6 relative flex overflow-hidden py-10 select-none"
+          ref={constraintsRef}
+          className="container mx-auto px-6 relative flex overflow-hidden py-10 select-none cursor-grab active:cursor-grabbing"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <motion.div 
+          <motion.div
+            ref={trackRef}
             className="flex flex-nowrap gap-8 pr-8"
-            animate={{
-              x: isPaused ? undefined : ["0%", "-50%"],
-            }}
-            transition={{
-              x: {
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 40,
-                ease: "linear",
-              },
-            }}
+            style={{ x }}
+            drag="x"
+            dragConstraints={constraintsRef}
+            dragElastic={0.05}
+            onDragStart={() => setIsPaused(true)}
+            onDragEnd={() => setIsPaused(false)}
           >
             {duplicatedTestimonials.map((testimonial, idx) => (
               <div 

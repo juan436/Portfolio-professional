@@ -93,7 +93,7 @@ export default function Hero() {
 
               <Button 
                 variant="outline" 
-                onClick={() => scrollToSection('projects')}
+                onClick={() => scrollToSection('testimonials')}
                 className="border-blue-600/50 text-blue-400 hover:bg-blue-600/10 font-bold px-8 py-6"
               >
                 {translatedTexts.secondary}

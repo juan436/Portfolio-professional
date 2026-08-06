@@ -6,10 +6,12 @@
     "projects": "Projects",
     "laboratory": "Laboratory",
     "skills": "Skills",
-    "contact": "Contact",
+    "contact": "Let's Talk",
     "experience": "Experience",
     "automations": "Automations",
-    "certificates": "Certifications"
+    "certificates": "Certifications",
+    "work": "Work",
+    "blog": "Blog"
   },
   "services": {
     "title": "Services",
@@ -52,9 +54,16 @@
     "university": "Universidad Centroccidental \"Lisandro Alvarado\"",
     "downloadCV": "Download CV"
   },
+  "work": {
+    "title": "I detect, architect, and automate",
+    "subtitle": "Here you'll find the systems I built end-to-end —front, back, and infrastructure— plus the AI automations already eliminating manual work in production.",
+    "ctaProjects": "View Projects",
+    "ctaAutomations": "View Automations"
+  },
   "projects": {
     "title": "Success Stories & High-Level Software",
     "subtitle": "Strategic solutions designed to scale businesses and automate processes.",
+    "all": "All",
     "systems": "Web Solutions",
     "mobile": "Mobile Apps",
     "automation": "Automation & AI",
@@ -92,7 +101,20 @@
     "workProcessHeading": "How I worked"
   },
   "laboratory": {
+    "title": "R&D Laboratory",
+    "subtitle": "Before an idea reaches production, it passes through here. Every file documents the hypothesis, the method I tried, and what I learned — including what didn't work. This isn't a showcase of finished products, it's real curiosity logged as it happened.",
+    "legendHeading": "How to read the statuses",
     "viewMore": "View all experiments",
+    "card": {
+      "fileLabel": "File No.",
+      "stampRing": "EXPERIMENT · IN PROGRESS ·",
+      "hipotesis": "Hypothesis",
+      "metodo": "Method",
+      "hallazgo": "Finding",
+      "siguiente": "Next step",
+      "viewFull": "View full file",
+      "notAvailable": "N/A"
+    },
     "detail": {
       "statusHeading": "Status",
       "statusTesting": "Testing",
@@ -118,9 +140,13 @@
     "other": "Other Skills",
     "experience": "The skills shown are backed by real projects and practical experience. You can see examples of my work in the projects section."
   },
+  "blog": {
+    "title": "Blog",
+    "comingSoon": "Coming soon — I'm preparing technical articles and real lessons from projects."
+  },
   "certificates": {
-    "title": "Certifications",
-    "subtitle": "Continuous learning backed by verifiable credentials.",
+    "title": "Certified Learning",
+    "subtitle": "Real, verifiable credentials — the technical foundation behind every project and automation in this portfolio, not just a list of courses.",
     "verify": "View credential",
     "viewMore": "View all certifications",
     "empty": "No certifications published at this time.",
@@ -133,18 +159,94 @@
     "durationLabel": "Duration"
   },
   "contact": {
-    "title": "Contact",
+    "title": "Let's Talk",
     "subtitle": "Do you have a project in mind? Let's talk! I'm available for freelance projects or full-time positions.",
     "info": "Contact Information",
     "email": "Email",
     "phone": "Phone",
     "location": "Location",
+    "javy": {
+      "windowTitle": "javy@javydev — let's talk",
+      "greeting": "Tell me about your project. What do you want to build?",
+      "greetingByService": {
+        "web": "I saw you want your own web platform. Tell me how you imagine it.",
+        "mobile": "I saw you're looking for a mobile app. Tell me what it should do.",
+        "automation": "I saw you need to automate something. Tell me which process you want to optimize.",
+        "infra": "I saw you need help with infrastructure. Tell me what you have today."
+      },
+      "chips": {
+        "app": "I want my own app",
+        "automation": "I need an automation",
+        "recruiter": "I'm here to offer you a job"
+      },
+      "inputPlaceholder": "type your answer",
+      "typing": "typing...",
+      "errorFallback": "I had trouble replying. Try again in a moment.",
+      "about": {
+        "badge": "AI Assistant",
+        "text": "Javy is a conversational agent, not a live person. The chat takes a few minutes — at the end, I'll reach out directly through the channel you prefer."
+      },
+      "stats": {
+        "heading": "By the numbers",
+        "projectsSuffix": "projects delivered",
+        "ratingSuffix": "testimonials"
+      },
+      "steps": {
+        "heading": "How it works",
+        "step1": "Tell Javy about your project and answer what it needs to understand it",
+        "step2": "It shows you a similar project I already built",
+        "step3": "You define the real scope together",
+        "step4": "I reach out through the channel you prefer, with a meeting already scheduled"
+      },
+      "fallback": {
+        "heading": "Prefer to write directly",
+        "text": "No chat, no detours:"
+      }
+    },
     "form": {
       "name": "Name",
       "email": "Email",
       "subject": "Subject",
       "message": "Message",
-      "send": "Send Message"
+      "send": "Send Message",
+      "sending": "Sending...",
+      "service": {
+        "label": "Type of service",
+        "web": "Web Platform",
+        "mobile": "Mobile App",
+        "automation": "Automation & AI",
+        "infra": "Infrastructure",
+        "other": "Other"
+      },
+      "idea": {
+        "label": "Tell me your idea",
+        "placeholderWeb": "E.g: I want a platform to sell my products online with integrated payments.",
+        "placeholderMobile": "E.g: I want an app so my clients can book appointments from their phone.",
+        "placeholderAutomation": "E.g: I want to automate sending weekly reports to my clients.",
+        "placeholderInfra": "E.g: I want to migrate my system to a more secure server with monitoring.",
+        "placeholderOther": "Tell me what you need, with as much detail as you have."
+      },
+      "budget": {
+        "label": "Estimated budget",
+        "under1k": "Less than $1,000",
+        "1kTo3k": "$1,000 - $3,000",
+        "3kTo7k": "$3,000 - $7,000",
+        "over7k": "More than $7,000",
+        "unsure": "Not sure yet"
+      },
+      "timeline": {
+        "label": "Expected timeline",
+        "asap": "As soon as possible",
+        "months": "In 1 to 3 months",
+        "noRush": "No rush, exploring options"
+      },
+      "subjectTemplate": {
+        "web": "New inquiry: Web Platform",
+        "mobile": "New inquiry: Mobile App",
+        "automation": "New inquiry: Automation & AI",
+        "infra": "New inquiry: Infrastructure",
+        "other": "New inquiry"
+      }
     }
   },
   "footer": {
@@ -161,6 +263,8 @@
   },
   "common": {
     "back": "Back",
+    "previous": "Previous",
+    "next": "Next",
     "seeMore": "See more",
     "seeLess": "See less"
   },
@@ -200,7 +304,7 @@
     },
     "contact": {
       "submit": "Submit my proposal",
-      "hook": "Ready to build something that scales? I reply in less than 24 hours."
+      "hook": "Explain your project to Javy in detail. It guides you, shows you something similar if we have it, and books a meeting with me with a clear proposal."
     }
   },
   "automations": {
@@ -218,63 +322,11 @@
       "stepsHeading": "How it works, step by step",
       "notFound": "We couldn't find this automation.",
       "backToList": "Back to Automations",
-      "toolsHeading": "Built with",
+      "viewDetail": "View detail",
+    "toolsHeading": "Built with",
       "channelsHeading": "Supported channels",
       "setupTimeHeading": "Setup time"
-    },
-    "items": [
-      {
-        "icon": "customer-service",
-        "title": "Customer Service Bot",
-        "description": "Automated replies and support, available around the clock.",
-        "useCase": "Built for businesses that get a lot of repeat questions (hours, prices, availability) and can't keep up answering each one by hand. It plugs into WhatsApp or the site chat and replies instantly, escalating to a human only when judgment is needed.",
-        "steps": [
-          "Customer writes (WhatsApp/Web)",
-          "AI interprets and replies",
-          "Escalates to a human when needed"
-        ],
-        "demoPlaceholder": "e.g. Do you offer home delivery?",
-        "demoOutputTemplate": "🤖 AI replies: got your message \"{input}\" — confirming the info or connecting you with an agent.",
-        "tools": ["n8n", "WhatsApp Business API", "LLM (GPT/Claude)"],
-        "channels": ["WhatsApp", "Web"],
-        "setupTime": "3-5 business days",
-        "subtype": "Conversational bot"
-      },
-      {
-        "icon": "sales",
-        "title": "Sales Processor",
-        "description": "From order to confirmed sale, no manual steps.",
-        "useCase": "For anyone selling through a catalog or social media who processes orders by hand (writing them down, checking stock, building the order). The bot takes the order, validates it against inventory, and leaves it ready to invoice — no spreadsheets, no copy-pasting.",
-        "steps": [
-          "Order received",
-          "Validates stock and data",
-          "Generates order and notifies"
-        ],
-        "demoPlaceholder": "e.g. I want 2 units of product X",
-        "demoOutputTemplate": "✅ Order registered: \"{input}\" — order generated and notification sent.",
-        "tools": ["n8n", "Inventory API", "WhatsApp/Web"],
-        "channels": ["WhatsApp", "Web"],
-        "setupTime": "1 week",
-        "subtype": "Automated flow"
-      },
-      {
-        "icon": "social",
-        "title": "Social Media Publisher",
-        "description": "Content prepared and published without friction.",
-        "useCase": "For brands that post often but lose time building and uploading every post by hand. Content gets prepared, AI adjusts the format per network, and it publishes itself according to the defined schedule.",
-        "steps": [
-          "Content prepared",
-          "AI adjusts copy and format",
-          "Publishes on the defined calendar"
-        ],
-        "demoPlaceholder": "e.g. New summer collection photo",
-        "demoOutputTemplate": "📅 Post scheduled: \"{input}\" — ready to go out per the calendar.",
-        "tools": ["n8n", "Meta Graph API", "Generative AI (copy)"],
-        "channels": ["Instagram", "Facebook"],
-        "setupTime": "3-5 business days",
-        "subtype": "Automated flow"
-      }
-    ]
+    }
   },
   "testimonials": {
     "title": "VERIFIED SUCCESS CASES",

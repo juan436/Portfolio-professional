@@ -9,8 +9,9 @@ export interface IProject extends Document {
   video?: string;
   github: string;
   demo: string;
-  category: 'systems' | 'mobile' | 'backend' | 'laboratory';
+  category: 'systems' | 'mobile' | 'backend' | 'laboratory' | 'automation';
   subtype?: string;
+  aiSummary?: string;
   tags: string[];
   duration?: string;
   sector?: string;
@@ -89,19 +90,52 @@ export interface IProject extends Document {
       demoOutputTemplate?: string;
     };
   };
+  automationDetails?: {
+    icon?: string;
+    useCase?: string;
+    tools?: string[];
+    channels?: string[];
+    setupTime?: string;
+    flow?: {
+      steps?: string[];
+      demoPlaceholder?: string;
+      demoOutputTemplate?: string;
+    };
+  };
   translations?: {
-    en?: {
-      title: string;
-      description: string;
-    };
-    fr?: {
-      title: string;
-      description: string;
-    };
-    it?: {
-      title: string;
-      description: string;
-    };
+    en?: LocaleContent;
+    fr?: LocaleContent;
+    it?: LocaleContent;
+  };
+}
+
+interface LocaleContent {
+  title?: string;
+  description?: string;
+  aiSummary?: string;
+  useCase?: string;
+  steps?: string[];
+  demoPlaceholder?: string;
+  demoOutputTemplate?: string;
+  tools?: string[];
+  channels?: string[];
+  setupTime?: string;
+  subtype?: string;
+}
+
+function localeContentFields() {
+  return {
+    title: String,
+    description: String,
+    aiSummary: String,
+    useCase: String,
+    steps: { type: [String], default: [] },
+    demoPlaceholder: String,
+    demoOutputTemplate: String,
+    tools: { type: [String], default: [] },
+    channels: { type: [String], default: [] },
+    setupTime: String,
+    subtype: String,
   };
 }
 
@@ -124,10 +158,11 @@ const ProjectSchema = new mongoose.Schema({
   demo: String,
   category: { 
     type: String, 
-    enum: ['systems', 'mobile', 'backend', 'laboratory'],
+    enum: ['systems', 'mobile', 'backend', 'laboratory', 'automation'],
     required: true 
   },
   subtype: String,
+  aiSummary: String,
   tags: {
     type: [String],
     default: []
@@ -248,22 +283,25 @@ const ProjectSchema = new mongoose.Schema({
       demoOutputTemplate: String,
     },
   },
+  automationDetails: {
+    icon: String,
+    useCase: String,
+    tools: { type: [String], default: [] },
+    channels: { type: [String], default: [] },
+    setupTime: String,
+    flow: {
+      steps: { type: [String], default: [] },
+      demoPlaceholder: String,
+      demoOutputTemplate: String,
+    },
+  },
   translations: {
-    en: {
-      title: String,
-      description: String,
-    },
-    fr: {
-      title: String,
-      description: String,
-    },
-    it: {
-      title: String,
-      description: String,
-    }
+    en: localeContentFields(),
+    fr: localeContentFields(),
+    it: localeContentFields(),
   }
-}, { 
-  timestamps: true 
+}, {
+  timestamps: true
 });
 
 export default mongoose.models.Project as mongoose.Model<IProject> || mongoose.model<IProject>('Project', ProjectSchema);

@@ -18,6 +18,7 @@ import {
   ShieldAlert,
   Target,
 } from "lucide-react"
+import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
 import { fetchProjectById } from "@/services/api/projects"
@@ -165,7 +166,7 @@ export default function LaboratoryDetailPage() {
     return (
       <main className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
         <p className="text-slate-400 mb-6">{noProjectsLabel}</p>
-        <Link href="/#laboratory" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
+        <Link href="/laboratory" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {backLabel}
         </Link>
@@ -186,6 +187,7 @@ export default function LaboratoryDetailPage() {
 
   return (
     <main className="min-h-screen bg-black">
+      <Navbar />
       <section className="pt-32 pb-20 relative">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
@@ -193,7 +195,7 @@ export default function LaboratoryDetailPage() {
         </div>
 
         <div className="container mx-auto px-6 relative z-10 max-w-6xl">
-          <ProjectHeader title={title} description={description} />
+          <ProjectHeader title={title} description={description} hideHeader backHref="/laboratory" />
 
           {labDetails?.status && (
             <div className="flex justify-center -mt-10 mb-10">
