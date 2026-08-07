@@ -40,18 +40,18 @@ function usePanelTexts(): PanelTexts {
 
   useEffect(() => {
     setTexts({
-      aboutBadge: String(t("contact.javy.about.badge")),
-      aboutText: String(t("contact.javy.about.text")),
-      statsHeading: String(t("contact.javy.stats.heading")),
-      projectsSuffix: String(t("contact.javy.stats.projectsSuffix")),
-      ratingSuffix: String(t("contact.javy.stats.ratingSuffix")),
-      stepsHeading: String(t("contact.javy.steps.heading")),
-      step1: String(t("contact.javy.steps.step1")),
-      step2: String(t("contact.javy.steps.step2")),
-      step3: String(t("contact.javy.steps.step3")),
-      step4: String(t("contact.javy.steps.step4")),
-      fallbackHeading: String(t("contact.javy.fallback.heading")),
-      fallbackText: String(t("contact.javy.fallback.text")),
+      aboutBadge: String(t("contact.jevy.about.badge")),
+      aboutText: String(t("contact.jevy.about.text")),
+      statsHeading: String(t("contact.jevy.stats.heading")),
+      projectsSuffix: String(t("contact.jevy.stats.projectsSuffix")),
+      ratingSuffix: String(t("contact.jevy.stats.ratingSuffix")),
+      stepsHeading: String(t("contact.jevy.steps.heading")),
+      step1: String(t("contact.jevy.steps.step1")),
+      step2: String(t("contact.jevy.steps.step2")),
+      step3: String(t("contact.jevy.steps.step3")),
+      step4: String(t("contact.jevy.steps.step4")),
+      fallbackHeading: String(t("contact.jevy.fallback.heading")),
+      fallbackText: String(t("contact.jevy.fallback.text")),
     })
   }, [t])
 
@@ -80,7 +80,7 @@ function useRealStats() {
   return { projectCount, avgRating, testimonialCount }
 }
 
-export function JavyAboutPanel() {
+export function JevyAboutPanel() {
   const texts = usePanelTexts()
   const { projectCount, avgRating, testimonialCount } = useRealStats()
 
@@ -119,7 +119,7 @@ export function JavyAboutPanel() {
   )
 }
 
-export function JavyGuidePanel() {
+export function JevyGuidePanel() {
   const texts = usePanelTexts()
   const { content } = useContent()
   const email = content?.contact?.email

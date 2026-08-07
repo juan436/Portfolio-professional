@@ -162,8 +162,8 @@
     "email": "Email",
     "phone": "Téléphone",
     "location": "Emplacement",
-    "javy": {
-      "windowTitle": "javy@javydev — discutons",
+    "jevy": {
+      "windowTitle": "jevy@jevy.dev — discutons",
       "greeting": "Parle-moi de ton projet. Qu'est-ce que tu veux construire ?",
       "greetingByService": {
         "web": "J'ai vu que tu veux ta propre plateforme web. Dis-moi comment tu l'imagines.",
@@ -179,9 +179,10 @@
       "inputPlaceholder": "écris ta réponse",
       "typing": "en train d'écrire...",
       "errorFallback": "J'ai eu un problème pour répondre. Réessaie dans un instant.",
+      "prototypeBadge": "Prototype en développement",
       "about": {
         "badge": "Assistant IA",
-        "text": "Javy est un agent conversationnel, pas une personne en direct. La conversation dure quelques minutes — à la fin, je te contacte directement par le canal que tu préfères."
+        "text": "Jevy est un agent conversationnel, pas une personne en direct. La conversation dure quelques minutes — à la fin, je te contacte directement par le canal que tu préfères."
       },
       "stats": {
         "heading": "En chiffres",
@@ -190,7 +191,7 @@
       },
       "steps": {
         "heading": "Comment ça marche",
-        "step1": "Tu racontes ton projet à Javy et tu réponds à ce qu'il faut pour le comprendre",
+        "step1": "Tu racontes ton projet à Jevy et tu réponds à ce qu'il faut pour le comprendre",
         "step2": "Il te montre un projet similaire que j'ai déjà réalisé",
         "step3": "Vous définissez ensemble la portée réelle",
         "step4": "Je te contacte par le canal que tu préfères, avec un rendez-vous déjà planifié"
@@ -301,7 +302,7 @@
     },
     "contact": {
       "submit": "Envoyer ma proposition",
-      "hook": "Explique ton projet à Javy en détail. Il te guide, te montre quelque chose de similaire si on l'a, et planifie un rendez-vous avec moi avec une proposition claire."
+      "hook": "Explique ton projet à Jevy en détail pour qu'il te guide et planifie un rendez-vous."
     }
   },
   "automations": {

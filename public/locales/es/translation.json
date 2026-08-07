@@ -165,8 +165,8 @@
     "email": "Correo",
     "phone": "Teléfono",
     "location": "Ubicación",
-    "javy": {
-      "windowTitle": "javy@javydev — hablemos",
+    "jevy": {
+      "windowTitle": "jevy@jevy.dev — hablemos",
       "greeting": "Cuéntame tu proyecto. ¿Qué quieres construir?",
       "greetingByService": {
         "web": "Vi que quieres tu propia plataforma web. Cuéntame cómo la imaginas.",
@@ -182,9 +182,10 @@
       "inputPlaceholder": "escribe tu respuesta",
       "typing": "escribiendo...",
       "errorFallback": "Tuve un problema para responder. Intenta de nuevo en un momento.",
+      "prototypeBadge": "Prototipo en desarrollo",
       "about": {
         "badge": "Asistente de IA",
-        "text": "Javy es un agente conversacional, no una persona en vivo. La charla dura unos minutos — al final, te contacto yo directo por el canal que prefieras."
+        "text": "Jevy es un agente conversacional, no una persona en vivo. La charla dura unos minutos — al final, te contacto yo directo por el canal que prefieras."
       },
       "stats": {
         "heading": "En números",
@@ -193,7 +194,7 @@
       },
       "steps": {
         "heading": "Cómo funciona",
-        "step1": "Le cuentas tu proyecto a Javy y te pregunta lo necesario para entenderlo",
+        "step1": "Le cuentas tu proyecto a Jevy y te pregunta lo necesario para entenderlo",
         "step2": "Te muestra un proyecto parecido que ya construí",
         "step3": "Definen juntos el alcance real",
         "step4": "Te contacto por el canal que prefieras, con una cita ya agendada"
@@ -304,7 +305,7 @@
     },
     "contact": {
       "submit": "Enviar mi propuesta",
-      "hook": "Explícale a Javy tu proyecto al detalle. Te guía, te muestra algo parecido si lo tenemos, y agenda una cita conmigo con la propuesta ya clara."
+      "hook": "Explícale a Jevy tu proyecto a detalle para que te guíe y agende una cita."
     }
   },
   "automations": {

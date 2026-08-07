@@ -4,8 +4,8 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
-import { JavyChat } from "./javy-chat"
-import { JavyAboutPanel, JavyGuidePanel } from "./side-panels"
+import { JevyChat } from "./jevy-chat"
+import { JevyAboutPanel, JevyGuidePanel } from "./side-panels"
 
 const VALID_SERVICES = ["web", "mobile", "automation", "infra", "other"] as const
 type ServiceKey = (typeof VALID_SERVICES)[number]
@@ -53,9 +53,9 @@ export default function Contact() {
       </div>
 
       {/* Fuera del `container` sitewide (max 1024-1400px según breakpoint) a propósito:
-          las 3 columnas (240+920+240+gaps) necesitan más ancho del que ese contenedor da. */}
-      <div className="w-full max-w-[1500px] mx-auto px-4 lg:px-8 mt-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,240px)_minmax(0,920px)_minmax(0,240px)] gap-6 items-start justify-center">
+          las 3 columnas (240+1000+240+gaps) necesitan más ancho del que ese contenedor da. */}
+      <div className="w-full max-w-[1600px] mx-auto px-4 lg:px-8 mt-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,240px)_minmax(0,1000px)_minmax(0,240px)] gap-6 items-start justify-center">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -63,7 +63,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="order-2 lg:order-1 min-w-0"
           >
-            <JavyAboutPanel />
+            <JevyAboutPanel />
           </motion.div>
 
           <motion.div
@@ -73,7 +73,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="order-1 lg:order-2 min-w-0"
           >
-            <JavyChat initialService={initialService} />
+            <JevyChat initialService={initialService} />
           </motion.div>
 
           <motion.div
@@ -83,7 +83,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="order-3 min-w-0"
           >
-            <JavyGuidePanel />
+            <JevyGuidePanel />
           </motion.div>
         </div>
       </div>

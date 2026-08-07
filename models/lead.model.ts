@@ -13,7 +13,7 @@ export interface ILead extends Document {
   projectMatch?: mongoose.Types.ObjectId;
   interestLevel: 'high' | 'medium' | 'low';
   transcript: {
-    role: 'javy' | 'lead';
+    role: 'jevy' | 'lead';
     text: string;
   }[];
   status: 'new' | 'contacted' | 'closed';
@@ -62,7 +62,7 @@ const LeadSchema = new mongoose.Schema({
   transcript: {
     type: [
       {
-        role: { type: String, enum: ['javy', 'lead'] },
+        role: { type: String, enum: ['jevy', 'lead'] },
         text: String,
       }
     ],

@@ -1,13 +1,24 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import Image from "next/image"
 import { Send } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 
+interface ProjectMatch {
+  id: string
+  title: string
+  image: string | null
+  path: string
+  demo: string | null
+  isPrototype: boolean
+}
+
 interface ChatLine {
   id: number
-  role: "javy" | "lead"
+  role: "jevy" | "lead"
   text: string
+  matches?: ProjectMatch[]
 }
 
 interface DeepSeekMessage {
@@ -15,24 +26,50 @@ interface DeepSeekMessage {
   content: string
 }
 
-const LINK_PATTERN = /\[(\/(?:projects|laboratory|automations|certificates)\/[a-zA-Z0-9]+)\]/g
-
-function renderWithLinks(text: string) {
-  const parts = text.split(LINK_PATTERN)
-  return parts.map((part, i) =>
-    i % 2 === 1 ? (
-      <a
-        key={i}
-        href={part}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-400 underline hover:text-blue-300"
-      >
-        {part}
-      </a>
-    ) : (
-      part
-    ),
+function ProjectMatchCard({ match, prototypeLabel, seeMoreLabel, demoLabel }: {
+  match: ProjectMatch
+  prototypeLabel: string
+  seeMoreLabel: string
+  demoLabel: string
+}) {
+  return (
+    <div className="mt-2 max-w-sm rounded-lg border border-blue-700/30 bg-black/40 overflow-hidden not-italic font-sans">
+      {match.image && (
+        <div className="relative w-full h-32">
+          <Image src={match.image} alt={match.title} fill className="object-cover" />
+        </div>
+      )}
+      <div className="p-3 space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-slate-200">{match.title}</span>
+        </div>
+        {match.isPrototype && (
+          <span className="inline-block text-[10px] uppercase tracking-wide text-amber-400 border border-amber-400/30 rounded-full px-2 py-0.5">
+            {prototypeLabel}
+          </span>
+        )}
+        <div className="flex gap-2 pt-1">
+          <a
+            href={match.path}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white transition-colors"
+          >
+            {seeMoreLabel}
+          </a>
+          {match.demo && (
+            <a
+              href={match.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs px-3 py-1.5 rounded-md border border-blue-600/50 text-blue-400 hover:bg-blue-600/10 transition-colors"
+            >
+              {demoLabel}
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -40,11 +77,11 @@ const CHIP_KEYS = ["app", "automation", "recruiter"] as const
 const SERVICES_WITH_GREETING = ["web", "mobile", "automation", "infra"] as const
 type ServiceKey = (typeof SERVICES_WITH_GREETING)[number]
 
-interface JavyChatProps {
+interface JevyChatProps {
   initialService?: string
 }
 
-export function JavyChat({ initialService }: JavyChatProps) {
+export function JevyChat({ initialService }: JevyChatProps) {
   const { t } = useLanguage()
 
   const [translatedTexts, setTranslatedTexts] = useState({
@@ -53,6 +90,9 @@ export function JavyChat({ initialService }: JavyChatProps) {
     inputPlaceholder: "",
     typing: "",
     errorFallback: "",
+    prototypeBadge: "",
+    seeMore: "",
+    demo: "",
     chips: [] as { key: string; label: string }[],
   })
 
@@ -60,16 +100,19 @@ export function JavyChat({ initialService }: JavyChatProps) {
   useEffect(() => {
     const hasContextualGreeting = (SERVICES_WITH_GREETING as readonly string[]).includes(initialService || "")
     const greeting = hasContextualGreeting
-      ? String(t(`contact.javy.greetingByService.${initialService as ServiceKey}`))
-      : String(t("contact.javy.greeting"))
+      ? String(t(`contact.jevy.greetingByService.${initialService as ServiceKey}`))
+      : String(t("contact.jevy.greeting"))
 
     setTranslatedTexts({
-      windowTitle: String(t("contact.javy.windowTitle")),
+      windowTitle: String(t("contact.jevy.windowTitle")),
       greeting,
-      inputPlaceholder: String(t("contact.javy.inputPlaceholder")),
-      typing: String(t("contact.javy.typing")),
-      errorFallback: String(t("contact.javy.errorFallback")),
-      chips: CHIP_KEYS.map((key) => ({ key, label: String(t(`contact.javy.chips.${key}`)) })),
+      inputPlaceholder: String(t("contact.jevy.inputPlaceholder")),
+      typing: String(t("contact.jevy.typing")),
+      errorFallback: String(t("contact.jevy.errorFallback")),
+      prototypeBadge: String(t("contact.jevy.prototypeBadge")),
+      seeMore: String(t("projects.seeMore")),
+      demo: String(t("projects.demo")),
+      chips: CHIP_KEYS.map((key) => ({ key, label: String(t(`contact.jevy.chips.${key}`)) })),
     })
   }, [t, initialService])
 
@@ -87,7 +130,7 @@ export function JavyChat({ initialService }: JavyChatProps) {
   // Arranca la conversación en cuanto el saludo traducido está listo (solo una vez)
   useEffect(() => {
     if (translatedTexts.greeting && lines.length === 0) {
-      setLines([{ id: 0, role: "javy", text: translatedTexts.greeting }])
+      setLines([{ id: 0, role: "jevy", text: translatedTexts.greeting }])
       setHistory([{ role: "assistant", content: translatedTexts.greeting }])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,11 +156,11 @@ export function JavyChat({ initialService }: JavyChatProps) {
         throw new Error(data.message || "respuesta vacía")
       }
 
-      setLines((prev) => [...prev, { id: prev.length, role: "javy", text: data.reply }])
+      setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: data.reply, matches: data.matches }])
       setHistory((prev) => [...prev, { role: "assistant", content: data.reply }])
     } catch (error) {
-      console.error("Error al hablar con Javy:", error)
-      setLines((prev) => [...prev, { id: prev.length, role: "javy", text: translatedTexts.errorFallback }])
+      console.error("Error al hablar con Jevy:", error)
+      setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: translatedTexts.errorFallback }])
     } finally {
       setIsTyping(false)
     }
@@ -143,13 +186,22 @@ export function JavyChat({ initialService }: JavyChatProps) {
         <span className="ml-2 text-sm text-slate-500 font-mono">{translatedTexts.windowTitle}</span>
       </div>
 
-      <div ref={scrollRef} className="p-6 space-y-4 h-[450px] overflow-y-auto font-mono text-base leading-relaxed">
+      <div ref={scrollRef} className="p-6 space-y-4 h-[500px] overflow-y-auto font-mono text-base leading-relaxed">
         {lines.map((line) => (
-          <div key={line.id} className={line.role === "javy" ? "" : "text-slate-400"}>
-            <span className={line.role === "javy" ? "text-blue-500" : "text-green-500"}>
-              {line.role === "javy" ? "javy>" : "tú>"}
+          <div key={line.id} className={line.role === "jevy" ? "" : "text-slate-400"}>
+            <span className={line.role === "jevy" ? "text-blue-500" : "text-green-500"}>
+              {line.role === "jevy" ? "jevy>" : "tú>"}
             </span>{" "}
-            {renderWithLinks(line.text)}
+            {line.text}
+            {line.matches?.map((match) => (
+              <ProjectMatchCard
+                key={match.id}
+                match={match}
+                prototypeLabel={translatedTexts.prototypeBadge}
+                seeMoreLabel={translatedTexts.seeMore}
+                demoLabel={translatedTexts.demo}
+              />
+            ))}
           </div>
         ))}
 
@@ -170,7 +222,7 @@ export function JavyChat({ initialService }: JavyChatProps) {
 
         {isTyping && (
           <div className="text-blue-500/70">
-            <span className="text-blue-500">javy&gt;</span> {translatedTexts.typing}
+            <span className="text-blue-500">jevy&gt;</span> {translatedTexts.typing}
           </div>
         )}
       </div>

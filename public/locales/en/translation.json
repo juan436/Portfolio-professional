@@ -165,8 +165,8 @@
     "email": "Email",
     "phone": "Phone",
     "location": "Location",
-    "javy": {
-      "windowTitle": "javy@javydev — let's talk",
+    "jevy": {
+      "windowTitle": "jevy@jevy.dev — let's talk",
       "greeting": "Tell me about your project. What do you want to build?",
       "greetingByService": {
         "web": "I saw you want your own web platform. Tell me how you imagine it.",
@@ -182,9 +182,10 @@
       "inputPlaceholder": "type your answer",
       "typing": "typing...",
       "errorFallback": "I had trouble replying. Try again in a moment.",
+      "prototypeBadge": "Prototype in progress",
       "about": {
         "badge": "AI Assistant",
-        "text": "Javy is a conversational agent, not a live person. The chat takes a few minutes — at the end, I'll reach out directly through the channel you prefer."
+        "text": "Jevy is a conversational agent, not a live person. The chat takes a few minutes — at the end, I'll reach out directly through the channel you prefer."
       },
       "stats": {
         "heading": "By the numbers",
@@ -193,7 +194,7 @@
       },
       "steps": {
         "heading": "How it works",
-        "step1": "Tell Javy about your project and answer what it needs to understand it",
+        "step1": "Tell Jevy about your project and answer what it needs to understand it",
         "step2": "It shows you a similar project I already built",
         "step3": "You define the real scope together",
         "step4": "I reach out through the channel you prefer, with a meeting already scheduled"
@@ -304,7 +305,7 @@
     },
     "contact": {
       "submit": "Submit my proposal",
-      "hook": "Explain your project to Javy in detail. It guides you, shows you something similar if we have it, and books a meeting with me with a clear proposal."
+      "hook": "Explain your project to Jevy in detail so it can guide you and book a meeting."
     }
   },
   "automations": {

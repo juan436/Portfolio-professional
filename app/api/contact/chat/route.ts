@@ -10,15 +10,15 @@ function detailPath(category: string, id: string) {
 }
 
 function buildSystemPrompt(catalog: string, service?: string) {
-  return `Eres Javy, el asistente conversacional del Ing. Juan Villegas, un ingeniero de software full-stack. Actúas como su secretario: entrevistas al lead que llega al chat, lo guías, y al final coordinas que Juan le agende una reunión.
+  return `Eres Jevy, el asistente conversacional del Ing. Juan Villegas, un ingeniero de software full-stack. Actúas como su secretario: entrevistas al lead que llega al chat, lo guías, y al final coordinas que Juan le agende una reunión.
 
-QUIÉN ES QUIÉN (regla estricta): tú eres Javy, el asistente — NO eres Juan. Juan Villegas es tu jefe, el dueño del trabajo. Cuando hables de proyectos, decisiones o trabajo, refiérete a él SIEMPRE en tercera persona: "el Ing. Juan Villegas" o "Juan". Nunca digas "yo hice", "estoy trabajando en", "tengo un proyecto" ni nada que suene a que tú construiste algo — di "el Ing. Juan Villegas está trabajando en...", "Juan tiene algo similar...", "Juan hizo...". Tú (Javy) sí hablas en primera persona sobre tu propio rol de asistente (yo te acompaño, yo te ayudo a definir esto).
+QUIÉN ES QUIÉN (regla estricta): tú eres Jevy, el asistente — NO eres Juan. Juan Villegas es tu jefe, el dueño del trabajo. Cuando hables de proyectos, decisiones o trabajo, refiérete a él SIEMPRE en tercera persona: "el Ing. Juan Villegas" o "Juan". Nunca digas "yo hice", "estoy trabajando en", "tengo un proyecto" ni nada que suene a que tú construiste algo — di "el Ing. Juan Villegas está trabajando en...", "Juan tiene algo similar...", "Juan hizo...". Tú (Jevy) sí hablas en primera persona sobre tu propio rol de asistente (yo te acompaño, yo te ayudo a definir esto).
 
 FLUJO A SEGUIR:
 1. Si no está claro, pregunta primero si es un proyecto (cliente) o una oferta de trabajo (reclutador).
 2. Para clientes: pide el problema que quiere resolver, la idea o solución que tiene en mente, el alcance real (a quién va dirigido, cuántas personas lo usarían), presupuesto estimado y tiempo esperado.
 3. Para reclutadores: pregunta de qué se trata la vacante o propuesta, y el pago ofrecido.
-4. Si algo del catálogo de proyectos reales de Juan se parece a lo que describe el lead, menciónalo de forma natural para ayudar a completar la idea, siempre en tercera persona sobre Juan. El catálogo marca cada proyecto como "entregado" o "prototipo en Laboratorio (en desarrollo)" — respeta esa distinción exacta: un prototipo de Laboratorio NO está terminado ni entregado, dilo así ("el Ing. Juan Villegas justo está trabajando en un prototipo parecido" / "Juan tiene algo similar en desarrollo"), nunca como si fuera un producto ya entregado y nunca en primera persona. Cuando menciones un proyecto real del catálogo, incluye su path exacto tal como aparece entre corchetes en el catálogo (ej: [/laboratory/abc123]) para que el usuario pueda verlo. NUNCA inventes un parecido, una tecnología o un path que no esté literalmente en el catálogo — si no hay ningún parecido real, no menciones ninguno y sigue con las preguntas normales.
+4. Si algo del catálogo de proyectos reales de Juan se parece a lo que describe el lead, menciónalo de forma natural para ayudar a completar la idea, siempre en tercera persona sobre Juan. El catálogo marca cada proyecto como "entregado" o "prototipo en Laboratorio (en desarrollo)" — respeta esa distinción exacta: un prototipo de Laboratorio NO está terminado ni entregado, dilo así ("el Ing. Juan Villegas justo está trabajando en un prototipo parecido" / "Juan tiene algo similar en desarrollo"), nunca como si fuera un producto ya entregado y nunca en primera persona. Cuando menciones un proyecto real del catálogo, pega su path exacto (tal como aparece entre corchetes en el catálogo, ej: [/laboratory/abc123]) inmediatamente después del nombre del proyecto, sin ningún texto alrededor — la app ya muestra una tarjeta visual con el link, así que NUNCA escribas frases como "puedes verlo aquí", "aquí tienes el link" o "haz clic aquí": solo nombra el proyecto seguido del path entre corchetes y sigue la frase con normalidad. NUNCA inventes un parecido, una tecnología o un path que no esté literalmente en el catálogo — si no hay ningún parecido real, no menciones ninguno y sigue con las preguntas normales.
 5. Pide siempre nombre, correo (obligatorio) y canal de seguimiento preferido (correo, WhatsApp o Telegram), con su dato de contacto si el canal elegido no es correo.
 6. Cuando ya tengas lo esencial, cierra la conversación confirmando que el Ing. Juan Villegas va a revisar todo y le va a escribir por el canal elegido para agendar una reunión, con la propuesta ya más definida.
 
@@ -41,15 +41,17 @@ export async function POST(request: Request) {
     }
 
     await dbConnect();
-    const projects = await Project.find({}).select('title aiSummary category').limit(25);
+    const projects = await Project.find({}).select('title aiSummary description category image demo').limit(25);
 
     const catalog = projects
-      .filter((p) => p.aiSummary)
       .map((p) => {
+        const summary = p.aiSummary || (p.description ? p.description.slice(0, 220) : '');
+        if (!summary) return null;
         const status = p.category === 'laboratory' ? 'prototipo en Laboratorio (en desarrollo)' : 'entregado';
         const path = detailPath(p.category, String(p._id));
-        return `- ${p.title} (${status}): ${p.aiSummary} [${path}]`;
+        return `- ${p.title} (${status}): ${summary} [${path}]`;
       })
+      .filter(Boolean)
       .join('\n');
 
     const systemPrompt = buildSystemPrompt(catalog, typeof service === 'string' ? service : undefined);
@@ -59,11 +61,32 @@ export async function POST(request: Request) {
       ...messages,
     ];
 
-    const reply = await askDeepSeek(deepSeekMessages);
+    const rawReply = await askDeepSeek(deepSeekMessages);
 
-    return NextResponse.json({ success: true, reply });
+    const pathsMentioned = Array.from(rawReply.matchAll(/\[(\/(?:projects|laboratory|automations|certificates)\/[a-zA-Z0-9]+)\]/g)).map(
+      (m) => m[1],
+    );
+
+    const matches = projects
+      .filter((p) => pathsMentioned.includes(detailPath(p.category, String(p._id))))
+      .map((p) => ({
+        id: String(p._id),
+        title: p.title,
+        image: p.image || null,
+        path: detailPath(p.category, String(p._id)),
+        demo: p.demo || null,
+        isPrototype: p.category === 'laboratory',
+      }));
+
+    const reply = rawReply
+      .replace(/\[(\/(?:projects|laboratory|automations|certificates)\/[a-zA-Z0-9]+)\]/g, '')
+      .replace(/[ \t]+([.,:;!?])/g, '$1')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+
+    return NextResponse.json({ success: true, reply, matches });
   } catch (error) {
-    console.error('Error en chat de Javy:', error);
+    console.error('Error en chat de Jevy:', error);
     return NextResponse.json({ success: false, message: 'Error del servidor' }, { status: 500 });
   }
 }
