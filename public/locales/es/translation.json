@@ -182,6 +182,21 @@
       "inputPlaceholder": "escribe tu respuesta",
       "typing": "escribiendo...",
       "errorFallback": "Tuve un problema para responder. Intenta de nuevo en un momento.",
+      "attachTooltip": "Adjuntar archivo (PDF, Word, Excel, PowerPoint, imagen)",
+      "attachTooLarge": "El archivo es muy grande (máx. 20MB)",
+      "attachError": "No se pudo procesar este archivo",
+      "attachedNotice": "Adjunté",
+      "dropHint": "Soltá el archivo acá",
+      "attachmentsCard": {
+        "title": "Adjuntos",
+        "empty": "Sin archivos todavía",
+        "filesSuffix": "archivos",
+        "viewHint": "ver todos",
+        "modalTitle": "Archivos adjuntos",
+        "processed": "procesado",
+        "pending": "procesando...",
+        "failed": "no se pudo procesar"
+      },
       "prototypeBadge": "Prototipo en desarrollo",
       "about": {
         "badge": "Asistente de IA",

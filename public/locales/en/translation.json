@@ -182,6 +182,21 @@
       "inputPlaceholder": "type your answer",
       "typing": "typing...",
       "errorFallback": "I had trouble replying. Try again in a moment.",
+      "attachTooltip": "Attach a file (PDF, Word, Excel, PowerPoint, image)",
+      "attachTooLarge": "File is too large (max. 20MB)",
+      "attachError": "Couldn't process this file",
+      "attachedNotice": "Attached",
+      "dropHint": "Drop the file here",
+      "attachmentsCard": {
+        "title": "Attachments",
+        "empty": "No files yet",
+        "filesSuffix": "files",
+        "viewHint": "view all",
+        "modalTitle": "Attached files",
+        "processed": "processed",
+        "pending": "processing...",
+        "failed": "couldn't process"
+      },
       "prototypeBadge": "Prototype in progress",
       "about": {
         "badge": "AI Assistant",

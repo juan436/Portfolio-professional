@@ -4,8 +4,8 @@ export interface ILead extends Document {
   type: 'client' | 'recruiter';
   name: string;
   email: string;
-  preferredChannel: 'email' | 'whatsapp' | 'telegram';
-  channelContact?: string;
+  preferredChannel: 'email' | 'whatsapp';
+  channelContact: string;
   problem: string;
   whatTheyWant: string;
   estimatedAmount?: string;
@@ -36,10 +36,13 @@ const LeadSchema = new mongoose.Schema({
   },
   preferredChannel: {
     type: String,
-    enum: ['email', 'whatsapp', 'telegram'],
+    enum: ['email', 'whatsapp'],
     required: true
   },
-  channelContact: String,
+  channelContact: {
+    type: String,
+    required: true
+  },
   problem: {
     type: String,
     required: true

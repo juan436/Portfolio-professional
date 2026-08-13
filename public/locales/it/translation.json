@@ -179,6 +179,21 @@
       "inputPlaceholder": "scrivi la tua risposta",
       "typing": "sto scrivendo...",
       "errorFallback": "Ho avuto un problema a rispondere. Riprova tra un momento.",
+      "attachTooltip": "Allega un file (PDF, Word, Excel, PowerPoint, immagine)",
+      "attachTooLarge": "Il file è troppo grande (max. 20MB)",
+      "attachError": "Impossibile elaborare questo file",
+      "attachedNotice": "Ho allegato",
+      "dropHint": "Rilascia il file qui",
+      "attachmentsCard": {
+        "title": "Allegati",
+        "empty": "Ancora nessun file",
+        "filesSuffix": "file",
+        "viewHint": "vedi tutti",
+        "modalTitle": "File allegati",
+        "processed": "elaborato",
+        "pending": "elaborazione...",
+        "failed": "elaborazione fallita"
+      },
       "prototypeBadge": "Prototipo in sviluppo",
       "about": {
         "badge": "Assistente IA",

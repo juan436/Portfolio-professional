@@ -102,6 +102,16 @@ export interface IProject extends Document {
       demoOutputTemplate?: string;
     };
   };
+  // Objeto dedicado a Jevy (motor de matching) — nunca se renderiza en el front.
+  // Nomenclatura propia para la IA, separada de category/subtype/sector (esos son
+  // para el visitante humano). Ver dev-aguila-azul/vault/portfolio: planes/matching-catalogo-function-calling.
+  jevyProfile?: {
+    categoria?: string;
+    subtype?: string;
+    problema_core?: string;
+    sector?: string;
+    pitchCorto?: string;
+  };
   translations?: {
     en?: LocaleContent;
     fr?: LocaleContent;
@@ -294,6 +304,17 @@ const ProjectSchema = new mongoose.Schema({
       demoPlaceholder: String,
       demoOutputTemplate: String,
     },
+  },
+  // Sin `enum` de Mongoose a propósito: el vocabulario vive en Mongo (colección
+  // JevyTaxonomy, dinámico, ver lib/jevy-taxonomy.ts), no se puede fijar acá en
+  // tiempo de arranque del proceso. Validación real contra la lista vigente a
+  // nivel de aplicación (admin form / seed scripts), no del schema.
+  jevyProfile: {
+    categoria: String,
+    subtype: String,
+    problema_core: String,
+    sector: String,
+    pitchCorto: String,
   },
   translations: {
     en: localeContentFields(),

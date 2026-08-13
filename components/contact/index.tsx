@@ -4,8 +4,9 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
+import { useAttachments } from "@/hooks/use-attachments"
 import { JevyChat } from "./jevy-chat"
-import { JevyAboutPanel, JevyGuidePanel } from "./side-panels"
+import { JevyAboutPanel, JevyGuidePanel, AttachmentsCard } from "./side-panels"
 
 const VALID_SERVICES = ["web", "mobile", "automation", "infra", "other"] as const
 type ServiceKey = (typeof VALID_SERVICES)[number]
@@ -20,6 +21,8 @@ export default function Contact() {
   const [translatedTexts, setTranslatedTexts] = useState({
     title: "",
     subtitle: "",
+    attachTooLarge: "",
+    attachError: "",
   })
 
   // Cargar traducciones después de la hidratación
@@ -27,8 +30,13 @@ export default function Contact() {
     setTranslatedTexts({
       title: String(t("contact.title")),
       subtitle: String(t("ctas.contact.hook")),
+      attachTooLarge: String(t("contact.jevy.attachTooLarge")),
+      attachError: String(t("contact.jevy.attachError")),
     })
   }, [t])
+
+  // Estado de adjuntos compartido entre el chat y la card de la columna izquierda
+  const attachments = useAttachments(translatedTexts.attachTooLarge, translatedTexts.attachError)
 
   return (
     <section id="contact" className="pt-20 pb-20 relative">
@@ -61,9 +69,10 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="order-2 lg:order-1 min-w-0"
+            className="order-2 lg:order-1 min-w-0 flex flex-col gap-4"
           >
             <JevyAboutPanel />
+            <AttachmentsCard attachments={attachments} />
           </motion.div>
 
           <motion.div
@@ -73,7 +82,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="order-1 lg:order-2 min-w-0"
           >
-            <JevyChat initialService={initialService} />
+            <JevyChat initialService={initialService} attachments={attachments} />
           </motion.div>
 
           <motion.div

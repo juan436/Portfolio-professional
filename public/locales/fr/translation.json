@@ -179,6 +179,21 @@
       "inputPlaceholder": "écris ta réponse",
       "typing": "en train d'écrire...",
       "errorFallback": "J'ai eu un problème pour répondre. Réessaie dans un instant.",
+      "attachTooltip": "Joindre un fichier (PDF, Word, Excel, PowerPoint, image)",
+      "attachTooLarge": "Le fichier est trop volumineux (max. 20MB)",
+      "attachError": "Impossible de traiter ce fichier",
+      "attachedNotice": "J'ai joint",
+      "dropHint": "Dépose le fichier ici",
+      "attachmentsCard": {
+        "title": "Pièces jointes",
+        "empty": "Aucun fichier pour l'instant",
+        "filesSuffix": "fichiers",
+        "viewHint": "tout voir",
+        "modalTitle": "Fichiers joints",
+        "processed": "traité",
+        "pending": "traitement...",
+        "failed": "échec du traitement"
+      },
       "prototypeBadge": "Prototype en développement",
       "about": {
         "badge": "Assistant IA",

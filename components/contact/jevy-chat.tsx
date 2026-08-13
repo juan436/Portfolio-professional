@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
-import { Send } from "lucide-react"
+import { Send, Paperclip, Check, Loader2 } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
+import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
+import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
 
 interface ProjectMatch {
   id: string
@@ -79,9 +81,10 @@ type ServiceKey = (typeof SERVICES_WITH_GREETING)[number]
 
 interface JevyChatProps {
   initialService?: string
+  attachments: UseAttachmentsReturn
 }
 
-export function JevyChat({ initialService }: JevyChatProps) {
+export function JevyChat({ initialService, attachments }: JevyChatProps) {
   const { t } = useLanguage()
 
   const [translatedTexts, setTranslatedTexts] = useState({
@@ -90,6 +93,11 @@ export function JevyChat({ initialService }: JevyChatProps) {
     inputPlaceholder: "",
     typing: "",
     errorFallback: "",
+    attachTooltip: "",
+    attachTooLarge: "",
+    attachError: "",
+    attachedNotice: "",
+    dropHint: "",
     prototypeBadge: "",
     seeMore: "",
     demo: "",
@@ -109,8 +117,13 @@ export function JevyChat({ initialService }: JevyChatProps) {
       inputPlaceholder: String(t("contact.jevy.inputPlaceholder")),
       typing: String(t("contact.jevy.typing")),
       errorFallback: String(t("contact.jevy.errorFallback")),
+      attachTooltip: String(t("contact.jevy.attachTooltip")),
+      attachTooLarge: String(t("contact.jevy.attachTooLarge")),
+      attachError: String(t("contact.jevy.attachError")),
+      attachedNotice: String(t("contact.jevy.attachedNotice")),
+      dropHint: String(t("contact.jevy.dropHint")),
       prototypeBadge: String(t("contact.jevy.prototypeBadge")),
-      seeMore: String(t("projects.seeMore")),
+      seeMore: String(t("common.seeMore")),
       demo: String(t("projects.demo")),
       chips: CHIP_KEYS.map((key) => ({ key, label: String(t(`contact.jevy.chips.${key}`)) })),
     })
@@ -136,7 +149,7 @@ export function JevyChat({ initialService }: JevyChatProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translatedTexts.greeting])
 
-  const pushLeadLine = async (text: string) => {
+  const pushLeadLine = async (text: string, contextOverride?: string) => {
     if (!text.trim() || isTyping) return
     setLines((prev) => [...prev, { id: prev.length, role: "lead", text }])
     setChipsVisible(false)
@@ -145,10 +158,15 @@ export function JevyChat({ initialService }: JevyChatProps) {
     setIsTyping(true)
 
     try {
+      const attachmentsContext = contextOverride ?? attachments.buildAttachmentsContext()
       const response = await fetch("/api/contact/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: nextHistory, service: initialService }),
+        body: JSON.stringify({
+          messages: nextHistory,
+          service: initialService,
+          ...(attachmentsContext ? { attachmentsContext } : {}),
+        }),
       })
       const data = await response.json()
 
@@ -177,8 +195,58 @@ export function JevyChat({ initialService }: JevyChatProps) {
     setInput("")
   }
 
+  const processFiles = async (files: File[]) => {
+    const processed = await attachments.handleFileSelect(files)
+    if (processed) {
+      const notice = `${translatedTexts.attachedNotice}: ${processed.succeeded.map((r) => r.filename).join(", ")}`
+      await pushLeadLine(notice, processed.mergedContext)
+    }
+  }
+
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files || [])
+    e.target.value = "" // permite volver a elegir el mismo archivo si se saca y se vuelve a adjuntar
+    await processFiles(selected)
+  }
+
+  const [isDraggingOver, setIsDraggingOver] = useState(false)
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (!isDraggingOver) setIsDraggingOver(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return
+    setIsDraggingOver(false)
+  }
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDraggingOver(false)
+    const dropped = Array.from(e.dataTransfer.files || [])
+    await processFiles(dropped)
+  }
+
+  const hasProcessedAttachment = attachments.attachmentResults.some((r) => r.markdown)
+
   return (
-    <div className="max-w-none mx-auto rounded-xl overflow-hidden border border-blue-700/30 bg-[#0b0d10] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.6)]">
+    <div
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className={`relative max-w-none mx-auto rounded-xl overflow-hidden border bg-[#0b0d10] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.6)] transition-colors ${
+        isDraggingOver ? "border-blue-500" : "border-blue-700/30"
+      }`}
+    >
+      {isDraggingOver && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-blue-950/70 backdrop-blur-[1px] pointer-events-none">
+          <span className="font-mono text-sm text-blue-300 border border-blue-500/50 rounded-md px-4 py-2 bg-black/40">
+            {translatedTexts.dropHint}
+          </span>
+        </div>
+      )}
       <div className="flex items-center gap-2 px-5 py-3 bg-[#0e1013] border-b border-blue-700/20">
         <span className="w-3 h-3 rounded-full bg-red-500" />
         <span className="w-3 h-3 rounded-full bg-amber-500" />
@@ -228,6 +296,33 @@ export function JevyChat({ initialService }: JevyChatProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="flex items-center gap-3 px-5 py-3 border-t border-blue-700/20 bg-[#0e1013]">
+        <input
+          ref={attachments.fileInputRef}
+          type="file"
+          multiple
+          accept={ACCEPTED_ATTACHMENT_TYPES}
+          onChange={handleFileInputChange}
+          className="hidden"
+        />
+        <button
+          type="button"
+          aria-label={translatedTexts.attachTooltip}
+          title={translatedTexts.attachTooltip}
+          disabled={isTyping || attachments.isUploadingAttachment}
+          onClick={() => attachments.fileInputRef.current?.click()}
+          className="relative w-9 h-9 shrink-0 rounded-md border border-blue-700/30 flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-500/50 transition-colors disabled:opacity-50"
+        >
+          {attachments.isUploadingAttachment ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Paperclip className="h-4 w-4" />
+          )}
+          {hasProcessedAttachment && !attachments.isUploadingAttachment && (
+            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-green-500 border border-[#0e1013] flex items-center justify-center">
+              <Check className="h-2.5 w-2.5 text-[#0e1013]" strokeWidth={3} />
+            </span>
+          )}
+        </button>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}

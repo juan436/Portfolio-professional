@@ -1,10 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { X, Loader2, Check, AlertTriangle } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
 import { fetchProjects } from "@/services/api/projects"
 import { fetchTestimonials } from "@/services/api/testimonials"
+import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
 
 interface PanelTexts {
   aboutBadge: string
@@ -150,5 +152,154 @@ export function JevyGuidePanel() {
         </div>
       )}
     </div>
+  )
+}
+
+function fileExtLabel(filename: string) {
+  const ext = filename.split(".").pop() || ""
+  return ext.slice(0, 3).toUpperCase()
+}
+
+interface AttachmentsTexts {
+  title: string
+  empty: string
+  filesSuffix: string
+  viewHint: string
+  modalTitle: string
+  processed: string
+  pending: string
+  failed: string
+}
+
+function useAttachmentsTexts(): AttachmentsTexts {
+  const { t } = useLanguage()
+  const [texts, setTexts] = useState<AttachmentsTexts>({
+    title: "",
+    empty: "",
+    filesSuffix: "",
+    viewHint: "",
+    modalTitle: "",
+    processed: "",
+    pending: "",
+    failed: "",
+  })
+
+  useEffect(() => {
+    setTexts({
+      title: String(t("contact.jevy.attachmentsCard.title")),
+      empty: String(t("contact.jevy.attachmentsCard.empty")),
+      filesSuffix: String(t("contact.jevy.attachmentsCard.filesSuffix")),
+      viewHint: String(t("contact.jevy.attachmentsCard.viewHint")),
+      modalTitle: String(t("contact.jevy.attachmentsCard.modalTitle")),
+      processed: String(t("contact.jevy.attachmentsCard.processed")),
+      pending: String(t("contact.jevy.attachmentsCard.pending")),
+      failed: String(t("contact.jevy.attachmentsCard.failed")),
+    })
+  }, [t])
+
+  return texts
+}
+
+export function AttachmentsCard({ attachments }: { attachments: UseAttachmentsReturn }) {
+  const texts = useAttachmentsTexts()
+  const [modalOpen, setModalOpen] = useState(false)
+  const count = attachments.attachedFiles.length
+
+  return (
+    <>
+      <div
+        className={`rounded-lg border border-blue-700/15 bg-black/30 p-4 transition-colors ${count > 0 ? "cursor-pointer hover:border-blue-700/30" : ""}`}
+        onClick={() => count > 0 && setModalOpen(true)}
+        role={count > 0 ? "button" : undefined}
+        tabIndex={count > 0 ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (count > 0 && (e.key === "Enter" || e.key === " ")) setModalOpen(true)
+        }}
+      >
+        <div className="font-mono text-[0.7rem] uppercase tracking-wider text-blue-400 mb-3">{texts.title}</div>
+
+        {count === 0 ? (
+          <div className="h-[70px] flex items-center justify-center rounded-md border border-dashed border-blue-700/20 text-slate-600 font-mono text-[0.65rem] text-center px-2">
+            {texts.empty}
+          </div>
+        ) : (
+          <>
+            <div className="h-[70px] relative flex items-center justify-center">
+              {attachments.attachedFiles.slice(0, 3).map((file, i) => (
+                <div
+                  key={file.name}
+                  className="absolute w-[54px] h-[70px] rounded border border-blue-700/30 bg-[#0e1013] flex items-end p-1.5 font-mono text-[0.55rem] text-slate-500"
+                  style={{
+                    transform: `rotate(${[-9, 4, -2][i]}deg) translateX(${[-18, 4, 20][i]}px)`,
+                    zIndex: i + 1,
+                    borderColor: i === 2 ? "rgba(29,78,216,0.5)" : undefined,
+                  }}
+                >
+                  .{fileExtLabel(file.name).toLowerCase()}
+                </div>
+              ))}
+            </div>
+            <div className="text-center font-mono text-[0.65rem] text-slate-500 mt-3">
+              <span className="text-blue-400 font-bold">{count}</span> {texts.filesSuffix} — {texts.viewHint}
+            </div>
+          </>
+        )}
+      </div>
+
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-xl border border-blue-700/30 bg-[#0b0d10] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.7)] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 bg-[#0e1013] border-b border-blue-700/20">
+              <span className="font-mono text-[0.75rem] uppercase tracking-wider text-blue-400">{texts.modalTitle}</span>
+              <button
+                type="button"
+                onClick={() => setModalOpen(false)}
+                aria-label="close"
+                className="text-slate-500 hover:text-red-400 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="flex flex-col max-h-[60vh] overflow-y-auto">
+              {attachments.attachedFiles.map((file) => {
+                const result = attachments.attachmentResults.find((r) => r.filename === file.name)
+                const failed = Boolean(result?.error)
+                const done = Boolean(result?.markdown)
+                return (
+                  <div key={file.name} className="flex items-center gap-3 px-4 py-2.5 border-b border-blue-700/10 last:border-b-0">
+                    <span className="w-7 h-[34px] shrink-0 rounded border border-blue-700/30 bg-[#0e1013] flex items-center justify-center font-mono text-[0.55rem] font-bold text-blue-300">
+                      {fileExtLabel(file.name)}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-slate-300 truncate">{file.name}</div>
+                      <div className={`font-mono text-[0.62rem] mt-0.5 flex items-center gap-1 ${failed ? "text-red-400" : done ? "text-green-500" : "text-slate-500"}`}>
+                        {failed && <AlertTriangle className="h-3 w-3" />}
+                        {done && <Check className="h-3 w-3" />}
+                        {!result && <Loader2 className="h-3 w-3 animate-spin" />}
+                        {failed ? texts.failed : done ? texts.processed : texts.pending}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => attachments.removeAttachedFile(file.name)}
+                      aria-label="remove attachment"
+                      className="text-slate-600 hover:text-red-400 transition-colors shrink-0"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
