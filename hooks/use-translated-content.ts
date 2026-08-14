@@ -96,9 +96,9 @@ export const useTranslatedContent = () => {
 
   // Traducir proyectos
   const translatedProjects = {
-    systems: content.projects.systems.map(translateProject),
+    web: content.projects.web.map(translateProject),
     mobile: content.projects.mobile.map(translateProject),
-    backend: content.projects.backend.map(translateProject),
+    infra_backend: content.projects.infra_backend.map(translateProject),
   };
 
   // Función para traducir otras habilidades

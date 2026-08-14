@@ -40,7 +40,7 @@ const emptyContent: Content = {
   hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
   about: { paragraph1: "", paragraph2: "", paragraph3: "", translations: {} },
   services: [],
-  projects: { systems: [], mobile: [], backend: [] },
+  projects: { web: [], mobile: [], infra_backend: [] },
   skills: { frontend: [], backend: [], database: [], devops: [] },
   otherSkills: [],
   contact: { email: "", phone: "", location: "", translations: {} },
@@ -62,9 +62,9 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
 
       try {
         const contentData = await fetchContent()
-        const systemsProjects = await fetchProjects('systems')
+        const webProjects = await fetchProjects('web')
         const mobileProjects = await fetchProjects('mobile')
-        const backendProjects = await fetchProjects('backend')
+        const infraBackendProjects = await fetchProjects('infra_backend')
         const experienceData = await fetchExperiences()
         const skillsData = await fetchSkills()
         const otherSkillsData = await fetchOtherSkills()
@@ -91,9 +91,9 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
           });
 
           const projectsData = {
-            systems: systemsProjects.map(mapProject),
+            web: webProjects.map(mapProject),
             mobile: mobileProjects.map(mapProject),
-            backend: backendProjects.map(mapProject)
+            infra_backend: infraBackendProjects.map(mapProject)
           }
 
           setContent({

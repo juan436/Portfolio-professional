@@ -38,14 +38,23 @@ function axisMatches(leadValue: string | undefined, catalogValue: string | undef
   return leadValue === catalogValue;
 }
 
+/**
+ * `problema_core` es una condición obligatoria, no solo un eje que suma.
+ * Probado en vivo (2026-08-13): un lead sin problema_core claro (`no_definido`,
+ * taxonomía sin ese valor todavía) igual cruzaba el piso solo con
+ * categoria+subtype (20+35=55) y matcheaba algo sin relación real. Categoria y
+ * subtype pueden coincidir por casualidad entre proyectos distintos — el
+ * problema de fondo, no. Sin ese eje coincidiendo, no hay candidato válido,
+ * sin importar cuánto sumen los demás.
+ */
 function scoreCandidate(lead: LeadProfile, project: IProject, includeCategoria: boolean): number {
   const profile = project.jevyProfile;
   if (!profile) return 0;
+  if (!axisMatches(lead.problema_core, profile.problema_core)) return 0;
 
-  let score = 0;
+  let score = WEIGHTS.problema_core;
   if (includeCategoria && axisMatches(lead.categoria, profile.categoria)) score += WEIGHTS.categoria;
   if (axisMatches(lead.subtype, profile.subtype)) score += WEIGHTS.subtype;
-  if (axisMatches(lead.problema_core, profile.problema_core)) score += WEIGHTS.problema_core;
   if (axisMatches(lead.sector, profile.sector)) score += WEIGHTS.sector;
   return score;
 }

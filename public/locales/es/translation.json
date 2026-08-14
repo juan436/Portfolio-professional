@@ -198,6 +198,16 @@
         "failed": "no se pudo procesar"
       },
       "prototypeBadge": "Prototipo en desarrollo",
+      "scheduling": {
+        "loadingSlots": "Buscando horarios disponibles...",
+        "pickSlot": "Elegí un horario:",
+        "confirming": "Confirmando tu cita...",
+        "successTitle": "¡Cita agendada!",
+        "successBody": "El Ing. Juan Villegas te va a contactar en el horario elegido.",
+        "conflict": "Ese horario ya no está disponible, elegí otro.",
+        "failed": "Hubo un problema agendando tu cita. Tu información ya quedó guardada, el Ing. Juan Villegas te contacta directo.",
+        "unavailable": "No pude cargar los horarios disponibles en este momento."
+      },
       "about": {
         "badge": "Asistente de IA",
         "text": "Jevy es un agente conversacional, no una persona en vivo. La charla dura unos minutos — al final, te contacto yo directo por el canal que prefieras."

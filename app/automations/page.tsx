@@ -37,7 +37,7 @@ export default function AutomationsPage() {
 
     const fetchAutomations = async () => {
       try {
-        const response = await fetch('/api/projects?category=automation')
+        const response = await fetch('/api/projects?category=automatizacion')
         const result = await response.json()
         if (result.success && Array.isArray(result.data)) {
           setAutomations(result.data)

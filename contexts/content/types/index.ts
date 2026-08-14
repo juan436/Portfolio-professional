@@ -93,9 +93,9 @@ export type Project = {
 }
 
 export type Projects = {
-  systems: Project[]
+  web: Project[]
   mobile: Project[]
-  backend: Project[]
+  infra_backend: Project[]
 }
 
 // Skill

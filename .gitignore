@@ -41,6 +41,10 @@ desing.mermaid
 mongorestore.exe
 portfolio_prod.gz
 
+# adjuntos de leads guardados en disco (lib/uploads.ts) — necesita volumen
+# persistente en el VPS, no se versiona
+/uploads/
+
 # docs internos de estrategia/roadmap - viven solo en dev-local, no en production (repo público)
 docs/roadmap/
 docs/seo-marketing/

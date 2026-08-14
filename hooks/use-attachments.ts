@@ -3,6 +3,8 @@ import { useRef, useState } from "react"
 export interface AttachmentResult {
   filename: string
   markdown?: string
+  url?: string
+  type?: string
   error?: string
 }
 
@@ -22,7 +24,7 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
   const [attachError, setAttachError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileSelect = async (files: File[]): Promise<{ succeeded: AttachmentResult[]; mergedContext: string } | null> => {
+  const handleFileSelect = async (files: File[], sessionId: string): Promise<{ succeeded: AttachmentResult[]; mergedContext: string } | null> => {
     if (files.length === 0) return null
 
     const validFiles = files.filter((f) => f.size <= MAX_ATTACHMENT_SIZE_BYTES)
@@ -37,6 +39,7 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
     try {
       const formData = new FormData()
       validFiles.forEach((f) => formData.append("files", f, f.name))
+      formData.append("sessionId", sessionId)
 
       const response = await fetch("/api/contact/attachments", { method: "POST", body: formData })
       const data = await response.json()

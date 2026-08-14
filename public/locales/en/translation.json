@@ -198,6 +198,16 @@
         "failed": "couldn't process"
       },
       "prototypeBadge": "Prototype in progress",
+      "scheduling": {
+        "loadingSlots": "Looking for available times...",
+        "pickSlot": "Pick a time:",
+        "confirming": "Confirming your appointment...",
+        "successTitle": "Appointment scheduled!",
+        "successBody": "Ing. Juan Villegas will contact you at the chosen time.",
+        "conflict": "That time is no longer available, pick another one.",
+        "failed": "There was a problem scheduling your appointment. Your information was saved, Ing. Juan Villegas will contact you directly.",
+        "unavailable": "Couldn't load available times right now."
+      },
       "about": {
         "badge": "AI Assistant",
         "text": "Jevy is a conversational agent, not a live person. The chat takes a few minutes — at the end, I'll reach out directly through the channel you prefer."

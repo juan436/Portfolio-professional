@@ -61,7 +61,7 @@ export default function LaboratoryPage() {
     const fetchLabProjects = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch('/api/projects?category=laboratory')
+        const response = await fetch('/api/projects?category=laboratorio')
         const result = await response.json()
 
         if (result.success && Array.isArray(result.data)) {

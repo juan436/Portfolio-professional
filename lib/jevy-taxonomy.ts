@@ -12,10 +12,10 @@ import JevyTaxonomyModel, { type IJevyTaxonomyEntry } from '@/models/jevy-taxono
 // (2026-08-12) — no es una lista cerrada para siempre, crece con el catálogo.
 
 export const JEVY_CATEGORIAS_SEED: IJevyTaxonomyEntry[] = [
-  { value: 'web', label: 'Solución web', definicion: 'Sistema o aplicación web (frontend + backend)' },
+  { value: 'web', label: 'Solución web', definicion: 'Sistema o app con un panel que alguien ABRE y USA activamente para gestionar algo (ver pedidos, cargar datos, revisar reportes). DEFAULT para casi cualquier pedido de un negocio, aunque el lead no diga "panel" — el silencio sobre eso NO significa que sea infra_backend NI automatizacion' },
   { value: 'mobile', label: 'Mobile', definicion: 'Aplicación móvil nativa o híbrida' },
-  { value: 'infra_backend', label: 'Infra / Backend', definicion: 'Servicio de backend puro, infraestructura o herramienta interna sin frontend de cliente' },
-  { value: 'automatizacion', label: 'Automatización', definicion: 'Bot conversacional o flujo automatizado (n8n, IA, mensajería)' },
+  { value: 'infra_backend', label: 'Infra / Backend', definicion: 'SOLO infraestructura o servicios técnicos donde NINGÚN usuario de negocio interactúa con una interfaz — monitoreo de servidores, integraciones entre sistemas, procesamiento en segundo plano. Si alguien (dueño, empleado, cliente) va a ver/usar/gestionar algo, es "web", no esto' },
+  { value: 'automatizacion', label: 'Automatización', definicion: 'Reacciona SOLA a un evento/disparador (llega un mensaje, un pedido nuevo, una hora programada) y hace su trabajo sin que nadie abra ni opere nada activamente — ni un panel de gestión ni un chat con un bot cuentan como "alguien operando algo", son el disparador o el canal, no uso activo de un sistema. Diferencia clave con "web": en "web" alguien entra y usa un sistema; en "automatizacion" el proceso corre solo, reaccionando' },
   {
     value: 'laboratorio',
     label: 'Laboratorio',
@@ -43,17 +43,18 @@ export const JEVY_SUBTYPES_SEED: IJevyTaxonomyEntry[] = [
 
 export const JEVY_PROBLEMAS_CORE_SEED: IJevyTaxonomyEntry[] = [
   { value: 'atencion_cliente_multicanal', label: 'Atención al cliente multicanal', definicion: 'Centralizar atención a clientes por varios canales (WhatsApp, chat, etc.), con o sin IA' },
-  { value: 'gestion_ventas_postventa', label: 'Gestión de ventas y postventa', definicion: 'Administrar el ciclo de venta y seguimiento posterior (garantías, pagos, entregas)' },
+  { value: 'gestion_ventas_postventa', label: 'Gestión de ventas y postventa', definicion: 'Administrar el ciclo de venta: procesar pedidos/órdenes, validar stock, seguimiento posterior (garantías, pagos, entregas). Incluye "dejar listo para facturar" como paso final — el foco es la ORDEN/VENTA, no el documento en sí' },
   { value: 'gestion_conocimiento_equipo', label: 'Gestión de conocimiento de equipo', definicion: 'Memoria/contexto compartido para que un equipo no pierda información ni la reinvente' },
   { value: 'intermediacion_pagos', label: 'Intermediación y pagos', definicion: 'Conectar dos partes de un mercado y procesar el pago entre ellas' },
   { value: 'gestion_eventos_colaboracion', label: 'Gestión de eventos y colaboración', definicion: 'Planificar un evento o proyecto con varias personas colaborando sobre el mismo recurso' },
   { value: 'auditoria_cumplimiento', label: 'Auditoría y cumplimiento', definicion: 'Revisar, documentar o certificar que algo cumple una norma o proceso' },
   { value: 'sincronizacion_offline_inventario', label: 'Sincronización offline / inventario', definicion: 'Gestionar inventario o datos que deben funcionar sin conexión y sincronizarse después' },
-  { value: 'automatizacion_documentos_fiscales', label: 'Automatización de documentos fiscales', definicion: 'Generar o procesar automáticamente documentos con reglas fiscales/legales' },
+  { value: 'automatizacion_documentos_fiscales', label: 'Automatización de documentos fiscales', definicion: 'El documento fiscal/legal EN SÍ es el foco (clasificar facturas recibidas, aplicar reglas tributarias, series fiscales) — NO uses esto solo porque una venta termine en factura, eso es gestion_ventas_postventa' },
   { value: 'gestion_financiera_personal', label: 'Gestión financiera personal', definicion: 'Ayudar a una persona (no una empresa) a organizar sus propias finanzas' },
   { value: 'logistica_postventa', label: 'Logística y postventa', definicion: 'Coordinar stock, envíos o servicio posterior a la venta' },
   { value: 'agendamiento_citas', label: 'Agendamiento de citas', definicion: 'Coordinar y agendar horarios/citas, evitando choques' },
   { value: 'analisis_predictivo', label: 'Análisis predictivo', definicion: 'Analizar datos históricos para predecir o sugerir una tendencia futura' },
+  { value: 'gestion_contenido_marketing', label: 'Gestión de contenido / marketing', definicion: 'Crear, programar o publicar contenido de marketing (redes sociales, campañas)' },
   { value: 'no_definido', label: 'Sin definir', definicion: 'La charla no dio suficiente información para clasificar este eje' },
 ];
 
@@ -70,6 +71,7 @@ export const JEVY_SECTORES_SEED: IJevyTaxonomyEntry[] = [
   { value: 'equipo_interno', label: 'Equipo interno', definicion: 'Uso interno del propio equipo de desarrollo, sin cliente externo' },
   { value: 'trading_finanzas', label: 'Trading / mercados financieros', definicion: 'Inversores o traders individuales operando en mercados financieros' },
   { value: 'comunidad_energia', label: 'Comunidad / servicios de energía', definicion: 'Personas afectadas por o interesadas en el servicio eléctrico de su zona' },
+  { value: 'comercio_retail', label: 'Comercio / retail general', definicion: 'Negocios que venden productos por catálogo, tienda física o redes sociales' },
   { value: 'no_definido', label: 'Sin definir', definicion: 'La charla no dio suficiente información para clasificar este eje' },
 ];
 

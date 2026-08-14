@@ -195,6 +195,16 @@
         "failed": "échec du traitement"
       },
       "prototypeBadge": "Prototype en développement",
+      "scheduling": {
+        "loadingSlots": "Recherche des créneaux disponibles...",
+        "pickSlot": "Choisissez un créneau :",
+        "confirming": "Confirmation de votre rendez-vous...",
+        "successTitle": "Rendez-vous programmé !",
+        "successBody": "L'Ing. Juan Villegas vous contactera à l'heure choisie.",
+        "conflict": "Ce créneau n'est plus disponible, choisissez-en un autre.",
+        "failed": "Un problème est survenu lors de la prise de rendez-vous. Vos informations ont été enregistrées, l'Ing. Juan Villegas vous contactera directement.",
+        "unavailable": "Impossible de charger les créneaux disponibles pour le moment."
+      },
       "about": {
         "badge": "Assistant IA",
         "text": "Jevy est un agent conversationnel, pas une personne en direct. La conversation dure quelques minutes — à la fin, je te contacte directement par le canal que tu préfères."

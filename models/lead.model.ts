@@ -1,16 +1,39 @@
 import mongoose, { Document } from 'mongoose';
 
+// Lead = solo cliente. El reclutador vive en su propia colección (JobOffer)
+// — los datos son demasiado distintos como para forzarlos en campos
+// genéricos compartidos. Ver dev-aguila-azul/vault/portfolio:
+// planes/levantamiento-informacion-jevy.
+
+export interface IAttachment {
+  filename: string;
+  type: string;
+  url: string;
+  extractedNote?: string;
+}
+
 export interface ILead extends Document {
-  type: 'client' | 'recruiter';
   name: string;
   email: string;
   preferredChannel: 'email' | 'whatsapp';
   channelContact: string;
+
   problem: string;
   whatTheyWant: string;
+  stakeholders?: string;
+  currentProcess?: string;
+  outOfScope?: string;
+  priorities?: string;
+  successCriteria?: string;
+
   estimatedAmount?: string;
   expectedTimeline?: string;
+
   projectMatch?: mongoose.Types.ObjectId;
+
+  markdownReport?: string;
+  attachments: IAttachment[];
+
   interestLevel: 'high' | 'medium' | 'low';
   transcript: {
     role: 'jevy' | 'lead';
@@ -20,12 +43,16 @@ export interface ILead extends Document {
   createdAt: Date;
 }
 
+function attachmentFields() {
+  return {
+    filename: { type: String, required: true },
+    type: { type: String, required: true },
+    url: { type: String, required: true },
+    extractedNote: String,
+  };
+}
+
 const LeadSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ['client', 'recruiter'],
-    required: true
-  },
   name: {
     type: String,
     required: true
@@ -43,6 +70,7 @@ const LeadSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
   problem: {
     type: String,
     required: true
@@ -51,12 +79,26 @@ const LeadSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  stakeholders: String,
+  currentProcess: String,
+  outOfScope: String,
+  priorities: String,
+  successCriteria: String,
+
   estimatedAmount: String,
   expectedTimeline: String,
+
   projectMatch: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project'
   },
+
+  markdownReport: String,
+  attachments: {
+    type: [attachmentFields()],
+    default: []
+  },
+
   interestLevel: {
     type: String,
     enum: ['high', 'medium', 'low'],

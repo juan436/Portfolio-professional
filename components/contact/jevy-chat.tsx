@@ -6,6 +6,7 @@ import { Send, Paperclip, Check, Loader2 } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
 import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
+import { SchedulingWidget, type SchedulingData } from "@/components/contact/scheduling-widget"
 
 interface ProjectMatch {
   id: string
@@ -21,6 +22,7 @@ interface ChatLine {
   role: "jevy" | "lead"
   text: string
   matches?: ProjectMatch[]
+  schedulingData?: SchedulingData
 }
 
 interface DeepSeekMessage {
@@ -102,6 +104,16 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
     seeMore: "",
     demo: "",
     chips: [] as { key: string; label: string }[],
+    scheduling: {
+      loadingSlots: "",
+      pickSlot: "",
+      confirming: "",
+      successTitle: "",
+      successBody: "",
+      conflict: "",
+      failed: "",
+      unavailable: "",
+    },
   })
 
   // Cargar traducciones después de la hidratación (mismo patrón que el resto de /contact)
@@ -126,6 +138,16 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
       seeMore: String(t("common.seeMore")),
       demo: String(t("projects.demo")),
       chips: CHIP_KEYS.map((key) => ({ key, label: String(t(`contact.jevy.chips.${key}`)) })),
+      scheduling: {
+        loadingSlots: String(t("contact.jevy.scheduling.loadingSlots")),
+        pickSlot: String(t("contact.jevy.scheduling.pickSlot")),
+        confirming: String(t("contact.jevy.scheduling.confirming")),
+        successTitle: String(t("contact.jevy.scheduling.successTitle")),
+        successBody: String(t("contact.jevy.scheduling.successBody")),
+        conflict: String(t("contact.jevy.scheduling.conflict")),
+        failed: String(t("contact.jevy.scheduling.failed")),
+        unavailable: String(t("contact.jevy.scheduling.unavailable")),
+      },
     })
   }, [t, initialService])
 
@@ -134,7 +156,11 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
   const [input, setInput] = useState("")
   const [chipsVisible, setChipsVisible] = useState(true)
   const [isTyping, setIsTyping] = useState(false)
+  const [isClosed, setIsClosed] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  // Un id por charla — agrupa los adjuntos guardados en disco y evita
+  // guardar el Lead/JobOffer más de una vez al cerrar.
+  const [sessionId] = useState(() => crypto.randomUUID())
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
@@ -150,7 +176,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
   }, [translatedTexts.greeting])
 
   const pushLeadLine = async (text: string, contextOverride?: string) => {
-    if (!text.trim() || isTyping) return
+    if (!text.trim() || isTyping || isClosed) return
     setLines((prev) => [...prev, { id: prev.length, role: "lead", text }])
     setChipsVisible(false)
     const nextHistory = [...history, { role: "user" as const, content: text }]
@@ -165,6 +191,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
         body: JSON.stringify({
           messages: nextHistory,
           service: initialService,
+          sessionId,
           ...(attachmentsContext ? { attachmentsContext } : {}),
         }),
       })
@@ -174,8 +201,12 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
         throw new Error(data.message || "respuesta vacía")
       }
 
-      setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: data.reply, matches: data.matches }])
+      setLines((prev) => [
+        ...prev,
+        { id: prev.length, role: "jevy", text: data.reply, matches: data.matches, schedulingData: data.schedulingData || undefined },
+      ])
       setHistory((prev) => [...prev, { role: "assistant", content: data.reply }])
+      if (data.closed) setIsClosed(true)
     } catch (error) {
       console.error("Error al hablar con Jevy:", error)
       setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: translatedTexts.errorFallback }])
@@ -196,7 +227,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
   }
 
   const processFiles = async (files: File[]) => {
-    const processed = await attachments.handleFileSelect(files)
+    const processed = await attachments.handleFileSelect(files, sessionId)
     if (processed) {
       const notice = `${translatedTexts.attachedNotice}: ${processed.succeeded.map((r) => r.filename).join(", ")}`
       await pushLeadLine(notice, processed.mergedContext)
@@ -270,6 +301,9 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
                 demoLabel={translatedTexts.demo}
               />
             ))}
+            {line.schedulingData && (
+              <SchedulingWidget schedulingData={line.schedulingData} texts={translatedTexts.scheduling} />
+            )}
           </div>
         ))}
 
@@ -308,7 +342,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
           type="button"
           aria-label={translatedTexts.attachTooltip}
           title={translatedTexts.attachTooltip}
-          disabled={isTyping || attachments.isUploadingAttachment}
+          disabled={isTyping || isClosed || attachments.isUploadingAttachment}
           onClick={() => attachments.fileInputRef.current?.click()}
           className="relative w-9 h-9 shrink-0 rounded-md border border-blue-700/30 flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-500/50 transition-colors disabled:opacity-50"
         >
@@ -327,13 +361,13 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={translatedTexts.inputPlaceholder}
-          disabled={isTyping}
+          disabled={isTyping || isClosed}
           className="flex-1 bg-transparent text-base font-mono text-slate-200 placeholder:text-slate-600 outline-none disabled:opacity-50"
         />
         <button
           type="submit"
           aria-label="send"
-          disabled={isTyping}
+          disabled={isTyping || isClosed}
           className="w-9 h-9 rounded-md bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center hover:brightness-110 transition-all disabled:opacity-50"
         >
           <Send className="h-4 w-4" />

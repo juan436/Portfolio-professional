@@ -14,8 +14,8 @@ export default function Projects() {
 
   // Combinar proyectos traducidos con las etiquetas e imágenes del contenido original
   const combinedProjects = {
-    systems: translatedContent.projects?.systems?.map(project => {
-      const originalProject = content.projects.systems.find(p => p.id === project.id);
+    web: translatedContent.projects?.web?.map(project => {
+      const originalProject = content.projects.web.find(p => p.id === project.id);
 
       let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
       if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
@@ -42,8 +42,8 @@ export default function Projects() {
         image: imageUrl
       };
     }) || [],
-    backend: translatedContent.projects?.backend?.map(project => {
-      const originalProject = content.projects.backend.find(p => p.id === project.id);
+    infra_backend: translatedContent.projects?.infra_backend?.map(project => {
+      const originalProject = content.projects.infra_backend.find(p => p.id === project.id);
 
       let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
       if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
@@ -61,9 +61,9 @@ export default function Projects() {
   const [translatedTexts, setTranslatedTexts] = useState({
     subtitle: "",
     navLabel: "",
-    systems: "",
+    web: "",
     mobile: "",
-    backend: "",
+    infra_backend: "",
     all: "",
     noProjects: "",
     code: "",
@@ -78,9 +78,9 @@ export default function Projects() {
     setTranslatedTexts({
       subtitle: String(t("projects.subtitle")),
       navLabel: String(t("nav.projects")),
-      systems: String(t("projects.systems")),
+      web: String(t("projects.systems")),
       mobile: String(t("projects.mobile")),
-      backend: String(t("projects.backend")),
+      infra_backend: String(t("projects.backend")),
       all: String(t("projects.all")),
       noProjects: String(t("projects.noProjects")),
       code: String(t("projects.code")),
@@ -91,7 +91,7 @@ export default function Projects() {
     })
   }, [t, language])
 
-  const totalCount = combinedProjects.systems.length + combinedProjects.mobile.length + combinedProjects.backend.length
+  const totalCount = combinedProjects.web.length + combinedProjects.mobile.length + combinedProjects.infra_backend.length
 
   return (
     <section id="projects" className="py-20 relative">
