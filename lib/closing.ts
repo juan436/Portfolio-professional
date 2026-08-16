@@ -33,6 +33,12 @@ export interface ClosingExtraction {
   contractType: 'freelance' | 'full_time' | 'per_project' | 'no_definido';
   offeredAmount: string;
   selectionProcess: string;
+
+  // Cualquier otro dato relevante que Jevy identifique en la charla, no
+  // limitado a una lista fija — reemplaza tener que anticipar cada campo
+  // posible con un schema cerrado. Ver dev-aguila-azul/vault/portfolio:
+  // planes/levantamiento-informacion-jevy (registro 2026-08-15).
+  additionalDetails: { topic: string; detail: string }[];
 }
 
 export function buildClosingTool(): DeepSeekToolFunction {
@@ -67,6 +73,20 @@ export function buildClosingTool(): DeepSeekToolFunction {
         contractType: { type: 'string', enum: ['freelance', 'full_time', 'per_project', 'no_definido'] },
         offeredAmount: { type: 'string', description: '(reclutador) Pago o rango ofrecido' },
         selectionProcess: { type: 'string', description: '(reclutador) Entrevistas, pruebas técnicas' },
+
+        additionalDetails: {
+          type: 'array',
+          description:
+            'Cualquier otro dato relevante para definir el proyecto/vacante que NO encaje en los campos de arriba — no es una lista cerrada, incluí lo que identifiques como importante en esta charla puntual, venga de una pregunta tuya o de algo que el lead mencionó sin que se lo preguntaras (charlando o en un adjunto). Ejemplos de temas a considerar si aplican (cliente): preferencia o restricción tecnológica (ej. "lo quiero en PHP"), integraciones necesarias con sistemas que ya usa, quién decide y aprueba el presupuesto, volumen esperado de uso, soporte post-entrega, plataformas objetivo (web/móvil/tablet), quién administra el contenido después, datos sensibles o compliance, urgencia real (por qué ahora), referencias visuales/funcionales, infraestructura existente (servidor/hosting/dominio), fecha límite dura vs. flexible, idiomas requeridos, identidad visual existente, estructura de pago, nivel de criticidad/uptime, equipo técnico interno, fases futuras ya pensadas, capacitación del equipo. Ejemplos (reclutador): estructura del equipo, duración y fecha de inicio, zona horaria, si es reemplazo o posición nueva, si el salario es negociable, beneficios adicionales, proceso completo hasta la decisión, contexto de la empresa (final/agencia/intermediario). No preguntes todo esto en cada charla — solo lo que sea relevante para ese lead puntual.',
+          items: {
+            type: 'object',
+            properties: {
+              topic: { type: 'string', description: 'Nombre corto del tema, ej. "Preferencia tecnológica"' },
+              detail: { type: 'string', description: 'Lo que contó el lead sobre ese tema' },
+            },
+            required: ['topic', 'detail'],
+          },
+        },
       },
       required: ['type', 'name', 'email', 'channelContact'],
     },
@@ -104,7 +124,17 @@ export function normalizeClosing(raw: Record<string, unknown> | null): ClosingEx
     contractType: (str('contractType') as ClosingExtraction['contractType']) || 'no_definido',
     offeredAmount: pick(raw?.offeredAmount),
     selectionProcess: pick(raw?.selectionProcess),
+
+    additionalDetails: pickAdditionalDetails(raw?.additionalDetails),
   };
+}
+
+function pickAdditionalDetails(v: unknown): { topic: string; detail: string }[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .filter((item): item is Record<string, unknown> => typeof item === 'object' && item !== null)
+    .map((item) => ({ topic: pick(item.topic), detail: pick(item.detail) }))
+    .filter((item) => item.topic && item.detail);
 }
 
 /** Listo para cerrar: tenemos contacto completo — lo mínimo indispensable. */

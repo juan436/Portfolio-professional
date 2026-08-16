@@ -1,4 +1,4 @@
-import type { ILead, IAttachment } from '@/models/lead.model';
+import type { ILead, IAttachment, IAdditionalDetail } from '@/models/lead.model';
 import type { IJobOffer } from '@/models/joboffer.model';
 
 // Arma el markdown completo del levantamiento — el mismo contenido que se
@@ -9,9 +9,44 @@ function field(label: string, value: string | undefined | null, fallback = '_sin
   return `**${label}:** ${value && value.trim() ? value : fallback}`;
 }
 
+// Los enums de reclutador (schema/BD en inglés, ver dev-aguila-azul/vault/
+// portfolio: planes/agente-intake-conversacional-deepseek) no son legibles
+// para un humano — se traducen acá antes de mostrarse, tanto en el markdown
+// como en el correo de n8n (ver lib/closing-actions.ts).
+const MODALITY_LABELS: Record<string, string> = {
+  remote: 'Remoto',
+  onsite: 'Presencial',
+  hybrid: 'Híbrido',
+};
+const CONTRACT_TYPE_LABELS: Record<string, string> = {
+  freelance: 'Freelance',
+  full_time: 'Tiempo completo',
+  per_project: 'Por proyecto',
+};
+
+export function modalityLabel(value: string | undefined | null): string | undefined {
+  if (!value) return undefined;
+  return MODALITY_LABELS[value] || value;
+}
+
+export function contractTypeLabel(value: string | undefined | null): string | undefined {
+  if (!value) return undefined;
+  return CONTRACT_TYPE_LABELS[value] || value;
+}
+
 function attachmentsList(attachments: IAttachment[]): string {
   if (!attachments.length) return '_ninguno_';
   return attachments.map((a) => `- ${a.filename}${a.extractedNote ? ` — ${a.extractedNote}` : ''}`).join('\n');
+}
+
+// Sección de largo variable — lo que Jevy identificó como relevante en esta
+// charla puntual, sin schema fijo (ver lib/closing.ts, additionalDetails).
+// Se omite del todo si no hay nada, en vez de mostrar "_ninguno_": a
+// diferencia de Adjuntos, no es un campo esperado siempre.
+function additionalDetailsSection(details: IAdditionalDetail[]): string {
+  if (!details.length) return '';
+  const fields = details.map((d) => field(d.topic, d.detail)).join('\n');
+  return `\n## Detalles adicionales\n${fields}\n`;
 }
 
 export function buildLeadMarkdown(lead: Partial<ILead>, matchTitle?: string, matchTier?: 'entregado' | 'laboratorio'): string {
@@ -41,7 +76,7 @@ ${field('Criterio de éxito', lead.successCriteria)}
 ## Restricciones
 ${field('Presupuesto estimado', lead.estimatedAmount)}
 ${field('Tiempo esperado', lead.expectedTimeline)}
-
+${additionalDetailsSection(lead.additionalDetails || [])}
 ## Adjuntos
 ${attachmentsList(lead.attachments || [])}
 `;
@@ -59,11 +94,11 @@ ${field('WhatsApp', offer.channelContact)}
 ${field('Empresa', offer.companyName)}
 ${field('Puesto', offer.role)}
 ${field('Stack requerido', offer.techStack)}
-${field('Modalidad', offer.modality)}
-${field('Tipo de contrato', offer.contractType)}
+${field('Modalidad', modalityLabel(offer.modality))}
+${field('Tipo de contrato', contractTypeLabel(offer.contractType))}
 ${field('Pago ofrecido', offer.offeredAmount)}
 ${field('Proceso de selección', offer.selectionProcess)}
-
+${additionalDetailsSection(offer.additionalDetails || [])}
 ## Adjuntos
 ${attachmentsList(offer.attachments || [])}
 `;

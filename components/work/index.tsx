@@ -33,7 +33,7 @@ export default function WorkIntro() {
   }
 
   return (
-    <section className="pt-8 pb-8 md:pt-12 md:pb-10 relative overflow-hidden">
+    <section className="pb-8 md:pb-10 relative overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/90 to-black" />
       </div>

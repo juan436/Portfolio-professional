@@ -106,7 +106,10 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
     chips: [] as { key: string; label: string }[],
     scheduling: {
       loadingSlots: "",
+      pickDay: "",
       pickSlot: "",
+      back: "",
+      hourTaken: "",
       confirming: "",
       successTitle: "",
       successBody: "",
@@ -140,7 +143,10 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
       chips: CHIP_KEYS.map((key) => ({ key, label: String(t(`contact.jevy.chips.${key}`)) })),
       scheduling: {
         loadingSlots: String(t("contact.jevy.scheduling.loadingSlots")),
+        pickDay: String(t("contact.jevy.scheduling.pickDay")),
         pickSlot: String(t("contact.jevy.scheduling.pickSlot")),
+        back: String(t("contact.jevy.scheduling.back")),
+        hourTaken: String(t("contact.jevy.scheduling.hourTaken")),
         confirming: String(t("contact.jevy.scheduling.confirming")),
         successTitle: String(t("contact.jevy.scheduling.successTitle")),
         successBody: String(t("contact.jevy.scheduling.successBody")),
@@ -285,7 +291,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
         <span className="ml-2 text-sm text-slate-500 font-mono">{translatedTexts.windowTitle}</span>
       </div>
 
-      <div ref={scrollRef} className="p-6 space-y-4 h-[500px] overflow-y-auto font-mono text-base leading-relaxed">
+      <div ref={scrollRef} className="p-6 space-y-4 h-[620px] overflow-y-auto font-mono text-base leading-relaxed">
         {lines.map((line) => (
           <div key={line.id} className={line.role === "jevy" ? "" : "text-slate-400"}>
             <span className={line.role === "jevy" ? "text-blue-500" : "text-green-500"}>

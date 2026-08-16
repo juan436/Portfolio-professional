@@ -9,7 +9,7 @@ export default function WorkPage() {
     <main className="min-h-screen bg-black flex flex-col">
       <Navbar />
 
-      <div className="pt-20 flex-grow">
+      <div className="pt-28 flex-grow">
         <WorkIntro />
         <Projects />
         <Automations />

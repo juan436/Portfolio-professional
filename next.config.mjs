@@ -18,7 +18,9 @@ const nextConfig = {
   // módulo — el bundler (Turbopack/webpack) las reescribe mal si lo empaqueta,
   // tira ENOENT buscando Helvetica.afm en una ruta virtual del bundler.
   // Excluido del bundle: se carga con require() nativo de Node, no bundleado.
-  serverExternalPackages: ['pdfkit'],
+  // @react-pdf/renderer (usado por @json-render/react-pdf, lib/pdf.ts desde
+  // 2026-08-14) usa pdfkit por debajo — mismo riesgo, excluido preventivo.
+  serverExternalPackages: ['pdfkit', '@react-pdf/renderer', '@json-render/react-pdf'],
   // Para Docker necesitamos output: 'standalone'
   output: 'standalone',
 }

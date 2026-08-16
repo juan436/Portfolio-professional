@@ -20,7 +20,6 @@ export default function Contact() {
     : undefined
   const [translatedTexts, setTranslatedTexts] = useState({
     title: "",
-    subtitle: "",
     attachTooLarge: "",
     attachError: "",
   })
@@ -29,7 +28,6 @@ export default function Contact() {
   useEffect(() => {
     setTranslatedTexts({
       title: String(t("contact.title")),
-      subtitle: String(t("ctas.contact.hook")),
       attachTooLarge: String(t("contact.jevy.attachTooLarge")),
       attachError: String(t("contact.jevy.attachError")),
     })
@@ -39,7 +37,7 @@ export default function Contact() {
   const attachments = useAttachments(translatedTexts.attachTooLarge, translatedTexts.attachError)
 
   return (
-    <section id="contact" className="pt-20 pb-20 relative">
+    <section id="contact" className="pt-28 pb-20 relative">
       <div className="absolute inset-0 z-0">
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
       </div>
@@ -55,8 +53,7 @@ export default function Contact() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-balance text-blue-500 mb-4">
             {translatedTexts.title}
           </h1>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">{translatedTexts.subtitle}</p>
+          <div className="w-20 h-1 bg-blue-600 mx-auto"></div>
         </motion.div>
       </div>
 

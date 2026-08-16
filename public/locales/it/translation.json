@@ -197,10 +197,13 @@
       "prototypeBadge": "Prototipo in sviluppo",
       "scheduling": {
         "loadingSlots": "Ricerca orari disponibili...",
+        "pickDay": "Scegli un giorno:",
         "pickSlot": "Scegli un orario:",
+        "back": "Indietro",
+        "hourTaken": "Occupato",
         "confirming": "Conferma dell'appuntamento...",
         "successTitle": "Appuntamento fissato!",
-        "successBody": "L'Ing. Juan Villegas ti contatterà all'orario scelto.",
+        "successBody": "L'Ing. Juan Villegas ti contatterà all'orario scelto. La videochiamata è stata programmata e il link è stato inviato alla tua email.",
         "conflict": "Quell'orario non è più disponibile, scegline un altro.",
         "failed": "Si è verificato un problema nella prenotazione. Le tue informazioni sono state salvate, l'Ing. Juan Villegas ti contatterà direttamente.",
         "unavailable": "Impossibile caricare gli orari disponibili al momento."

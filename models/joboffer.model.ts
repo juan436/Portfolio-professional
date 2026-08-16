@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-import type { IAttachment } from '@/models/lead.model';
+import type { IAttachment, IAdditionalDetail } from '@/models/lead.model';
 
 // JobOffer = reclutador. Separado de Lead a propósito (charla 2026-08-13,
 // dev-aguila-azul/vault/portfolio: planes/levantamiento-informacion-jevy) —
@@ -31,6 +31,7 @@ export interface IJobOffer extends Document {
 
   markdownReport?: string;
   attachments: IAttachment[];
+  additionalDetails: IAdditionalDetail[];
 
   interestLevel: 'high' | 'medium' | 'low';
   transcript: {
@@ -83,6 +84,10 @@ const JobOfferSchema = new mongoose.Schema({
   markdownReport: String,
   attachments: {
     type: [attachmentFields()],
+    default: []
+  },
+  additionalDetails: {
+    type: [{ topic: { type: String, required: true }, detail: { type: String, required: true } }],
     default: []
   },
 

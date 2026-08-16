@@ -200,10 +200,13 @@
       "prototypeBadge": "Prototipo en desarrollo",
       "scheduling": {
         "loadingSlots": "Buscando horarios disponibles...",
+        "pickDay": "Elegí un día:",
         "pickSlot": "Elegí un horario:",
+        "back": "Volver",
+        "hourTaken": "Ocupado",
         "confirming": "Confirmando tu cita...",
         "successTitle": "¡Cita agendada!",
-        "successBody": "El Ing. Juan Villegas te va a contactar en el horario elegido.",
+        "successBody": "El Ing. Juan Villegas te va a contactar en el horario elegido. La videollamada quedó agendada y el enlace se envió a tu correo.",
         "conflict": "Ese horario ya no está disponible, elegí otro.",
         "failed": "Hubo un problema agendando tu cita. Tu información ya quedó guardada, el Ing. Juan Villegas te contacta directo.",
         "unavailable": "No pude cargar los horarios disponibles en este momento."

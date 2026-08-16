@@ -12,6 +12,11 @@ export interface IAttachment {
   extractedNote?: string;
 }
 
+export interface IAdditionalDetail {
+  topic: string;
+  detail: string;
+}
+
 export interface ILead extends Document {
   name: string;
   email: string;
@@ -33,6 +38,7 @@ export interface ILead extends Document {
 
   markdownReport?: string;
   attachments: IAttachment[];
+  additionalDetails: IAdditionalDetail[];
 
   interestLevel: 'high' | 'medium' | 'low';
   transcript: {
@@ -96,6 +102,10 @@ const LeadSchema = new mongoose.Schema({
   markdownReport: String,
   attachments: {
     type: [attachmentFields()],
+    default: []
+  },
+  additionalDetails: {
+    type: [{ topic: { type: String, required: true }, detail: { type: String, required: true } }],
     default: []
   },
 

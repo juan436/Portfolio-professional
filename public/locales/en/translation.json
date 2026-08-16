@@ -200,10 +200,13 @@
       "prototypeBadge": "Prototype in progress",
       "scheduling": {
         "loadingSlots": "Looking for available times...",
+        "pickDay": "Pick a day:",
         "pickSlot": "Pick a time:",
+        "back": "Back",
+        "hourTaken": "Taken",
         "confirming": "Confirming your appointment...",
         "successTitle": "Appointment scheduled!",
-        "successBody": "Ing. Juan Villegas will contact you at the chosen time.",
+        "successBody": "Ing. Juan Villegas will contact you at the chosen time. The video call was scheduled and the link was sent to your email.",
         "conflict": "That time is no longer available, pick another one.",
         "failed": "There was a problem scheduling your appointment. Your information was saved, Ing. Juan Villegas will contact you directly.",
         "unavailable": "Couldn't load available times right now."

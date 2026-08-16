@@ -7,7 +7,7 @@ export default function ContactPage() {
     <main className="min-h-screen bg-black flex flex-col">
       <Navbar />
 
-      <div className="mt-16 flex-grow">
+      <div className="flex-grow">
         <Contact />
       </div>
 

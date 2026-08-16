@@ -53,7 +53,7 @@ export default function CertificatesPage() {
     <main className="min-h-screen bg-black flex flex-col">
       <Navbar />
 
-      <div className="container mx-auto px-6 pt-20 pb-8 mt-16 flex-grow relative">
+      <div className="container mx-auto px-6 pt-28 pb-8 flex-grow relative">
         <div className="absolute top-20 right-0 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
 
         <motion.div

@@ -197,10 +197,13 @@
       "prototypeBadge": "Prototype en développement",
       "scheduling": {
         "loadingSlots": "Recherche des créneaux disponibles...",
+        "pickDay": "Choisissez un jour :",
         "pickSlot": "Choisissez un créneau :",
+        "back": "Retour",
+        "hourTaken": "Occupé",
         "confirming": "Confirmation de votre rendez-vous...",
         "successTitle": "Rendez-vous programmé !",
-        "successBody": "L'Ing. Juan Villegas vous contactera à l'heure choisie.",
+        "successBody": "L'Ing. Juan Villegas vous contactera à l'heure choisie. L'appel vidéo a été programmé et le lien a été envoyé à votre e-mail.",
         "conflict": "Ce créneau n'est plus disponible, choisissez-en un autre.",
         "failed": "Un problème est survenu lors de la prise de rendez-vous. Vos informations ont été enregistrées, l'Ing. Juan Villegas vous contactera directement.",
         "unavailable": "Impossible de charger les créneaux disponibles pour le moment."
