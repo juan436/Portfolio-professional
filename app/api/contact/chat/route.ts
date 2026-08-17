@@ -79,7 +79,7 @@ ${attachmentsContext ? `CONTENIDO EXTRAÍDO DE ARCHIVOS QUE EL LEAD ADJUNTÓ (co
 
 export async function POST(request: Request) {
   try {
-    const { messages, service, attachmentsContext, sessionId } = await request.json();
+    const { messages, service, attachmentsContext, sessionId, alreadyMatched } = await request.json();
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ success: false, message: 'messages es requerido' }, { status: 400 });
@@ -90,11 +90,13 @@ export async function POST(request: Request) {
 
     // Extracción por function calling — recién con algo de charla acumulada
     // (nunca en el primer mensaje). Si falla, Jevy sigue sin match, no rompe
-    // la conversación. Ver planes/matching-catalogo-function-calling.
+    // la conversación. Ver planes/matching-catalogo-function-calling. Una vez
+    // que el frontend ya mostró un match (alreadyMatched), no se vuelve a
+    // calcular — evita que la misma tarjeta se reenvíe en cada turno siguiente.
     const userMessageCount = (messages as DeepSeekMessage[]).filter((m) => m.role === 'user').length;
     let matchResult: MatchResult | null = null;
 
-    if (userMessageCount >= 2) {
+    if (userMessageCount >= 2 && !alreadyMatched) {
       try {
         const taxonomy = await getJevyTaxonomy();
         const tool = buildExtractionTool(taxonomy);

@@ -8,6 +8,8 @@ import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
 import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
 import { SchedulingWidget, type SchedulingData } from "@/components/contact/scheduling-widget"
 
+const CHAT_STORAGE_KEY = "jevy-chat-state"
+
 interface ProjectMatch {
   id: string
   title: string
@@ -201,7 +203,46 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
   const bottomSentinelRef = useRef<HTMLDivElement>(null)
   // Un id por charla — agrupa los adjuntos guardados en disco y evita
   // guardar el Lead/JobOffer más de una vez al cerrar.
-  const [sessionId] = useState(() => crypto.randomUUID())
+  const [sessionId, setSessionId] = useState(() => crypto.randomUUID())
+
+  // Restaurar la charla completa desde localStorage al montar — antes de
+  // recargar la página se perdía todo. Corre antes de que el efecto del
+  // saludo inicial dispare (mismo mount), así si hay algo guardado el saludo
+  // no lo pisa. isFirstSaveRef evita que el efecto de guardado de abajo
+  // sobreescriba lo recién leído con el estado vacío por defecto de este
+  // primer render (las actualizaciones de estado de acá no son sincrónicas).
+  const isFirstSaveRef = useRef(true)
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(CHAT_STORAGE_KEY)
+      if (raw) {
+        const saved = JSON.parse(raw)
+        if (saved?.sessionId && Array.isArray(saved.lines) && saved.lines.length > 0) {
+          setSessionId(saved.sessionId)
+          setLines(saved.lines)
+          setHistory(Array.isArray(saved.history) ? saved.history : [])
+          setIsClosed(Boolean(saved.isClosed))
+          setChipsVisible(Boolean(saved.chipsVisible))
+        }
+      }
+    } catch {
+      // localStorage corrupto o inaccesible — arranca de cero, no rompe el chat
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (isFirstSaveRef.current) {
+      isFirstSaveRef.current = false
+      return
+    }
+    try {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify({ sessionId, lines, history, isClosed, chipsVisible }))
+    } catch {
+      // localStorage lleno o inaccesible — no rompe el chat
+    }
+  }, [sessionId, lines, history, isClosed, chipsVisible])
 
   // Auto-scroll al fondo dirigido por el tamaño real del contenido (ResizeObserver),
   // no por una lista de dependencias de estado — así cualquier cosa que haga crecer
@@ -254,6 +295,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
 
     try {
       const attachmentsContext = contextOverride ?? attachments.buildAttachmentsContext()
+      const alreadyMatched = lines.some((line) => (line.matches?.length ?? 0) > 0)
       const response = await fetch("/api/contact/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -261,6 +303,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
           messages: nextHistory,
           service: initialService,
           sessionId,
+          alreadyMatched,
           ...(attachmentsContext ? { attachmentsContext } : {}),
         }),
       })
