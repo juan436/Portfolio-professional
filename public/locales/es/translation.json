@@ -223,13 +223,14 @@
       "steps": {
         "heading": "Cómo funciona",
         "step1": "Le cuentas tu proyecto a Jevy y te pregunta lo necesario para entenderlo",
-        "step2": "Te muestra un proyecto parecido que ya construí",
+        "step2": "Si ya existe una solución parecida, te la muestro para ayudarte a mejorar tu idea",
         "step3": "Definen juntos el alcance real",
-        "step4": "Te contacto por el canal que prefieras, con una cita ya agendada"
+        "step4": "Te contacto para confirmar los detalles, con tu cita ya agendada en el horario que elegiste"
       },
       "fallback": {
         "heading": "Prefieres escribir directo",
-        "text": "Sin chat, sin vueltas:"
+        "text": "Sin chat, sin vueltas:",
+        "whatsappLabel": "WhatsApp"
       }
     },
     "form": {

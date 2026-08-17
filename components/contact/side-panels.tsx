@@ -7,6 +7,7 @@ import { useContent } from "@/contexts/content"
 import { fetchProjects } from "@/services/api/projects"
 import { fetchTestimonials } from "@/services/api/testimonials"
 import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
+import { WHATSAPP_NUMBER } from "@/utils/social-links"
 
 interface PanelTexts {
   aboutBadge: string
@@ -21,6 +22,7 @@ interface PanelTexts {
   step4: string
   fallbackHeading: string
   fallbackText: string
+  fallbackWhatsappLabel: string
 }
 
 function usePanelTexts(): PanelTexts {
@@ -38,6 +40,7 @@ function usePanelTexts(): PanelTexts {
     step4: "",
     fallbackHeading: "",
     fallbackText: "",
+    fallbackWhatsappLabel: "",
   })
 
   useEffect(() => {
@@ -54,6 +57,7 @@ function usePanelTexts(): PanelTexts {
       step4: String(t("contact.jevy.steps.step4")),
       fallbackHeading: String(t("contact.jevy.fallback.heading")),
       fallbackText: String(t("contact.jevy.fallback.text")),
+      fallbackWhatsappLabel: String(t("contact.jevy.fallback.whatsappLabel")),
     })
   }, [t])
 
@@ -142,13 +146,27 @@ export function JevyGuidePanel() {
         </ol>
       </div>
 
-      {email && (
+      {(email || WHATSAPP_NUMBER) && (
         <div className="rounded-lg border border-blue-700/15 bg-black/30 p-4 text-sm">
           <div className="font-mono text-[0.7rem] uppercase tracking-wider text-blue-400 mb-2">{texts.fallbackHeading}</div>
           <p className="text-slate-400 mb-2">{texts.fallbackText}</p>
-          <a href={`mailto:${email}`} className="font-mono text-[0.85rem] text-blue-300 border-b border-dashed border-blue-700/40 hover:text-blue-200 transition-colors">
-            {email}
-          </a>
+          <div className="flex flex-col gap-1.5">
+            {email && (
+              <a href={`mailto:${email}`} className="font-mono text-[0.85rem] text-blue-300 border-b border-dashed border-blue-700/40 hover:text-blue-200 transition-colors w-fit">
+                {email}
+              </a>
+            )}
+            {WHATSAPP_NUMBER && (
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[0.85rem] text-blue-300 border-b border-dashed border-blue-700/40 hover:text-blue-200 transition-colors w-fit"
+              >
+                {texts.fallbackWhatsappLabel}
+              </a>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -252,47 +270,39 @@ export function AttachmentsCard({ attachments }: { attachments: UseAttachmentsRe
           onClick={() => setModalOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-xl border border-blue-700/30 bg-[#0b0d10] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.7)] overflow-hidden"
+            className="w-full max-w-xl rounded-xl border border-blue-700/30 bg-[#0b0d10] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.7)] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between px-4 py-3 bg-[#0e1013] border-b border-blue-700/20">
-              <span className="font-mono text-[0.75rem] uppercase tracking-wider text-blue-400">{texts.modalTitle}</span>
+            <div className="flex items-center justify-between px-6 py-4 bg-[#0e1013] border-b border-blue-700/20">
+              <span className="font-mono text-sm uppercase tracking-wider text-blue-400">{texts.modalTitle}</span>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
                 aria-label="close"
                 className="text-slate-500 hover:text-red-400 transition-colors"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex flex-col max-h-[60vh] overflow-y-auto">
+            <div className="flex flex-col h-[420px] overflow-y-auto">
               {attachments.attachedFiles.map((file) => {
                 const result = attachments.attachmentResults.find((r) => r.filename === file.name)
                 const failed = Boolean(result?.error)
                 const done = Boolean(result?.markdown)
                 return (
-                  <div key={file.name} className="flex items-center gap-3 px-4 py-2.5 border-b border-blue-700/10 last:border-b-0">
-                    <span className="w-7 h-[34px] shrink-0 rounded border border-blue-700/30 bg-[#0e1013] flex items-center justify-center font-mono text-[0.55rem] font-bold text-blue-300">
+                  <div key={file.name} className="flex items-center gap-4 px-6 py-4 border-b border-blue-700/10 last:border-b-0">
+                    <span className="w-10 h-12 shrink-0 rounded border border-blue-700/30 bg-[#0e1013] flex items-center justify-center font-mono text-xs font-bold text-blue-300">
                       {fileExtLabel(file.name)}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm text-slate-300 truncate">{file.name}</div>
-                      <div className={`font-mono text-[0.62rem] mt-0.5 flex items-center gap-1 ${failed ? "text-red-400" : done ? "text-green-500" : "text-slate-500"}`}>
-                        {failed && <AlertTriangle className="h-3 w-3" />}
-                        {done && <Check className="h-3 w-3" />}
-                        {!result && <Loader2 className="h-3 w-3 animate-spin" />}
+                      <div className="text-base text-slate-300 truncate">{file.name}</div>
+                      <div className={`font-mono text-xs mt-1 flex items-center gap-1.5 ${failed ? "text-red-400" : done ? "text-green-500" : "text-slate-500"}`}>
+                        {failed && <AlertTriangle className="h-3.5 w-3.5" />}
+                        {done && <Check className="h-3.5 w-3.5" />}
+                        {!result && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                         {failed ? texts.failed : done ? texts.processed : texts.pending}
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => attachments.removeAttachedFile(file.name)}
-                      aria-label="remove attachment"
-                      className="text-slate-600 hover:text-red-400 transition-colors shrink-0"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
                   </div>
                 )
               })}

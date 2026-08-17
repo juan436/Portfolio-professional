@@ -73,11 +73,6 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
     }
   }
 
-  const removeAttachedFile = (filename: string) => {
-    setAttachedFiles((prev) => prev.filter((f) => f.name !== filename))
-    setAttachmentResults((prev) => prev.filter((r) => r.filename !== filename))
-  }
-
   const buildAttachmentsContext = () =>
     attachmentResults
       .filter((r) => r.markdown)
@@ -91,7 +86,6 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
     attachError,
     fileInputRef,
     handleFileSelect,
-    removeAttachedFile,
     buildAttachmentsContext,
   }
 }

@@ -220,13 +220,14 @@
       "steps": {
         "heading": "Come funziona",
         "step1": "Racconti il tuo progetto a Jevy e rispondi a ciò che serve per capirlo",
-        "step2": "Ti mostra un progetto simile che ho già realizzato",
+        "step2": "Se esiste già una soluzione simile, te la mostro per aiutarti a migliorare la tua idea",
         "step3": "Definite insieme l'ambito reale",
-        "step4": "Ti contatto tramite il canale che preferisci, con un appuntamento già fissato"
+        "step4": "Ti contatto per confermare i dettagli, con il tuo appuntamento già fissato all'orario scelto"
       },
       "fallback": {
         "heading": "Preferisci scrivere direttamente",
-        "text": "Senza chat, senza giri:"
+        "text": "Senza chat, senza giri:",
+        "whatsappLabel": "WhatsApp"
       }
     },
     "form": {

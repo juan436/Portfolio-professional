@@ -3,7 +3,7 @@
  */
 
 // Número de WhatsApp sin el signo +
-const WHATSAPP_NUMBER = "584125086548";
+export const WHATSAPP_NUMBER = "14099953886";
 
 // URLs de redes sociales centralizadas
 export const SOCIAL_LINKS = {

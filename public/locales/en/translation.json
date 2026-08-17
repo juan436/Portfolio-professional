@@ -223,13 +223,14 @@
       "steps": {
         "heading": "How it works",
         "step1": "Tell Jevy about your project and answer what it needs to understand it",
-        "step2": "It shows you a similar project I already built",
+        "step2": "If I already have a similar solution, I'll show it to you to help refine your idea",
         "step3": "You define the real scope together",
-        "step4": "I reach out through the channel you prefer, with a meeting already scheduled"
+        "step4": "I reach out to confirm the details, with your meeting already scheduled at the time you picked"
       },
       "fallback": {
         "heading": "Prefer to write directly",
-        "text": "No chat, no detours:"
+        "text": "No chat, no detours:",
+        "whatsappLabel": "WhatsApp"
       }
     },
     "form": {
