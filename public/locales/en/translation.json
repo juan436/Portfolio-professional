@@ -9,6 +9,7 @@
     "contact": "Let's Talk",
     "experience": "Experience",
     "automations": "Automations",
+    "agents": "Agents",
     "certificates": "Certifications",
     "work": "Work",
     "blog": "Blog"
@@ -43,22 +44,23 @@
   "hero": {
     "title": "Juan Villegas",
     "subtitle": "Full Stack Developer",
-    "consultantBadge": "Engineer & 360° Tech Consultant",
+    "consultantBadge": "Solutions Architect",
     "projects": "View Projects",
     "contact": "Contact Me"
   },
   "about": {
     "title": "About Me",
-    "role": "Full Stack Developer",
+    "role": "Solutions Architect",
     "engineer": "Telematics Engineer",
     "university": "Universidad Centroccidental \"Lisandro Alvarado\"",
     "downloadCV": "Download CV"
   },
   "work": {
-    "title": "I detect, architect, and automate",
-    "subtitle": "Here you'll find the systems I built end-to-end —front, back, and infrastructure— plus the AI automations already eliminating manual work in production.",
+    "title": "I detect, architect, automate, and build agents",
+    "subtitle": "Here you'll find the systems I built end-to-end —front, back, and infrastructure— plus the automations and AI agents already running in production, eliminating manual work and talking to real customers.",
     "ctaProjects": "View Projects",
-    "ctaAutomations": "View Automations"
+    "ctaAutomations": "View Automations",
+    "ctaAgents": "View Agents"
   },
   "projects": {
     "title": "Success Stories & High-Level Software",
@@ -174,6 +176,12 @@
         "automation": "I saw you need to automate something. Tell me which process you want to optimize.",
         "infra": "I saw you need help with infrastructure. Tell me what you have today."
       },
+      "defaultMessageByService": {
+        "web": "I want to build a web platform",
+        "mobile": "I want a native mobile app",
+        "automation": "I need to automate a process",
+        "infra": "I need help with infrastructure and deployment"
+      },
       "chips": {
         "app": "I want my own app",
         "automation": "I need an automation",
@@ -281,7 +289,7 @@
   },
   "footer": {
     "rights": "All rights reserved.",
-    "role": "Full Stack Developer"
+    "role": "Solutions Architect"
   },
   "experience": {
     "title": "Work Experience",
@@ -352,6 +360,24 @@
       "stepsHeading": "How it works, step by step",
       "notFound": "We couldn't find this automation.",
       "backToList": "Back to Automations",
+      "viewDetail": "View detail",
+      "toolsHeading": "Built with",
+      "channelsHeading": "Supported channels",
+      "setupTimeHeading": "Setup time"
+    }
+  },
+  "agents": {
+    "title": "Agents",
+    "subtitle": "Conversational systems that reason, decide and act — not fixed-step automations. Each entry shows a real agent, running.",
+    "capabilitiesWord": "capabilities",
+    "viewMore": "View all agents",
+    "detail": {
+      "whatItDoes": "What it does",
+      "capabilitiesHeading": "Capabilities",
+      "tryLive": "Try it live",
+      "liveDemoUnavailable": "Live demo coming soon.",
+      "notFound": "We couldn't find this agent.",
+      "backToList": "Back to Agents",
       "viewDetail": "View detail",
       "toolsHeading": "Built with",
       "channelsHeading": "Supported channels",

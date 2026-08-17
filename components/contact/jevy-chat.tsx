@@ -327,6 +327,20 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
     }
   }
 
+  // Si se llegó desde una tarjeta de Servicios (?servicio=X), manda automáticamente
+  // el mensaje por defecto de ese servicio como si el lead lo hubiera escrito —
+  // apenas aparece el saludo inicial, sin esperar que toque nada. Una sola vez.
+  const autoSentServiceMessageRef = useRef(false)
+  useEffect(() => {
+    if (autoSentServiceMessageRef.current) return
+    if (!initialService || !(SERVICES_WITH_GREETING as readonly string[]).includes(initialService)) return
+    if (lines.length !== 1) return
+    autoSentServiceMessageRef.current = true
+    const defaultMessage = String(t(`contact.jevy.defaultMessageByService.${initialService as ServiceKey}`))
+    pushLeadLine(defaultMessage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lines.length, initialService, t])
+
   const handleChipClick = (label: string) => {
     pushLeadLine(label)
   }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
@@ -52,15 +52,6 @@ export default function Services() {
       cloudCTA: String(t("ctas.services.cloud"))
     })
   }, [t])
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: (index: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, delay: 0.1 * index },
-    }),
-  }
 
   const getServiceIcon = (iconName: string) => {
     const iconClass = "h-10 w-10 text-blue-500 filter drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
@@ -145,46 +136,25 @@ export default function Services() {
         </motion.div>
 
         <div className="relative">
-          {/* SVG Connection Line */}
-          <div className="absolute top-1/2 left-0 w-full h-1 z-0 hidden lg:block pointer-events-none -translate-y-1/2 mt-10">
-            <svg className="w-full h-24 overflow-visible">
-              <path 
-                d="M 12.5% 40 Q 50% -20 87.5% 40"
-                stroke="url(#glow-gradient)" 
-                strokeWidth="2" 
-                fill="none" 
-                className="animate-pulse"
-                style={{ animationDuration: "3s" }}
-              />
-              <defs>
-                <linearGradient id="glow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="transparent" />
-                  <stop offset="50%" stopColor="#3b82f6" />
-                  <stop offset="100%" stopColor="transparent" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
             {translatedContent.services.map((service, index) => {
               const parts = service.description.split('|');
               const promise = parts[0]?.trim();
               const benefits = parts.slice(1);
-              const isLast = index === translatedContent.services.length - 1;
 
               return (
                 <motion.div
                   key={service._id || `service-${index}-${service.title}`}
-                  custom={index}
-                  variants={fadeIn}
-                  initial="initial"
-                  whileInView="animate"
-                  whileHover={{ 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.05 * index }}
+                  whileHover={{
                     scale: 1.02,
-                    rotateX: 5, 
+                    rotateX: 5,
                     rotateY: -5,
-                    transition: { duration: 0.2 } 
+                    transition: { duration: 0.2 }
                   }}
                   style={{ perspective: 1000 }}
                   viewport={{ once: true }}
@@ -195,13 +165,13 @@ export default function Services() {
                     <CardContent className="pt-6 flex flex-col h-full">
                       <div className="flex flex-col items-center text-center h-full">
                         <div className="mb-4 p-3 rounded-lg bg-blue-500/10 flex-shrink-0 relative group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-shadow duration-300">{getServiceIcon(service.icon)}</div>
-                        
+
                         <div className="min-h-[64px] flex items-center justify-center text-center w-full mb-2">
                           <h3 className="text-xl font-bold text-blue-400">{service.title}</h3>
                         </div>
-                        
+
                         <p className="text-sm font-medium mb-4 text-white/90 italic">"{promise}"</p>
-                        
+
                         <ul className="text-left space-y-2 mb-6 w-full">
                           {benefits.map((benefit, i) => (
                             <li key={i} className="text-xs text-slate-400 flex items-start">
@@ -210,9 +180,14 @@ export default function Services() {
                             </li>
                           ))}
                         </ul>
-                        
+
                         <Link
-                          href={`/contact?servicio=${getServiceKey(service.title)}`}
+                          href="/contact"
+                          onClick={() => {
+                            try {
+                              sessionStorage.setItem("jevy_initial_service", getServiceKey(service.title))
+                            } catch {}
+                          }}
                           className="mt-auto w-full py-3 px-2 bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-400 text-blue-400 hover:text-white text-[11px] font-black uppercase tracking-wider transition-all duration-300 rounded flex items-center justify-center group/btn"
                         >
                           {(() => {
@@ -232,13 +207,6 @@ export default function Services() {
                       </div>
                     </CardContent>
                   </Card>
-                  
-                  {/* Flecha indicadora de flujo */}
-                  {!isLast && (
-                    <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 bg-blue-500 rounded-full p-1 border-4 border-black group-hover:scale-125 transition-transform hidden lg:flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.5)]">
-                      <ArrowRight className="w-4 h-4 text-white" />
-                    </div>
-                  )}
                 </motion.div>
               );
             })}

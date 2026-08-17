@@ -9,6 +9,7 @@
     "contact": "Hablemos",
     "experience": "Experiencia",
     "automations": "Automatizaciones",
+    "agents": "Agentes",
     "certificates": "Certificaciones",
     "work": "Trabajo",
     "blog": "Blog"
@@ -31,7 +32,7 @@
         "description": "Construyo una base técnica robusta, escalable y preparada para el futuro de tu negocio."
       },
       "phase3": {
-        "title": "AUTOMATIZACIÓN INTELLIGENTE",
+        "title": "AUTOMATIZACIÓN INTELIGENTE",
         "description": "Integro IA y flujos de trabajo autónomos para que el sistema trabaje para ti, no al revés."
       },
       "phase4": {
@@ -43,22 +44,23 @@
   "hero": {
     "title": "Juan Villegas",
     "subtitle": "Desarrollador Full Stack",
-    "consultantBadge": "Ingeniero & Consultor Tecnológico 360°",
+    "consultantBadge": "Arquitecto de Soluciones Digitales",
     "projects": "Ver Proyectos",
     "contact": "Contáctame"
   },
   "about": {
     "title": "Sobre Mí",
-    "role": "Desarrollador Full Stack",
+    "role": "Arquitecto de Soluciones Digitales",
     "engineer": "Ingeniero en Telemática",
     "university": "Universidad Centroccidental \"Lisandro Alvarado\"",
     "downloadCV": "Descargar CV"
   },
   "work": {
-    "title": "Detecto, arquitecto y automatizo",
-    "subtitle": "Acá vas a ver los sistemas que construí completos —front, back e infraestructura— y las automatizaciones con IA que ya eliminan trabajo manual en producción.",
+    "title": "Detecto, arquitecto, automatizo y creo agentes",
+    "subtitle": "Acá vas a ver los sistemas que construí completos —front, back e infraestructura— y las automatizaciones y agentes de IA que ya operan en producción, eliminando trabajo manual y conversando con clientes reales.",
     "ctaProjects": "Ver Proyectos",
-    "ctaAutomations": "Ver Automatizaciones"
+    "ctaAutomations": "Ver Automatizaciones",
+    "ctaAgents": "Ver Agentes"
   },
   "projects": {
     "title": "Casos de Éxito & Software de Alto Nivel",
@@ -174,6 +176,12 @@
         "automation": "Vi que necesitas automatizar algo. Cuéntame qué proceso quieres optimizar.",
         "infra": "Vi que necesitas ayuda con infraestructura. Cuéntame qué tienes hoy."
       },
+      "defaultMessageByService": {
+        "web": "Quiero construir una plataforma web",
+        "mobile": "Quiero una app nativa móvil",
+        "automation": "Necesito automatizar un proceso",
+        "infra": "Necesito ayuda con infraestructura y despliegue"
+      },
       "chips": {
         "app": "Quiero mi propia app",
         "automation": "Necesito una automatización",
@@ -281,7 +289,7 @@
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
-    "role": "Desarrollador Full Stack"
+    "role": "Arquitecto de Soluciones Digitales"
   },
   "experience": {
     "title": "Experiencia Laboral",
@@ -352,6 +360,24 @@
       "stepsHeading": "Cómo funciona, paso a paso",
       "notFound": "No encontramos esta automatización.",
       "backToList": "Volver a Automatizaciones",
+      "viewDetail": "Ver detalle",
+      "toolsHeading": "Construido con",
+      "channelsHeading": "Canales soportados",
+      "setupTimeHeading": "Tiempo de puesta en marcha"
+    }
+  },
+  "agents": {
+    "title": "Agentes",
+    "subtitle": "Sistemas conversacionales que razonan, deciden y actúan — no automatizaciones de pasos fijos. Cada expediente muestra un agente real, funcionando.",
+    "capabilitiesWord": "capacidades",
+    "viewMore": "Ver todos los agentes",
+    "detail": {
+      "whatItDoes": "Qué hace",
+      "capabilitiesHeading": "Capacidades",
+      "tryLive": "Probalo en vivo",
+      "liveDemoUnavailable": "Demo en vivo próximamente.",
+      "notFound": "No encontramos este agente.",
+      "backToList": "Volver a Agentes",
       "viewDetail": "Ver detalle",
       "toolsHeading": "Construido con",
       "channelsHeading": "Canales soportados",

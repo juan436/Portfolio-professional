@@ -10,6 +10,7 @@ import { closeConversation, type SchedulingData } from '@/lib/closing-actions';
 function detailPath(category: string, id: string) {
   if (category === 'laboratorio') return `/laboratory/${id}`;
   if (category === 'automatizacion') return `/automations/${id}`;
+  if (category === 'agente') return `/agents/${id}`;
   return `/projects/${id}`;
 }
 
@@ -206,7 +207,7 @@ export async function POST(request: Request) {
       : [];
 
     const reply = rawReply
-      .replace(/\[(\/(?:projects|laboratory|automations|certificates)\/[a-zA-Z0-9]+)\]/g, '')
+      .replace(/\[(\/(?:projects|laboratory|automations|agents|certificates)\/[a-zA-Z0-9]+)\]/g, '')
       .replace(/[ \t]+([.,:;!?])/g, '$1')
       .replace(/[ \t]{2,}/g, ' ')
       .replace(/\n{3,}/g, '\n\n')

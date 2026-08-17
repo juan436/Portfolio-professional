@@ -2,15 +2,18 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Github, Linkedin, ArrowUp, X } from "lucide-react"
+import { Github, Linkedin, ArrowUp, X, Mail } from "lucide-react"
 import { WhatsappIcon } from "@/components/icons/whatsapp-icon"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/hooks/use-language"
+import { useContent } from "@/contexts/content"
 import { useState, useEffect } from "react"
 import { openWhatsAppWithMessage, SOCIAL_LINKS } from "@/utils/social-links"
 
 export default function Footer() {
   const { t } = useLanguage()
+  const { content } = useContent()
+  const email = content?.contact?.email
   const [translatedTexts, setTranslatedTexts] = useState({
     rights: "",
     role: ""
@@ -76,12 +79,17 @@ export default function Footer() {
             <Link href={SOCIAL_LINKS.TWITTER} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-500 transition-colors duration-300">
               <X className="h-6 w-6 scale-110" />
             </Link>
-            <button 
-              onClick={handleWhatsAppClick} 
+            <button
+              onClick={handleWhatsAppClick}
               className="text-slate-400 hover:text-green-500 transition-colors duration-300"
             >
               <WhatsappIcon className="h-6 w-6" />
             </button>
+            {email && (
+              <Link href={`mailto:${email}`} className="text-slate-400 hover:text-blue-500 transition-colors duration-300">
+                <Mail className="h-6 w-6" />
+              </Link>
+            )}
           </motion.div>
 
           <motion.div

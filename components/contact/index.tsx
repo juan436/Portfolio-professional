@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { useAttachments } from "@/hooks/use-attachments"
@@ -13,11 +12,27 @@ type ServiceKey = (typeof VALID_SERVICES)[number]
 
 export default function Contact() {
   const { t } = useLanguage()
-  const searchParams = useSearchParams()
-  const servicioParam = searchParams.get("servicio")
-  const initialService = (VALID_SERVICES as readonly string[]).includes(servicioParam || "")
-    ? (servicioParam as ServiceKey)
-    : undefined
+  // No usamos query string (?servicio=...) a propósito: la URL de /contact
+  // debe quedar limpia al venir desde una card de Servicio. El dato viaja
+  // por sessionStorage, seteado por el onClick de la card. Se lee de forma
+  // síncrona (lazy initializer, no useEffect) para que esté disponible desde
+  // el primer render en cliente — si no, JevyChat ya habría pintado el saludo
+  // genérico antes de que initialService llegara, y el saludo contextual
+  // nunca lo reemplaza (solo se pinta una vez, cuando lines.length === 0).
+  const [initialService] = useState<ServiceKey | undefined>(() => {
+    if (typeof window === "undefined") return undefined
+    try {
+      const stored = sessionStorage.getItem("jevy_initial_service")
+      return stored && (VALID_SERVICES as readonly string[]).includes(stored) ? (stored as ServiceKey) : undefined
+    } catch {
+      return undefined
+    }
+  })
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem("jevy_initial_service")
+    } catch {}
+  }, [])
   const [translatedTexts, setTranslatedTexts] = useState({
     title: "",
     attachTooLarge: "",

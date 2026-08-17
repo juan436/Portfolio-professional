@@ -3,6 +3,7 @@ import Footer from "@/components/footer"
 import WorkIntro from "@/components/work"
 import Projects from "@/components/projects"
 import Automations from "@/components/automations"
+import Agents from "@/components/agents"
 
 export default function WorkPage() {
   return (
@@ -13,6 +14,7 @@ export default function WorkPage() {
         <WorkIntro />
         <Projects />
         <Automations />
+        <Agents />
       </div>
 
       <Footer />

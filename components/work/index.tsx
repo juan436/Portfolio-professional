@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Code2, Workflow } from "lucide-react"
+import { Bot, Code2, Workflow } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 
 export default function WorkIntro() {
@@ -13,6 +13,7 @@ export default function WorkIntro() {
     subtitle: "",
     ctaProjects: "",
     ctaAutomations: "",
+    ctaAgents: "",
   })
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function WorkIntro() {
       subtitle: String(t("work.subtitle")),
       ctaProjects: String(t("work.ctaProjects")),
       ctaAutomations: String(t("work.ctaAutomations")),
+      ctaAgents: String(t("work.ctaAgents")),
     })
   }, [t, language])
 
@@ -78,6 +80,13 @@ export default function WorkIntro() {
           >
             <Workflow className="h-4 w-4" />
             {isMounted ? texts.ctaAutomations : ""}
+          </button>
+          <button
+            onClick={() => scrollToSection("agents")}
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 border border-blue-600/50 text-blue-400 hover:bg-blue-600/10 font-bold transition-all duration-300"
+          >
+            <Bot className="h-4 w-4" />
+            {isMounted ? texts.ctaAgents : ""}
           </button>
         </motion.div>
       </div>

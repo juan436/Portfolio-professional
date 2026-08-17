@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
@@ -84,11 +85,13 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button 
-                onClick={() => scrollToSection('contact')}
+              <Button
+                asChild
                 className="bg-blue-600 hover:bg-blue-500 text-white font-black uppercase italic tracking-wider shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all duration-300 border-none px-8 py-6"
               >
-                {translatedTexts.primary} <ArrowRight className="ml-2 h-5 w-5" />
+                <Link href="/contact">
+                  {translatedTexts.primary} <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
 
               <Button 

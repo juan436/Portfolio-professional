@@ -8,6 +8,7 @@
     "contact": "Parliamone",
     "experience": "Esperienza",
     "automations": "Automazioni",
+    "agents": "Agenti",
     "certificates": "Certificazioni",
     "laboratory": "Laboratorio",
     "work": "Lavoro",
@@ -42,22 +43,23 @@
   "hero": {
     "title": "Juan Villegas",
     "subtitle": "Sviluppatore Full Stack",
-    "consultantBadge": "Consulente Tecnologico 360°",
+    "consultantBadge": "Architetto di Soluzioni",
     "projects": "Vedi Progetti",
     "contact": "Contattami"
   },
   "about": {
     "title": "Chi Sono",
-    "role": "Sviluppatore Full Stack",
+    "role": "Architetto di Soluzioni",
     "engineer": "Ingegnere in Telematica",
     "university": "Università Centroccidental \"Lisandro Alvarado\"",
     "downloadCV": "Scarica CV"
   },
   "work": {
-    "title": "Rilevo, progetto e automatizzo",
-    "subtitle": "Qui trovi i sistemi che ho costruito end-to-end —front, back e infrastruttura— e le automazioni IA già in produzione che eliminano il lavoro manuale.",
+    "title": "Rilevo, progetto, automatizzo e creo agenti",
+    "subtitle": "Qui trovi i sistemi che ho costruito end-to-end —front, back e infrastruttura— e le automazioni e gli agenti IA già in produzione, che eliminano il lavoro manuale e conversano con clienti reali.",
     "ctaProjects": "Vedi Progetti",
-    "ctaAutomations": "Vedi Automazioni"
+    "ctaAutomations": "Vedi Automazioni",
+    "ctaAgents": "Vedi Agenti"
   },
   "projects": {
     "title": "I Miei Progetti",
@@ -171,6 +173,12 @@
         "automation": "Ho visto che devi automatizzare qualcosa. Dimmi quale processo vuoi ottimizzare.",
         "infra": "Ho visto che hai bisogno di aiuto con l'infrastruttura. Dimmi cosa hai oggi."
       },
+      "defaultMessageByService": {
+        "web": "Voglio costruire una piattaforma web",
+        "mobile": "Voglio un'app mobile nativa",
+        "automation": "Ho bisogno di automatizzare un processo",
+        "infra": "Ho bisogno di aiuto con infrastruttura e deployment"
+      },
       "chips": {
         "app": "Voglio la mia app",
         "automation": "Ho bisogno di un'automazione",
@@ -278,7 +286,7 @@
   },
   "footer": {
     "rights": "Tutti i diritti riservati.",
-    "role": "Sviluppatore Full Stack"
+    "role": "Architetto di Soluzioni"
   },
   "experience": {
     "title": "Esperienza Lavorativa",
@@ -349,6 +357,24 @@
       "stepsHeading": "Come funziona, passo dopo passo",
       "notFound": "Non abbiamo trovato questa automazione.",
       "backToList": "Torna alle Automazioni",
+      "viewDetail": "Vedi dettaglio",
+      "toolsHeading": "Costruito con",
+      "channelsHeading": "Canali supportati",
+      "setupTimeHeading": "Tempo di attivazione"
+    }
+  },
+  "agents": {
+    "title": "Agenti",
+    "subtitle": "Sistemi conversazionali che ragionano, decidono e agiscono — non automazioni a passi fissi. Ogni scheda mostra un agente reale, funzionante.",
+    "capabilitiesWord": "capacità",
+    "viewMore": "Vedi tutti gli agenti",
+    "detail": {
+      "whatItDoes": "Cosa fa",
+      "capabilitiesHeading": "Capacità",
+      "tryLive": "Provalo dal vivo",
+      "liveDemoUnavailable": "Demo dal vivo prossimamente.",
+      "notFound": "Non abbiamo trovato questo agente.",
+      "backToList": "Torna ad Agenti",
       "viewDetail": "Vedi dettaglio",
       "toolsHeading": "Costruito con",
       "channelsHeading": "Canali supportati",

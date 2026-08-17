@@ -16,6 +16,7 @@ export const JEVY_CATEGORIAS_SEED: IJevyTaxonomyEntry[] = [
   { value: 'mobile', label: 'Mobile', definicion: 'Aplicación móvil nativa o híbrida' },
   { value: 'infra_backend', label: 'Infra / Backend', definicion: 'SOLO infraestructura o servicios técnicos donde NINGÚN usuario de negocio interactúa con una interfaz — monitoreo de servidores, integraciones entre sistemas, procesamiento en segundo plano. Si alguien (dueño, empleado, cliente) va a ver/usar/gestionar algo, es "web", no esto' },
   { value: 'automatizacion', label: 'Automatización', definicion: 'Reacciona SOLA a un evento/disparador (llega un mensaje, un pedido nuevo, una hora programada) y hace su trabajo sin que nadie abra ni opere nada activamente — ni un panel de gestión ni un chat con un bot cuentan como "alguien operando algo", son el disparador o el canal, no uso activo de un sistema. Diferencia clave con "web": en "web" alguien entra y usa un sistema; en "automatizacion" el proceso corre solo, reaccionando' },
+  { value: 'agente', label: 'Agente de IA', definicion: 'El lead pide algo que CONVERSA, RAZONA y DECIDE con un usuario o cliente final — un bot/asistente que entiende contexto y elige qué preguntar o hacer, no un flujo de pasos fijos. Diferencia clave con "automatizacion": la automatización reacciona sola a un trigger con un camino fijo; un agente sostiene una conversación real y decide dinámicamente. Diferencia con "web": no es un panel que alguien opera, es algo con quien alguien conversa' },
   {
     value: 'laboratorio',
     label: 'Laboratorio',

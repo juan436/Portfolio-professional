@@ -9,7 +9,7 @@ export interface IProject extends Document {
   video?: string;
   github: string;
   demo: string;
-  category: 'web' | 'mobile' | 'infra_backend' | 'laboratorio' | 'automatizacion';
+  category: 'web' | 'mobile' | 'infra_backend' | 'laboratorio' | 'automatizacion' | 'agente';
   subtype?: string;
   aiSummary?: string;
   tags: string[];
@@ -102,6 +102,15 @@ export interface IProject extends Document {
       demoOutputTemplate?: string;
     };
   };
+  agentDetails?: {
+    icon?: string;
+    useCase?: string;
+    capabilities?: string[];
+    channels?: string[];
+    tools?: string[];
+    setupTime?: string;
+    liveDemo?: 'jevy-chat' | 'none';
+  };
   // Objeto dedicado a Jevy (motor de matching) — nunca se renderiza en el front.
   // Nomenclatura propia para la IA, separada de category/subtype/sector (esos son
   // para el visitante humano). Ver dev-aguila-azul/vault/portfolio: planes/matching-catalogo-function-calling.
@@ -131,6 +140,7 @@ interface LocaleContent {
   channels?: string[];
   setupTime?: string;
   subtype?: string;
+  capabilities?: string[];
 }
 
 function localeContentFields() {
@@ -146,6 +156,7 @@ function localeContentFields() {
     channels: { type: [String], default: [] },
     setupTime: String,
     subtype: String,
+    capabilities: { type: [String], default: [] },
   };
 }
 
@@ -168,7 +179,7 @@ const ProjectSchema = new mongoose.Schema({
   demo: String,
   category: { 
     type: String, 
-    enum: ['web', 'mobile', 'infra_backend', 'laboratorio', 'automatizacion'],
+    enum: ['web', 'mobile', 'infra_backend', 'laboratorio', 'automatizacion', 'agente'],
     required: true 
   },
   subtype: String,
@@ -304,6 +315,15 @@ const ProjectSchema = new mongoose.Schema({
       demoPlaceholder: String,
       demoOutputTemplate: String,
     },
+  },
+  agentDetails: {
+    icon: String,
+    useCase: String,
+    capabilities: { type: [String], default: [] },
+    channels: { type: [String], default: [] },
+    tools: { type: [String], default: [] },
+    setupTime: String,
+    liveDemo: { type: String, enum: ['jevy-chat', 'none'] },
   },
   // Sin `enum` de Mongoose a propósito: el vocabulario vive en Mongo (colección
   // JevyTaxonomy, dinámico, ver lib/jevy-taxonomy.ts), no se puede fijar acá en
