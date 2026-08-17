@@ -352,7 +352,7 @@
       "notFound": "We couldn't find this automation.",
       "backToList": "Back to Automations",
       "viewDetail": "View detail",
-    "toolsHeading": "Built with",
+      "toolsHeading": "Built with",
       "channelsHeading": "Supported channels",
       "setupTimeHeading": "Setup time"
     }

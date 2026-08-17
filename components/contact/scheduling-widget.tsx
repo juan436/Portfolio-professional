@@ -242,7 +242,7 @@ export function SchedulingWidget({ schedulingData, texts }: SchedulingWidgetProp
       )}
 
       <div className="rounded-lg border border-blue-700/30 bg-black/40 overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-blue-700/20 bg-black/30 text-xs">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-blue-700/20 bg-black/30 text-xs">
           <div className="flex items-center gap-1.5 text-slate-500">
             <button
               type="button"
@@ -273,7 +273,7 @@ export function SchedulingWidget({ schedulingData, texts }: SchedulingWidgetProp
         <div className="p-5">
           {view === "month" ? (
             <>
-              <div className="flex items-center gap-1.5 text-slate-400 text-sm mb-3">
+              <div className="flex items-center gap-1.5 text-slate-400 text-sm mb-4">
                 <Calendar className="h-4 w-4" />
                 {texts.pickDay}
               </div>
@@ -323,14 +323,14 @@ export function SchedulingWidget({ schedulingData, texts }: SchedulingWidgetProp
                         setView("day")
                       }}
                       className={
-                        "relative aspect-square rounded-md text-sm flex items-center justify-center transition-colors " +
+                        "relative h-9 rounded-md text-sm flex items-center justify-center transition-colors " +
                         (available
                           ? "bg-blue-500/10 border border-blue-700/30 text-slate-200 hover:border-blue-500/50 cursor-pointer"
                           : "text-slate-700 cursor-not-allowed")
                       }
                     >
                       {day}
-                      {available && <span className="absolute bottom-1.5 w-1 h-1 rounded-full bg-blue-400" />}
+                      {available && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-blue-400" />}
                     </button>
                   )
                 })}
@@ -355,7 +355,7 @@ export function SchedulingWidget({ schedulingData, texts }: SchedulingWidgetProp
                         disabled={!slot}
                         onClick={() => slot && pickSlot(slot)}
                         className={
-                          "flex flex-col items-center gap-1 py-3 rounded-md text-xs transition-colors " +
+                          "flex flex-col items-center justify-center gap-1 py-3 rounded-md text-xs transition-colors " +
                           (slot
                             ? "border border-blue-700/30 text-slate-300 hover:border-blue-500/50 hover:text-blue-400 cursor-pointer"
                             : "border border-transparent bg-black/30 text-slate-700 cursor-not-allowed")

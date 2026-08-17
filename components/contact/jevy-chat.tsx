@@ -30,6 +30,39 @@ interface DeepSeekMessage {
   content: string
 }
 
+function renderInline(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i}>{part.slice(2, -2)}</strong>
+    ) : (
+      <span key={i}>{part}</span>
+    ),
+  )
+}
+
+function FormattedText({ text }: { text: string }) {
+  const rawLines = text.split("\n")
+  const lines: { text: string; gap: boolean }[] = []
+  let pendingGap = false
+  for (const line of rawLines) {
+    if (line.trim() === "") {
+      pendingGap = true
+      continue
+    }
+    lines.push({ text: line, gap: pendingGap && lines.length > 0 })
+    pendingGap = false
+  }
+  return (
+    <>
+      {lines.map((line, i) => (
+        <span key={i} className={i === 0 ? "" : "block" + (line.gap ? " mt-2" : "")}>
+          {renderInline(line.text)}
+        </span>
+      ))}
+    </>
+  )
+}
+
 function ProjectMatchCard({ match, prototypeLabel, seeMoreLabel, demoLabel }: {
   match: ProjectMatch
   prototypeLabel: string
@@ -164,13 +197,43 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
   const [isTyping, setIsTyping] = useState(false)
   const [isClosed, setIsClosed] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const bottomSentinelRef = useRef<HTMLDivElement>(null)
   // Un id por charla — agrupa los adjuntos guardados en disco y evita
   // guardar el Lead/JobOffer más de una vez al cerrar.
   const [sessionId] = useState(() => crypto.randomUUID())
 
+  // Auto-scroll al fondo dirigido por el tamaño real del contenido (ResizeObserver),
+  // no por una lista de dependencias de estado — así cualquier cosa que haga crecer
+  // el contenido (mensaje nuevo, imagen que termina de cargar, tarjeta que se expande)
+  // dispara el scroll sin que haya que acordarse de sumarla a mano. "¿Está cerca del
+  // fondo?" se mide con un IntersectionObserver sobre un sentinel al final de la lista
+  // — no restando scrollTop/scrollHeight en un instante, porque esa resta se contamina
+  // con nuestra propia animación de scroll en curso (scroll-smooth) y da falsos negativos
+  // mientras el scroll previo todavía está terminando de bajar.
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
-  }, [lines, isTyping, chipsVisible])
+    const scrollEl = scrollRef.current
+    const contentEl = contentRef.current
+    const sentinelEl = bottomSentinelRef.current
+    if (!scrollEl || !contentEl || !sentinelEl) return
+
+    let isNearBottom = true
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isNearBottom = entry.isIntersecting
+    }, { root: scrollEl, threshold: 0 })
+    intersectionObserver.observe(sentinelEl)
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (isNearBottom) scrollEl.scrollTop = scrollEl.scrollHeight
+    })
+    resizeObserver.observe(contentEl)
+
+    return () => {
+      intersectionObserver.disconnect()
+      resizeObserver.disconnect()
+    }
+  }, [])
 
   // Arranca la conversación en cuanto el saludo traducido está listo (solo una vez)
   useEffect(() => {
@@ -291,48 +354,51 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
         <span className="ml-2 text-sm text-slate-500 font-mono">{translatedTexts.windowTitle}</span>
       </div>
 
-      <div ref={scrollRef} className="p-6 space-y-4 h-[620px] overflow-y-auto font-mono text-base leading-relaxed">
-        {lines.map((line) => (
-          <div key={line.id} className={line.role === "jevy" ? "" : "text-slate-400"}>
-            <span className={line.role === "jevy" ? "text-blue-500" : "text-green-500"}>
-              {line.role === "jevy" ? "jevy>" : "tú>"}
-            </span>{" "}
-            {line.text}
-            {line.matches?.map((match) => (
-              <ProjectMatchCard
-                key={match.id}
-                match={match}
-                prototypeLabel={translatedTexts.prototypeBadge}
-                seeMoreLabel={translatedTexts.seeMore}
-                demoLabel={translatedTexts.demo}
-              />
-            ))}
-            {line.schedulingData && (
-              <SchedulingWidget schedulingData={line.schedulingData} texts={translatedTexts.scheduling} />
-            )}
-          </div>
-        ))}
+      <div ref={scrollRef} className="p-6 h-[620px] overflow-y-auto scroll-smooth font-mono text-base leading-relaxed">
+        <div ref={contentRef} className="space-y-4">
+          {lines.map((line) => (
+            <div key={line.id} className={line.role === "jevy" ? "" : "text-slate-400"}>
+              <span className={line.role === "jevy" ? "text-blue-500" : "text-green-500"}>
+                {line.role === "jevy" ? "jevy>" : "tú>"}
+              </span>{" "}
+              <FormattedText text={line.text} />
+              {line.matches?.map((match) => (
+                <ProjectMatchCard
+                  key={match.id}
+                  match={match}
+                  prototypeLabel={translatedTexts.prototypeBadge}
+                  seeMoreLabel={translatedTexts.seeMore}
+                  demoLabel={translatedTexts.demo}
+                />
+              ))}
+              {line.schedulingData && (
+                <SchedulingWidget schedulingData={line.schedulingData} texts={translatedTexts.scheduling} />
+              )}
+            </div>
+          ))}
 
-        {chipsVisible && !isTyping && (
-          <div className="flex flex-col items-start gap-2 pt-1">
-            {translatedTexts.chips.map((chip, i) => (
-              <button
-                key={chip.key}
-                onClick={() => handleChipClick(chip.label)}
-                className="text-left text-slate-300 hover:text-blue-400 transition-colors"
-              >
-                <span className="text-green-500 mr-2">[{i + 1}]</span>
-                {chip.label}
-              </button>
-            ))}
-          </div>
-        )}
+          {chipsVisible && !isTyping && (
+            <div className="flex flex-col items-start gap-2 pt-1">
+              {translatedTexts.chips.map((chip, i) => (
+                <button
+                  key={chip.key}
+                  onClick={() => handleChipClick(chip.label)}
+                  className="text-left text-slate-300 hover:text-blue-400 transition-colors"
+                >
+                  <span className="text-green-500 mr-2">[{i + 1}]</span>
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+          )}
 
-        {isTyping && (
-          <div className="text-blue-500/70">
-            <span className="text-blue-500">jevy&gt;</span> {translatedTexts.typing}
-          </div>
-        )}
+          {isTyping && (
+            <div className="text-blue-500/70">
+              <span className="text-blue-500">jevy&gt;</span> {translatedTexts.typing}
+            </div>
+          )}
+          <div ref={bottomSentinelRef} className="h-px" />
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex items-center gap-3 px-5 py-3 border-t border-blue-700/20 bg-[#0e1013]">
