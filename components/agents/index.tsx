@@ -58,7 +58,6 @@ export default function Agents() {
 
   const title = String(t("agents.title") || "Agentes")
   const subtitle = String(t("agents.subtitle") || "")
-  const capabilitiesWord = String(t("agents.capabilitiesWord") || "capacidades")
   const viewMore = String(t("agents.viewMore") || "Ver todos los agentes")
 
   if (!isMounted || agents.length === 0) return null
@@ -108,11 +107,9 @@ export default function Agents() {
               <AgentCard
                 key={agent._id}
                 id={agent._id}
-                icon={details?.icon || ""}
                 title={agentTitle}
                 description={description}
-                capabilitiesCount={capabilities.length}
-                capabilitiesWord={capabilitiesWord}
+                capabilities={capabilities}
                 subtype={subtype}
                 index={index}
               />

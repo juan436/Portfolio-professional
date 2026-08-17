@@ -52,7 +52,6 @@ export default function AgentsPage() {
 
   const title = String(t("agents.title") || "Agentes")
   const subtitle = String(t("agents.subtitle") || "")
-  const capabilitiesWord = String(t("agents.capabilitiesWord") || "capacidades")
   const noProjects = String(t("projects.noProjects") || "")
 
   return (
@@ -90,11 +89,9 @@ export default function AgentsPage() {
                   <AgentCard
                     key={agent._id}
                     id={agent._id}
-                    icon={agent.agentDetails?.icon || ""}
                     title={agentTitle}
                     description={description}
-                    capabilitiesCount={capabilities.length}
-                    capabilitiesWord={capabilitiesWord}
+                    capabilities={capabilities}
                     subtype={subtype}
                     index={index}
                   />
