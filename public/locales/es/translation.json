@@ -190,6 +190,8 @@
       "inputPlaceholder": "escribe tu respuesta",
       "typing": "escribiendo...",
       "errorFallback": "Tuve un problema para responder. Intenta de nuevo en un momento.",
+      "limitReached": "Ya charlamos bastante por acá. Si querés seguir, escribile directo al Ing. Juan Villegas por WhatsApp o correo.",
+      "areYouThere": "¿Sigues ahí? Si no respondés en un ratito, voy a cerrar la charla — podés arrancar una nueva cuando quieras.",
       "attachTooltip": "Adjuntar archivo (PDF, Word, Excel, PowerPoint, imagen)",
       "attachTooLarge": "El archivo es muy grande (máx. 20MB)",
       "attachError": "No se pudo procesar este archivo",
@@ -318,7 +320,8 @@
     "projects_short": "Mis proyectos",
     "contact_short": "¡Contáctame!",
     "experience": "¡Echa un vistazo a mi trayectoria profesional! Aquí encontrarás mi experiencia y los roles que he desempeñado a lo largo de mi carrera.",
-    "experience_short": "¡Mi experiencia!"
+    "experience_short": "¡Mi experiencia!",
+    "talk_prompt": "Hablemos"
   },
   "social": {
     "whatsapp_message": "Hola Ingeniero Villegas, quiero hacerle una consulta sobre sus servicios."
@@ -374,14 +377,16 @@
     "detail": {
       "whatItDoes": "Qué hace",
       "capabilitiesHeading": "Capacidades",
-      "tryLive": "Probalo en vivo",
-      "liveDemoUnavailable": "Demo en vivo próximamente.",
+      "howItWorks": "Así trabaja",
+      "liveDemoUnavailable": "Demo próximamente.",
       "notFound": "No encontramos este agente.",
       "backToList": "Volver a Agentes",
       "viewDetail": "Ver detalle",
       "toolsHeading": "Construido con",
       "channelsHeading": "Canales soportados",
-      "setupTimeHeading": "Tiempo de puesta en marcha"
+      "setupTimeHeading": "Tiempo de puesta en marcha",
+      "demoBadge": "Ejemplo simulado — sin conexión real",
+      "demoReplay": "Reproducir de nuevo"
     }
   },
   "testimonials": {

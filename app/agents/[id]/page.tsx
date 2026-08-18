@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
-import { useAttachments } from "@/hooks/use-attachments"
-import { JevyChat } from "@/components/contact/jevy-chat"
+import { JevyChatDemo } from "@/components/agents/jevy-chat-demo"
 import { fetchProjectById } from "@/services/api/projects"
 import { ProjectHeader } from "@/components/projects/project-header"
 import { agentIconMap } from "@/components/agents/agent-icon-map"
@@ -71,7 +70,7 @@ export default function AgentDetailPage() {
 
   const whatItDoes = String(t("agents.detail.whatItDoes") || "Qué hace")
   const capabilitiesHeading = String(t("agents.detail.capabilitiesHeading") || "Capacidades")
-  const tryLive = String(t("agents.detail.tryLive") || "Probalo en vivo")
+  const howItWorks = String(t("agents.detail.howItWorks") || "Así trabaja")
   const liveDemoUnavailable = String(t("agents.detail.liveDemoUnavailable") || "")
   const notFoundLabel = String(t("agents.detail.notFound") || "")
   const backToList = String(t("agents.detail.backToList") || "Volver")
@@ -82,12 +81,6 @@ export default function AgentDetailPage() {
   const ctaHeading = String(t("projects.ctaHeading") || "¿Necesitas algo similar?")
   const ctaText = String(t("projects.ctaText") || "Hablemos sobre tu proyecto.")
   const ctaButton = String(t("projects.ctaButton") || "Hablemos")
-  const attachTooLarge = String(t("contact.jevy.attachTooLarge") || "")
-  const attachError = String(t("contact.jevy.attachError") || "")
-
-  // Mismo hook que /contact, instanciado local — el chat embebido acá es
-  // independiente del de /contact (cada uno con su propia sesión/adjuntos).
-  const attachments = useAttachments(attachTooLarge, attachError)
 
   const handleBack = () => {
     if (typeof window !== "undefined" && window.history.length > 1) {
@@ -194,10 +187,10 @@ export default function AgentDetailPage() {
             viewport={{ once: true }}
             className="w-full mb-16"
           >
-            <h2 className="text-2xl font-bold text-center mb-8">{tryLive}</h2>
+            <h2 className="text-2xl font-bold text-center mb-8">{howItWorks}</h2>
             {details?.liveDemo === "jevy-chat" ? (
               <div className="max-w-3xl mx-auto">
-                <JevyChat attachments={attachments} />
+                <JevyChatDemo />
               </div>
             ) : (
               <p className="text-center text-slate-500 text-sm">{liveDemoUnavailable}</p>

@@ -5,7 +5,26 @@ export interface DeepSeekMessage {
   content: string;
 }
 
-export async function askDeepSeek(messages: DeepSeekMessage[]): Promise<string> {
+export interface DeepSeekUsage {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+}
+
+function readUsage(data: { usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } }): DeepSeekUsage {
+  return {
+    promptTokens: data.usage?.prompt_tokens || 0,
+    completionTokens: data.usage?.completion_tokens || 0,
+    totalTokens: data.usage?.total_tokens || 0,
+  };
+}
+
+export interface DeepSeekReply {
+  content: string;
+  usage: DeepSeekUsage;
+}
+
+export async function askDeepSeek(messages: DeepSeekMessage[]): Promise<DeepSeekReply> {
   const token = process.env.TOKEN_DEEPSEEK;
   if (!token) {
     throw new Error('TOKEN_DEEPSEEK no está configurado');
@@ -31,7 +50,10 @@ export async function askDeepSeek(messages: DeepSeekMessage[]): Promise<string> 
   }
 
   const data = await response.json();
-  return data.choices?.[0]?.message?.content?.trim() || '';
+  return {
+    content: data.choices?.[0]?.message?.content?.trim() || '',
+    usage: readUsage(data),
+  };
 }
 
 export interface DeepSeekToolFunction {
@@ -52,10 +74,15 @@ export interface DeepSeekToolFunction {
  * confirmar el endpoint beta exacto contra la doc antes de prender esto en
  * producción. Sin `strict`, function calling estándar ya es confiable.
  */
+export interface DeepSeekToolReply {
+  result: Record<string, unknown> | null;
+  usage: DeepSeekUsage;
+}
+
 export async function askDeepSeekTool(
   messages: DeepSeekMessage[],
   tool: DeepSeekToolFunction,
-): Promise<Record<string, unknown> | null> {
+): Promise<DeepSeekToolReply> {
   const token = process.env.TOKEN_DEEPSEEK;
   if (!token) {
     throw new Error('TOKEN_DEEPSEEK no está configurado');
@@ -82,13 +109,14 @@ export async function askDeepSeekTool(
   }
 
   const data = await response.json();
+  const usage = readUsage(data);
   const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
   const rawArgs = toolCall?.function?.arguments;
-  if (!rawArgs) return null;
+  if (!rawArgs) return { result: null, usage };
 
   try {
-    return JSON.parse(rawArgs);
+    return { result: JSON.parse(rawArgs), usage };
   } catch {
-    return null;
+    return { result: null, usage };
   }
 }

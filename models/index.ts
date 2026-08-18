@@ -8,3 +8,4 @@ export { default as Testimonial } from './testimonial.model';
 export { default as ProjectStats } from './project-stats.model';
 export { default as StatType } from './stat-type.model';
 export { default as Lead } from './lead.model';
+export { default as JevyChatStat } from './jevy-chat-stat.model';

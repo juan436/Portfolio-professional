@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 import { saveLeadFile } from '@/lib/uploads';
+import { isRateLimited, getClientIp } from '@/lib/rate-limit';
+
+const ATTACHMENTS_IP_LIMIT = 15;
+const ATTACHMENTS_IP_WINDOW_MS = 10 * 60 * 1000;
 
 interface AttachmentResult {
   filename: string;
@@ -47,6 +51,10 @@ async function convertOne(file: File, baseUrl: string, apiKey: string, sessionId
 
 export async function POST(request: Request) {
   try {
+    if (isRateLimited(`attachments:${getClientIp(request)}`, ATTACHMENTS_IP_LIMIT, ATTACHMENTS_IP_WINDOW_MS)) {
+      return NextResponse.json({ success: false, message: 'Demasiadas solicitudes, intenta de nuevo en unos minutos' }, { status: 429 });
+    }
+
     const baseUrl = process.env.MARKDOWN_TRANSFORMER_URL;
     const apiKey = process.env.MARKDOWN_TRANSFORMER_API_KEY;
 

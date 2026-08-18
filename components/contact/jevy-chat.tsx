@@ -9,6 +9,11 @@ import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
 import { SchedulingWidget, type SchedulingData } from "@/components/contact/scheduling-widget"
 
 const CHAT_STORAGE_KEY = "jevy-chat-state"
+// 5 min sin actividad real (mensaje enviado/recibido): se manda un aviso
+// automático ("¿sigues ahí?", sin pasar por DeepSeek). Si pasan otros 30s más
+// sin actividad después de ese aviso, se cierra la charla y arranca una nueva.
+const INACTIVITY_WARNING_MS = 5 * 60 * 1000
+const INACTIVITY_CLOSE_MS = 30 * 1000
 
 interface ProjectMatch {
   id: string
@@ -130,6 +135,8 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
     inputPlaceholder: "",
     typing: "",
     errorFallback: "",
+    limitReached: "",
+    areYouThere: "",
     attachTooltip: "",
     attachTooLarge: "",
     attachError: "",
@@ -167,6 +174,8 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
       inputPlaceholder: String(t("contact.jevy.inputPlaceholder")),
       typing: String(t("contact.jevy.typing")),
       errorFallback: String(t("contact.jevy.errorFallback")),
+      limitReached: String(t("contact.jevy.limitReached")),
+      areYouThere: String(t("contact.jevy.areYouThere")),
       attachTooltip: String(t("contact.jevy.attachTooltip")),
       attachTooLarge: String(t("contact.jevy.attachTooLarge")),
       attachError: String(t("contact.jevy.attachError")),
@@ -218,12 +227,16 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
       const raw = localStorage.getItem(CHAT_STORAGE_KEY)
       if (raw) {
         const saved = JSON.parse(raw)
-        if (saved?.sessionId && Array.isArray(saved.lines) && saved.lines.length > 0) {
+        const isStale = typeof saved?.updatedAt !== "number" || Date.now() - saved.updatedAt > INACTIVITY_WARNING_MS
+        if (isStale) {
+          localStorage.removeItem(CHAT_STORAGE_KEY)
+        } else if (saved?.sessionId && Array.isArray(saved.lines) && saved.lines.length > 0) {
           setSessionId(saved.sessionId)
           setLines(saved.lines)
           setHistory(Array.isArray(saved.history) ? saved.history : [])
           setIsClosed(Boolean(saved.isClosed))
           setChipsVisible(Boolean(saved.chipsVisible))
+          if (!saved.isClosed) scheduleInactivityWarning()
         }
       }
     } catch {
@@ -238,7 +251,10 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
       return
     }
     try {
-      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify({ sessionId, lines, history, isClosed, chipsVisible }))
+      localStorage.setItem(
+        CHAT_STORAGE_KEY,
+        JSON.stringify({ sessionId, lines, history, isClosed, chipsVisible, updatedAt: Date.now() }),
+      )
     } catch {
       // localStorage lleno o inaccesible — no rompe el chat
     }
@@ -281,12 +297,78 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
     if (translatedTexts.greeting && lines.length === 0) {
       setLines([{ id: 0, role: "jevy", text: translatedTexts.greeting }])
       setHistory([{ role: "assistant", content: translatedTexts.greeting }])
+      scheduleInactivityWarning()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translatedTexts.greeting])
 
+  // Refs para leer el valor más reciente desde dentro de los setTimeout —
+  // los closures de scheduleInactivityWarning/resetChat se crean una sola vez
+  // por llamada y si leyeran `isClosed`/`translatedTexts` directo, quedarían
+  // pegados al valor que tenían en ese render (podría ser texto vacío antes
+  // de que carguen las traducciones, o un isClosed viejo).
+  const isClosedRef = useRef(isClosed)
+  useEffect(() => {
+    isClosedRef.current = isClosed
+  }, [isClosed])
+  const translatedTextsRef = useRef(translatedTexts)
+  useEffect(() => {
+    translatedTextsRef.current = translatedTexts
+  }, [translatedTexts])
+
+  const warnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearInactivityTimers = () => {
+    if (warnTimerRef.current) {
+      clearTimeout(warnTimerRef.current)
+      warnTimerRef.current = null
+    }
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+  }
+
+  // Charla vieja sin actividad: aviso automático (sin pasar por DeepSeek) y,
+  // si tampoco hay respuesta 30s después, se cierra y arranca una nueva —
+  // ver constantes INACTIVITY_WARNING_MS / INACTIVITY_CLOSE_MS arriba.
+  const resetChat = () => {
+    clearInactivityTimers()
+    try {
+      localStorage.removeItem(CHAT_STORAGE_KEY)
+    } catch {
+      // localStorage inaccesible — igual arranca de cero en memoria
+    }
+    setSessionId(crypto.randomUUID())
+    setIsClosed(false)
+    setChipsVisible(true)
+    setInput("")
+    const greeting = translatedTextsRef.current.greeting
+    setLines([{ id: 0, role: "jevy", text: greeting }])
+    setHistory([{ role: "assistant", content: greeting }])
+    scheduleInactivityWarning()
+  }
+
+  const scheduleInactivityWarning = () => {
+    clearInactivityTimers()
+    warnTimerRef.current = setTimeout(() => {
+      if (isClosedRef.current) return
+      const warningText = translatedTextsRef.current.areYouThere
+      setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: warningText }])
+      setHistory((prev) => [...prev, { role: "assistant", content: warningText }])
+      closeTimerRef.current = setTimeout(() => {
+        if (isClosedRef.current) return
+        resetChat()
+      }, INACTIVITY_CLOSE_MS)
+    }, INACTIVITY_WARNING_MS)
+  }
+
+  useEffect(() => clearInactivityTimers, [])
+
   const pushLeadLine = async (text: string, contextOverride?: string) => {
     if (!text.trim() || isTyping || isClosed) return
+    scheduleInactivityWarning()
     setLines((prev) => [...prev, { id: prev.length, role: "lead", text }])
     setChipsVisible(false)
     const nextHistory = [...history, { role: "user" as const, content: text }]
@@ -309,16 +391,21 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
       })
       const data = await response.json()
 
-      if (!response.ok || !data.success || !data.reply) {
+      if (!response.ok || !data.success || (!data.reply && !data.limited)) {
         throw new Error(data.message || "respuesta vacía")
       }
 
+      const replyText = data.limited ? translatedTexts.limitReached : data.reply
+
       setLines((prev) => [
         ...prev,
-        { id: prev.length, role: "jevy", text: data.reply, matches: data.matches, schedulingData: data.schedulingData || undefined },
+        { id: prev.length, role: "jevy", text: replyText, matches: data.matches, schedulingData: data.schedulingData || undefined },
       ])
-      setHistory((prev) => [...prev, { role: "assistant", content: data.reply }])
-      if (data.closed) setIsClosed(true)
+      setHistory((prev) => [...prev, { role: "assistant", content: replyText }])
+      if (data.closed) {
+        setIsClosed(true)
+        clearInactivityTimers()
+      }
     } catch (error) {
       console.error("Error al hablar con Jevy:", error)
       setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: translatedTexts.errorFallback }])

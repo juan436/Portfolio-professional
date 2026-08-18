@@ -1,4 +1,8 @@
 import { NextResponse } from 'next/server';
+import { isRateLimited, getClientIp } from '@/lib/rate-limit';
+
+const SCHEDULE_IP_LIMIT = 20;
+const SCHEDULE_IP_WINDOW_MS = 10 * 60 * 1000;
 
 // Proxy server-side al webhook real de n8n (flujo-agenda-cita-leads,
 // "Jevy — Agenda"). El secreto (x-javy-secret) nunca llega al navegador.
@@ -13,6 +17,10 @@ import { NextResponse } from 'next/server';
 //   -> 500 { success: false, error: 'booking_failed', requestId, message }
 
 export async function POST(request: Request) {
+  if (isRateLimited(`schedule:${getClientIp(request)}`, SCHEDULE_IP_LIMIT, SCHEDULE_IP_WINDOW_MS)) {
+    return NextResponse.json({ success: false, message: 'Demasiadas solicitudes, intenta de nuevo en unos minutos' }, { status: 429 });
+  }
+
   const webhookUrl = process.env.JAVY_AGENDA_WEBHOOK_URL;
   const secret = process.env.JAVY_WEBHOOK_SECRET;
 

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { RobotWolf } from "./robot-wolf"
 import { WelcomeText } from "./welcome-text"
+import { welcomeOverlaySignal } from "@/lib/welcome-overlay-signal"
 
 export default function WelcomeAnimation() {
   const [showAnimation, setShowAnimation] = useState(false)
@@ -20,6 +21,7 @@ export default function WelcomeAnimation() {
       setShowAnimation(true)
       // Marcar que ya ha visitado el sitio
       sessionStorage.setItem("hasVisitedBefore", "true")
+      welcomeOverlaySignal.activeUntil = Date.now() + 5000
 
       // Ocultar la animación después de completarse
       const timer = setTimeout(() => {
