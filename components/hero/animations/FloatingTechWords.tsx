@@ -1,21 +1,15 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 
 interface FloatingTechWordsProps {
   words?: string[]
 }
 
 export function FloatingTechWords({ words = ["REACT", "NODE.JS", "API", "DATABASE", "DOCKER"] }: FloatingTechWordsProps) {
-  // Estado para controlar si estamos en el cliente
-  const [isMounted, setIsMounted] = useState(false)
-  
-  // Efecto que se ejecuta solo en el cliente
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-  
+  const isMounted = useIsMounted()
+
   // No renderizar nada durante SSR
   if (!isMounted) {
     return null

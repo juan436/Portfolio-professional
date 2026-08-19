@@ -20,18 +20,18 @@ interface ProjectFormProps {
   onCancel?: () => void
   isNewProject?: boolean
   isLoading?: boolean
-  category?: 'fullstack' | 'backend'
+  category?: 'web' | 'mobile' | 'infra_backend'
 }
 
-export default function ProjectForm({ 
-  project, 
-  editMode, 
-  setEditMode, 
+export default function ProjectForm({
+  project,
+  editMode,
+  setEditMode,
   onSave,
   onCancel,
   isNewProject = false,
   isLoading = false,
-  category = 'fullstack'
+  category = 'web'
 }: ProjectFormProps) {
   const [formData, setFormData] = useState<Project | null>(project)
   const [emptyFields, setEmptyFields] = useState<Record<string, boolean>>({})
@@ -264,8 +264,8 @@ export default function ProjectForm({
                 />
               </div>
 
-              {/* Campo de imagen - solo visible para proyectos fullstack o proyectos backend existentes */}
-              {(category === 'fullstack' || !isNewProject) && (
+              {/* Campo de imagen - solo visible para proyectos web/mobile o proyectos backend existentes */}
+              {(category !== 'infra_backend' || !isNewProject) && (
                 <div className="space-y-2">
                   <Label htmlFor="image">URL de la Imagen</Label>
                   <div className="flex gap-2">
@@ -290,7 +290,7 @@ export default function ProjectForm({
                     )}
                   </div>
                   <p className="text-xs text-slate-400">
-                    URL de la imagen del proyecto. {category === 'backend' && isNewProject && "No requerido para proyectos backend."}
+                    URL de la imagen del proyecto. {category === 'infra_backend' && isNewProject && "No requerido para proyectos backend."}
                   </p>
                 </div>
               )}

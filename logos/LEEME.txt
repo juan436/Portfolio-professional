@@ -1,0 +1,34 @@
+MARCA JUAN VILLEGAS — Arquitecto de Soluciones Digitales
+Paleta: azul señal #3b82f6 · blanco #FFFFFF · negro técnico #0A0A0A
+Tipografía: Archivo 700 (títulos y logotipo)
+
+SVG (vectorial, fondo transparente, escalable)
+  isotipo-bicolor.svg .............. marca ancha, blanco + azul (fondos oscuros)
+  isotipo-bicolor-fondo-claro.svg .. marca ancha, negro + azul (fondos claros)
+  isotipo-mono-blanco / -negro.svg . una sola tinta
+  isotipo-compacto-*.svg ........... variante compacta, casi cuadrada (pico encajado en la V)
+  imagotipo-oscuro / -claro.svg .... vertical: marca + nombre + rol
+  horizontal-oscuro / -claro.svg ... lockup horizontal para cabeceras y firmas
+
+PNG (fondo transparente) — carpeta png/
+  isotipo-*-512.png / -2048.png ............ redes, presentaciones (ancho y compacto)
+  horizontal-*.png (2600 px) ............... cabecera web, firma de correo
+  imagotipo-*.png (1472 px) ................ perfiles, portadas
+
+FAVICON — carpeta favicon/ (marca compacta centrada, con aire en los 4 lados)
+  favicon.svg / -fondo-claro.svg ........... masters vectoriales bicolor
+  favicon-mono-blanco.svg / -mono-negro.svg  masters de una sola tinta
+  Cada master en PNG: 16, 32, 48, 64, 180, 192 y 512 px (fondo transparente)
+  app-icon-azul-180 / -512.png ............. icono sólido azul, marca en negro
+  app-icon-negro-180 / -512.png ............ icono sólido negro, marca en blanco
+
+  HTML sugerido:
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon-mono-negro-32x32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="app-icon-negro-180x180.png">
+
+Uso
+  Aire mínimo alrededor de la marca: la altura del asta de la J.
+  Tamaño mínimo del isotipo ancho: 16 px de alto; por debajo, usar la versión compacta.
+  No rotar, no deformar, no añadir sombras ni degradados, no redondear.
+  Sobre fotografías, usar la versión mono blanca.

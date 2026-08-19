@@ -4,35 +4,27 @@ import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content/use-content"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { useEffect, useState } from "react"
 import { AboutProfile } from "./about-profile"
 
 export default function About() {
-  const { t, language } = useLanguage()
+  const { language } = useLanguage()
   const { content } = useContent()
   const { translatedContent } = useTranslatedContent()
   // Usamos el estado local para manejar el contenido actualizado
   const [localContent, setLocalContent] = useState(content)
-  const [translatedTexts, setTranslatedTexts] = useState({
-    aboutTitle: "",
-    role: "",
-    engineer: "",
-    university: "",
-    downloadCV: "",
-    heroTitle: ""
-  })
-
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setTranslatedTexts({
+  const translatedTexts = useTranslatedTexts(
+    (t) => ({
       aboutTitle: String(t("about.title")),
       role: String(t("about.role")),
       engineer: String(t("about.engineer")),
       university: String(t("about.university")),
       downloadCV: String(t("about.downloadCV")),
       heroTitle: String(t("hero.title"))
-    })
-  }, [t, language])
+    }),
+    { aboutTitle: "", role: "", engineer: "", university: "", downloadCV: "", heroTitle: "" }
+  )
 
   // Actualizar el estado local cuando cambia el contenido global
   useEffect(() => {

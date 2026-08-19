@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import { useLanguage } from "@/hooks/use-language"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { useContent } from "@/contexts/content/use-content"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -10,7 +10,6 @@ import { ExperienceTimeline } from "./experience-timeline"
 import { ExperienceCard } from "./experience-card"
 
 export default function Experience() {
-  const { t, language } = useLanguage()
   const { content } = useContent()
   const [activeIndex, setActiveIndex] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -18,24 +17,16 @@ export default function Experience() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(false)
   const timelineRef = useRef<HTMLDivElement>(null)
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null)
-  const [translatedTexts, setTranslatedTexts] = useState({
-    title: "",
-    subtitle: "",
-    viewExperience: "",
-    pause: "",
-    autoplay: ""
-  })
-
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setTranslatedTexts({
+  const translatedTexts = useTranslatedTexts(
+    (t) => ({
       title: String(t("experience.title")),
       subtitle: String(t("experience.subtitle")),
       viewExperience: String(t("experience.viewExperience")),
       pause: String(t("experience.pause")),
       autoplay: String(t("experience.autoplay"))
-    })
-  }, [t, language])
+    }),
+    { title: "", subtitle: "", viewExperience: "", pause: "", autoplay: "" }
+  )
 
   // Asegurarse de que la experiencia esté ordenada por fecha (más reciente primero)
   const sortedExperience = [...content.experience].sort((a, b) => {

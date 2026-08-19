@@ -31,8 +31,8 @@ export const updateProjects = async (
  * Crea un nuevo proyecto en la categoría especificada
  */
 export const createProjectItem = async (
-  projectData: Omit<Project, "id">, 
-  category: 'fullstack' | 'backend',
+  projectData: Omit<Project, "id">,
+  category: keyof Projects,
   setContent: Dispatch<SetStateAction<Content>>,
   setIsLoading: Dispatch<SetStateAction<boolean>>
 ): Promise<Project | null> => {
@@ -61,23 +61,13 @@ export const createProjectItem = async (
       }
 
       // Actualizar el estado local
-      if (category === 'fullstack') {
-        setContent(prev => ({
-          ...prev,
-          projects: {
-            ...prev.projects,
-            fullstack: [...prev.projects.fullstack, newProject]
-          }
-        }))
-      } else {
-        setContent(prev => ({
-          ...prev,
-          projects: {
-            ...prev.projects,
-            backend: [...prev.projects.backend, newProject]
-          }
-        }))
-      }
+      setContent(prev => ({
+        ...prev,
+        projects: {
+          ...prev.projects,
+          [category]: [...prev.projects[category], newProject]
+        }
+      }))
 
       setIsLoading(false)
       return newProject
@@ -96,9 +86,9 @@ export const createProjectItem = async (
  * Actualiza un proyecto existente en la categoría especificada
  */
 export const updateProjectItem = async (
-  id: string, 
-  project: Partial<Project>, 
-  category: 'fullstack' | 'backend',
+  id: string,
+  project: Partial<Project>,
+  category: keyof Projects,
   content: Content,
   setContent: Dispatch<SetStateAction<Content>>,
   setIsLoading: Dispatch<SetStateAction<boolean>>
@@ -130,31 +120,17 @@ export const updateProjectItem = async (
     const response = await updateProjectApi(id, projectToUpdate)
 
     if (response.success) {
-      if (category === 'fullstack') {
-        const updatedProjects = content.projects.fullstack.map(p =>
-          p.id.toString() === id ? { ...p, ...dataToUpdate } : p
-        )
+      const updatedProjects = content.projects[category].map(p =>
+        p.id.toString() === id ? { ...p, ...dataToUpdate } : p
+      )
 
-        setContent(prev => ({
-          ...prev,
-          projects: {
-            ...prev.projects,
-            fullstack: updatedProjects
-          }
-        }))
-      } else {
-        const updatedProjects = content.projects.backend.map(p =>
-          p.id.toString() === id ? { ...p, ...dataToUpdate } : p
-        )
-
-        setContent(prev => ({
-          ...prev,
-          projects: {
-            ...prev.projects,
-            backend: updatedProjects
-          }
-        }))
-      }
+      setContent(prev => ({
+        ...prev,
+        projects: {
+          ...prev.projects,
+          [category]: updatedProjects
+        }
+      }))
 
       setIsLoading(false)
       return true
@@ -173,8 +149,8 @@ export const updateProjectItem = async (
  * Elimina un proyecto existente de la categoría especificada
  */
 export const deleteProjectItem = async (
-  id: string, 
-  category: 'fullstack' | 'backend',
+  id: string,
+  category: keyof Projects,
   content: Content,
   setContent: Dispatch<SetStateAction<Content>>,
   setIsLoading: Dispatch<SetStateAction<boolean>>
@@ -184,31 +160,17 @@ export const deleteProjectItem = async (
     const response = await deleteProjectApi(id)
 
     if (response.success) {
-      if (category === 'fullstack') {
-        const filteredProjects = content.projects.fullstack.filter(
-          p => p.id.toString() !== id
-        )
+      const filteredProjects = content.projects[category].filter(
+        p => p.id.toString() !== id
+      )
 
-        setContent(prev => ({
-          ...prev,
-          projects: {
-            ...prev.projects,
-            fullstack: filteredProjects
-          }
-        }))
-      } else {
-        const filteredProjects = content.projects.backend.filter(
-          p => p.id.toString() !== id
-        )
-
-        setContent(prev => ({
-          ...prev,
-          projects: {
-            ...prev.projects,
-            backend: filteredProjects
-          }
-        }))
-      }
+      setContent(prev => ({
+        ...prev,
+        projects: {
+          ...prev.projects,
+          [category]: filteredProjects
+        }
+      }))
 
       setIsLoading(false)
       return true

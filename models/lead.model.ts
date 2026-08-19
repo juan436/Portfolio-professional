@@ -1,16 +1,12 @@
 import mongoose, { Document } from 'mongoose';
+import { attachmentFields, type IAttachment } from '@/models/shared-fields';
 
 // Lead = solo cliente. El reclutador vive en su propia colección (JobOffer)
 // — los datos son demasiado distintos como para forzarlos en campos
 // genéricos compartidos. Ver dev-aguila-azul/vault/portfolio:
 // planes/levantamiento-informacion-jevy.
 
-export interface IAttachment {
-  filename: string;
-  type: string;
-  url: string;
-  extractedNote?: string;
-}
+export type { IAttachment };
 
 export interface IAdditionalDetail {
   topic: string;
@@ -47,15 +43,6 @@ export interface ILead extends Document {
   }[];
   status: 'new' | 'contacted' | 'closed';
   createdAt: Date;
-}
-
-function attachmentFields() {
-  return {
-    filename: { type: String, required: true },
-    type: { type: String, required: true },
-    url: { type: String, required: true },
-    extractedNote: String,
-  };
 }
 
 const LeadSchema = new mongoose.Schema({

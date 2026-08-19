@@ -126,7 +126,15 @@ export default function ImageManager() {
   const profileImage =
     content.hero.profileImage ||
     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/profile-E9YRocD6o4olhnzraHWCjLmKjCbspw.jpeg"
-  const fullstackImages = content.projects.fullstack.map((project) => ({
+  // Antes leía content.projects.fullstack, categoría que nunca existió en el
+  // contenido real (web/mobile/infra_backend) — crasheaba al abrir esta
+  // pestaña (auditoría 2026-08-18 §8). Esta sección es un vistazo general a
+  // las imágenes de proyecto que ya existen, no un filtro real por categoría.
+  const fullstackImages = [
+    ...content.projects.web,
+    ...content.projects.mobile,
+    ...content.projects.infra_backend,
+  ].map((project) => ({
     url: project.image || "",
     title: project.title,
     id: project.id,

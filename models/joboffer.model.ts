@@ -1,19 +1,11 @@
 import mongoose, { Document } from 'mongoose';
-import type { IAttachment, IAdditionalDetail } from '@/models/lead.model';
+import type { IAdditionalDetail } from '@/models/lead.model';
+import { attachmentFields, type IAttachment } from '@/models/shared-fields';
 
 // JobOffer = reclutador. Separado de Lead a propósito (charla 2026-08-13,
 // dev-aguila-azul/vault/portfolio: planes/levantamiento-informacion-jevy) —
 // no matchea contra el catálogo de proyectos, no tiene sentido compartir
 // schema con Lead.
-
-function attachmentFields() {
-  return {
-    filename: { type: String, required: true },
-    type: { type: String, required: true },
-    url: { type: String, required: true },
-    extractedNote: String,
-  };
-}
 
 export interface IJobOffer extends Document {
   name: string;

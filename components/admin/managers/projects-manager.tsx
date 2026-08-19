@@ -4,7 +4,7 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Plus, Code2, Server } from "lucide-react"
+import { Plus, Code2, Smartphone, Server } from "lucide-react"
 import { useProjectsActions } from "@/hooks/admin/entities/projects/use-projects-actions"
 
 import ProjectForm from "@/components/admin/forms/project-form"
@@ -55,7 +55,7 @@ export default function ProjectsManager() {
           onCancel={handleCancelEdit}
           isNewProject={isCreatingNewProject}
           isLoading={isLoading}
-          category={activeCategory as 'fullstack' | 'backend'}
+          category={activeCategory as 'web' | 'mobile' | 'infra_backend'}
         />
       </div>
     </div>
@@ -79,14 +79,21 @@ export default function ProjectsManager() {
       <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
         <TabsList className="bg-black/40 border border-blue-700/20 mb-6">
           <TabsTrigger
-            value="fullstack"
+            value="web"
             className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
           >
             <Code2 className="mr-2 h-4 w-4" />
-            Full Stack
+            Web
           </TabsTrigger>
           <TabsTrigger
-            value="backend"
+            value="mobile"
+            className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
+          >
+            <Smartphone className="mr-2 h-4 w-4" />
+            Mobile
+          </TabsTrigger>
+          <TabsTrigger
+            value="infra_backend"
             className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
           >
             <Server className="mr-2 h-4 w-4" />
@@ -94,12 +101,16 @@ export default function ProjectsManager() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="fullstack" className="mt-0">
-          {renderProjectContent("fullstack", "Proyectos Full Stack", "Selecciona un proyecto para editarlo o añade uno nuevo.")}
+        <TabsContent value="web" className="mt-0">
+          {renderProjectContent("web", "Proyectos Web", "Selecciona un proyecto para editarlo o añade uno nuevo.")}
         </TabsContent>
 
-        <TabsContent value="backend" className="mt-0">
-          {renderProjectContent("backend", "Proyectos Backend", "APIs, servicios y aplicaciones de servidor.")}
+        <TabsContent value="mobile" className="mt-0">
+          {renderProjectContent("mobile", "Proyectos Mobile", "Selecciona un proyecto para editarlo o añade uno nuevo.")}
+        </TabsContent>
+
+        <TabsContent value="infra_backend" className="mt-0">
+          {renderProjectContent("infra_backend", "Proyectos Backend", "APIs, servicios y aplicaciones de servidor.")}
         </TabsContent>
       </Tabs>
 

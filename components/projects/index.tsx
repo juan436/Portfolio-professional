@@ -1,14 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
 import { ProjectsGrid } from "./projects-grid"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 
 export default function Projects() {
-  const { t, language } = useLanguage()
   const { content, isLoading } = useContent()
   const { translatedContent } = useTranslatedContent()
 
@@ -58,24 +56,8 @@ export default function Projects() {
     }) || []
   };
 
-  const [translatedTexts, setTranslatedTexts] = useState({
-    subtitle: "",
-    navLabel: "",
-    web: "",
-    mobile: "",
-    infra_backend: "",
-    all: "",
-    noProjects: "",
-    code: "",
-    demo: "",
-    repo: "",
-    docs: "",
-    viewMore: "",
-  })
-
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setTranslatedTexts({
+  const translatedTexts = useTranslatedTexts(
+    (t) => ({
       subtitle: String(t("projects.subtitle")),
       navLabel: String(t("nav.projects")),
       web: String(t("projects.systems")),
@@ -88,8 +70,22 @@ export default function Projects() {
       repo: String(t("projects.repo")),
       docs: String(t("projects.docs")),
       viewMore: String(t("projects.viewMore_general")),
-    })
-  }, [t, language])
+    }),
+    {
+      subtitle: "",
+      navLabel: "",
+      web: "",
+      mobile: "",
+      infra_backend: "",
+      all: "",
+      noProjects: "",
+      code: "",
+      demo: "",
+      repo: "",
+      docs: "",
+      viewMore: "",
+    }
+  )
 
   const totalCount = combinedProjects.web.length + combinedProjects.mobile.length + combinedProjects.infra_backend.length
 

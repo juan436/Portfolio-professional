@@ -61,13 +61,25 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true)
 
       try {
-        const contentData = await fetchContent()
-        const webProjects = await fetchProjects('web')
-        const mobileProjects = await fetchProjects('mobile')
-        const infraBackendProjects = await fetchProjects('infra_backend')
-        const experienceData = await fetchExperiences()
-        const skillsData = await fetchSkills()
-        const otherSkillsData = await fetchOtherSkills()
+        // Antes: 7 awaits en cadena (uno detrás del otro) — son fetches
+        // independientes entre sí, no hay razón para esperarlos en serie.
+        const [
+          contentData,
+          webProjects,
+          mobileProjects,
+          infraBackendProjects,
+          experienceData,
+          skillsData,
+          otherSkillsData,
+        ] = await Promise.all([
+          fetchContent(),
+          fetchProjects('web'),
+          fetchProjects('mobile'),
+          fetchProjects('infra_backend'),
+          fetchExperiences(),
+          fetchSkills(),
+          fetchOtherSkills(),
+        ])
 
         if (contentData) {
           const mapProject = (p: any) => ({

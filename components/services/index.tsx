@@ -5,6 +5,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Code2, Database, Server, Cpu, Globe, Smartphone, Monitor, Cloud, Shield,
@@ -29,20 +30,8 @@ export default function Services() {
   const { t } = useLanguage()
   const { translatedContent } = useTranslatedContent()
   const [isMounted, setIsMounted] = useState(false)
-  const [translatedTexts, setTranslatedTexts] = useState({
-    title: "",
-    subtitle: "",
-    consultSolution: "",
-    webCTA: "",
-    mobileCTA: "",
-    aiCTA: "",
-    cloudCTA: ""
-  })
-
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setIsMounted(true)
-    setTranslatedTexts({
+  const translatedTexts = useTranslatedTexts(
+    (t) => ({
       title: String(t("services.title")),
       subtitle: String(t("services.subtitle")),
       consultSolution: String(t("services.consultSolution")),
@@ -50,7 +39,12 @@ export default function Services() {
       mobileCTA: String(t("ctas.services.mobile")),
       aiCTA: String(t("ctas.services.ai")),
       cloudCTA: String(t("ctas.services.cloud"))
-    })
+    }),
+    { title: "", subtitle: "", consultSolution: "", webCTA: "", mobileCTA: "", aiCTA: "", cloudCTA: "" }
+  )
+
+  useEffect(() => {
+    setIsMounted(true)
   }, [t])
 
   const getServiceIcon = (iconName: string) => {

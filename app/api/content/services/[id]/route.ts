@@ -6,13 +6,13 @@ import mongoose from 'mongoose';
 // DELETE: Eliminar un servicio específico por su ID
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  
+
   try {
-    const id = params.id;
-    
+    const { id } = await params;
+
     // Validar que el ID sea un ObjectId válido de MongoDB
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ 

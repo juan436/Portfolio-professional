@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 90" width="620" height="90">
+  <g transform="translate(0,6)">
+  <polygon points="4,2 18,2 18,60 0,60 0,48 4,48" fill="#FFFFFF"></polygon>
+  <path d="M34,8 L54,48 L74,8" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-miterlimit="12"></path>
+  <path d="M88,18 L124,40 L88,62" fill="none" stroke="#3b82f6" stroke-width="13" stroke-miterlimit="12"></path>
+  </g>
+  <rect x="150" y="12" width="2" height="64" fill="#A3A3A3"></rect>
+  <text x="176" y="42" font-family="Archivo, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="1.4" fill="#FFFFFF">JUAN VILLEGAS</text>
+  <text x="176" y="64" font-family="Archivo, Arial, sans-serif" font-size="10" font-weight="500" letter-spacing="2.4" fill="#A3A3A3">INGENIERO TELEMÁTICO · AUTOMATIZACIÓN &amp; AGENTES DE IA</text>
+</svg>

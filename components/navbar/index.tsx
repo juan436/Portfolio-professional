@@ -2,29 +2,26 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useLanguage } from "@/hooks/use-language"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { Logo } from "./logo"
 import { DesktopNav } from "./desktop-nav"
 import { MobileNav } from "./mobile-nav"
 import type { NavEntry } from "./types"
 
 export default function Navbar() {
-  const { t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [navItems, setNavItems] = useState<NavEntry[]>([])
-
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setNavItems([
+  const navItems = useTranslatedTexts<NavEntry[]>(
+    (t) => [
       { name: String(t("nav.home") || "Inicio"), href: "/" },
       { name: String(t("nav.work") || "Trabajo"), href: "/work" },
       { name: String(t("nav.laboratory") || "Laboratorio"), href: "/laboratory" },
       { name: String(t("nav.certificates") || "Certificaciones"), href: "/certificates" },
       { name: String(t("nav.blog") || "Blog"), href: "/blog" },
       { name: String(t("nav.contact") || "Contacto"), href: "/contact" },
-    ])
-  }, [t])
+    ],
+    []
+  )
 
   // Detectar scroll para cambiar el estilo de la barra de navegación
   useEffect(() => {

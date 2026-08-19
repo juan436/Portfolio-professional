@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { Send, Paperclip, Check, Loader2 } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
 import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
 import { SchedulingWidget, type SchedulingData } from "@/components/contact/scheduling-widget"
@@ -129,77 +130,78 @@ interface JevyChatProps {
 export function JevyChat({ initialService, attachments }: JevyChatProps) {
   const { t } = useLanguage()
 
-  const [translatedTexts, setTranslatedTexts] = useState({
-    windowTitle: "",
-    greeting: "",
-    inputPlaceholder: "",
-    typing: "",
-    errorFallback: "",
-    limitReached: "",
-    areYouThere: "",
-    attachTooltip: "",
-    attachTooLarge: "",
-    attachError: "",
-    attachedNotice: "",
-    dropHint: "",
-    prototypeBadge: "",
-    seeMore: "",
-    demo: "",
-    chips: [] as { key: string; label: string }[],
-    scheduling: {
-      loadingSlots: "",
-      pickDay: "",
-      pickSlot: "",
-      back: "",
-      hourTaken: "",
-      confirming: "",
-      successTitle: "",
-      successBody: "",
-      conflict: "",
-      failed: "",
-      unavailable: "",
+  const translatedTexts = useTranslatedTexts(
+    (t) => {
+      const hasContextualGreeting = (SERVICES_WITH_GREETING as readonly string[]).includes(initialService || "")
+      const greeting = hasContextualGreeting
+        ? String(t(`contact.jevy.greetingByService.${initialService as ServiceKey}`))
+        : String(t("contact.jevy.greeting"))
+
+      return {
+        windowTitle: String(t("contact.jevy.windowTitle")),
+        greeting,
+        inputPlaceholder: String(t("contact.jevy.inputPlaceholder")),
+        typing: String(t("contact.jevy.typing")),
+        errorFallback: String(t("contact.jevy.errorFallback")),
+        limitReached: String(t("contact.jevy.limitReached")),
+        areYouThere: String(t("contact.jevy.areYouThere")),
+        attachTooltip: String(t("contact.jevy.attachTooltip")),
+        attachTooLarge: String(t("contact.jevy.attachTooLarge")),
+        attachError: String(t("contact.jevy.attachError")),
+        attachedNotice: String(t("contact.jevy.attachedNotice")),
+        dropHint: String(t("contact.jevy.dropHint")),
+        prototypeBadge: String(t("contact.jevy.prototypeBadge")),
+        seeMore: String(t("common.seeMore")),
+        demo: String(t("projects.demo")),
+        chips: CHIP_KEYS.map((key) => ({ key, label: String(t(`contact.jevy.chips.${key}`)) })),
+        scheduling: {
+          loadingSlots: String(t("contact.jevy.scheduling.loadingSlots")),
+          pickDay: String(t("contact.jevy.scheduling.pickDay")),
+          pickSlot: String(t("contact.jevy.scheduling.pickSlot")),
+          back: String(t("contact.jevy.scheduling.back")),
+          hourTaken: String(t("contact.jevy.scheduling.hourTaken")),
+          confirming: String(t("contact.jevy.scheduling.confirming")),
+          successTitle: String(t("contact.jevy.scheduling.successTitle")),
+          successBody: String(t("contact.jevy.scheduling.successBody")),
+          conflict: String(t("contact.jevy.scheduling.conflict")),
+          failed: String(t("contact.jevy.scheduling.failed")),
+          unavailable: String(t("contact.jevy.scheduling.unavailable")),
+        },
+      }
     },
-  })
-
-  // Cargar traducciones después de la hidratación (mismo patrón que el resto de /contact)
-  useEffect(() => {
-    const hasContextualGreeting = (SERVICES_WITH_GREETING as readonly string[]).includes(initialService || "")
-    const greeting = hasContextualGreeting
-      ? String(t(`contact.jevy.greetingByService.${initialService as ServiceKey}`))
-      : String(t("contact.jevy.greeting"))
-
-    setTranslatedTexts({
-      windowTitle: String(t("contact.jevy.windowTitle")),
-      greeting,
-      inputPlaceholder: String(t("contact.jevy.inputPlaceholder")),
-      typing: String(t("contact.jevy.typing")),
-      errorFallback: String(t("contact.jevy.errorFallback")),
-      limitReached: String(t("contact.jevy.limitReached")),
-      areYouThere: String(t("contact.jevy.areYouThere")),
-      attachTooltip: String(t("contact.jevy.attachTooltip")),
-      attachTooLarge: String(t("contact.jevy.attachTooLarge")),
-      attachError: String(t("contact.jevy.attachError")),
-      attachedNotice: String(t("contact.jevy.attachedNotice")),
-      dropHint: String(t("contact.jevy.dropHint")),
-      prototypeBadge: String(t("contact.jevy.prototypeBadge")),
-      seeMore: String(t("common.seeMore")),
-      demo: String(t("projects.demo")),
-      chips: CHIP_KEYS.map((key) => ({ key, label: String(t(`contact.jevy.chips.${key}`)) })),
+    {
+      windowTitle: "",
+      greeting: "",
+      inputPlaceholder: "",
+      typing: "",
+      errorFallback: "",
+      limitReached: "",
+      areYouThere: "",
+      attachTooltip: "",
+      attachTooLarge: "",
+      attachError: "",
+      attachedNotice: "",
+      dropHint: "",
+      prototypeBadge: "",
+      seeMore: "",
+      demo: "",
+      chips: [] as { key: string; label: string }[],
       scheduling: {
-        loadingSlots: String(t("contact.jevy.scheduling.loadingSlots")),
-        pickDay: String(t("contact.jevy.scheduling.pickDay")),
-        pickSlot: String(t("contact.jevy.scheduling.pickSlot")),
-        back: String(t("contact.jevy.scheduling.back")),
-        hourTaken: String(t("contact.jevy.scheduling.hourTaken")),
-        confirming: String(t("contact.jevy.scheduling.confirming")),
-        successTitle: String(t("contact.jevy.scheduling.successTitle")),
-        successBody: String(t("contact.jevy.scheduling.successBody")),
-        conflict: String(t("contact.jevy.scheduling.conflict")),
-        failed: String(t("contact.jevy.scheduling.failed")),
-        unavailable: String(t("contact.jevy.scheduling.unavailable")),
+        loadingSlots: "",
+        pickDay: "",
+        pickSlot: "",
+        back: "",
+        hourTaken: "",
+        confirming: "",
+        successTitle: "",
+        successBody: "",
+        conflict: "",
+        failed: "",
+        unavailable: "",
       },
-    })
-  }, [t, initialService])
+    },
+    [initialService]
+  )
 
   const [lines, setLines] = useState<ChatLine[]>([])
   const [history, setHistory] = useState<DeepSeekMessage[]>([])

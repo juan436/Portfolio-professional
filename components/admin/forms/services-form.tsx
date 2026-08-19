@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Trash2, Code, Server, Database, Cpu, Globe, Smartphone, Monitor, Cloud, Shield, LineChart, Settings, Layers, Briefcase, PenTool, FileCode, Zap } from "lucide-react"
+import { Plus, Trash2, Code } from "lucide-react"
+import { getServiceIconComponent } from "@/lib/service-icon-map"
 import { useToast } from "@/hooks/use-toast"
 import ServiceIconSelector from "@/components/admin/common/service-icon-selector"
 import { useContent } from "@/contexts/content/use-content"
@@ -152,42 +153,8 @@ export default function ServicesForm({ services, onChange }: ServicesFormProps) 
 
   // Renderizar el ícono correspondiente
   const renderIcon = (iconName: string) => {
-    switch (iconName) {
-      case "Code":
-        return <Code className="h-6 w-6 mx-auto text-blue-500" />
-      case "Server":
-        return <Server className="h-6 w-6 mx-auto text-blue-500" />
-      case "Database":
-        return <Database className="h-6 w-6 mx-auto text-blue-500" />
-      case "Cpu":
-        return <Cpu className="h-6 w-6 mx-auto text-blue-500" />
-      case "Globe":
-        return <Globe className="h-6 w-6 mx-auto text-blue-500" />
-      case "Smartphone":
-        return <Smartphone className="h-6 w-6 mx-auto text-blue-500" />
-      case "Monitor":
-        return <Monitor className="h-6 w-6 mx-auto text-blue-500" />
-      case "Cloud":
-        return <Cloud className="h-6 w-6 mx-auto text-blue-500" />
-      case "Shield":
-        return <Shield className="h-6 w-6 mx-auto text-blue-500" />
-      case "LineChart":
-        return <LineChart className="h-6 w-6 mx-auto text-blue-500" />
-      case "Settings":
-        return <Settings className="h-6 w-6 mx-auto text-blue-500" />
-      case "Layers":
-        return <Layers className="h-6 w-6 mx-auto text-blue-500" />
-      case "Briefcase":
-        return <Briefcase className="h-6 w-6 mx-auto text-blue-500" />
-      case "PenTool":
-        return <PenTool className="h-6 w-6 mx-auto text-blue-500" />
-      case "FileCode":
-        return <FileCode className="h-6 w-6 mx-auto text-blue-500" />
-      case "Zap":
-        return <Zap className="h-6 w-6 mx-auto text-blue-500" />
-      default:
-        return <Code className="h-6 w-6 mx-auto text-blue-500" />
-    }
+    const Icon = getServiceIconComponent(iconName)
+    return <Icon className="h-6 w-6 mx-auto text-blue-500" />
   }
 
   return (

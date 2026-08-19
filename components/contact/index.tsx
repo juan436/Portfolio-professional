@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useLanguage } from "@/hooks/use-language"
 import { useAttachments } from "@/hooks/use-attachments"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { JevyChat } from "./jevy-chat"
 import { JevyAboutPanel, JevyGuidePanel, AttachmentsCard } from "./side-panels"
 
@@ -11,7 +11,6 @@ const VALID_SERVICES = ["web", "mobile", "automation", "infra", "other"] as cons
 type ServiceKey = (typeof VALID_SERVICES)[number]
 
 export default function Contact() {
-  const { t } = useLanguage()
   // No usamos query string (?servicio=...) a propósito: la URL de /contact
   // debe quedar limpia al venir desde una card de Servicio. El dato viaja
   // por sessionStorage, seteado por el onClick de la card. Se lee de forma
@@ -33,20 +32,14 @@ export default function Contact() {
       sessionStorage.removeItem("jevy_initial_service")
     } catch {}
   }, [])
-  const [translatedTexts, setTranslatedTexts] = useState({
-    title: "",
-    attachTooLarge: "",
-    attachError: "",
-  })
-
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setTranslatedTexts({
+  const translatedTexts = useTranslatedTexts(
+    (t) => ({
       title: String(t("contact.title")),
       attachTooLarge: String(t("contact.jevy.attachTooLarge")),
       attachError: String(t("contact.jevy.attachError")),
-    })
-  }, [t])
+    }),
+    { title: "", attachTooLarge: "", attachError: "" }
+  )
 
   // Estado de adjuntos compartido entre el chat y la card de la columna izquierda
   const attachments = useAttachments(translatedTexts.attachTooLarge, translatedTexts.attachError)

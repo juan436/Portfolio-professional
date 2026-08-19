@@ -1,4 +1,4 @@
-// portfolio/models/otherSkills.model.ts
+// portfolio/models/other-skills.model.ts
 import mongoose, { Document } from 'mongoose';
 
 export interface IOtherSkill extends Document {

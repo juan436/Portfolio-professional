@@ -7,25 +7,20 @@ import { WhatsappIcon } from "@/components/icons/whatsapp-icon"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
-import { useState, useEffect } from "react"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { openWhatsAppWithMessage, SOCIAL_LINKS } from "@/utils/social-links"
 
 export default function Footer() {
   const { t } = useLanguage()
   const { content } = useContent()
   const email = content?.contact?.email
-  const [translatedTexts, setTranslatedTexts] = useState({
-    rights: "",
-    role: ""
-  })
-  
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setTranslatedTexts({
+  const translatedTexts = useTranslatedTexts(
+    (t) => ({
       rights: String(t("footer.rights")),
       role: String(t("footer.role"))
-    })
-  }, [t])
+    }),
+    { rights: "", role: "" }
+  )
 
   const scrollToTop = () => {
     window.scrollTo({

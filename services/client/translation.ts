@@ -1,13 +1,11 @@
 /**
- * Servicio de traducción utilizando LibreTranslate API
- * Instancia local: http://localhost:5000
+ * Servicio de traducción vía DeepSeek (app/api/translate, server-side —
+ * TOKEN_DEEPSEEK es secreto de servidor, este archivo corre en el navegador)
  */
+import { getApiUrl } from '@/utils/url';
 
-// Códigos de idioma soportados por LibreTranslate
+// Códigos de idioma soportados
 export type SupportedLanguage = 'es' | 'en' | 'fr' | 'it';
-
-// URL base de la API local
-const LIBRETRANSLATE_API_URL = 'https://api-translate.jvserver.com/translate';
 
 /**
  * Traduce un texto de un idioma a otro
@@ -22,14 +20,9 @@ export async function translateText(
   target: SupportedLanguage
 ): Promise<string> {
   try {
-    const response = await fetch(LIBRETRANSLATE_API_URL, {
+    const response = await fetch(`${getApiUrl()}/translate`, {
       method: 'POST',
-      body: JSON.stringify({
-        q: text,
-        source: source,
-        target: target,
-        format: 'text',
-      }),
+      body: JSON.stringify({ text, source, target }),
       headers: { 'Content-Type': 'application/json' },
     });
 

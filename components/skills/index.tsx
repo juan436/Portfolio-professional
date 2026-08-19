@@ -2,32 +2,18 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
+import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { SkillsTabs } from "./skills-tabs"
 import { OtherSkills } from "./other-skills"
 
 export default function Skills() {
-  const { t } = useLanguage()
   const { content } = useContent()
   const [activeTab, setActiveTab] = useState("frontend")
   const [skills, setSkills] = useState(content.skills)
   const [otherSkills, setOtherSkills] = useState(content.otherSkills)
-  const [skillsData, setSkillsData] = useState(content.skills)
-  const [translatedTexts, setTranslatedTexts] = useState({
-    title: "",
-    subtitle: "",
-    frontend: "",
-    backend: "",
-    database: "",
-    devops: "",
-    other: "",
-    viewExperience: ""
-  })
-
-  // Cargar traducciones después de la hidratación
-  useEffect(() => {
-    setTranslatedTexts({
+  const translatedTexts = useTranslatedTexts(
+    (t) => ({
       title: String(t("skills.title")),
       subtitle: String(t("skills.subtitle")),
       frontend: String(t("skills.frontend")),
@@ -36,8 +22,9 @@ export default function Skills() {
       devops: String(t("skills.devops")),
       other: String(t("skills.other")),
       viewExperience: String(t("skills.viewExperience"))
-    })
-  }, [t])
+    }),
+    { title: "", subtitle: "", frontend: "", backend: "", database: "", devops: "", other: "", viewExperience: "" }
+  )
 
   // Actualizar cuando cambia el contenido global
   useEffect(() => {
@@ -63,30 +50,6 @@ export default function Skills() {
     window.addEventListener("contentUpdated", handleContentUpdated)
     return () => {
       window.removeEventListener("contentUpdated", handleContentUpdated)
-    }
-  }, [])
-
-  // Añadir un efecto para escuchar el evento skillsUpdated
-  useEffect(() => {
-    const handleContentUpdate = (event: CustomEvent) => {
-      if (event.detail && event.detail.skills) {
-        setSkillsData(event.detail.skills)
-      }
-    }
-
-    const handleSkillsUpdate = (event: CustomEvent) => {
-      if (event.detail) {
-        setSkillsData(event.detail)
-      }
-    }
-
-    // Escuchar eventos de actualización de contenido y habilidades específicamente
-    window.addEventListener("contentUpdated", handleContentUpdate as EventListener)
-    window.addEventListener("skillsUpdated", handleSkillsUpdate as EventListener)
-
-    return () => {
-      window.removeEventListener("contentUpdated", handleContentUpdate as EventListener)
-      window.removeEventListener("skillsUpdated", handleSkillsUpdate as EventListener)
     }
   }, [])
 

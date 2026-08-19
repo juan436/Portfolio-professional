@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useModifiedFieldsForm } from "@/hooks/use-modified-fields-form"
 
 // Definir la interfaz para la estructura de datos de contacto
 export interface ContactContent {
@@ -19,41 +19,7 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ content, onChange }: ContactFormProps) {
-  // Estado para rastrear los campos modificados
-  const [modifiedFields, setModifiedFields] = useState<string[]>([]);
-  
-  // Estado local para el contenido
-  const [localContent, setLocalContent] = useState<ContactContent>({...content});
-  
-  // Actualizar el estado local cuando cambia el contenido desde props
-  useEffect(() => {
-    setLocalContent({...content});
-    // Resetear los campos modificados cuando se recibe nuevo contenido desde props
-    setModifiedFields([]);
-  }, [content]);
-
-  // Manejar cambios en los campos del formulario
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    
-    // Actualizar el estado local
-    setLocalContent(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    
-    // Registrar el campo como modificado si no está ya en la lista
-    if (!modifiedFields.includes(name)) {
-      setModifiedFields(prev => [...prev, name]);
-    }
-    
-    // Enviar el contenido actualizado con la lista de campos modificados
-    onChange({
-      ...localContent,
-      [name]: value,
-      _modifiedFields: [...modifiedFields, name].filter((v, i, a) => a.indexOf(v) === i) // Eliminar duplicados
-    });
-  }
+  const { localContent, handleChange } = useModifiedFieldsForm<ContactContent>(content, onChange)
 
   return (
     <Card className="bg-black/40 border-blue-700/20">

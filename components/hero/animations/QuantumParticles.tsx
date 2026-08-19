@@ -1,17 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 
 export function QuantumParticles() {
-  // Estado para controlar si estamos en el cliente
-  const [isMounted, setIsMounted] = useState(false)
-  
-  // Efecto que se ejecuta solo en el cliente
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-  
+  const isMounted = useIsMounted()
+
   // No renderizar nada durante SSR
   if (!isMounted) {
     return null

@@ -1,60 +1,32 @@
 "use client"
 
+// SVG solo (marca J/V/DEV) sin el wrapper de interacción — components/navbar/logo.tsx
+// lo envuelve en un <button> que hace scroll-to-top; components/projects/project-header.tsx
+// lo envuelve en un <Link href="/"> porque ahí no hay Home debajo para hacer scroll.
+// Isotipo compacto real (logos/isotipo-compacto-bicolor.svg) — J/V en blanco +
+// flecha azul. Reemplaza el logo J/V/DEV dibujado a mano.
+export function LogoMark() {
+  return (
+    <svg
+      width="63"
+      height="48"
+      viewBox="-9 -6 120 92"
+      className="hover:scale-105 transition-transform duration-300"
+    >
+      <path d="M15,8 L15,44 L7,56" fill="none" stroke="#FFFFFF" strokeWidth="13" strokeMiterlimit="12" />
+      <path d="M28,8 L46,50 L64,8" fill="none" stroke="#FFFFFF" strokeWidth="13" strokeMiterlimit="12" />
+      <path d="M74,26 L94,44 L74,62" fill="none" stroke="#3b82f6" strokeWidth="12" strokeMiterlimit="12" />
+    </svg>
+  )
+}
+
 export function Logo() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className="focus:outline-none"
     >
-      <svg
-        width="80"
-        height="48"
-        viewBox="0 0 50 30"
-        className="hover:scale-105 transition-transform duration-300"
-      >
-        {/* Background shape */}
-        <rect
-          x="1"
-          y="1"
-          width="48"
-          height="28"
-          rx="6"
-          fill="transparent"
-          stroke="#3b82f6"
-          strokeWidth="1.5"
-          strokeOpacity="0.3"
-        />
-
-        {/* J letter */}
-        <path
-          d="M12 7v10c0 2-1 3-3 3s-3-1-3-3"
-          stroke="#3b82f6"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-
-        {/* V letter */}
-        <path
-          d="M18 7l4 13 4-13"
-          stroke="#3b82f6"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-
-        {/* Underscore and DEV */}
-        <path d="M30 17h12" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-        <text x="30" y="13" fontFamily="monospace" fontSize="7" fontWeight="bold" fill="#e2e8f0">
-          DEV
-        </text>
-
-        {/* Tech circuit lines */}
-        <path d="M3 15h2 M45 15h2" stroke="#3b82f6" strokeWidth="1" strokeOpacity="0.6" />
-        <circle cx="5" cy="15" r="1" fill="#3b82f6" />
-        <circle cx="45" cy="15" r="1" fill="#3b82f6" />
-      </svg>
+      <LogoMark />
     </button>
   )
 }

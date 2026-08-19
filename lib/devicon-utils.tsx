@@ -7,97 +7,37 @@ import React from 'react';
  * @param className Clases CSS adicionales para el icono
  * @returns Elemento JSX con el icono
  */
+// Iconos cuyo nombre de clase Devicon no sigue el patrón regular
+// `devicon-{nombre}-{plain|plain-wordmark}{ colored}` — cada uno tiene su
+// propia forma real (sufijo distinto, o el "colored" en otro lugar del
+// string). Antes eran 9 bloques if/else casi idénticos.
+const specialIconClass: Record<string, (colored: boolean) => string> = {
+  nextjs: (colored) => `devicon-nextjs-${colored ? "line" : "plain"}`,
+  amazonwebservices: (colored) => `devicon-amazonwebservices-plain-wordmark${colored ? " colored" : ""}`,
+  github: (colored) => `devicon-github-original${colored ? "-wordmark" : ""}`,
+  express: (colored) => `devicon-express-original${colored ? "-wordmark" : ""}`,
+  django: (colored) => `devicon-django-plain${colored ? " colored" : ""}`,
+  flask: (colored) => `devicon-flask-original${colored ? "-wordmark" : ""}`,
+  vercel: (colored) => `devicon-vercel-${colored ? "original" : "line"}`,
+  wordpress: (colored) => `devicon-wordpress-${colored ? "plain-wordmark" : "plain"}`,
+  prisma: (colored) => `devicon-prisma-original${colored ? "-wordmark" : ""}`,
+};
+
 export function renderDevIcon(
-  iconName: string, 
-  colored: boolean = true, 
+  iconName: string,
+  colored: boolean = true,
   className: string = ""
 ): React.ReactNode {
   if (!iconName) return null;
 
   // Estilos base para el icono
   const baseStyle = colored === false ? { color: "white" } : {};
-  
-  // Caso especial para Next.js
-  if (iconName === "nextjs") {
-    return (
-      <i
-        className={`devicon-nextjs-${colored ? "line" : "plain"} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
+
+  const specialClass = specialIconClass[iconName]?.(colored);
+  if (specialClass) {
+    return <i className={`${specialClass} ${className}`} style={baseStyle}></i>;
   }
-  // Caso especial para AWS
-  else if (iconName === "amazonwebservices") {
-    return (
-      <i
-        className={`devicon-amazonwebservices-plain-wordmark${colored ? " colored" : ""} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
-  // Caso especial para GitHub
-  else if (iconName === "github") {
-    return (
-      <i
-        className={`devicon-github-original${colored ? "-wordmark" : ""} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
-  // Caso especial para Express
-  else if (iconName === "express") {
-    return (
-      <i
-        className={`devicon-express-original${colored ? "-wordmark" : ""} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
-  // Caso especial para Django
-  else if (iconName === "django") {
-    return (
-      <i
-        className={`devicon-django-plain${colored ? " colored" : ""} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
-  // Caso especial para Flask
-  else if (iconName === "flask") {
-    return (
-      <i
-        className={`devicon-flask-original${colored ? "-wordmark" : ""} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
-  // Caso especial para Vercel
-  else if (iconName === "vercel") {
-    return (
-      <i
-        className={`devicon-vercel-${colored ? "original" : "line"} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
-  // Caso especial para WordPress
-  else if (iconName === "wordpress") {
-    return (
-      <i
-        className={`devicon-wordpress-${colored ? "plain-wordmark" : "plain"} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
-  // Caso especial para Prisma
-  else if (iconName === "prisma") {
-    return (
-      <i
-        className={`devicon-prisma-original${colored ? "-wordmark" : ""} ${className}`}
-        style={baseStyle}
-      ></i>
-    );
-  }
+
   // Casos especiales que usan sufijos diferentes
   const specialIcons: Record<string, string> = {
     nestjs: "plain-wordmark",

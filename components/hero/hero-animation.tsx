@@ -1,6 +1,7 @@
 "use client"
 
-import { motion, AnimatePresence } from "framer-motion"
+import { useRef } from "react"
+import { motion, AnimatePresence, useInView } from "framer-motion"
 import Image from "next/image"
 import { useContent } from "@/contexts/content"
 import {
@@ -20,7 +21,11 @@ interface HeroAnimationProps {
 
 export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: HeroAnimationProps) {
   const { content } = useContent()
-  
+  const containerRef = useRef<HTMLDivElement>(null)
+  // Los 5 fondos de abajo suman 48 elementos con animaciones infinitas — no
+  // hay razón para que sigan corriendo cuando ya scrolleaste lejos del Hero.
+  const isInView = useInView(containerRef)
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -28,21 +33,25 @@ export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: Her
       transition={{ duration: 0.8, delay: 0.2 }}
       className="flex justify-center"
     >
-      <div className="relative w-80 h-80 md:w-96 md:h-96">
-        {/* Campo de fuerza hexagonal */}
-        <HexagonalField />
-        
-        {/* Rayos de energía */}
-        <QuantumRays />
-        
-        {/* Partículas */}
-        <QuantumParticles />
-        
-        {/* Palabras tecnológicas */}
-        <FloatingTechWords />
-        
-        {/* Ondas de energía */}
-        <EnergyWaves />
+      <div ref={containerRef} className="relative w-80 h-80 md:w-96 md:h-96">
+        {isInView && (
+          <>
+            {/* Campo de fuerza hexagonal */}
+            <HexagonalField />
+
+            {/* Rayos de energía */}
+            <QuantumRays />
+
+            {/* Partículas */}
+            <QuantumParticles />
+
+            {/* Palabras tecnológicas */}
+            <FloatingTechWords />
+
+            {/* Ondas de energía */}
+            <EnergyWaves />
+          </>
+        )}
 
         {/* Imagen del perfil con animación */}
         <div className="absolute inset-0 rounded-full overflow-hidden z-20">

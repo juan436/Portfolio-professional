@@ -32,9 +32,9 @@ export type ContentContextType = {
   removeOtherSkill: (id: string) => Promise<boolean>
   
   // Métodos para proyectos
-  createProjectItem: (project: Omit<Project, "id">, category: 'fullstack' | 'backend') => Promise<Project | null>
-  updateProjectItem: (id: string, project: Project, category: 'fullstack' | 'backend') => Promise<boolean>
-  deleteProjectItem: (id: string, category: 'fullstack' | 'backend') => Promise<boolean>
+  createProjectItem: (project: Omit<Project, "id">, category: keyof Projects) => Promise<Project | null>
+  updateProjectItem: (id: string, project: Project, category: keyof Projects) => Promise<boolean>
+  deleteProjectItem: (id: string, category: keyof Projects) => Promise<boolean>
   
   // Métodos para skills
   createSkillItem: (skillData: Omit<Skill, "_id">) => Promise<Skill | null>

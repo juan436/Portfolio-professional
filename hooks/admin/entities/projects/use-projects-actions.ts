@@ -1,10 +1,18 @@
 import { useState, useCallback, useEffect } from "react";
 import { useContent } from "@/contexts/content";
 import { useToastNotifications } from "../../use-toast-notifications";
-import type { Project } from "@/contexts/content/types";
+import type { Project, Projects } from "@/contexts/content/types";
 
-// Tipo para las categorías de proyectos
-export type ProjectCategory = 'fullstack' | 'backend';
+// Categorías reales del contenido (ver contexts/content/types) — antes este
+// hook usaba 'fullstack' | 'backend', que nunca existieron en `Projects`
+// (auditoría 2026-08-18 §8: rompía la creación/edición de proyectos en Admin)
+export type ProjectCategory = keyof Projects;
+
+const emptyProjectsByCategory = (): Record<ProjectCategory, Project[]> => ({
+  web: [],
+  mobile: [],
+  infra_backend: [],
+});
 
 /**
  * Hook específico para gestionar proyectos en el panel de administración
@@ -12,43 +20,46 @@ export type ProjectCategory = 'fullstack' | 'backend';
  * @param initialCategory Categoría inicial seleccionada
  * @returns Funciones y estado para gestionar proyectos
  */
-export function useProjectsActions(initialCategory: ProjectCategory = 'fullstack') {
+export function useProjectsActions(initialCategory: ProjectCategory = 'web') {
   const { content, createProjectItem, updateProjectItem, deleteProjectItem } = useContent();
   const toastNotifications = useToastNotifications();
-  
+
   // Estados para manejar las pestañas y proyectos
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>(initialCategory);
-  const [fullstackProjects, setFullstackProjects] = useState<Project[]>(content.projects.fullstack || []);
-  const [backendProjects, setBackendProjects] = useState<Project[]>(content.projects.backend || []);
+  const [projectsByCategory, setProjectsByCategory] = useState<Record<ProjectCategory, Project[]>>({
+    ...emptyProjectsByCategory(),
+    ...content.projects,
+  });
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [lastSelectedFullstack, setLastSelectedFullstack] = useState<Project | null>(null);
-  const [lastSelectedBackend, setLastSelectedBackend] = useState<Project | null>(null);
+  const [lastSelectedByCategory, setLastSelectedByCategory] = useState<Record<ProjectCategory, Project | null>>({
+    web: null,
+    mobile: null,
+    infra_backend: null,
+  });
   const [isTabChanging, setIsTabChanging] = useState(false);
   const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Estado para el diálogo de confirmación de eliminación
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<number | null>(null);
 
   // Obtener los proyectos actuales según la categoría activa
-  const currentProjects = activeCategory === "fullstack" ? fullstackProjects : backendProjects;
-  const lastSelected = activeCategory === "fullstack" ? lastSelectedFullstack : lastSelectedBackend;
-  
+  const currentProjects = projectsByCategory[activeCategory];
+  const lastSelected = lastSelectedByCategory[activeCategory];
+
   // Función para recordar el último proyecto seleccionado por categoría
   const setLastSelected = useCallback((project: Project | null) => {
-    if (activeCategory === "fullstack") {
-      setLastSelectedFullstack(project);
-    } else {
-      setLastSelectedBackend(project);
-    }
+    setLastSelectedByCategory(prev => ({ ...prev, [activeCategory]: project }));
   }, [activeCategory]);
 
   // Sincronizar proyectos con el contexto
   useEffect(() => {
-    setFullstackProjects(content.projects.fullstack || []);
-    setBackendProjects(content.projects.backend || []);
+    setProjectsByCategory({
+      ...emptyProjectsByCategory(),
+      ...content.projects,
+    });
   }, [content.projects]);
 
   // Manejar cambios de pestaña y selección de proyectos
@@ -117,13 +128,12 @@ export function useProjectsActions(initialCategory: ProjectCategory = 'fullstack
           setEditMode(false);
           setIsCreatingNewProject(false);
           toastNotifications.showCreatedToast("Proyecto");
-          
+
           // Actualizar la lista de proyectos correspondiente
-          if (activeCategory === "fullstack") {
-            setFullstackProjects(prev => [...prev, newProject]);
-          } else {
-            setBackendProjects(prev => [...prev, newProject]);
-          }
+          setProjectsByCategory(prev => ({
+            ...prev,
+            [activeCategory]: [...prev[activeCategory], newProject],
+          }));
         } else {
           toastNotifications.showErrorCreatingToast("proyecto");
         }
@@ -215,8 +225,6 @@ export function useProjectsActions(initialCategory: ProjectCategory = 'fullstack
   return {
     // Estado
     activeCategory,
-    fullstackProjects,
-    backendProjects,
     selectedProject,
     currentProjects,
     editMode,
