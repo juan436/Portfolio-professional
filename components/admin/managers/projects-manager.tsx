@@ -4,15 +4,33 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Plus, Code2, Smartphone, Server } from "lucide-react"
+import { Plus, Code2, Smartphone, Server, FlaskConical, Workflow, Bot } from "lucide-react"
 import { useProjectsActions } from "@/hooks/admin/entities/projects/use-projects-actions"
+import { CATEGORY_LABELS, CATEGORY_ORDER, type ProjectCategoryValue } from "@/hooks/admin/entities/projects/types"
 
 import ProjectForm from "@/components/admin/forms/project-form"
 import ProjectsTable from "@/components/admin/tables/projects-table"
 import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialog"
 
+const CATEGORY_ICONS: Record<ProjectCategoryValue, React.ElementType> = {
+  web: Code2,
+  mobile: Smartphone,
+  infra_backend: Server,
+  laboratorio: FlaskConical,
+  automatizacion: Workflow,
+  agente: Bot,
+}
+
+const CATEGORY_DESCRIPTIONS: Record<ProjectCategoryValue, string> = {
+  web: "Selecciona un proyecto para editarlo o añade uno nuevo.",
+  mobile: "Selecciona un proyecto para editarlo o añade uno nuevo.",
+  infra_backend: "APIs, servicios y aplicaciones de servidor.",
+  laboratorio: "Experimentos y pruebas técnicas (R&D).",
+  automatizacion: "Flujos de automatización (n8n, scripts, etc.).",
+  agente: "Agentes conversacionales (ej. Jevy).",
+}
+
 export default function ProjectsManager() {
-  // Usar el hook específico para proyectos que contiene toda la lógica
   const {
     activeCategory,
     currentProjects,
@@ -32,18 +50,16 @@ export default function ProjectsManager() {
     handleConfirmDelete
   } = useProjectsActions();
 
-  // Renderizar el contenido de proyectos según la categoría
-  const renderProjectContent = (category: string, title: string, description: string) => (
+  const renderProjectContent = (category: ProjectCategoryValue) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
       <div className="md:col-span-1">
         <ProjectsTable
           projects={currentProjects}
           selectedProject={selectedProject}
           onSelectProject={setSelectedProject}
-          onDeleteProject={() => {}} // Mantenemos este prop por compatibilidad
           handleOpenDeleteDialog={handleOpenDeleteDialog}
-          title={title}
-          description={description}
+          title={`Proyectos ${CATEGORY_LABELS[category]}`}
+          description={CATEGORY_DESCRIPTIONS[category]}
         />
       </div>
       <div className="md:col-span-3">
@@ -55,7 +71,7 @@ export default function ProjectsManager() {
           onCancel={handleCancelEdit}
           isNewProject={isCreatingNewProject}
           isLoading={isLoading}
-          category={activeCategory as 'web' | 'mobile' | 'infra_backend'}
+          category={activeCategory}
         />
       </div>
     </div>
@@ -77,41 +93,27 @@ export default function ProjectsManager() {
       </div>
 
       <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
-        <TabsList className="bg-black/40 border border-blue-700/20 mb-6">
-          <TabsTrigger
-            value="web"
-            className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
-          >
-            <Code2 className="mr-2 h-4 w-4" />
-            Web
-          </TabsTrigger>
-          <TabsTrigger
-            value="mobile"
-            className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
-          >
-            <Smartphone className="mr-2 h-4 w-4" />
-            Mobile
-          </TabsTrigger>
-          <TabsTrigger
-            value="infra_backend"
-            className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
-          >
-            <Server className="mr-2 h-4 w-4" />
-            Backend
-          </TabsTrigger>
+        <TabsList className="bg-black/40 border border-blue-700/20 mb-6 flex-wrap h-auto">
+          {CATEGORY_ORDER.map((category) => {
+            const Icon = CATEGORY_ICONS[category]
+            return (
+              <TabsTrigger
+                key={category}
+                value={category}
+                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
+              >
+                <Icon className="mr-2 h-4 w-4" />
+                {CATEGORY_LABELS[category]}
+              </TabsTrigger>
+            )
+          })}
         </TabsList>
 
-        <TabsContent value="web" className="mt-0">
-          {renderProjectContent("web", "Proyectos Web", "Selecciona un proyecto para editarlo o añade uno nuevo.")}
-        </TabsContent>
-
-        <TabsContent value="mobile" className="mt-0">
-          {renderProjectContent("mobile", "Proyectos Mobile", "Selecciona un proyecto para editarlo o añade uno nuevo.")}
-        </TabsContent>
-
-        <TabsContent value="infra_backend" className="mt-0">
-          {renderProjectContent("infra_backend", "Proyectos Backend", "APIs, servicios y aplicaciones de servidor.")}
-        </TabsContent>
+        {CATEGORY_ORDER.map((category) => (
+          <TabsContent key={category} value={category} className="mt-0">
+            {renderProjectContent(category)}
+          </TabsContent>
+        ))}
       </Tabs>
 
       <ConfirmationDialog

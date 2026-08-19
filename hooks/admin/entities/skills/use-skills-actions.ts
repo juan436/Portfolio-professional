@@ -1,144 +1,100 @@
 import { useState, useEffect, useCallback } from "react";
-import { useContent } from "@/contexts/content";
+import { fetchSkills } from "@/services/api/skills/regular-skills";
+import { createSkillAction, updateSkillAction, deleteSkillAction } from "@/lib/actions/skills";
 import type { Skill } from "@/contexts/content/types";
 import { useToastNotifications } from "../../use-toast-notifications";
+
 /**
- * Hook para gestionar las habilidades en el panel de administración
- * Encapsula toda la lógica de gestión de habilidades
- * @returns Funciones y estado para gestionar habilidades
+ * Hook para gestionar las habilidades en el panel de administración —
+ * reescrito para usar Server Actions (lib/actions/skills.ts) en vez del
+ * ContentProvider global (Fase 4, auditoría 2026-08-19). Carga inicial
+ * propia (fetch client-side), igual que el resto de entidades ya migradas.
  */
 export function useSkillsActions() {
-  const { 
-    content, 
-    createSkillItem,
-    updateSkillItem,
-    deleteSkillItem
-  } = useContent();
   const toastNotifications = useToastNotifications();
-  
-  // Estado local para las habilidades
-  const [skills, setSkills] = useState<any>(content.skills || {
-    frontend: [],
-    backend: [],
-    database: [],
-    devops: []
-  });
+
+  const [skills, setSkills] = useState<any>({ frontend: [], backend: [], database: [], devops: [] });
+  const [isFetching, setIsFetching] = useState(true);
   const [currentSkill, setCurrentSkill] = useState<Skill | null>(null);
   const [isSkillFormOpen, setIsSkillFormOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("frontend");
 
-  // Sincronizar con el contexto global
-  useEffect(() => {
-    if (content.skills) {
-      setSkills(content.skills);
+  const load = useCallback(async () => {
+    setIsFetching(true);
+    try {
+      const result = await fetchSkills();
+      setSkills(result);
+    } finally {
+      setIsFetching(false);
     }
-  }, [content.skills]);
+  }, []);
 
-  /**
-   * Abre el formulario para crear una nueva habilidad
-   */
+  useEffect(() => {
+    load();
+  }, [load]);
+
   const openNewSkillForm = useCallback((category: string) => {
     setCurrentSkill({
       name: "",
       icon: "",
-      level: 50,
+      colored: false,
       category
-    });
+    } as Skill);
     setIsSkillFormOpen(true);
   }, []);
 
-  /**
-   * Abre el formulario para editar una habilidad existente
-   */
   const openEditSkillForm = useCallback((skill: Skill) => {
     setCurrentSkill({ ...skill });
     setIsSkillFormOpen(true);
   }, []);
 
-  /**
-   * Cierra el formulario de habilidad
-   */
   const closeSkillForm = useCallback(() => {
     setIsSkillFormOpen(false);
     setCurrentSkill(null);
   }, []);
 
-  /**
-   * Guarda una habilidad (nueva o editada)
-   */
   const saveSkill = useCallback((skill: Skill) => {
-    if (skill._id) {
-      // Actualizar habilidad existente
-      updateSkillItem(skill._id, skill)
-        .then(success => {
-          if (success) {
-            toastNotifications.showSuccessToast(
-              "Habilidad actualizada", 
-              `La habilidad "${skill.name}" ha sido actualizada correctamente.`
-            );
-          } else {
-            toastNotifications.showErrorToast(
-              "Error al actualizar", 
-              "No se pudo actualizar la habilidad. Inténtalo de nuevo."
-            );
-          }
-        })
-        .catch(error => {
-          toastNotifications.showErrorToast(
-            "Error al actualizar", 
-            `No se pudo actualizar la habilidad: ${error.message}`
-          );
-        });
-    } else {
-      // Crear nueva habilidad
-      createSkillItem(skill)
-        .then(newSkill => {
-          if (newSkill) {
-            toastNotifications.showSuccessToast(
-              "Habilidad creada", 
-              `La habilidad "${newSkill.name}" ha sido creada correctamente.`
-            );
-          }
-        })
-        .catch(error => {
-          toastNotifications.showErrorToast(
-            "Error al crear", 
-            `No se pudo crear la habilidad: ${error.message}`
-          );
-        });
-    }
-    
-    closeSkillForm();
-  }, [updateSkillItem, createSkillItem, closeSkillForm, toastNotifications]);
+    const payload = { name: skill.name, icon: skill.icon, colored: skill.colored ?? false, category: skill.category };
 
-  /**
-   * Elimina una habilidad
-   */
-  const deleteSkill = useCallback((skillId: string) => {
-    deleteSkillItem(skillId)
-      .then(success => {
-        if (success) {
-          toastNotifications.showSuccessToast(
-            "Habilidad eliminada", 
-            "La habilidad ha sido eliminada correctamente."
-          );
-        } else {
-          toastNotifications.showErrorToast(
-            "Error al eliminar", 
-            "No se pudo eliminar la habilidad. Inténtalo de nuevo."
-          );
-        }
+    const promise = skill._id
+      ? updateSkillAction(skill._id, payload)
+      : createSkillAction(payload);
+
+    promise
+      .then(() => {
+        toastNotifications.showSuccessToast(
+          skill._id ? "Habilidad actualizada" : "Habilidad creada",
+          `La habilidad "${skill.name}" se guardó correctamente.`
+        );
+        load();
       })
-      .catch(error => {
+      .catch((error) => {
         toastNotifications.showErrorToast(
-          "Error al eliminar", 
-          `No se pudo eliminar la habilidad: ${error.message}`
+          skill._id ? "Error al actualizar" : "Error al crear",
+          error instanceof Error ? error.message : "Ocurrió un error inesperado."
         );
       });
-  }, [deleteSkillItem, toastNotifications]);
+
+    closeSkillForm();
+  }, [closeSkillForm, load, toastNotifications]);
+
+  const deleteSkill = useCallback((skillId: string) => {
+    deleteSkillAction(skillId)
+      .then(() => {
+        toastNotifications.showSuccessToast("Habilidad eliminada", "La habilidad ha sido eliminada correctamente.");
+        load();
+      })
+      .catch((error) => {
+        toastNotifications.showErrorToast(
+          "Error al eliminar",
+          error instanceof Error ? error.message : "No se pudo eliminar la habilidad."
+        );
+      });
+  }, [load, toastNotifications]);
 
   return {
     skills,
+    isFetching,
     currentSkill,
     isSkillFormOpen,
     activeTab,

@@ -144,7 +144,11 @@
   },
   "blog": {
     "title": "Blog",
-    "comingSoon": "Coming soon — I'm preparing technical articles and real lessons from projects."
+    "subtitle": "Technical articles and real lessons from projects.",
+    "comingSoon": "Coming soon — I'm preparing technical articles and real lessons from projects.",
+    "empty": "No articles published yet.",
+    "notFound": "We couldn't find this article.",
+    "readMore": "Read more"
   },
   "certificates": {
     "title": "Certified Learning",

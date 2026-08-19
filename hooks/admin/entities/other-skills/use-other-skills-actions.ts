@@ -1,147 +1,98 @@
 import { useState, useEffect, useCallback } from "react";
-import { useContent } from "@/contexts/content";
+import { fetchOtherSkills } from "@/services/api/skills/other-skills";
+import { createOtherSkillAction, updateOtherSkillAction, deleteOtherSkillAction } from "@/lib/actions/other-skills";
 import type { OtherSkill } from "@/contexts/content/types";
 import { useToastNotifications } from "../../use-toast-notifications";
 
 /**
- * Hook para gestionar las otras habilidades en el panel de administración
- * Encapsula toda la lógica de gestión de otras habilidades
- * @returns Funciones y estado para gestionar otras habilidades
+ * Hook para gestionar las otras habilidades — reescrito para usar Server
+ * Actions (lib/actions/other-skills.ts), Fase 4 (auditoría 2026-08-19).
  */
 export function useOtherSkillsActions() {
-  const { 
-    content, 
-    addOtherSkill,
-    editOtherSkill,
-    removeOtherSkill,
-    isLoading
-  } = useContent();
   const toastNotifications = useToastNotifications();
-  
-  // Estado local para las otras habilidades
-  const [otherSkills, setOtherSkills] = useState<OtherSkill[]>(content.otherSkills || []);
+
+  const [otherSkills, setOtherSkills] = useState<OtherSkill[]>([]);
+  const [isFetching, setIsFetching] = useState(true);
   const [currentOtherSkill, setCurrentOtherSkill] = useState<OtherSkill | null>(null);
   const [isOtherSkillDialogOpen, setIsOtherSkillDialogOpen] = useState(false);
   const [newOtherSkillName, setNewOtherSkillName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Sincronizar con el contexto global
-  useEffect(() => {
-    if (content.otherSkills) {
-      setOtherSkills(content.otherSkills);
+  const load = useCallback(async () => {
+    setIsFetching(true);
+    try {
+      const result = await fetchOtherSkills();
+      setOtherSkills(result.data || []);
+    } finally {
+      setIsFetching(false);
     }
-  }, [content.otherSkills]);
+  }, []);
 
-  /**
-   * Abre el diálogo para crear una nueva habilidad
-   */
+  useEffect(() => {
+    load();
+  }, [load]);
+
   const openNewOtherSkillDialog = useCallback(() => {
     setCurrentOtherSkill(null);
     setNewOtherSkillName("");
     setIsOtherSkillDialogOpen(true);
   }, []);
 
-  /**
-   * Abre el diálogo para editar una habilidad existente
-   */
   const openEditOtherSkillDialog = useCallback((skill: OtherSkill) => {
     setCurrentOtherSkill(skill);
     setNewOtherSkillName(skill.name);
     setIsOtherSkillDialogOpen(true);
   }, []);
 
-  /**
-   * Cierra el diálogo de habilidades
-   */
   const closeOtherSkillDialog = useCallback(() => {
     setIsOtherSkillDialogOpen(false);
     setCurrentOtherSkill(null);
     setNewOtherSkillName("");
   }, []);
 
-  /**
-   * Guarda una habilidad (nueva o editada)
-   */
-  const saveOtherSkill = useCallback(() => {
+  const saveOtherSkill = useCallback(async () => {
     if (!newOtherSkillName.trim()) {
-      toastNotifications.showErrorToast(
-        "Campo requerido", 
-        "El nombre de la habilidad es obligatorio."
-      );
+      toastNotifications.showErrorToast("Campo requerido", "El nombre de la habilidad es obligatorio.");
       return;
     }
 
-    if (currentOtherSkill && currentOtherSkill._id) {
-      // Actualizar habilidad existente
-      const updatedSkill = {
-        ...currentOtherSkill,
-        name: newOtherSkillName.trim()
-      };
-      
-      editOtherSkill(currentOtherSkill._id, updatedSkill)
-        .then(() => {
-          toastNotifications.showSuccessToast(
-            "Habilidad actualizada", 
-            `La habilidad "${updatedSkill.name}" ha sido actualizada correctamente.`
-          );
-          closeOtherSkillDialog();
-        })
-        .catch(error => {
-          toastNotifications.showErrorToast(
-            "Error al actualizar", 
-            `No se pudo actualizar la habilidad: ${error.message}`
-          );
-        });
-    } else {
-      // Crear nueva habilidad
-      const newSkill: OtherSkill = {
-        name: newOtherSkillName.trim()
-      };
-      
-      addOtherSkill(newSkill)
-        .then(() => {
-          toastNotifications.showSuccessToast(
-            "Habilidad creada", 
-            `La habilidad "${newSkill.name}" ha sido creada correctamente.`
-          );
-          closeOtherSkillDialog();
-        })
-        .catch(error => {
-          toastNotifications.showErrorToast(
-            "Error al crear", 
-            `No se pudo crear la habilidad: ${error.message}`
-          );
-        });
+    setIsLoading(true);
+    try {
+      if (currentOtherSkill?._id) {
+        await updateOtherSkillAction(currentOtherSkill._id, newOtherSkillName.trim());
+        toastNotifications.showSuccessToast("Habilidad actualizada", `La habilidad "${newOtherSkillName.trim()}" se actualizó correctamente.`);
+      } else {
+        await createOtherSkillAction(newOtherSkillName.trim());
+        toastNotifications.showSuccessToast("Habilidad creada", `La habilidad "${newOtherSkillName.trim()}" se creó correctamente.`);
+      }
+      await load();
+      closeOtherSkillDialog();
+    } catch (error) {
+      toastNotifications.showErrorToast(
+        currentOtherSkill?._id ? "Error al actualizar" : "Error al crear",
+        error instanceof Error ? error.message : "Ocurrió un error inesperado."
+      );
+    } finally {
+      setIsLoading(false);
     }
-  }, [currentOtherSkill, newOtherSkillName, addOtherSkill, editOtherSkill, closeOtherSkillDialog, toastNotifications]);
+  }, [currentOtherSkill, newOtherSkillName, load, closeOtherSkillDialog, toastNotifications]);
 
-  /**
-   * Elimina una habilidad
-   */
-  const deleteOtherSkill = useCallback((skillId: string) => {
-    removeOtherSkill(skillId)
-      .then(success => {
-        if (success) {
-          toastNotifications.showSuccessToast(
-            "Habilidad eliminada", 
-            "La habilidad ha sido eliminada correctamente."
-          );
-        } else {
-          toastNotifications.showErrorToast(
-            "Error al eliminar", 
-            "No se pudo eliminar la habilidad. Inténtalo de nuevo."
-          );
-        }
-      })
-      .catch(error => {
-        toastNotifications.showErrorToast(
-          "Error al eliminar", 
-          `No se pudo eliminar la habilidad: ${error.message}`
-        );
-      });
-  }, [removeOtherSkill, toastNotifications]);
+  const deleteOtherSkill = useCallback(async (skillId: string) => {
+    try {
+      await deleteOtherSkillAction(skillId);
+      toastNotifications.showSuccessToast("Habilidad eliminada", "La habilidad ha sido eliminada correctamente.");
+      await load();
+    } catch (error) {
+      toastNotifications.showErrorToast(
+        "Error al eliminar",
+        error instanceof Error ? error.message : "No se pudo eliminar la habilidad."
+      );
+    }
+  }, [load, toastNotifications]);
 
   return {
     otherSkills,
+    isFetching,
     currentOtherSkill,
     isOtherSkillDialogOpen,
     newOtherSkillName,

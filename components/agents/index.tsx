@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/use-language"
@@ -9,6 +8,7 @@ import { AgentCard } from "./agent-card"
 
 interface RawAgent {
   _id: string
+  slug: string
   title: string
   description: string
   subtype?: string
@@ -30,37 +30,21 @@ interface LocaleContent {
   capabilities?: string[]
 }
 
+interface AgentsProps {
+  agents: RawAgent[]
+}
+
 // Sección "Agentes" en /work — grilla simple (no carrusel con demo embebida como
 // Automatizaciones): un chat real como el de Jevy no tiene sentido pre-visualizado
 // dos veces (acá y en /agents/[id]), así que la tarjeta manda directo al detalle.
-export default function Agents() {
+export default function Agents({ agents }: AgentsProps) {
   const { language, t } = useLanguage()
-  const [agents, setAgents] = useState<RawAgent[]>([])
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-
-    const fetchAgents = async () => {
-      try {
-        const response = await fetch("/api/projects?category=agente")
-        const result = await response.json()
-        if (result.success && Array.isArray(result.data)) {
-          setAgents(result.data)
-        }
-      } catch (error) {
-        console.error("Error fetching agents:", error)
-      }
-    }
-
-    fetchAgents()
-  }, [])
 
   const title = String(t("agents.title") || "Agentes")
   const subtitle = String(t("agents.subtitle") || "")
   const viewMore = String(t("agents.viewMore") || "Ver todos los agentes")
 
-  if (!isMounted || agents.length === 0) return null
+  if (agents.length === 0) return null
 
   return (
     <section id="agents" className="py-24 bg-black relative overflow-hidden">
@@ -107,6 +91,7 @@ export default function Agents() {
               <AgentCard
                 key={agent._id}
                 id={agent._id}
+                slug={agent.slug}
                 title={agentTitle}
                 description={description}
                 capabilities={capabilities}

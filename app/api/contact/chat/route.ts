@@ -18,11 +18,11 @@ const CHAT_IP_LIMIT = 40;
 const CHAT_IP_WINDOW_MS = 10 * 60 * 1000;
 const CHAT_TURN_LIMIT = 30;
 
-function detailPath(category: string, id: string) {
-  if (category === 'laboratorio') return `/laboratory/${id}`;
-  if (category === 'automatizacion') return `/automations/${id}`;
-  if (category === 'agente') return `/agents/${id}`;
-  return `/projects/${id}`;
+function detailPath(category: string, slug: string) {
+  if (category === 'laboratorio') return `/laboratory/${slug}`;
+  if (category === 'automatizacion') return `/automations/${slug}`;
+  if (category === 'agente') return `/agents/${slug}`;
+  return `/projects/${slug}`;
 }
 
 function buildSystemPrompt(matchResult: MatchResult | null, service?: string, attachmentsContext?: string) {
@@ -84,7 +84,7 @@ ${
         matchResult.tier === 'laboratorio' ? 'en desarrollo (Laboratorio), NO entregado' : 'entregado'
       }. Pitch para usar (parafraseá, no cites literal): "${
         matchResult.project.jevyProfile?.pitchCorto || matchResult.project.description
-      }". Path exacto a pegar entre corchetes después del nombre: [${detailPath(String(matchResult.project.category), String(matchResult.project._id))}]`
+      }". Path exacto a pegar entre corchetes después del nombre: [${detailPath(String(matchResult.project.category), String(matchResult.project.slug))}]`
     : 'No hay ningún proyecto parecido por ahora — no menciones ninguno, seguí con las preguntas normales.'
 }
 
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
     }
 
     await dbConnect();
-    const projects = await Project.find({}).select('title aiSummary description category image demo jevyProfile').limit(50);
+    const projects = await Project.find({}).select('title slug description category image demo jevyProfile').limit(50);
 
     // Estadísticas de tokens del turno — un doc por request que sí llegó a
     // llamar a DeepSeek, ver models/jevy-chat-stat.model.ts.
@@ -232,7 +232,7 @@ export async function POST(request: Request) {
             id: String(matchResult.project._id),
             title: matchResult.project.title,
             image: matchResult.project.image || null,
-            path: detailPath(String(matchResult.project.category), String(matchResult.project._id)),
+            path: detailPath(String(matchResult.project.category), String(matchResult.project.slug)),
             demo: matchResult.project.demo || null,
             isPrototype: matchResult.tier === 'laboratorio',
           },

@@ -12,6 +12,7 @@ export const flowIconMap: Record<string, typeof MessageCircle> = {
 
 interface FlowCardProps {
   id: string
+  slug: string
   icon: string
   title: string
   description: string
@@ -22,7 +23,7 @@ interface FlowCardProps {
 }
 
 export function FlowCard({
-  id,
+  slug,
   icon,
   title,
   description,
@@ -34,7 +35,7 @@ export function FlowCard({
   const Icon = flowIconMap[icon] || MessageCircle
 
   return (
-    <Link href={`/automations/${id}`}>
+    <Link href={`/automations/${slug}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

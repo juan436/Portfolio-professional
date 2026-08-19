@@ -1,50 +1,27 @@
 "use client"
 
 import { createContext, useContext } from "react"
-import { 
-  Hero, About, Service, Project, Projects, 
-  Skill, Skills, Contact, OtherSkill, Experience, Content 
-} from "./types"
+import { Projects, Skills, Content } from "./types"
 
-// Definir el tipo para el contexto de contenido
+// ContentProvider quedó como caché de lectura para el sitio público (home,
+// Footer, /contact) — todas las mutaciones (Proyectos, Testimonios, Métricas,
+// Certificados, Blog, Skills, Experiencia, Hero/About/Servicios/Contacto)
+// migraron a Server Actions (lib/actions/*.ts). Ver
+// vault/portfolio: planes/rediseno-admin-server-actions.
 export type ContentContextType = {
   // Estado global
   content: Content
   isLoading: boolean
-  
-  // Métodos para actualizar secciones principales
-  updateHero: (hero: Hero) => void
-  updateAbout: (about: About) => void
-  updateServices: (services: Service[]) => void
+
+  // Hidratación server-side (ver content-provider.tsx)
+  hydrateContent: (initial: Content) => void
+  hydratePartial: (partial: Partial<Content>) => void
+
+  // Legacy, sin consumidores reales (bulk-replace de una sección completa,
+  // reemplazado por CRUD item-a-item vía Server Actions) — se deja por ahora,
+  // candidato a Fase 5 (cleanup)
   updateProjects: (projects: Projects) => void
   updateSkills: (skills: Skills) => void
-  updateOtherSkills: (otherSkills: OtherSkill[]) => void
-  updateContact: (contact: Contact) => void
-  updateExperience: (experience: Experience[]) => void
-  saveAllContent: () => boolean
-  
-  // Método para eliminar servicios
-  deleteService: (id: string) => Promise<boolean>
-  
-  // Métodos para OtherSkills
-  addOtherSkill: (skill: OtherSkill) => Promise<OtherSkill | null>
-  editOtherSkill: (id: string, updatedSkill: OtherSkill) => Promise<boolean>
-  removeOtherSkill: (id: string) => Promise<boolean>
-  
-  // Métodos para proyectos
-  createProjectItem: (project: Omit<Project, "id">, category: keyof Projects) => Promise<Project | null>
-  updateProjectItem: (id: string, project: Project, category: keyof Projects) => Promise<boolean>
-  deleteProjectItem: (id: string, category: keyof Projects) => Promise<boolean>
-  
-  // Métodos para skills
-  createSkillItem: (skillData: Omit<Skill, "_id">) => Promise<Skill | null>
-  updateSkillItem: (id: string, skill: Skill) => Promise<boolean>
-  deleteSkillItem: (id: string) => Promise<boolean>
-  
-  // Métodos para experiencia
-  createExperienceItem: (experience: Omit<Experience, "_id">) => Promise<Experience | null>
-  updateExperienceItem: (id: string, experience: Experience) => Promise<boolean>
-  deleteExperienceItem: (id: string) => Promise<boolean>
 }
 
 // Crear el contexto

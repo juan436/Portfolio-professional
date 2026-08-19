@@ -10,7 +10,7 @@ import { Plus, Trash2, Code } from "lucide-react"
 import { getServiceIconComponent } from "@/lib/service-icon-map"
 import { useToast } from "@/hooks/use-toast"
 import ServiceIconSelector from "@/components/admin/common/service-icon-selector"
-import { useContent } from "@/contexts/content/use-content"
+import { deleteServiceAction } from "@/lib/actions/content"
 
 // Definir la interfaz para un servicio
 export interface Service {
@@ -28,7 +28,6 @@ interface ServicesFormProps {
 
 export default function ServicesForm({ services, onChange }: ServicesFormProps) {
   const { toast } = useToast()
-  const { deleteService: deleteServiceFromDB } = useContent()
   const [activeServiceIndex, setActiveServiceIndex] = useState(0)
 
   // Verificar que el índice activo sea válido cuando cambian los servicios
@@ -97,22 +96,12 @@ export default function ServicesForm({ services, onChange }: ServicesFormProps) 
     // Si el servicio tiene un ID válido (ya existe en la BD), eliminarlo del backend
     if (serviceToDelete._id && serviceToDelete._id.trim() !== '') {
       try {
-        const success = await deleteServiceFromDB(serviceToDelete._id);
-        
-        if (success) {
-          toast({
-            title: "Servicio eliminado",
-            description: "El servicio ha sido eliminado correctamente.",
-            variant: "default",
-          });
-        } else {
-          console.error(`[ServicesForm] La función deleteServiceFromDB devolvió false`);
-          toast({
-            title: "Error al eliminar",
-            description: "No se pudo eliminar el servicio del servidor.",
-            variant: "destructive",
-          });
-        }
+        await deleteServiceAction(serviceToDelete._id);
+        toast({
+          title: "Servicio eliminado",
+          description: "El servicio ha sido eliminado correctamente.",
+          variant: "default",
+        });
       } catch (error) {
         console.error("[ServicesForm] Error eliminando servicio:", error);
         toast({

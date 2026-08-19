@@ -144,7 +144,11 @@
   },
   "blog": {
     "title": "Blog",
-    "comingSoon": "Próximamente — estoy preparando artículos técnicos y aprendizajes reales de proyectos."
+    "subtitle": "Artículos técnicos y aprendizajes reales de proyectos.",
+    "comingSoon": "Próximamente — estoy preparando artículos técnicos y aprendizajes reales de proyectos.",
+    "empty": "Sin artículos publicados por el momento.",
+    "notFound": "No encontramos este artículo.",
+    "readMore": "Leer más"
   },
   "certificates": {
     "title": "Formación Certificada",

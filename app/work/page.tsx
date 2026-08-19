@@ -1,16 +1,22 @@
+import { getProjectsByCategory } from "@/lib/data/projects"
 import WorkIntro from "@/components/work"
 import Projects from "@/components/projects"
 import Automations from "@/components/automations"
 import Agents from "@/components/agents"
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  const [automations, agents] = await Promise.all([
+    getProjectsByCategory("automatizacion"),
+    getProjectsByCategory("agente"),
+  ])
+
   return (
     <main className="min-h-screen bg-black flex flex-col">
       <div className="pt-28 flex-grow">
         <WorkIntro />
         <Projects />
-        <Automations />
-        <Agents />
+        <Automations automations={automations} />
+        <Agents agents={agents} />
       </div>
     </main>
   )

@@ -1,40 +1,14 @@
 "use client"
 
-import { useState, useEffect, type ReactNode } from "react"
+import { useState, useEffect, useRef, type ReactNode } from "react"
 import ContentContext, { ContentContextType } from "./content-context"
 import { Content } from "./types"
 
 import {
   fetchContent, fetchProjects, fetchExperiences, fetchSkills, fetchOtherSkills
 } from "@/services/api"
-import { updateHero } from "./slices/hero/actions"
-import { updateAbout } from "./slices/about/actions"
-import { updateServices, deleteService as deleteServiceAction } from "./slices/services/actions"
-import {
-  updateProjects,
-  createProjectItem as createProject,
-  updateProjectItem as updateProject,
-  deleteProjectItem as deleteProject
-} from "./slices/projects/actions"
-import {
-  updateSkills,
-  createSkillItem as createSkill,
-  updateSkillItem as updateSkill,
-  deleteSkillItem as deleteSkill
-} from "./slices/skills/actions"
-import {
-  updateOtherSkills,
-  addOtherSkill,
-  editOtherSkill,
-  removeOtherSkill
-} from "./slices/otherSkills/actions"
-import { updateContact } from "./slices/contact/actions"
-import {
-  updateExperience,
-  createExperienceItem as createExperience,
-  updateExperienceItem as updateExperienceItem,
-  deleteExperienceItem as deleteExperienceItem
-} from "./slices/experience/actions"
+import { updateProjects } from "./slices/projects/actions"
+import { updateSkills } from "./slices/skills/actions"
 
 const emptyContent: Content = {
   hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
@@ -47,16 +21,25 @@ const emptyContent: Content = {
   experience: []
 }
 
+// Caché de lectura para el sitio público (home, Footer, /contact) y para las
+// pocas pantallas de Admin que todavía leen de acá (image-manager.tsx, solo
+// lectura). Las mutaciones viven todas en Server Actions ahora — ver
+// vault/portfolio: planes/rediseno-admin-server-actions.
 export const ContentProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState<Content>(emptyContent)
   const [isLoading, setIsLoading] = useState(true)
+  // Puesto en true por hydrateContent (llamado desde un ContentHydrator hijo,
+  // vía useLayoutEffect — corre antes que este useEffect en el mismo commit).
+  // Evita repetir los 7 fetches cuando la página ya trajo todo server-side.
+  const hydratedRef = useRef(false)
 
   useEffect(() => {
+    if (hydratedRef.current) return
     if (typeof window === 'undefined') {
       setIsLoading(false);
       return;
     }
-    
+
     const loadData = async () => {
       setIsLoading(true)
 
@@ -84,6 +67,7 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         if (contentData) {
           const mapProject = (p: any) => ({
             id: p._id,
+            slug: p.slug,
             title: p.title,
             description: p.description,
             image: p.image,
@@ -164,49 +148,30 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     loadData()
   }, [])
 
-  const saveAllContent = (): boolean => {
-    try {
-      if (typeof window !== "undefined") {
-        const event = new CustomEvent("contentUpdated", { detail: content })
-        window.dispatchEvent(event)
-      }
-      return true
-    } catch (error) {
-      console.error("Error dispatching content update event:", error)
-      return false
-    }
+  // Reemplazo completo — usado por páginas que ya traen TODO el contenido
+  // resuelto server-side (home). Marca hydratedRef para que el useEffect de
+  // arriba no dispare los 7 fetches de nuevo.
+  const hydrateContent = (initial: Content) => {
+    hydratedRef.current = true
+    setContent(initial)
+    setIsLoading(false)
+  }
+
+  // Merge parcial — usado por páginas que solo necesitan una sección (ej.
+  // /contact con `contact.email`). No toca hydratedRef: el fetch completo de
+  // fondo sigue corriendo normal, así el resto del sitio no se queda vacío
+  // si el usuario navega desde acá a otra página.
+  const hydratePartial = (partial: Partial<Content>) => {
+    setContent((prev) => ({ ...prev, ...partial }))
   }
 
   const contextValue: ContentContextType = {
     content,
     isLoading,
-    updateHero: (hero) => updateHero(hero, setContent, setIsLoading),
-    updateAbout: (about) => updateAbout(about, setContent, setIsLoading),
-    updateServices: (services) => updateServices(services, setContent, setIsLoading),
+    hydrateContent,
+    hydratePartial,
     updateProjects: (projects) => updateProjects(projects, setContent, setIsLoading),
     updateSkills: (skills) => updateSkills(skills, setContent, setIsLoading),
-    updateOtherSkills: (otherSkills) => updateOtherSkills(otherSkills, setContent, setIsLoading),
-    updateContact: (contact) => updateContact(contact, setContent, setIsLoading),
-    updateExperience: (experience) => updateExperience(experience, setContent, setIsLoading),
-    saveAllContent,
-
-    // Método para eliminar servicios
-    deleteService: (id) => deleteServiceAction(id, content, setContent, setIsLoading),
-
-    addOtherSkill: (skill) => addOtherSkill(skill, setContent, setIsLoading),
-    editOtherSkill: (id, skill) => editOtherSkill(id, skill, setContent, setIsLoading),
-    removeOtherSkill: (id) => removeOtherSkill(id, content, setContent, setIsLoading),
-    createProjectItem: (project, category) => createProject(project, category, setContent, setIsLoading),
-    updateProjectItem: (id, project, category) => updateProject(id, project, category, content, setContent, setIsLoading),
-    deleteProjectItem: (id, category) => deleteProject(id, category, content, setContent, setIsLoading),
-
-    createSkillItem: (skill) => createSkill(skill, setContent, setIsLoading),
-    updateSkillItem: (id, skill) => updateSkill(id, skill, setContent, setIsLoading),
-    deleteSkillItem: (id) => deleteSkill(id, content, setContent, setIsLoading),
-
-    createExperienceItem: (experience) => createExperience(experience, setContent, setIsLoading),
-    updateExperienceItem: (id, experience) => updateExperienceItem(id, experience, setContent, setIsLoading),
-    deleteExperienceItem: (id) => deleteExperienceItem(id, setContent, setIsLoading)
   }
 
   return (

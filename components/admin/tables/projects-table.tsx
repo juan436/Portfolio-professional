@@ -5,14 +5,13 @@ import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
-import type { Project } from "@/contexts/content/types"
+import type { AdminProject } from "@/hooks/admin/entities/projects/types"
 
 interface ProjectsTableProps {
-  projects: Project[]
-  selectedProject: Project | null
-  onSelectProject: (project: Project) => void
-  onDeleteProject: (id: number) => void
-  handleOpenDeleteDialog: (id: number) => void
+  projects: AdminProject[]
+  selectedProject: AdminProject | null
+  onSelectProject: (project: AdminProject) => void
+  handleOpenDeleteDialog: (id: string) => void
   title: string
   description: string
 }
@@ -21,14 +20,13 @@ export default function ProjectsTable({
   projects,
   selectedProject,
   onSelectProject,
-  onDeleteProject,
   handleOpenDeleteDialog,
   title,
   description
 }: ProjectsTableProps) {
   // Ordenar proyectos por fecha de creación (más reciente primero)
   const sortedProjects = [...projects].sort(
-    (a, b) => new Date(b.createdAt || "").getTime() - new Date(a.createdAt || "").getTime()
+    (a, b) => new Date(b.createdAt as any || "").getTime() - new Date(a.createdAt as any || "").getTime()
   )
 
   return (
@@ -42,12 +40,12 @@ export default function ProjectsTable({
           {sortedProjects.length > 0 ? (
             sortedProjects.map((project) => (
               <motion.div
-                key={project.id}
+                key={project._id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className={`p-3 rounded-md cursor-pointer relative group ${
-                  selectedProject?.id === project.id
+                  selectedProject?._id === project._id
                     ? "bg-blue-900/30 border border-blue-500"
                     : "bg-black/20 border border-blue-700/20 hover:border-blue-700/50"
                 }`}
@@ -61,7 +59,7 @@ export default function ProjectsTable({
                     className="h-6 w-6 p-1 absolute right-2 top-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 hover:bg-red-500/10"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleOpenDeleteDialog(project.id)
+                      handleOpenDeleteDialog(project._id)
                     }}
                   >
                     <Trash2 className="h-4 w-4" />

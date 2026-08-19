@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/use-language"
@@ -9,6 +9,7 @@ import { AutomationShowcaseCard, type ShowcaseAutomation } from "./automation-sh
 
 interface RawAutomation {
   _id: string
+  slug: string
   title: string
   description: string
   subtype?: string
@@ -32,30 +33,14 @@ interface LocaleContent {
   demoOutputTemplate?: string
 }
 
-export default function Automations() {
+interface AutomationsProps {
+  automations: RawAutomation[]
+}
+
+export default function Automations({ automations }: AutomationsProps) {
   const { language, t } = useLanguage()
-  const [automations, setAutomations] = useState<RawAutomation[]>([])
   const [activeIndex, setActiveIndex] = useState(0)
   const [direction, setDirection] = useState(0)
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-
-    const fetchAutomations = async () => {
-      try {
-        const response = await fetch('/api/projects?category=automatizacion')
-        const result = await response.json()
-        if (result.success && Array.isArray(result.data)) {
-          setAutomations(result.data)
-        }
-      } catch (error) {
-        console.error('Error fetching automations:', error)
-      }
-    }
-
-    fetchAutomations()
-  }, [])
 
   const title = String(t("automations.title") || "Automatizaciones")
   const subtitle = String(t("automations.subtitle") || "")
@@ -65,8 +50,6 @@ export default function Automations() {
   const outputLabel = String(t("automations.outputLabel") || "")
   const viewDetailLabel = String(t("automations.detail.viewDetail") || "Ver detalle")
 
-  if (!isMounted) return null
-
   const showcaseList: ShowcaseAutomation[] = automations.map((auto) => {
     const translated = auto.translations?.[language.code as "en" | "fr" | "it"]
     const isEs = language.code === "es"
@@ -74,6 +57,7 @@ export default function Automations() {
 
     return {
       id: auto._id,
+      slug: auto.slug,
       icon: details?.icon || "",
       title: isEs ? auto.title : translated?.title || auto.title,
       description: isEs ? auto.description : translated?.description || auto.description,

@@ -14,11 +14,15 @@ declare global {
   var mongoose: MongooseCache | undefined;
 }
 
-let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+// Bug real (auditoría 2026-08-19): `cached` se inicializaba con
+// `global.mongoose || {...}`, así que nunca era falsy — el `if` de abajo
+// nunca corría y `global.mongoose` jamás se llegaba a asignar. Efecto:
+// en dev, cada Fast Refresh que reevalúa este módulo perdía el caché y
+// reconectaba a Mongo de cero en vez de reusar la conexión.
+if (!global.mongoose) {
+  global.mongoose = { conn: null, promise: null };
 }
+let cached: MongooseCache = global.mongoose;
 
 async function dbConnect() {
   if (cached.conn) {

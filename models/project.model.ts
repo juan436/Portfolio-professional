@@ -3,6 +3,7 @@ import mongoose, { Document } from 'mongoose';
 // Interfaz para el documento de proyecto
 export interface IProject extends Document {
   title: string;
+  slug: string;
   description: string;
   image?: string;
   images?: string[];
@@ -11,7 +12,6 @@ export interface IProject extends Document {
   demo: string;
   category: 'web' | 'mobile' | 'infra_backend' | 'laboratorio' | 'automatizacion' | 'agente';
   subtype?: string;
-  aiSummary?: string;
   tags: string[];
   duration?: string;
   sector?: string;
@@ -131,7 +131,6 @@ export interface IProject extends Document {
 interface LocaleContent {
   title?: string;
   description?: string;
-  aiSummary?: string;
   useCase?: string;
   steps?: string[];
   demoPlaceholder?: string;
@@ -147,7 +146,6 @@ function localeContentFields() {
   return {
     title: String,
     description: String,
-    aiSummary: String,
     useCase: String,
     steps: { type: [String], default: [] },
     demoPlaceholder: String,
@@ -162,12 +160,17 @@ function localeContentFields() {
 
 const ProjectSchema = new mongoose.Schema({
   title: { 
-    type: String, 
-    required: true 
+    type: String,
+    required: true
   },
-  description: { 
-    type: String, 
-    required: true 
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  description: {
+    type: String,
+    required: true
   },
   image: String,
   images: {
@@ -183,7 +186,6 @@ const ProjectSchema = new mongoose.Schema({
     required: true 
   },
   subtype: String,
-  aiSummary: String,
   tags: {
     type: [String],
     default: []

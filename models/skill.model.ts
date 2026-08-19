@@ -13,7 +13,7 @@ export interface ISkill extends Document {
     fr?: {
       name: string;
     };
-    pt?: {
+    it?: {
       name: string;
     };
   };
@@ -44,7 +44,7 @@ const SkillSchema = new mongoose.Schema({
     fr: {
       name: String
     },
-    pt: {
+    it: {
       name: String
     }
   }

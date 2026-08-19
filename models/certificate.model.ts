@@ -2,6 +2,7 @@ import mongoose, { Document } from 'mongoose';
 
 export interface ICertificate extends Document {
   title: string;
+  slug: string;
   issuer: string;
   category?: string;
   date: Date;
@@ -18,6 +19,11 @@ const CertificateSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+  },
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
   },
   issuer: {
     type: String,

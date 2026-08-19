@@ -1,229 +1,190 @@
 import { useState, useCallback, useEffect } from "react";
-import { useContent } from "@/contexts/content";
+import { fetchProjects } from "@/services/api/projects";
+import { createProjectAction, updateProjectAction, deleteProjectAction } from "@/lib/actions/projects";
 import { useToastNotifications } from "../../use-toast-notifications";
-import type { Project, Projects } from "@/contexts/content/types";
+import { CATEGORY_ORDER, emptyProject, type AdminProject, type ProjectCategoryValue } from "./types";
 
-// Categorías reales del contenido (ver contexts/content/types) — antes este
-// hook usaba 'fullstack' | 'backend', que nunca existieron en `Projects`
-// (auditoría 2026-08-18 §8: rompía la creación/edición de proyectos en Admin)
-export type ProjectCategory = keyof Projects;
-
-const emptyProjectsByCategory = (): Record<ProjectCategory, Project[]> => ({
+const emptyProjectsByCategory = (): Record<ProjectCategoryValue, AdminProject[]> => ({
   web: [],
   mobile: [],
   infra_backend: [],
+  laboratorio: [],
+  automatizacion: [],
+  agente: [],
 });
 
 /**
- * Hook específico para gestionar proyectos en el panel de administración
- * Mantiene toda la funcionalidad del ProjectsManager original
- * @param initialCategory Categoría inicial seleccionada
- * @returns Funciones y estado para gestionar proyectos
+ * Hook de Proyectos para el panel de administración — reescrito para usar
+ * Server Actions (lib/actions/projects.ts) en vez del ContentProvider global
+ * (auditoría 2026-08-19: Admin quedó desacoplado del Context, cada entidad
+ * migra a su propio ritmo). La carga inicial sigue siendo un fetch client-side
+ * propio (Admin no necesita el patrón Server Component del sitio público,
+ * siempre quiere el dato más fresco al entrar).
  */
-export function useProjectsActions(initialCategory: ProjectCategory = 'web') {
-  const { content, createProjectItem, updateProjectItem, deleteProjectItem } = useContent();
+export function useProjectsActions(initialCategory: ProjectCategoryValue = "web") {
   const toastNotifications = useToastNotifications();
 
-  // Estados para manejar las pestañas y proyectos
-  const [activeCategory, setActiveCategory] = useState<ProjectCategory>(initialCategory);
-  const [projectsByCategory, setProjectsByCategory] = useState<Record<ProjectCategory, Project[]>>({
-    ...emptyProjectsByCategory(),
-    ...content.projects,
-  });
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [activeCategory, setActiveCategoryState] = useState<ProjectCategoryValue>(initialCategory);
+  const [projectsByCategory, setProjectsByCategory] = useState<Record<ProjectCategoryValue, AdminProject[]>>(
+    emptyProjectsByCategory()
+  );
+  const [selectedProject, setSelectedProject] = useState<AdminProject | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [lastSelectedByCategory, setLastSelectedByCategory] = useState<Record<ProjectCategory, Project | null>>({
+  const [lastSelectedByCategory, setLastSelectedByCategory] = useState<Record<ProjectCategoryValue, AdminProject | null>>({
     web: null,
     mobile: null,
     infra_backend: null,
+    laboratorio: null,
+    automatizacion: null,
+    agente: null,
   });
   const [isTabChanging, setIsTabChanging] = useState(false);
   const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
-  // Estado para el diálogo de confirmación de eliminación
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<number | null>(null);
+  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
 
-  // Obtener los proyectos actuales según la categoría activa
   const currentProjects = projectsByCategory[activeCategory];
   const lastSelected = lastSelectedByCategory[activeCategory];
 
-  // Función para recordar el último proyecto seleccionado por categoría
-  const setLastSelected = useCallback((project: Project | null) => {
-    setLastSelectedByCategory(prev => ({ ...prev, [activeCategory]: project }));
+  const setLastSelected = useCallback((project: AdminProject | null) => {
+    setLastSelectedByCategory((prev) => ({ ...prev, [activeCategory]: project }));
   }, [activeCategory]);
 
-  // Sincronizar proyectos con el contexto
+  // Carga inicial: todos los proyectos de una sola vez, agrupados en cliente
+  // por categoría (1 request en vez de 6).
   useEffect(() => {
-    setProjectsByCategory({
-      ...emptyProjectsByCategory(),
-      ...content.projects,
-    });
-  }, [content.projects]);
+    let cancelled = false;
+    const load = async () => {
+      setIsFetching(true);
+      try {
+        const all = (await fetchProjects()) as AdminProject[];
+        const grouped = emptyProjectsByCategory();
+        for (const project of all) {
+          const category = project.category as ProjectCategoryValue;
+          if (grouped[category]) grouped[category].push(project);
+        }
+        if (!cancelled) setProjectsByCategory(grouped);
+      } catch (error) {
+        console.error("Error cargando proyectos:", error);
+      } finally {
+        if (!cancelled) setIsFetching(false);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  // Manejar cambios de pestaña y selección de proyectos
   useEffect(() => {
     if (selectedProject && !isTabChanging) {
       setLastSelected(selectedProject);
     }
 
     if (isTabChanging) {
-      const lastProjectExists = lastSelected && 
-        currentProjects.some(p => p.id === lastSelected.id);
-      
+      const lastProjectExists = lastSelected && currentProjects.some((p) => p._id === lastSelected._id);
       setSelectedProject(lastProjectExists ? lastSelected : null);
       setEditMode(false);
       setIsTabChanging(false);
     }
   }, [activeCategory, selectedProject, isTabChanging, currentProjects, lastSelected, setLastSelected]);
 
-  /**
-   * Cambia la categoría activa (pestaña)
-   */
   const handleTabChange = useCallback((value: string) => {
     setIsTabChanging(true);
-    setActiveCategory(value as ProjectCategory);
+    setActiveCategoryState(value as ProjectCategoryValue);
   }, []);
 
-  /**
-   * Crea un nuevo proyecto con valores predeterminados
-   */
   const addNewProject = useCallback(() => {
-    const currentDate = new Date().toISOString().split("T")[0];
-    
-    // Crear un objeto de proyecto temporal mínimo
-    // Los valores predeterminados se manejan en el ProjectForm
-    const newProjectTemplate: Project = {
-      id: -1,
-      title: "",
-      description: "",
-      tags: [],
-      github: "",
-      demo: "",
-      createdAt: currentDate,
-      image: undefined
-    };
-
-    // Establecer el modo de creación
     setIsCreatingNewProject(true);
-    
-    // Seleccionar el proyecto temporal y activar el modo de edición
-    setSelectedProject(newProjectTemplate);
+    setSelectedProject(emptyProject(activeCategory) as AdminProject);
     setEditMode(true);
-  }, []);
+  }, [activeCategory]);
 
-  /**
-   * Guarda los cambios en un proyecto (nuevo o existente)
-   */
-  const handleSaveEdit = useCallback(async (updatedProject: Project) => {
-    // Si estamos creando un nuevo proyecto
+  const handleSaveEdit = useCallback(async (updatedProject: AdminProject) => {
     if (isCreatingNewProject) {
       setIsLoading(true);
       try {
-        const newProject = await createProjectItem(updatedProject, activeCategory);
-        
-        if (newProject) {
-          setSelectedProject(newProject);
-          setEditMode(false);
-          setIsCreatingNewProject(false);
-          toastNotifications.showCreatedToast("Proyecto");
-
-          // Actualizar la lista de proyectos correspondiente
-          setProjectsByCategory(prev => ({
-            ...prev,
-            [activeCategory]: [...prev[activeCategory], newProject],
-          }));
-        } else {
-          toastNotifications.showErrorCreatingToast("proyecto");
-        }
+        const { _id, ...payload } = updatedProject;
+        const newProject = await createProjectAction({ ...payload, category: activeCategory });
+        setSelectedProject(newProject);
+        setEditMode(false);
+        setIsCreatingNewProject(false);
+        toastNotifications.showCreatedToast("Proyecto");
+        setProjectsByCategory((prev) => ({
+          ...prev,
+          [activeCategory]: [...prev[activeCategory], newProject],
+        }));
       } catch (error) {
         console.error("Error al crear proyecto:", error);
-        toastNotifications.showErrorToast("Error", "Ocurrió un error al crear el proyecto.");
+        toastNotifications.showErrorCreatingToast("proyecto");
       } finally {
         setIsLoading(false);
       }
-    } 
-    // Si estamos editando un proyecto existente
-    else {
+    } else {
       setIsLoading(true);
       try {
-        // Enviar el objeto completo con _modifiedFields
-        const success = await updateProjectItem(
-          updatedProject.id.toString(), 
-          updatedProject,
-          activeCategory
-        );
-
-        if (success) {
-          setSelectedProject(updatedProject);
-          setEditMode(false);
-          toastNotifications.showUpdatedToast("Proyecto");
-        } else {
-          toastNotifications.showErrorUpdatingToast("proyecto");
-        }
+        const updated = await updateProjectAction(updatedProject._id, updatedProject);
+        setSelectedProject(updated);
+        setEditMode(false);
+        toastNotifications.showUpdatedToast("Proyecto");
+        setProjectsByCategory((prev) => ({
+          ...prev,
+          [activeCategory]: prev[activeCategory].map((p) => (p._id === updated._id ? updated : p)),
+        }));
       } catch (error) {
         console.error("Error al actualizar proyecto:", error);
-        toastNotifications.showErrorToast("Error", "Ocurrió un error al actualizar el proyecto.");
+        toastNotifications.showErrorUpdatingToast("proyecto");
       } finally {
         setIsLoading(false);
       }
     }
-  }, [activeCategory, createProjectItem, updateProjectItem, isCreatingNewProject, toastNotifications]);
+  }, [activeCategory, isCreatingNewProject, toastNotifications]);
 
-  /**
-   * Cancela la edición de un proyecto
-   */
   const handleCancelEdit = useCallback(() => {
     if (isCreatingNewProject) {
-      // Si estamos creando un nuevo proyecto, simplemente descartamos el proyecto temporal
       setSelectedProject(null);
       setIsCreatingNewProject(false);
     }
-    
     setEditMode(false);
   }, [isCreatingNewProject]);
 
-  /**
-   * Abre el diálogo de confirmación para eliminar un proyecto
-   */
-  const handleOpenDeleteDialog = useCallback((id: number) => {
+  const handleOpenDeleteDialog = useCallback((id: string) => {
     setIsDeleteDialogOpen(true);
     setProjectToDelete(id);
   }, []);
 
-  /**
-   * Cierra el diálogo de confirmación para eliminar un proyecto
-   */
   const handleCloseDeleteDialog = useCallback(() => {
     setIsDeleteDialogOpen(false);
     setProjectToDelete(null);
   }, []);
 
-  /**
-   * Elimina un proyecto después de confirmar
-   */
   const handleConfirmDelete = useCallback(async () => {
     if (projectToDelete !== null) {
-      const success = await deleteProjectItem(projectToDelete.toString(), activeCategory);
+      try {
+        const target = currentProjects.find((p) => p._id === projectToDelete);
+        await deleteProjectAction(projectToDelete, activeCategory, target?.slug || "");
 
-      if (success) {
-        if (selectedProject && selectedProject.id === projectToDelete) {
-          const remainingProjects = currentProjects.filter(p => p.id !== projectToDelete);
-          setSelectedProject(remainingProjects.length > 0 ? remainingProjects[0] : null);
+        if (selectedProject && selectedProject._id === projectToDelete) {
+          const remaining = currentProjects.filter((p) => p._id !== projectToDelete);
+          setSelectedProject(remaining.length > 0 ? remaining[0] : null);
         }
-        
+        setProjectsByCategory((prev) => ({
+          ...prev,
+          [activeCategory]: prev[activeCategory].filter((p) => p._id !== projectToDelete),
+        }));
         toastNotifications.showDeletedToast("Proyecto");
-      } else {
+      } catch (error) {
+        console.error("Error al eliminar proyecto:", error);
         toastNotifications.showErrorDeletingToast("proyecto");
       }
     }
-
     handleCloseDeleteDialog();
-  }, [activeCategory, currentProjects, deleteProjectItem, projectToDelete, selectedProject, toastNotifications]);
+  }, [activeCategory, currentProjects, projectToDelete, selectedProject, toastNotifications]);
 
   return {
-    // Estado
     activeCategory,
     selectedProject,
     currentProjects,
@@ -231,8 +192,8 @@ export function useProjectsActions(initialCategory: ProjectCategory = 'web') {
     isCreatingNewProject,
     isDeleteDialogOpen,
     isLoading,
-    
-    // Acciones
+    isFetching,
+
     setActiveCategory: handleTabChange,
     setSelectedProject,
     setEditMode,
@@ -241,6 +202,8 @@ export function useProjectsActions(initialCategory: ProjectCategory = 'web') {
     handleCancelEdit,
     handleOpenDeleteDialog,
     handleCloseDeleteDialog,
-    handleConfirmDelete
+    handleConfirmDelete,
   };
 }
+
+export { CATEGORY_ORDER };

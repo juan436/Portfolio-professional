@@ -50,6 +50,7 @@ export type Service = {
 // Project
 export type Project = {
   id: number
+  slug?: string
   title: string
   description: string
   image?: string

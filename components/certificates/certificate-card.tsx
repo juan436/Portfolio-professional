@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 
 export interface Certificate {
   _id: string
+  slug: string
   title: string
   issuer: string
   category?: string
@@ -42,7 +43,7 @@ export function CertificateCard({ certificate: cert, index, verifyLabel, formatD
             <span className="text-xs uppercase tracking-wider text-blue-400 font-bold">{cert.issuer}</span>
           </div>
 
-          <Link href={`/certificates/${cert._id}`}>
+          <Link href={`/certificates/${cert.slug}`}>
             <h3 className="text-base font-bold text-white mb-2 leading-snug hover:text-blue-400 transition-colors line-clamp-2 min-h-[2.75rem]">
               {cert.title}
             </h3>

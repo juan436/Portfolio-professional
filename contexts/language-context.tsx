@@ -5,6 +5,7 @@ import i18next from "i18next"
 import { initReactI18next, useTranslation } from "react-i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import Backend from "i18next-http-backend"
+import esTranslation from "@/public/locales/es/translation.json"
 
 // Definir los idiomas disponibles
 export type LanguageCode = "es" | "en" | "it" | "fr"
@@ -32,7 +33,16 @@ i18next
     interpolation: {
       escapeValue: false,
     },
-    // Cargamos los recursos desde la carpeta public/locales
+    // "es" va embebido de forma síncrona: el server siempre renderiza en "es"
+    // (no tiene localStorage/navigator para detectar idioma) y el Backend HTTP
+    // es async, así que sin esto el primer render del server usa el diccionario
+    // vacío (t() devuelve la key cruda) mientras el cliente ya lo tiene cargado
+    // -> hydration mismatch. Los demás idiomas se siguen cargando por HTTP vía
+    // Backend, solo cuando el usuario cambia de idioma en el cliente.
+    resources: {
+      es: { translation: esTranslation },
+    },
+    // Cargamos el resto de los recursos desde la carpeta public/locales
     ns: ["translation"],
     defaultNS: "translation",
     backend: {

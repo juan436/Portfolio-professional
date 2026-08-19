@@ -48,7 +48,7 @@ export function FullStackProjectCard({ project, index }: FullStackProjectCardPro
             </span>
           )}
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <Link href={`/projects/${project.id}`}>
+            <Link href={`/projects/${project.slug || project.id}`}>
               <h3 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 drop-shadow-sm hover:from-blue-400 hover:to-blue-200 transition-all">
                 {project.title}
               </h3>

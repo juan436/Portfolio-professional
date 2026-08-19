@@ -8,6 +8,7 @@ import { RobotAvatar } from "./robot-avatar"
 
 interface AgentCardProps {
   id: string
+  slug: string
   title: string
   description: string
   capabilities: string[]
@@ -15,13 +16,13 @@ interface AgentCardProps {
   index: number
 }
 
-export function AgentCard({ id, title, description, capabilities, subtype, index }: AgentCardProps) {
+export function AgentCard({ slug, title, description, capabilities, subtype, index }: AgentCardProps) {
   const [hovered, setHovered] = useState(false)
   const visibleCapabilities = capabilities.slice(0, 3)
   const extraCount = capabilities.length - visibleCapabilities.length
 
   return (
-    <Link href={`/agents/${id}`}>
+    <Link href={`/agents/${slug}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

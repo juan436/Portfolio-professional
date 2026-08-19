@@ -12,6 +12,7 @@ interface WorkBlock {
 
 export interface LabExpedienteProject {
   _id: string
+  slug: string
   title: string
   tags?: string[]
   translations?: {
@@ -176,7 +177,7 @@ export function LabExpedienteCard({
         </div>
 
         <Link
-          href={`/laboratory/${project._id}`}
+          href={`/laboratory/${project.slug}`}
           className="group inline-flex items-center gap-2 text-sm font-medium text-white border-b border-blue-500/40 pb-0.5 hover:text-blue-400 transition-colors"
         >
           {viewFullLabel}

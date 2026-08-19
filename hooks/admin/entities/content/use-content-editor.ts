@@ -1,31 +1,27 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useContent } from "@/contexts/content";
+import { fetchContent } from "@/services/api/content";
+import { updateHeroAction, updateAboutAction, updateServicesAction, updateContactAction } from "@/lib/actions/content";
 import { useToastNotifications } from "../../use-toast-notifications";
 import { HeroContent } from "@/components/admin/forms/hero-form";
 import { AboutContent } from "@/components/admin/forms/about-form";
 import { Service } from "@/components/admin/forms/services-form";
 import { ContactContent } from "@/components/admin/forms/contact-form";
 
+const DEFAULT_PROFILE_IMAGE =
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/profile-E9YRocD6o4olhnzraHWCjLmKjCbspw.jpeg";
+
 /**
- * Hook personalizado para gestionar el estado y la lógica del editor de contenido
- * Encapsula toda la lógica de gestión de contenido para las secciones Hero, About, Services y Contact
+ * Hook del editor de contenido (Hero/About/Services/Contact) — reescrito
+ * para usar Server Actions (lib/actions/content.ts), Fase 4 (auditoría
+ * 2026-08-19). Carga inicial propia (ya no depende de ContentProvider).
  */
 export function useContentEditor() {
-  const { 
-    content, 
-    updateHero, 
-    updateAbout, 
-    updateServices, 
-    updateContact, 
-    saveAllContent 
-  } = useContent();
-  
   const { showSuccessToast, showErrorToast } = useToastNotifications();
   const [activeTab, setActiveTab] = useState("hero");
+  const [isFetching, setIsFetching] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Referencias para almacenar el estado inicial
   const initialContent = useRef({
     hero: {} as HeroContent,
     about: {} as AboutContent,
@@ -33,149 +29,97 @@ export function useContentEditor() {
     contact: {} as ContactContent
   });
 
-  // Estados locales para edición
-  const [heroContent, setHeroContent] = useState<HeroContent>({
-    ...content.hero,
-    profileImage:
-      content.hero.profileImage ||
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/profile-E9YRocD6o4olhnzraHWCjLmKjCbspw.jpeg",
-  });
-  
-  const [aboutContent, setAboutContent] = useState<AboutContent>({
-    paragraph1: content.about.paragraph1 || "",
-    paragraph2: content.about.paragraph2 || "",
-    paragraph3: content.about.paragraph3 || "",
-  });
-  
-  const [servicesContent, setServicesContent] = useState<Service[]>(content.services || []);
-  const [contactContent, setContactContent] = useState<ContactContent>(content.contact);
+  const [heroContent, setHeroContent] = useState<HeroContent>({} as HeroContent);
+  const [aboutContent, setAboutContent] = useState<AboutContent>({ paragraph1: "", paragraph2: "", paragraph3: "" });
+  const [servicesContent, setServicesContent] = useState<Service[]>([]);
+  const [contactContent, setContactContent] = useState<ContactContent>({} as ContactContent);
 
-  // Actualizar estados locales cuando cambia el contenido global
-  useEffect(() => {
-    // Evitar actualizaciones innecesarias que causan parpadeo
-    if (isLoading) return;
-
-    const heroData = {
-      ...content.hero,
-      profileImage:
-        content.hero.profileImage ||
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/profile-E9YRocD6o4olhnzraHWCjLmKjCbspw.jpeg",
+  const applyLoadedContent = useCallback((content: any) => {
+    const heroData: HeroContent = {
+      ...content?.hero,
+      profileImage: content?.hero?.profileImage || DEFAULT_PROFILE_IMAGE,
     };
-
-    const aboutData = {
-      paragraph1: content.about.paragraph1 || "",
-      paragraph2: content.about.paragraph2 || "",
-      paragraph3: content.about.paragraph3 || "",
+    const aboutData: AboutContent = {
+      paragraph1: content?.about?.paragraph1 || "",
+      paragraph2: content?.about?.paragraph2 || "",
+      paragraph3: content?.about?.paragraph3 || "",
     };
-
-    const servicesData = content.services || [];
-    const contactData = content.contact;
+    const servicesData: Service[] = content?.services || [];
+    const contactData: ContactContent = content?.contact || {};
 
     setHeroContent(heroData);
     setAboutContent(aboutData);
     setServicesContent(servicesData);
     setContactContent(contactData);
 
-    // Guardar una copia profunda del estado inicial
     initialContent.current = {
       hero: JSON.parse(JSON.stringify(heroData)),
       about: JSON.parse(JSON.stringify(aboutData)),
       services: JSON.parse(JSON.stringify(servicesData)),
-      contact: JSON.parse(JSON.stringify(contactData))
+      contact: JSON.parse(JSON.stringify(contactData)),
     };
-
-    // Resetear el estado de cambios
     setHasChanges(false);
-  }, [content, isLoading]);
+  }, []);
+
+  const load = useCallback(async () => {
+    setIsFetching(true);
+    try {
+      const content = await fetchContent();
+      applyLoadedContent(content);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [applyLoadedContent]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   // Detectar cambios en el contenido
   useEffect(() => {
-    // Comparar el estado actual con el estado inicial
-    const currentContent = {
-      hero: heroContent,
-      about: aboutContent,
-      services: servicesContent,
-      contact: contactContent
-    };
-
-    const currentJson = JSON.stringify(currentContent);
-    const initialJson = JSON.stringify(initialContent.current);
-    
-    setHasChanges(currentJson !== initialJson);
+    const currentContent = { hero: heroContent, about: aboutContent, services: servicesContent, contact: contactContent };
+    setHasChanges(JSON.stringify(currentContent) !== JSON.stringify(initialContent.current));
   }, [heroContent, aboutContent, servicesContent, contactContent]);
 
-  /**
-   * Función para guardar todos los cambios en el contenido
-   */
   const handleSave = useCallback(async () => {
-    // Si no hay cambios, no hacer nada
     if (!hasChanges) return;
 
     try {
       setIsLoading(true);
 
-      // Primero actualizar el contexto global con los estados locales
-      updateHero(heroContent);
-      updateAbout(aboutContent);
-      updateServices(servicesContent);
-      updateContact(contactContent);
+      await Promise.all([
+        JSON.stringify(heroContent) !== JSON.stringify(initialContent.current.hero) ? updateHeroAction(heroContent) : Promise.resolve(),
+        JSON.stringify(aboutContent) !== JSON.stringify(initialContent.current.about) ? updateAboutAction(aboutContent) : Promise.resolve(),
+        JSON.stringify(servicesContent) !== JSON.stringify(initialContent.current.services) ? updateServicesAction(servicesContent) : Promise.resolve(),
+        JSON.stringify(contactContent) !== JSON.stringify(initialContent.current.contact) ? updateContactAction(contactContent) : Promise.resolve(),
+      ]);
 
-      // Luego guardar todo en localStorage y disparar el evento
-      const success = saveAllContent();
-
-      if (success) {
-        showSuccessToast(
-          "Cambios guardados",
-          "El contenido ha sido actualizado correctamente."
-        );
-      } else {
-        showErrorToast(
-          "Error al guardar",
-          "Ha ocurrido un error al guardar los cambios."
-        );
-      }
+      await load();
+      showSuccessToast("Cambios guardados", "El contenido ha sido actualizado correctamente.");
     } catch (error) {
       console.error("Error al guardar el contenido:", error);
-      showErrorToast(
-        "Error",
-        "Ocurrió un error inesperado al guardar los cambios."
-      );
+      showErrorToast("Error", "Ocurrió un error inesperado al guardar los cambios.");
     } finally {
       setIsLoading(false);
     }
-  }, [
-    heroContent, 
-    aboutContent, 
-    servicesContent, 
-    contactContent, 
-    updateHero, 
-    updateAbout, 
-    updateServices, 
-    updateContact, 
-    saveAllContent, 
-    showSuccessToast, 
-    showErrorToast,
-    hasChanges
-  ]);
+  }, [heroContent, aboutContent, servicesContent, contactContent, hasChanges, load, showSuccessToast, showErrorToast]);
 
   return {
-    // Estados
     activeTab,
+    isFetching,
     isLoading,
     heroContent,
     aboutContent,
     servicesContent,
     contactContent,
     hasChanges,
-    
-    // Setters
+
     setActiveTab,
     setHeroContent,
     setAboutContent,
     setServicesContent,
     setContactContent,
-    
-    // Acciones
+
     handleSave
   };
 }

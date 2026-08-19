@@ -8,12 +8,9 @@ export { ContentProvider } from './content-provider'
 // Exportar tipos
 export * from './types'
 
-// Exportar acciones por entidad
-export * from './slices/hero/actions'
-export * from './slices/about/actions'
-export * from './slices/services/actions'
+// Acciones legacy sin consumidores reales (updateProjects/updateSkills
+// bulk-replace) — hero/about/services/otherSkills/experience/contact
+// migraron a Server Actions (lib/actions/*.ts), sus slices se borraron en
+// Fase 5. Ver vault/portfolio: planes/rediseno-admin-server-actions.
 export * from './slices/projects/actions'
 export * from './slices/skills/actions'
-export * from './slices/otherSkills/actions'
-export * from './slices/experience/actions'
-export * from './slices/contact/actions'

@@ -42,7 +42,7 @@ export function BackendProjectCard({ project, index }: BackendProjectCardProps) 
         <CardContent className="p-6 relative z-10 flex flex-col h-full">
           <div className="flex items-center mb-4">
             {getIconForProject(project.id)}
-            <Link href={`/projects/${project.id}`}>
+            <Link href={`/projects/${project.slug || project.id}`}>
               <h3 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 drop-shadow-sm hover:from-blue-400 hover:to-blue-200 transition-all">
                 {project.title}
               </h3>

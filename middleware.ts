@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { jwtVerify } from 'jose'
+import { verifyAdminToken } from '@/lib/auth/jwt'
 
 // Rutas de API que requieren autenticación (mutaciones de datos)
 const PROTECTED_API_ROUTES = [
@@ -10,16 +10,6 @@ const PROTECTED_API_ROUTES = [
   '/api/skills',
   '/api/other-skills',
 ]
-
-async function verifyJWT(token: string): Promise<boolean> {
-  try {
-    const secret = new TextEncoder().encode(process.env.SECRET_KEY)
-    await jwtVerify(token, secret)
-    return true
-  } catch {
-    return false
-  }
-}
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
@@ -58,7 +48,7 @@ export async function middleware(request: NextRequest) {
       )
     }
 
-    const isValid = await verifyJWT(tokenToVerify)
+    const isValid = await verifyAdminToken(tokenToVerify)
     if (!isValid) {
       return NextResponse.json(
         { success: false, message: 'Token inválido o expirado' },

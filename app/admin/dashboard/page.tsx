@@ -10,7 +10,13 @@ import ContentEditor from "@/components/admin/managers/content-editor"
 import ImageManager from "@/components/admin/managers/image-manager"
 import SkillsManager from "@/components/admin/managers/skills-manager"
 import ExperienceManager from "@/components/admin/managers/experience-manager"
-import { Code, FileText, FileImage, Settings, User, Briefcase } from "lucide-react"
+import TestimonialsManager from "@/components/admin/managers/testimonials-manager"
+import ProjectStatsManager from "@/components/admin/managers/project-stats-manager"
+import CertificatesManager from "@/components/admin/managers/certificates-manager"
+import BlogManager from "@/components/admin/managers/blog-manager"
+import { Code, FileText, FileImage, User, Briefcase, Quote, BarChart3, Award, Newspaper } from "lucide-react"
+
+const TABS = ["projects", "skills", "experience", "content", "images", "testimonials", "stats", "certificates", "blog"]
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -23,7 +29,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const tab = searchParams.get("tab")
-    if (tab && ["projects", "skills", "experience", "content", "images"].includes(tab)) {
+    if (tab && TABS.includes(tab)) {
       setActiveTab(tab)
     }
   }, [searchParams])
@@ -60,7 +66,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
 
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="bg-black/40 border border-blue-700/20 w-full justify-start flex-wrap">
+            <TabsList className="bg-black/40 border border-blue-700/20 w-full justify-start flex-wrap h-auto">
               <TabsTrigger
                 value="projects"
                 className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
@@ -96,6 +102,34 @@ export default function DashboardPage() {
                 <FileImage className="mr-2 h-4 w-4" />
                 Imágenes
               </TabsTrigger>
+              <TabsTrigger
+                value="testimonials"
+                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
+              >
+                <Quote className="mr-2 h-4 w-4" />
+                Testimonios
+              </TabsTrigger>
+              <TabsTrigger
+                value="stats"
+                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Métricas
+              </TabsTrigger>
+              <TabsTrigger
+                value="certificates"
+                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
+              >
+                <Award className="mr-2 h-4 w-4" />
+                Certificados
+              </TabsTrigger>
+              <TabsTrigger
+                value="blog"
+                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
+              >
+                <Newspaper className="mr-2 h-4 w-4" />
+                Blog
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -106,6 +140,10 @@ export default function DashboardPage() {
           {activeTab === "experience" && <ExperienceManager />}
           {activeTab === "content" && <ContentEditor />}
           {activeTab === "images" && <ImageManager />}
+          {activeTab === "testimonials" && <TestimonialsManager />}
+          {activeTab === "stats" && <ProjectStatsManager />}
+          {activeTab === "certificates" && <CertificatesManager />}
+          {activeTab === "blog" && <BlogManager />}
         </div>
       </div>
     </AdminLayout>

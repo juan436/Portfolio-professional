@@ -141,7 +141,11 @@
   },
   "blog": {
     "title": "Blog",
-    "comingSoon": "Bientôt disponible — je prépare des articles techniques et des leçons réelles tirées de mes projets."
+    "subtitle": "Articles techniques et leçons réelles tirées de mes projets.",
+    "comingSoon": "Bientôt disponible — je prépare des articles techniques et des leçons réelles tirées de mes projets.",
+    "empty": "Aucun article publié pour le moment.",
+    "notFound": "Nous n'avons pas trouvé cet article.",
+    "readMore": "Lire la suite"
   },
   "certificates": {
     "title": "Formation Certifiée",

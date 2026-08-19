@@ -9,6 +9,7 @@ import { flowIconMap } from "./flow-card"
 
 export interface ShowcaseAutomation {
   id: string
+  slug: string
   icon: string
   title: string
   description: string
@@ -67,7 +68,7 @@ export function AutomationShowcaseCard({ automation, direction, tryPrompt, sendL
               <p className="text-sm text-slate-400">{automation.description}</p>
             </div>
             <Button asChild size="sm" className="hidden sm:inline-flex bg-blue-600 hover:bg-blue-500 flex-shrink-0">
-              <Link href={`/automations/${automation.id}?from=work`}>
+              <Link href={`/automations/${automation.slug}?from=work`}>
                 {viewDetailLabel}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -75,7 +76,7 @@ export function AutomationShowcaseCard({ automation, direction, tryPrompt, sendL
           </div>
 
           <Button asChild size="sm" className="sm:hidden mb-6 bg-blue-600 hover:bg-blue-500">
-            <Link href={`/automations/${automation.id}?from=work`}>
+            <Link href={`/automations/${automation.slug}?from=work`}>
               {viewDetailLabel}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
