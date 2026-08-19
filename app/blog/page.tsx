@@ -2,8 +2,6 @@
 
 import Link from "next/link"
 import { ArrowLeft, Newspaper } from "lucide-react"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
 
 export default function BlogPage() {
@@ -11,8 +9,6 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-black flex flex-col">
-      <Navbar />
-
       <div className="flex-grow flex flex-col items-center justify-center px-6 pt-32 pb-20 text-center">
         <div className="p-4 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
           <Newspaper className="h-10 w-10 text-blue-500" />
@@ -24,8 +20,6 @@ export default function BlogPage() {
           {String(t("projects.backToHome") || "Volver")}
         </Link>
       </div>
-
-      <Footer />
     </main>
   )
 }

@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
 import { CertificateCard, type Certificate } from "@/components/certificates/certificate-card"
 import { PaginationControls } from "@/components/pagination-controls"
 
@@ -51,8 +49,6 @@ export default function CertificatesPage() {
 
   return (
     <main className="min-h-screen bg-black flex flex-col">
-      <Navbar />
-
       <div className="container mx-auto px-6 pt-28 pb-8 flex-grow relative">
         <div className="absolute top-20 right-0 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
 
@@ -100,7 +96,6 @@ export default function CertificatesPage() {
           )
         )}
       </div>
-      <Footer />
     </main>
   )
 }

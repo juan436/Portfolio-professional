@@ -6,8 +6,6 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowLeft, MessageCircle, Radio, Sparkles, Timer, Wrench } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
 import { JevyChatDemo } from "@/components/agents/jevy-chat-demo"
 import { fetchProjectById } from "@/services/api/projects"
@@ -121,7 +119,6 @@ export default function AgentDetailPage() {
 
   return (
     <main className="min-h-screen bg-black">
-      <Navbar />
       <section className="pt-32 pb-20 relative">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
@@ -271,8 +268,6 @@ export default function AgentDetailPage() {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
     </main>
   )
 }

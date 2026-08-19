@@ -1,8 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
 import { ProjectHeader } from "@/components/projects/project-header"
 import { FlowCard } from "@/components/automations/flow-card"
@@ -57,7 +55,6 @@ export default function AutomationsPage() {
 
   return (
     <main className="min-h-screen bg-black">
-      <Navbar />
       <section className="pt-32 pb-20 relative">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
@@ -110,8 +107,6 @@ export default function AutomationsPage() {
           )}
         </div>
       </section>
-
-      <Footer />
     </main>
   )
 }

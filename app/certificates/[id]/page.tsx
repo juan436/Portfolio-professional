@@ -5,8 +5,6 @@ import { useParams } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowLeft, Award, Briefcase, Calendar, Clock, ExternalLink, Layers, Lightbulb } from "lucide-react"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
 import { useLanguage } from "@/hooks/use-language"
 import { fetchCertificateById } from "@/services/api/certificates"
 import { ProjectHeader } from "@/components/projects/project-header"
@@ -80,7 +78,6 @@ export default function CertificateDetailPage() {
 
   return (
     <main className="min-h-screen bg-black">
-      <Navbar />
       <section className="pt-32 pb-20 relative">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
@@ -180,8 +177,6 @@ export default function CertificateDetailPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </main>
   )
 }

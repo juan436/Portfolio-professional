@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/contexts/language-context"
 import { ContentProvider } from "@/contexts/content"
 import WolfGuide from "@/components/wolf"
+import SiteChrome from "@/components/layout/site-chrome"
 import { Toaster } from "@/components/ui/toaster"
 import JsonLd from "@/app/components/json-ld"
 const inter = Inter({ subsets: ["latin"] })
@@ -57,7 +58,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <ContentProvider>
             <LanguageProvider>
-              {children}
+              <SiteChrome>{children}</SiteChrome>
               <WolfGuide />
             </LanguageProvider>
             <Toaster />

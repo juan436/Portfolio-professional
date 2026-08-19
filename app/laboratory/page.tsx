@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
 import { LabExpedienteCard, type LabExpedienteProject } from "@/components/laboratory/lab-expediente-card"
 import { LabIntro } from "@/components/laboratory/lab-intro"
 
@@ -79,8 +77,6 @@ export default function LaboratoryPage() {
 
   return (
     <main className="min-h-screen bg-black flex flex-col">
-      <Navbar />
-
       <div className="container mx-auto px-6 pt-28 pb-8 flex-grow relative">
         <div className="absolute top-20 right-0 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-600/10 blur-[120px] rounded-full pointer-events-none" />
@@ -151,7 +147,6 @@ export default function LaboratoryPage() {
           </div>
         )}
       </div>
-      <Footer />
     </main>
   )
 }
