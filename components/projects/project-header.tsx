@@ -9,16 +9,20 @@ import { LogoMark } from "@/components/navbar/logo";
 interface ProjectHeaderProps {
   title: string;
   description: string;
-  viewMoreHref?: string;
-  viewMoreLabel?: string;
   subtype?: string;
   hideHeader?: boolean;
-  backHref?: string;
   onBackClick?: () => void;
+  nav?: {
+    backHref?: string;
+    viewMoreHref?: string;
+    viewMoreLabel?: string;
+  };
 }
 
-export function ProjectHeader({ title, description, viewMoreHref, viewMoreLabel, subtype, hideHeader, backHref = "/", onBackClick }: ProjectHeaderProps) {
+export function ProjectHeader({ title, description, subtype, hideHeader, onBackClick, nav }: ProjectHeaderProps) {
   const { t } = useLanguage();
+  const backHref = nav?.backHref ?? "/";
+  const { viewMoreHref, viewMoreLabel } = nav ?? {};
 
   return (
     <>

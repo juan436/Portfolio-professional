@@ -28,11 +28,11 @@ export function LaboratoryListView({ labProjects }: { labProjects: LabExpediente
     metodo: String(t("laboratory.card.metodo") || "Método"),
     hallazgo: String(t("laboratory.card.hallazgo") || "Hallazgo"),
     siguiente: String(t("laboratory.card.siguiente") || "Próximo paso"),
+    fileLabel: String(t("laboratory.card.fileLabel") || "Expediente Nº"),
+    stampRingLabel: String(t("laboratory.card.stampRing") || "EXPERIMENTO · EN CURSO ·"),
+    viewFullLabel: String(t("laboratory.card.viewFull") || "Ver expediente completo"),
+    naLabel: String(t("laboratory.card.notAvailable") || "N/D"),
   }
-  const fileLabel = String(t("laboratory.card.fileLabel") || "Expediente Nº")
-  const stampRingLabel = String(t("laboratory.card.stampRing") || "EXPERIMENTO · EN CURSO ·")
-  const viewFullLabel = String(t("laboratory.card.viewFull") || "Ver expediente completo")
-  const naLabel = String(t("laboratory.card.notAvailable") || "N/D")
   const pageTitle = String(t("laboratory.title") || "Laboratorio R&D")
   const pageSubtitle = String(t("laboratory.subtitle") || "")
   const legendHeading = String(t("laboratory.legendHeading") || "Cómo leer los estados")
@@ -82,10 +82,6 @@ export function LaboratoryListView({ labProjects }: { labProjects: LabExpediente
                     languageCode={language.code}
                     statusLabels={statusLabels}
                     fieldLabels={fieldLabels}
-                    fileLabel={fileLabel}
-                    stampRingLabel={stampRingLabel}
-                    viewFullLabel={viewFullLabel}
-                    naLabel={naLabel}
                   />
                 ))}
               </motion.div>

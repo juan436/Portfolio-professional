@@ -1,9 +1,8 @@
 "use server"
 
-import { cookies } from "next/headers"
 import dbConnect from "@/lib/db/conection"
 import Project from "@/models/project.model"
-import { verifyAdminToken } from "@/lib/auth/jwt"
+import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
 import { slugify, uniqueSlug } from "@/lib/slug"
 import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation"
@@ -11,30 +10,6 @@ import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation
 export type { ProjectCategoryValue }
 
 const TRANSLATABLE_FIELDS = ["title", "description"] as const
-
-async function requireAdminSession() {
-  const store = await cookies()
-  const token = store.get("authToken")?.value
-  const ok = await verifyAdminToken(token)
-  if (!ok) throw new Error("No autorizado")
-}
-
-// Server Actions no pasan por el matcher de middleware.ts (son POSTs a un
-// endpoint interno de Next) — cada una verifica la sesión por su cuenta con
-// la misma función que usa el middleware (lib/auth/jwt.ts).
-
-// Merge por idioma en vez de reemplazo — el flujo viejo (services/api/projects.ts
-// + createItemHandlers) hacía `item.set({ translations: {...} })` con solo los
-// idiomas/campos recién traducidos, lo que borraba traducciones previas de
-// otros campos. Acá se preserva lo que ya había y solo se pisa lo nuevo.
-function mergeTranslations(existing: any, incoming: any) {
-  if (!incoming) return existing
-  const merged: Record<string, any> = { ...(existing || {}) }
-  for (const lang of Object.keys(incoming)) {
-    merged[lang] = { ...(existing?.[lang] || {}), ...incoming[lang] }
-  }
-  return merged
-}
 
 export async function createProjectAction(data: Record<string, any>) {
   await requireAdminSession()

@@ -1,19 +1,11 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
 import dbConnect from "@/lib/db/conection"
 import BlogPost from "@/models/blog.model"
-import { verifyAdminToken } from "@/lib/auth/jwt"
+import { requireAdminSession } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
 import { slugify, uniqueSlug } from "@/lib/slug"
-
-async function requireAdminSession() {
-  const store = await cookies()
-  const token = store.get("authToken")?.value
-  const ok = await verifyAdminToken(token)
-  if (!ok) throw new Error("No autorizado")
-}
 
 function revalidateBlog(slug?: string) {
   revalidatePath("/blog")

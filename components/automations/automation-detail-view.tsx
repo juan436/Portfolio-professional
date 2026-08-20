@@ -131,8 +131,10 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
           <ProjectHeader
             title={title}
             description={description}
-            viewMoreHref={cameFromWork ? "/automations" : undefined}
-            viewMoreLabel={cameFromWork ? viewMoreLabel : undefined}
+            nav={{
+              viewMoreHref: cameFromWork ? "/automations" : undefined,
+              viewMoreLabel: cameFromWork ? viewMoreLabel : undefined,
+            }}
             subtype={subtype}
             hideHeader
             onBackClick={handleBack}

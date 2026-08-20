@@ -113,8 +113,10 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
           <ProjectHeader
             title={title}
             description={description}
-            viewMoreHref={cameFromWork ? "/agents" : undefined}
-            viewMoreLabel={cameFromWork ? viewMoreLabel : undefined}
+            nav={{
+              viewMoreHref: cameFromWork ? "/agents" : undefined,
+              viewMoreLabel: cameFromWork ? viewMoreLabel : undefined,
+            }}
             subtype={subtype}
             hideHeader
             onBackClick={handleBack}

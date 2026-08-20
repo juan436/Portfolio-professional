@@ -1,18 +1,10 @@
 "use server"
 
-import { cookies } from "next/headers"
 import dbConnect from "@/lib/db/conection"
 import Testimonial from "@/models/testimonial.model"
 import Project from "@/models/project.model"
-import { verifyAdminToken } from "@/lib/auth/jwt"
+import { requireAdminSession } from "@/lib/actions/shared"
 import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation"
-
-async function requireAdminSession() {
-  const store = await cookies()
-  const token = store.get("authToken")?.value
-  const ok = await verifyAdminToken(token)
-  if (!ok) throw new Error("No autorizado")
-}
 
 // Un testimonio puede citar varios proyectos/automatizaciones (links[]) —
 // revalida la ficha pública de cada uno según su categoría real (no todos

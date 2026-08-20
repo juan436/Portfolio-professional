@@ -50,7 +50,7 @@ function axisMatches(leadValue: string | undefined, catalogValue: string | undef
 function scoreCandidate(lead: LeadProfile, project: IProject, includeCategoria: boolean): number {
   const profile = project.jevyProfile;
   if (!profile) return 0;
-  if (!axisMatches(lead.problema_core, profile.problema_core)) return 0;
+  if (!axisMatches(lead.problema_core, profile.problemaCore)) return 0;
 
   let score = WEIGHTS.problema_core;
   if (includeCategoria && axisMatches(lead.categoria, profile.categoria)) score += WEIGHTS.categoria;

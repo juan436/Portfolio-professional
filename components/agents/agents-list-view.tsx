@@ -44,7 +44,7 @@ export function AgentsListView({ agents }: { agents: RawAgent[] }) {
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
-          <ProjectHeader title={title} description={subtitle} hideHeader backHref="/work" />
+          <ProjectHeader title={title} description={subtitle} hideHeader nav={{ backHref: "/work" }} />
 
           {agents.length === 0 ? (
             <div className="text-center py-12">

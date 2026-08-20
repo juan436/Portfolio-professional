@@ -1,18 +1,10 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
 import dbConnect from "@/lib/db/conection"
 import Content from "@/models/content.model"
-import { verifyAdminToken } from "@/lib/auth/jwt"
+import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
-
-async function requireAdminSession() {
-  const store = await cookies()
-  const token = store.get("authToken")?.value
-  const ok = await verifyAdminToken(token)
-  if (!ok) throw new Error("No autorizado")
-}
 
 // Content es un documento único (Content.findOne()) — hero/about/contact son
 // sub-objetos anidados, no colecciones propias. Si todavía no existe (primera
@@ -22,15 +14,6 @@ async function getOrCreateContent() {
   let doc = await Content.findOne()
   if (!doc) doc = new Content({})
   return doc
-}
-
-function mergeTranslations(existing: any, incoming: any) {
-  if (!incoming) return existing
-  const merged: Record<string, any> = { ...(existing || {}) }
-  for (const lang of Object.keys(incoming)) {
-    merged[lang] = { ...(existing?.[lang] || {}), ...incoming[lang] }
-  }
-  return merged
 }
 
 function plainOf(sub: any) {

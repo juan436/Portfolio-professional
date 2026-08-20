@@ -117,7 +117,7 @@ export interface IProject extends Document {
   jevyProfile?: {
     categoria?: string;
     subtype?: string;
-    problema_core?: string;
+    problemaCore?: string;
     sector?: string;
     pitchCorto?: string;
   };
@@ -334,7 +334,7 @@ const ProjectSchema = new mongoose.Schema({
   jevyProfile: {
     categoria: String,
     subtype: String,
-    problema_core: String,
+    problemaCore: String,
     sector: String,
     pitchCorto: String,
   },

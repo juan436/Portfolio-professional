@@ -1,13 +1,14 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import Image from "next/image"
 import { Send, Paperclip, Check, Loader2 } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
 import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
 import { SchedulingWidget, type SchedulingData } from "@/components/contact/scheduling-widget"
+import { ProjectMatchCard, type ProjectMatch } from "@/components/contact/project-match-card"
+import { FormattedText } from "@/components/contact/formatted-text"
 
 const CHAT_STORAGE_KEY = "jevy-chat-state"
 // 5 min sin actividad real (mensaje enviado/recibido): se manda un aviso
@@ -15,15 +16,6 @@ const CHAT_STORAGE_KEY = "jevy-chat-state"
 // sin actividad después de ese aviso, se cierra la charla y arranca una nueva.
 const INACTIVITY_WARNING_MS = 5 * 60 * 1000
 const INACTIVITY_CLOSE_MS = 30 * 1000
-
-interface ProjectMatch {
-  id: string
-  title: string
-  image: string | null
-  path: string
-  demo: string | null
-  isPrototype: boolean
-}
 
 interface ChatLine {
   id: number
@@ -36,86 +28,6 @@ interface ChatLine {
 interface DeepSeekMessage {
   role: "system" | "user" | "assistant"
   content: string
-}
-
-function renderInline(text: string) {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-    part.startsWith("**") && part.endsWith("**") ? (
-      <strong key={i}>{part.slice(2, -2)}</strong>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
-  )
-}
-
-function FormattedText({ text }: { text: string }) {
-  const rawLines = text.split("\n")
-  const lines: { text: string; gap: boolean }[] = []
-  let pendingGap = false
-  for (const line of rawLines) {
-    if (line.trim() === "") {
-      pendingGap = true
-      continue
-    }
-    lines.push({ text: line, gap: pendingGap && lines.length > 0 })
-    pendingGap = false
-  }
-  return (
-    <>
-      {lines.map((line, i) => (
-        <span key={i} className={i === 0 ? "" : "block" + (line.gap ? " mt-2" : "")}>
-          {renderInline(line.text)}
-        </span>
-      ))}
-    </>
-  )
-}
-
-function ProjectMatchCard({ match, prototypeLabel, seeMoreLabel, demoLabel }: {
-  match: ProjectMatch
-  prototypeLabel: string
-  seeMoreLabel: string
-  demoLabel: string
-}) {
-  return (
-    <div className="mt-2 max-w-sm rounded-lg border border-blue-700/30 bg-black/40 overflow-hidden not-italic font-sans">
-      {match.image && (
-        <div className="relative w-full h-32">
-          <Image src={match.image} alt={match.title} fill className="object-cover" />
-        </div>
-      )}
-      <div className="p-3 space-y-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-slate-200">{match.title}</span>
-        </div>
-        {match.isPrototype && (
-          <span className="inline-block text-[10px] uppercase tracking-wide text-amber-400 border border-amber-400/30 rounded-full px-2 py-0.5">
-            {prototypeLabel}
-          </span>
-        )}
-        <div className="flex gap-2 pt-1">
-          <a
-            href={match.path}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white transition-colors"
-          >
-            {seeMoreLabel}
-          </a>
-          {match.demo && (
-            <a
-              href={match.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs px-3 py-1.5 rounded-md border border-blue-600/50 text-blue-400 hover:bg-blue-600/10 transition-colors"
-            >
-              {demoLabel}
-            </a>
-          )}
-        </div>
-      </div>
-    </div>
-  )
 }
 
 const CHIP_KEYS = ["app", "automation", "recruiter"] as const

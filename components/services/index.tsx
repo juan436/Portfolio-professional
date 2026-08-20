@@ -1,11 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Code2, Database, Server, Cpu, Globe, Smartphone, Monitor, Cloud, Shield,
@@ -27,9 +26,8 @@ function getServiceKey(title: string): "automation" | "mobile" | "infra" | "web"
 }
 
 export default function Services() {
-  const { t } = useLanguage()
   const { translatedContent } = useTranslatedContent()
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useIsMounted()
   const translatedTexts = useTranslatedTexts(
     (t) => ({
       title: String(t("services.title")),
@@ -42,10 +40,6 @@ export default function Services() {
     }),
     { title: "", subtitle: "", consultSolution: "", webCTA: "", mobileCTA: "", aiCTA: "", cloudCTA: "" }
   )
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [t])
 
   const getServiceIcon = (iconName: string) => {
     const iconClass = "h-10 w-10 text-blue-500 filter drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"

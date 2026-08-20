@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from "react"
 import { motion, useScroll, useSpring, useTransform, MotionValue } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Search, Layout, Zap, TrendingUp, LucideIcon } from "lucide-react"
 
 interface Phase {
@@ -105,7 +106,7 @@ function MethodologyCard({
 export default function Methodology() {
   const { t } = useLanguage()
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useIsMounted()
   const [translatedTexts, setTranslatedTexts] = useState({ title: "", subtitle: "" })
   const [translatedPhases, setTranslatedPhases] = useState<Phase[]>([])
 
@@ -123,7 +124,6 @@ export default function Methodology() {
   const yPercent = useTransform(elevatorY, [0, 1], ["0%", "100%"])
 
   useEffect(() => {
-    setIsMounted(true)
     setTranslatedTexts({
       title: String(t("methodology.title")),
       subtitle: String(t("methodology.subtitle"))

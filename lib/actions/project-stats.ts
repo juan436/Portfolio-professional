@@ -1,19 +1,11 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
 import dbConnect from "@/lib/db/conection"
 import ProjectStats from "@/models/project-stats.model"
 import Project from "@/models/project.model"
-import { verifyAdminToken } from "@/lib/auth/jwt"
+import { requireAdminSession } from "@/lib/actions/shared"
 import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation"
-
-async function requireAdminSession() {
-  const store = await cookies()
-  const token = store.get("authToken")?.value
-  const ok = await verifyAdminToken(token)
-  if (!ok) throw new Error("No autorizado")
-}
 
 // Métricas de un proyecto/automatización puntual alimentan también el
 // resumen acumulado que se muestra en la home (StatType, /api/stat-types/summary).

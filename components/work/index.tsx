@@ -4,10 +4,11 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Bot, Code2, Workflow } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 
 export default function WorkIntro() {
   const { t, language } = useLanguage()
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useIsMounted()
   const [texts, setTexts] = useState({
     title: "",
     subtitle: "",
@@ -17,7 +18,6 @@ export default function WorkIntro() {
   })
 
   useEffect(() => {
-    setIsMounted(true)
     setTexts({
       title: String(t("work.title")),
       subtitle: String(t("work.subtitle")),

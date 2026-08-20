@@ -45,7 +45,7 @@ export function AutomationsListView({ automations }: { automations: RawAutomatio
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
-          <ProjectHeader title={title} description={subtitle} hideHeader backHref="/work" />
+          <ProjectHeader title={title} description={subtitle} hideHeader nav={{ backHref: "/work" }} />
 
           {automations.length === 0 ? (
             <div className="text-center py-12">
@@ -67,14 +67,16 @@ export function AutomationsListView({ automations }: { automations: RawAutomatio
                 return (
                   <FlowCard
                     key={auto._id}
-                    id={auto._id}
-                    slug={auto.slug}
-                    icon={auto.automationDetails?.icon || ""}
-                    title={autoTitle}
-                    description={description}
-                    stepsCount={steps.length}
+                    flow={{
+                      id: auto._id,
+                      slug: auto.slug,
+                      icon: auto.automationDetails?.icon || "",
+                      title: autoTitle,
+                      description,
+                      stepsCount: steps.length,
+                      subtype,
+                    }}
                     stepsWord={stepsWord}
-                    subtype={subtype}
                     index={index}
                   />
                 )

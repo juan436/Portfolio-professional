@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react"
 import { motion, useMotionValue, useAnimationFrame } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Star, Quote } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -16,15 +17,11 @@ interface Testimonial {
 export default function Testimonials() {
   const { t } = useLanguage()
   const [isPaused, setIsPaused] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useIsMounted()
   const constraintsRef = useRef(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const halfWidthRef = useRef(0)
   const x = useMotionValue(0)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
 
   // Usamos returnObjects: true para obtener el array de testimonios desde i18n
   const testimonials = useMemo(() => {

@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 import { HeroSocialLinks } from "./hero-social-links"
 import { HeroAnimation } from "./hero-animation"
 
@@ -14,7 +15,7 @@ export default function Hero() {
   const { t, language } = useLanguage()
   const { translatedContent } = useTranslatedContent()
   const [showAnimation, setShowAnimation] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useIsMounted()
   const [translatedTexts, setTranslatedTexts] = useState<{
     projects: string;
     contact: string;
@@ -28,7 +29,6 @@ export default function Hero() {
   })
 
   useEffect(() => {
-    setIsMounted(true)
     setTranslatedTexts({
       projects: String(t("hero.projects")),
       contact: String(t("hero.contact")),

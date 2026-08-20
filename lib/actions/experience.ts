@@ -1,29 +1,12 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
 import dbConnect from "@/lib/db/conection"
 import Experience from "@/models/experience.model"
-import { verifyAdminToken } from "@/lib/auth/jwt"
+import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
 
-async function requireAdminSession() {
-  const store = await cookies()
-  const token = store.get("authToken")?.value
-  const ok = await verifyAdminToken(token)
-  if (!ok) throw new Error("No autorizado")
-}
-
 const TRANSLATABLE_FIELDS = ["position", "description", "location"] as const
-
-function mergeTranslations(existing: any, incoming: any) {
-  if (!incoming) return existing
-  const merged: Record<string, any> = { ...(existing || {}) }
-  for (const lang of Object.keys(incoming)) {
-    merged[lang] = { ...(existing?.[lang] || {}), ...incoming[lang] }
-  }
-  return merged
-}
 
 function revalidateExperience() {
   revalidatePath("/")

@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Building2, Calendar, ChevronDown, ChevronUp } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
+import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Experience } from "@/contexts/content/types"
 import { Button } from "@/components/ui/button"
 
@@ -28,7 +29,7 @@ export function ExperienceCard({
   handleMouseUp,
 }: ExperienceCardProps) {
   const { t, language } = useLanguage()
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useIsMounted()
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
   const contentRef = useRef<HTMLDivElement>(null)
   const techContainerRef = useRef<HTMLDivElement>(null)
@@ -40,10 +41,6 @@ export function ExperienceCard({
     }),
     { seeMore: "", seeLess: "", technologies: "" }
   )
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [t, language])
 
   // Función para obtener el texto traducido o el original si no hay traducción
   const getTranslatedField = (experience: Experience, field: "position" | "description" | "location") => {

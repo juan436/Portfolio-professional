@@ -7,8 +7,6 @@ import { Content } from "./types"
 import {
   fetchContent, fetchProjects, fetchExperiences, fetchSkills, fetchOtherSkills
 } from "@/services/api"
-import { updateProjects } from "./slices/projects/actions"
-import { updateSkills } from "./slices/skills/actions"
 
 const emptyContent: Content = {
   hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
@@ -170,8 +168,6 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     isLoading,
     hydrateContent,
     hydratePartial,
-    updateProjects: (projects) => updateProjects(projects, setContent, setIsLoading),
-    updateSkills: (skills) => updateSkills(skills, setContent, setIsLoading),
   }
 
   return (

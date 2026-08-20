@@ -39,11 +39,11 @@ interface LabExpedienteCardProps {
     metodo: string
     hallazgo: string
     siguiente: string
+    fileLabel: string
+    stampRingLabel: string
+    viewFullLabel: string
+    naLabel: string
   }
-  fileLabel: string
-  stampRingLabel: string
-  viewFullLabel: string
-  naLabel: string
 }
 
 const STATUS_ACCENT: Record<string, string> = {
@@ -63,11 +63,8 @@ export function LabExpedienteCard({
   languageCode,
   statusLabels,
   fieldLabels,
-  fileLabel,
-  stampRingLabel,
-  viewFullLabel,
-  naLabel,
 }: LabExpedienteCardProps) {
+  const { fileLabel, stampRingLabel, viewFullLabel, naLabel } = fieldLabels
   const details = project.labDetails
   const status = details?.status || "testing"
   const accentClass = STATUS_ACCENT[status] || STATUS_ACCENT.testing

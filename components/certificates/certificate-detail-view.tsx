@@ -69,7 +69,7 @@ export function CertificateDetailView({ certificate }: CertificateDetailViewProp
         </div>
 
         <div className="container mx-auto px-6 relative z-10 max-w-6xl">
-          <ProjectHeader title={certificate.title} description={certificate.issuer} hideHeader backHref="/certificates" />
+          <ProjectHeader title={certificate.title} description={certificate.issuer} hideHeader nav={{ backHref: "/certificates" }} />
 
           <div className="grid grid-cols-1 lg:grid-cols-9 gap-8 mb-12 items-start">
             {certificate.image && (

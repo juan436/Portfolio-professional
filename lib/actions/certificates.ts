@@ -1,18 +1,10 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
 import dbConnect from "@/lib/db/conection"
 import Certificate from "@/models/certificate.model"
-import { verifyAdminToken } from "@/lib/auth/jwt"
+import { requireAdminSession } from "@/lib/actions/shared"
 import { slugify, uniqueSlug } from "@/lib/slug"
-
-async function requireAdminSession() {
-  const store = await cookies()
-  const token = store.get("authToken")?.value
-  const ok = await verifyAdminToken(token)
-  if (!ok) throw new Error("No autorizado")
-}
 
 function revalidateCertificates(slug?: string) {
   revalidatePath("/certificates")

@@ -162,7 +162,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
             description={description}
             subtype={project.subtype}
             hideHeader
-            backHref="/work"
+            nav={{ backHref: "/work" }}
           />
 
           {hasGallery ? (

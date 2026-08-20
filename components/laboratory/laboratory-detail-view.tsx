@@ -176,7 +176,7 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
         </div>
 
         <div className="container mx-auto px-6 relative z-10 max-w-6xl">
-          <ProjectHeader title={title} description={description} hideHeader backHref="/laboratory" />
+          <ProjectHeader title={title} description={description} hideHeader nav={{ backHref: "/laboratory" }} />
 
           {labDetails?.status && (
             <div className="flex justify-center -mt-10 mb-10">

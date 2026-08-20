@@ -40,7 +40,7 @@ const jevyAgent = {
   jevyProfile: {
     categoria: 'agente',
     subtype: 'bot_conversacional',
-    problema_core: 'atencion_cliente_multicanal',
+    problemaCore: 'atencion_cliente_multicanal',
     sector: 'equipo_interno',
     pitchCorto: 'Agente conversacional que entrevista, hace matching y agenda citas reales — el propio asistente de este sitio, funcionando en producción.',
   },

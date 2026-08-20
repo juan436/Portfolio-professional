@@ -10,28 +10,24 @@ export const flowIconMap: Record<string, typeof MessageCircle> = {
   "social": Share2,
 }
 
-interface FlowCardProps {
+export interface FlowCardData {
   id: string
   slug: string
   icon: string
   title: string
   description: string
   stepsCount: number
-  stepsWord: string
   subtype?: string
+}
+
+interface FlowCardProps {
+  flow: FlowCardData
+  stepsWord: string
   index: number
 }
 
-export function FlowCard({
-  slug,
-  icon,
-  title,
-  description,
-  stepsCount,
-  stepsWord,
-  subtype,
-  index,
-}: FlowCardProps) {
+export function FlowCard({ flow, stepsWord, index }: FlowCardProps) {
+  const { slug, icon, title, description, stepsCount, subtype } = flow
   const Icon = flowIconMap[icon] || MessageCircle
 
   return (
