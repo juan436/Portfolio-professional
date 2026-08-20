@@ -28,11 +28,11 @@ const imageTypes: ImageType[] = [
     },
   },
   {
-    id: "fullstack",
-    name: "Proyectos Fullstack",
+    id: "proyectos",
+    name: "Imágenes de Proyectos",
     icon: <Laptop className="h-5 w-5 text-blue-500" />,
-    description: "Imágenes para proyectos de desarrollo fullstack",
-    path: "/images/projects/fullstack/",
+    description: "Imágenes para proyectos web, mobile e infraestructura/backend",
+    path: "/images/projects/",
     recommendations: {
       dimensions: "1280x720px (16:9) o 1200x800px (3:2)",
       format: "JPG o PNG",
@@ -135,7 +135,7 @@ export default function ImageManager() {
   // contenido real (web/mobile/infra_backend) — crasheaba al abrir esta
   // pestaña (auditoría 2026-08-18 §8). Esta sección es un vistazo general a
   // las imágenes de proyecto que ya existen, no un filtro real por categoría.
-  const fullstackImages = [
+  const projectImages = [
     ...content.projects.web,
     ...content.projects.mobile,
     ...content.projects.infra_backend,
@@ -180,8 +180,9 @@ export default function ImageManager() {
               <h3 className="text-sm font-medium">Estructura recomendada para imágenes</h3>
               <div className="bg-black/60 p-3 rounded-md text-xs font-mono text-slate-300">
                 <p>/public/images/profile/</p>
-                <p>/public/images/projects/fullstack/</p>
-                <p>/public/images/projects/backend/</p>
+                <p>/public/images/projects/web/</p>
+                <p>/public/images/projects/mobile/</p>
+                <p>/public/images/projects/infra_backend/</p>
                 <p>/public/images/backgrounds/</p>
               </div>
             </div>
@@ -245,21 +246,21 @@ export default function ImageManager() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="fullstack" className="mt-0 space-y-6">
-          <ImageGuide imageType={imageTypes.find(type => type.id === "fullstack")!} />
-          
+        <TabsContent value="proyectos" className="mt-0 space-y-6">
+          <ImageGuide imageType={imageTypes.find(type => type.id === "proyectos")!} />
+
           <Card className="bg-black/40 border-blue-700/20">
             <CardContent className="pt-6">
               <div>
-                <h3 className="text-sm font-medium mb-4">Imágenes de Proyectos Fullstack</h3>
+                <h3 className="text-sm font-medium mb-4">Imágenes de Proyectos</h3>
                 <p className="text-sm text-slate-300 mb-4">
                   Las imágenes de proyectos se configuran en la sección "Proyectos" del panel administrativo. Cada
                   proyecto puede tener su propia imagen representativa.
                 </p>
 
-                {fullstackImages.length > 0 ? (
+                {projectImages.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {fullstackImages.map((image, index) => (
+                    {projectImages.map((image, index) => (
                       <Card key={index} className="bg-black/60 border-blue-700/20 overflow-hidden">
                         <div className="relative h-40">
                           <img
@@ -280,7 +281,7 @@ export default function ImageManager() {
                 ) : (
                   <div className="text-center p-6 border border-dashed border-blue-700/30 rounded-md">
                     <FileImage className="h-12 w-12 mx-auto text-blue-700/50 mb-2" />
-                    <p className="text-slate-400">No hay imágenes de proyectos fullstack disponibles.</p>
+                    <p className="text-slate-400">No hay imágenes de proyectos disponibles.</p>
                   </div>
                 )}
               </div>

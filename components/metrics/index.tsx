@@ -78,11 +78,17 @@ export default function MetricsSection() {
 /** Card individual de métrica — animación de conteo (número) desde 0 al entrar en viewport. */
 function MetricCard({ metric, label, index }: { metric: Metric; label: string; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(cardRef, { once: true, margin: "-100px" })
+  // Sin `once`: las animaciones infinitas (float/rotate/spotlight, abajo) se
+  // apagan solas al salir de vista, igual que hero-animation.tsx. El conteo
+  // sigue disparando una sola vez via `hasCountedRef` (si no, reiniciaría el
+  // número cada vez que la card vuelve a entrar en pantalla).
+  const isInView = useInView(cardRef, { margin: "-100px" })
+  const hasCountedRef = useRef(false)
   const [displayValue, setDisplayValue] = useState<string | number>(typeof metric.value === 'string' ? "" : 0)
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && !hasCountedRef.current) {
+      hasCountedRef.current = true
       if (typeof metric.value === 'number') {
         let startTime: number | null = null
         const duration = 2000
@@ -130,16 +136,16 @@ function MetricCard({ metric, label, index }: { metric: Metric; label: string; i
       className="relative group p-10 rounded-3xl bg-white/[0.02] border border-white/10 backdrop-blur-3xl overflow-hidden select-none cursor-default"
     >
       {/* Spotlight Automático Suave */}
-      <motion.div 
-        animate={{
+      <motion.div
+        animate={isInView ? {
           background: [
             "radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.08), transparent 70%)",
             "radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.08), transparent 70%)",
             "radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.08), transparent 70%)",
           ]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 z-0 pointer-events-none" 
+        } : {}}
+        transition={isInView ? { duration: 10, repeat: Infinity, ease: "linear" } : undefined}
+        className="absolute inset-0 z-0 pointer-events-none"
       />
 
       <div className="relative z-10 text-center">

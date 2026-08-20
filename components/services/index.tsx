@@ -6,10 +6,8 @@ import { useTranslatedContent } from "@/hooks/use-translated-content"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Card, CardContent } from "@/components/ui/card"
-import {
-  Code2, Database, Server, Cpu, Globe, Smartphone, Monitor, Cloud, Shield,
-  LineChart, Settings, Layers, Briefcase, PenTool, FileCode, Zap, Check, ArrowRight
-} from "lucide-react"
+import { Code2, Check, ArrowRight } from "lucide-react"
+import { getServiceIconComponent, serviceIconMap } from "@/lib/service-icon-map"
 
 function getServiceKey(title: string): "automation" | "mobile" | "infra" | "web" {
   const lower = title.toLowerCase()
@@ -48,42 +46,10 @@ export default function Services() {
 
   const getServiceIcon = (iconName: string) => {
     const iconClass = "h-10 w-10 text-blue-500 filter drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
-    switch (iconName) {
-      case "Code":
-        return <Code2 className={iconClass} />
-      case "Server":
-        return <Server className={iconClass} />
-      case "Database":
-        return <Database className={iconClass} />
-      case "Cpu":
-        return <Cpu className={iconClass} />
-      case "Globe":
-        return <Globe className={iconClass} />
-      case "Smartphone":
-        return <Smartphone className={iconClass} />
-      case "Monitor":
-        return <Monitor className={iconClass} />
-      case "Cloud":
-        return <Cloud className={iconClass} />
-      case "Shield":
-        return <Shield className={iconClass} />
-      case "LineChart":
-        return <LineChart className={iconClass} />
-      case "Settings":
-        return <Settings className={iconClass} />
-      case "Layers":
-        return <Layers className={iconClass} />
-      case "Briefcase":
-        return <Briefcase className={iconClass} />
-      case "PenTool":
-        return <PenTool className={iconClass} />
-      case "FileCode":
-        return <FileCode className={iconClass} />
-      case "Zap":
-        return <Zap className={iconClass} />
-      default:
-        return <Code2 className={iconClass} />
-    }
+    // "Code" y cualquier nombre no mapeado usan Code2 (no Code) — discrepancia
+    // ya existente en producción, documentada en lib/service-icon-map.ts.
+    const Icon = iconName !== "Code" && iconName in serviceIconMap ? getServiceIconComponent(iconName) : Code2
+    return <Icon className={iconClass} />
   }
 
   // Si no está montado, renderizamos una estructura vacía o con placeholders para evitar mismatch
@@ -144,20 +110,23 @@ export default function Services() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.05 * index }}
                   whileHover={{
-                    scale: 1.02,
-                    rotateX: 5,
-                    rotateY: -5,
-                    transition: { duration: 0.2 }
+                    scale: 1.03,
+                    y: -4,
+                    transition: { duration: 0.15, ease: "easeOut" }
                   }}
-                  style={{ perspective: 1000 }}
                   viewport={{ once: true }}
                   className="h-full relative group"
                 >
-                  <Card className="bg-zinc-900/40 border border-white/10 backdrop-blur-md hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all duration-300 flex flex-col h-full relative z-10 overflow-visible">
-                    <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-colors duration-300 -z-10 rounded-xl" />
+                  <Card className="bg-zinc-900/40 border border-white/10 backdrop-blur-md hover:border-blue-500/50 transition-colors duration-200 flex flex-col h-full relative z-10 overflow-visible">
+                    {/* Glow con opacidad fija animada (compositor) en vez de animar el blur del shadow (repaint) */}
+                    <div className="absolute inset-0 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.2)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10 pointer-events-none" />
+                    <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-colors duration-200 -z-10 rounded-xl" />
                     <CardContent className="pt-6 flex flex-col h-full">
                       <div className="flex flex-col items-center text-center h-full">
-                        <div className="mb-4 p-3 rounded-lg bg-blue-500/10 flex-shrink-0 relative group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-shadow duration-300">{getServiceIcon(service.icon)}</div>
+                        <div className="mb-4 p-3 rounded-lg bg-blue-500/10 flex-shrink-0 relative">
+                          {getServiceIcon(service.icon)}
+                          <div className="absolute inset-0 rounded-lg shadow-[0_0_15px_rgba(59,130,246,0.5)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+                        </div>
 
                         <div className="min-h-[64px] flex items-center justify-center text-center w-full mb-2">
                           <h3 className="text-xl font-bold text-blue-400">{service.title}</h3>
@@ -181,7 +150,7 @@ export default function Services() {
                               sessionStorage.setItem("jevy_initial_service", getServiceKey(service.title))
                             } catch {}
                           }}
-                          className="mt-auto w-full py-3 px-2 bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-400 text-blue-400 hover:text-white text-[11px] font-black uppercase tracking-wider transition-all duration-300 rounded flex items-center justify-center group/btn"
+                          className="mt-auto w-full py-3 px-2 bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-400 text-blue-400 hover:text-white text-[11px] font-black uppercase tracking-wider transition-colors duration-200 rounded flex items-center justify-center group/btn"
                         >
                           {(() => {
                             switch (getServiceKey(service.title)) {
