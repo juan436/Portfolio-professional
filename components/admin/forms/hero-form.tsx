@@ -6,6 +6,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useModifiedFieldsForm } from "@/hooks/use-modified-fields-form"
 
+/**
+ * Form de la sección Hero del Admin (título/subtítulo/descripción/imagen de perfil).
+ * Recibe: `content: HeroContent` + `onChange`.
+ * Produce: campos controlados vía `useModifiedFieldsForm`.
+ */
 // Definir la interfaz para la estructura de datos de Hero
 export interface HeroContent {
   title: string

@@ -13,6 +13,12 @@ import { TestimonialMetrics } from "@/components/projects/testimonial-metrics"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 
+/**
+ * Vista de detalle de un proyecto web/mobile/infra_backend (`/projects/[slug]`).
+ * Recibe: `project` (crudo, con traducciones) + `testimonials`/`resultsMetrics`.
+ * Produce: galería de imágenes, reto/solución, cómo lo trabajé, decisiones técnicas, seguridad,
+ * detalles específicos por tipo (infra/sistema/ecommerce/mobile), diagrama de despliegue, métricas y testimonios.
+ */
 interface RawProject {
   _id: string
   title: string

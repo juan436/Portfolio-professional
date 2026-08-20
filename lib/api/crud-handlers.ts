@@ -4,6 +4,13 @@ import type { Model } from 'mongoose';
 
 type RouteParams = { params: Promise<{ id: string }> };
 
+/**
+ * Fábricas de handlers CRUD para las rutas API de Admin (`app/api/*\/route.ts`)
+ * — reemplazan el mismo find/create/update/delete copiado en cada par de rutas.
+ * `createListHandlers` → GET (lista) + POST; `createItemHandlers` → GET/PATCH/DELETE por id.
+ * Recibe: `Model` de Mongoose + opciones de sort/validación/mensajes por dominio.
+ * Produce: `{ GET, POST }` / `{ GET, PATCH, DELETE }`, listos para `export const` en la route.
+ */
 interface ListHandlersOptions {
   Model: Model<any>;
   sort?: Record<string, 1 | -1>;

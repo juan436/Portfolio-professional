@@ -18,6 +18,12 @@ import { Check, Send, Sparkles, Cog } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+/**
+ * Diagrama de flujo interactivo (React Flow) para probar en vivo una automatización.
+ * Recibe: `flow: AutomationFlow` (icon/title/description/steps/demoPlaceholder/demoOutputTemplate) + labels traducidos.
+ * Procesa: el usuario escribe un input y dispara `runFlow`, que avanza un nodo por paso cada `STEP_DELAY_MS`.
+ * Produce: canvas de React Flow (trigger → steps → resultado), con el output final armado desde `demoOutputTemplate`.
+ */
 const X_SPACING = 260
 const Y_STAGGER = 150
 const STEP_DELAY_MS = 900

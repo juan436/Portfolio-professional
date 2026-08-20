@@ -7,6 +7,13 @@ import { RobotWolf } from "./robot-wolf"
 import { WelcomeText } from "./welcome-text"
 import { welcomeOverlaySignal } from "@/lib/welcome-overlay-signal"
 
+/**
+ * Overlay de bienvenida de primera visita (pantalla completa, 5s, solo una vez por sesión).
+ * Recibe: nada.
+ * Procesa: marca `hasVisitedBefore` en sessionStorage y avisa a `welcomeOverlaySignal` (lo lee `WolfGuide`
+ * para no aparecer encima del overlay).
+ * Produce: `null` en visitas repetidas; si no, `RobotWolf` + `WelcomeText` a pantalla completa.
+ */
 export default function WelcomeAnimation() {
   const [showAnimation, setShowAnimation] = useState(false)
   const { t } = useLanguage()

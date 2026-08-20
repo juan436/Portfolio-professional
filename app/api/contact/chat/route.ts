@@ -9,6 +9,18 @@ import { buildClosingTool, normalizeClosing, isReadyToClose } from '@/lib/closin
 import { closeConversation, type SchedulingData } from '@/lib/closing-actions';
 import { isRateLimited, getClientIp } from '@/lib/rate-limit';
 
+/**
+ * `/api/contact/chat` — POST, motor conversacional de Jevy (el endpoint más
+ * complejo del sitio).
+ * Recibe: `{ messages, service?, sessionId, alreadyMatched, attachmentsContext? }`.
+ * Procesa por turno: rate-limit por IP + tope de turnos por sesión; arma el system
+ * prompt con reglas de tono/dominio; a partir del 2do mensaje corre extracción de
+ * matching (function calling + reintento si hay señal parcial, ver lib/matching.ts);
+ * a partir del 3ro intenta extracción de cierre (lib/closing.ts) y si ya hay contacto
+ * completo guarda Lead/JobOffer + genera informe (lib/closing-actions.ts); siempre
+ * pide la respuesta charlada a DeepSeek y registra tokens/llamadas (JevyChatStat).
+ * Produce: `{ success, reply, matches, closed, schedulingData }`.
+ */
 // Tope por IP: una charla real hace ~1 request por turno, con reintentos de
 // adjuntos/errores incluidos esto da margen de sobra sin dejar la puerta
 // abierta a flood. Tope por sesión: evita que una sola charla (aunque venga

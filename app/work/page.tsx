@@ -4,6 +4,12 @@ import Projects from "@/components/projects"
 import Automations from "@/components/automations"
 import Agents from "@/components/agents"
 
+/**
+ * Página `/work` (Server Component) — resumen de las 3 categorías con lista fija (web/mobile/infra_backend leídas por `Projects`).
+ * Recibe: nada.
+ * Procesa: trae automatizaciones y agentes en paralelo.
+ * Produce: `WorkIntro` + `Projects` + `Automations` + `Agents`.
+ */
 export default async function WorkPage() {
   const [automations, agents] = await Promise.all([
     getProjectsByCategory("automatizacion"),

@@ -12,6 +12,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 
+/**
+ * Diálogo genérico crear/editar del Admin — envuelve `children` (el form real) con header/footer estándar.
+ * Recibe: `isOpen`/`onClose`/`onSubmit` + título/descripción/labels/`isLoading` + `children`.
+ * Produce: modal con el form adentro, botón submit con spinner mientras `isLoading`.
+ */
 interface FormDialogProps {
   isOpen: boolean
   onClose: () => void

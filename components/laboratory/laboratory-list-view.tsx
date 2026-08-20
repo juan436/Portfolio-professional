@@ -15,6 +15,11 @@ const slideVariants = {
   exit: (direction: number) => ({ opacity: 0, x: direction >= 0 ? -60 : 60 }),
 }
 
+/**
+ * Página `/laboratory` (client) — carrusel paginado de expedientes (2 por página).
+ * Recibe: `labProjects: LabExpedienteProject[]` (crudo, del Server Component).
+ * Produce: `LabIntro` + `LabExpedienteCard` x2 con transición de slide + controles prev/next.
+ */
 export function LaboratoryListView({ labProjects }: { labProjects: LabExpedienteProject[] }) {
   const { language, t } = useLanguage()
   const statusLabels: Record<string, string> = {

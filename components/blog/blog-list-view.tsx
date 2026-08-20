@@ -21,6 +21,11 @@ interface BlogPost {
 const LOCALES: Record<string, string> = { es: "es-ES", en: "en-US", fr: "fr-FR", it: "it-IT" }
 const PAGE_SIZE = 6
 
+/**
+ * Página `/blog` (client) — grilla paginada de posts publicados.
+ * Recibe: `posts: BlogPost[]` (crudo, del Server Component).
+ * Produce: grid de cards traducidas al idioma actual + paginación.
+ */
 export function BlogListView({ posts }: { posts: BlogPost[] }) {
   const { language, t } = useLanguage()
   const [page, setPage] = useState(1)

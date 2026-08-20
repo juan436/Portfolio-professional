@@ -10,6 +10,11 @@ import { JevyAboutPanel, JevyGuidePanel, AttachmentsCard } from "./side-panels"
 const VALID_SERVICES = ["web", "mobile", "automation", "infra", "other"] as const
 type ServiceKey = (typeof VALID_SERVICES)[number]
 
+/**
+ * Sección /contact — layout de 3 columnas (paneles de Jevy + chat + guía) con estado de adjuntos compartido.
+ * Recibe: nada (lee `?servicio` guardado en sessionStorage por la card de Servicios).
+ * Produce: `JevyAboutPanel` + `AttachmentsCard` + `JevyChat` + `JevyGuidePanel`.
+ */
 export default function Contact() {
   // No usamos query string (?servicio=...) a propósito: la URL de /contact
   // debe quedar limpia al venir desde una card de Servicio. El dato viaja

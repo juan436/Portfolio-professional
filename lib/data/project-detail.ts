@@ -3,6 +3,12 @@ import Project from "@/models/project.model"
 import Testimonial from "@/models/testimonial.model"
 import ProjectStats from "@/models/project-stats.model"
 
+/**
+ * Lectura server-only del detalle de un proyecto (project + testimonios + métricas).
+ * Recibe: `getProjectDetail(slug)`.
+ * Procesa: 1 query por slug + 2 queries en paralelo (testimonios "resultado" ligados, stats).
+ * Produce: `ProjectDetailData` o `null` si no existe/hay error de consulta.
+ */
 export interface ProjectDetailData {
   project: any
   testimonials: any[]

@@ -10,6 +10,11 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
+/**
+ * Diálogo de confirmación genérico para acciones destructivas del Admin (ej. borrar).
+ * Recibe: `isOpen`/`onClose`/`onConfirm` + título/descripción/labels/variant.
+ * Produce: modal con botón cancelar + confirmar.
+ */
 interface ConfirmationDialogProps {
   isOpen: boolean
   onClose: () => void

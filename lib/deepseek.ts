@@ -1,3 +1,8 @@
+/**
+ * Cliente HTTP de la API de DeepSeek (chat completions).
+ * Recibe: `askDeepSeek(messages)` para charla libre; `askDeepSeekTool(messages, tool)` para function calling.
+ * Produce: `{ content, usage }` (charla) o `{ result, usage }` (tool call, `result` parseado del JSON de argumentos).
+ */
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
 export interface DeepSeekMessage {

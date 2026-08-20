@@ -11,6 +11,11 @@ import { useIsMounted } from "@/hooks/use-is-mounted"
 import { HeroSocialLinks } from "./hero-social-links"
 import { HeroAnimation } from "./hero-animation"
 
+/**
+ * Sección Hero del home (primer bloque visible).
+ * Recibe: nada (lee `content.hero`/`translatedContent.hero` de los contexts).
+ * Produce: título/subtítulo/descripción + CTAs + `HeroSocialLinks` + `HeroAnimation`.
+ */
 export default function Hero() {
   const { t, language } = useLanguage()
   const { translatedContent } = useTranslatedContent()

@@ -3,6 +3,12 @@
 import { useState } from "react"
 import { AnimatePresence, motion, type PanInfo, type Variants } from "framer-motion"
 
+/**
+ * Carrusel de imágenes tipo "mazo de cartas" (swipe) para el detalle de un proyecto.
+ * Recibe: `images: string[]` + `alt`.
+ * Procesa: al soltar un swipe que supera `SWIPE_THRESHOLD`, rota el orden (la de adelante pasa al fondo).
+ * Produce: `null` si no hay imágenes; si no, hasta 3 cards apiladas, la de adelante arrastrable si hay 2+.
+ */
 interface ProjectImageCarouselProps {
   images: string[]
   alt: string

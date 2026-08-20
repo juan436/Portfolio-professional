@@ -1,6 +1,11 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+/**
+ * Combina clases de Tailwind resolviendo conflictos (mismo patrón shadcn/ui).
+ * @param inputs - Clases condicionales (string, objeto, array, etc.).
+ * @returns `string` de clases final, sin duplicados/conflictos.
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

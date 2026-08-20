@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 
+/** Pose SVG "idle" (quieto, respirando) del lobo — usada por `WolfGuide`. Recibe: nada. Produce: el grupo SVG. */
 export const IdlePose = () => {
   return (
     <motion.g animate={{ y: [0, -3, 0] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}>

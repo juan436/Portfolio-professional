@@ -2,6 +2,11 @@
 
 import { motion } from "framer-motion"
 
+/**
+ * Encabezado de `/laboratory` — título/subtítulo + leyenda de los 4 estados posibles.
+ * Recibe: `title`/`subtitle`/`legendHeading`/`statusLabels` (traducidos por el caller).
+ * Produce: header + leyenda de estados con su color asociado.
+ */
 interface LabIntroProps {
   title: string
   subtitle: string

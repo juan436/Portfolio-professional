@@ -4,8 +4,11 @@ import { Content, Experience, OtherSkill, Project } from '@/contexts/content/typ
 import { LanguageCode } from '@/contexts/language-context';
 
 /**
- * Hook personalizado que combina useLanguage y useContent para obtener
- * el contenido traducido según el idioma seleccionado
+ * Combina `useLanguage` y `useContent` para resolver el contenido traducido.
+ * Recibe: nada (lee ambos contexts).
+ * Procesa: para cada sección (hero/about/contact/experience/projects/otherSkills/services),
+ * si el idioma no es "es" busca el campo en `translations[langCode]`, si no cae al original.
+ * Produce: `{ translatedContent, currentLanguage }`.
  */
 export const useTranslatedContent = () => {
   const { language } = useLanguage();

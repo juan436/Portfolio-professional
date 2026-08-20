@@ -4,6 +4,11 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Code, Server, Database, Layers, RotateCcw } from "lucide-react"
 
+/**
+ * Cara "código" del avatar del Hero — flip 3D al hacer click sobre la foto de perfil.
+ * Recibe: `codeLines: string[]` (líneas ya armadas por el caller) + `onClose`.
+ * Produce: card animada con partículas de fondo, líneas de código y botón "volver".
+ */
 interface CodeCardProps {
   codeLines: string[]
   onClose: () => void

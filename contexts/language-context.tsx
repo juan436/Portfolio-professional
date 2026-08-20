@@ -7,6 +7,14 @@ import LanguageDetector from "i18next-browser-languagedetector"
 import Backend from "i18next-http-backend"
 import esTranslation from "@/public/locales/es/translation.json"
 
+/**
+ * Provider de idioma — envuelve i18next/react-i18next para todo el sitio.
+ * Recibe: `children`.
+ * Procesa: detecta idioma (localStorage/navigator) y sincroniza con i18next; "es" va embebido
+ * síncrono (ver comentario de `.init()` abajo) para que el primer render del server no dispare
+ * mismatch de hidratación.
+ * Produce: `LanguageContext.Provider` con `{ language, setLanguage, t }`.
+ */
 // Definir los idiomas disponibles
 export type LanguageCode = "es" | "en" | "it" | "fr"
 

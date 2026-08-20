@@ -11,6 +11,11 @@ import {
 } from "@/components/ui/pagination"
 import { useLanguage } from "@/hooks/use-language"
 
+/**
+ * Paginación compartida por las listas del sitio (proyectos/automatizaciones/agentes/blog/certificados/laboratorio).
+ * Recibe: `currentPage`/`totalPages`/`onPageChange`.
+ * Produce: `null` si hay 1 página o menos; si no, prev/next + números con "…" cuando hay más de 7 páginas.
+ */
 interface PaginationControlsProps {
   currentPage: number
   totalPages: number

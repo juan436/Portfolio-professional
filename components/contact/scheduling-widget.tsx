@@ -38,6 +38,12 @@ interface Slot {
 type Status = "loading" | "picking" | "booking" | "success" | "conflict" | "failed" | "unavailable"
 type View = "month" | "day"
 
+/**
+ * Widget de agenda embebido en una respuesta del chat de Jevy — calendario en 2 pasos (día → hora).
+ * Recibe: `schedulingData` (armado por lib/closing-actions.ts) + `texts` traducidos.
+ * Procesa: trae disponibilidad de `/api/contact/schedule` (`action:'availability'`), reserva con `action:'book'`.
+ * Produce: estado loading/picking/booking/success/conflict/failed/unavailable según la respuesta del webhook.
+ */
 interface SchedulingWidgetProps {
   schedulingData: SchedulingData
   texts: {

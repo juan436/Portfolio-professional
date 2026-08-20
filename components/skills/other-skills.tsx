@@ -4,6 +4,11 @@ import { motion } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
 import type { OtherSkill } from "@/contexts/content/types"
 
+/**
+ * Lista de "otras habilidades" (sección Habilidades del home) — badges sueltos, sin categoría.
+ * Recibe: `otherSkills: OtherSkill[]` + `translatedTexts`.
+ * Produce: fila de badges con el nombre traducido al idioma actual.
+ */
 interface OtherSkillsProps {
   otherSkills: OtherSkill[]
   translatedTexts: {

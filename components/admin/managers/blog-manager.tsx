@@ -17,6 +17,11 @@ import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialo
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { TextField, TextAreaField, StringListField, WorkProcessEditor } from "@/components/admin/forms/project-form-fields"
 
+/**
+ * Manager de Blog del Admin — lista + panel de crear/editar (Server Actions, lib/actions/blog.ts).
+ * Recibe: nada (carga su propia lista al montar).
+ * Produce: CRUD completo de posts con selector lateral + form con bloques de contenido.
+ */
 interface ContentBlock {
   kind: "paragraph" | "steps"
   text?: string

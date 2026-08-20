@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/conection';
 import Testimonial from '@/models/testimonial.model';
 
+/**
+ * `/api/testimonials` — GET (lista, filtrable por `type`/`ref`) + POST (crear).
+ * Nota: el POST real de Admin ya vive en Server Actions (lib/actions/testimonials.ts).
+ */
 // GET: Obtener testimonios, filtrados opcionalmente por tipo y/o a qué proyecto/automatización están vinculados
 export async function GET(request: Request) {
   await dbConnect();

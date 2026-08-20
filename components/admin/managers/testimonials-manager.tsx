@@ -18,6 +18,11 @@ import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialo
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { TextField, TextAreaField } from "@/components/admin/forms/project-form-fields"
 
+/**
+ * Manager de Testimonios del Admin — lista + panel de crear/editar (Server Actions, lib/actions/testimonials.ts).
+ * Recibe: nada (carga testimonios + catálogo de proyectos al montar).
+ * Produce: CRUD completo, con repeater de `links[]` a proyectos/automatizaciones para testimonios tipo "resultado".
+ */
 interface TestimonialLink {
   type: "proyecto" | "automatizacion"
   ref: string

@@ -2,8 +2,9 @@ import { useContext } from 'react';
 import { LanguageContext } from '@/contexts/language-context';
 
 /**
- * Hook personalizado para usar el contexto de idioma
- * Proporciona acceso al idioma actual, la función para cambiarlo y la función de traducción
+ * Hook para acceder al contexto de idioma.
+ * Recibe: nada (lee el `LanguageContext`).
+ * Produce: `{ language, setLanguage, t }`; lanza si se usa fuera de `LanguageProvider`.
  */
 export const useLanguage = () => {
   const context = useContext(LanguageContext);

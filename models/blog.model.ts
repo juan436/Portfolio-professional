@@ -6,6 +6,11 @@ interface ContentBlock {
   items?: string[];
 }
 
+/**
+ * Modelo Mongoose de post de blog.
+ * Recibe: title/slug/excerpt/body (bloques paragraph|steps)/tags/status, traducciones opcionales.
+ * Produce: `BlogPost`, listo para `find`/`create` contra la colección `blogposts`.
+ */
 // body como bloques (mismo patrón que Project.workProcess/labDetails.testing)
 // en vez de markdown/HTML — sin librería nueva, reusa WorkProcessEditor del
 // Admin y el mismo criterio de "texto estructurado simple" que ya usa el resto

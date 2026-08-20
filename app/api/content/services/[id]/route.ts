@@ -3,6 +3,11 @@ import dbConnect from '@/lib/db/conection';
 import Content from '@/models/content.model';
 import mongoose from 'mongoose';
 
+/**
+ * `/api/content/services/[id]` — DELETE de un servicio embebido en el documento único de Content.
+ * Recibe: `params.id` (ObjectId del sub-documento a borrar).
+ * Produce: `{ success, message }`; 400 si el id es inválido, 404 si no existe.
+ */
 // DELETE: Eliminar un servicio específico por su ID
 export async function DELETE(
   request: Request,

@@ -6,6 +6,12 @@ import Skill from "@/models/skill.model"
 import { requireAdminSession } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
 
+/**
+ * Server Actions CRUD de habilidades técnicas (Admin).
+ * Recibe: `{ name, icon, colored?, category }` en create/update; `id` en update/delete.
+ * Procesa: traduce `name` a en/fr/it antes de guardar.
+ * Produce: la skill creada/actualizada (plana) / `true` al borrar.
+ */
 function revalidateSkills() {
   revalidatePath("/")
 }

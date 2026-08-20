@@ -1,6 +1,11 @@
 import mongoose, { Document } from 'mongoose';
 import { attachmentFields, type IAttachment } from '@/models/shared-fields';
 
+/**
+ * Modelo Mongoose de Lead (cliente potencial levantado por Jevy).
+ * Recibe: datos de contacto + levantamiento (problem/whatTheyWant/prioridades/etc.), adjuntos y transcript.
+ * Produce: `Lead`, listo para `find`/`create` contra la colección `leads`.
+ */
 // Lead = solo cliente. El reclutador vive en su propia colección (JobOffer)
 // — los datos son demasiado distintos como para forzarlos en campos
 // genéricos compartidos. Ver dev-aguila-azul/vault/portfolio:

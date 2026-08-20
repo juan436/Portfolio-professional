@@ -18,6 +18,11 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
+/**
+ * Mapa nombre→ícono Lucide para la sección Servicios del Admin/sitio.
+ * Recibe: `getServiceIconComponent(name)`.
+ * Produce: `LucideIcon` (cae a `Code` si `name` no está mapeado).
+ */
 // Mismo patrón que flowIconMap (components/automations/flow-card.tsx) y
 // agentIconMap (components/agents/agent-icon-map.ts). Reemplaza el switch de
 // 16 casos que estaba copiado en service-icon-selector.tsx y services-form.tsx

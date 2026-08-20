@@ -34,6 +34,13 @@ const CHIP_KEYS = ["app", "automation", "recruiter"] as const
 const SERVICES_WITH_GREETING = ["web", "mobile", "automation", "infra"] as const
 type ServiceKey = (typeof SERVICES_WITH_GREETING)[number]
 
+/**
+ * Chat conversacional de Jevy (`/contact`) — el componente con más estado del sitio.
+ * Recibe: `initialService?` (venido de una card de Servicios, saludo/mensaje inicial contextual) + `attachments` (compartido con `AttachmentsCard`).
+ * Procesa: persiste la charla en localStorage, timers de inactividad (aviso a los 5min, cierre a los 30s más),
+ * manda cada mensaje a `/api/contact/chat` y renderiza matches de proyecto / widget de agenda que vengan en la respuesta.
+ * Produce: la ventana de chat completa (historial, chips iniciales, input, drag&drop de adjuntos).
+ */
 interface JevyChatProps {
   initialService?: string
   attachments: UseAttachmentsReturn

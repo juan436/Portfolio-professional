@@ -15,6 +15,11 @@ import ContactForm from "@/components/admin/forms/contact-form"
 // Importar hook personalizado
 import { useContentEditor } from "@/hooks/admin/entities/content/use-content-editor"
 
+/**
+ * Manager de Contenido del Admin — tabs Hero/About/Servicios/Contacto, cada uno delegado a su form.
+ * Recibe: nada (toda la lógica vive en `useContentEditor`).
+ * Produce: el form de la tab activa + botón "Guardar" único (solo activo si `hasChanges`).
+ */
 export default function ContentEditor() {
   const {
     // Estados

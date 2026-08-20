@@ -11,6 +11,11 @@ export interface PredefinedImage {
   description: string
 }
 
+/**
+ * Galería de URLs de imágenes predefinidas con botón "copiar" (Admin).
+ * Recibe: `images: PredefinedImage[]`.
+ * Produce: grid de cards; copiar URL al portapapeles + toast de confirmación/error.
+ */
 interface PredefinedImagesProps {
   images: PredefinedImage[]
 }

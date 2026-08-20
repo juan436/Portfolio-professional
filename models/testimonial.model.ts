@@ -1,5 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose de testimonio de cliente.
+ * Recibe: autor/rol/foto/contenido/rating y `links[]` a los proyectos/automatizaciones que respalda.
+ * Produce: `Testimonial`, listo para `find`/`create` contra la colección `testimonials`.
+ */
 export interface ITestimonial extends Document {
   author: string;
   role?: string;

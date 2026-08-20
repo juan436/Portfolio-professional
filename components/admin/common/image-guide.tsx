@@ -18,6 +18,11 @@ export interface ImageType {
   }
 }
 
+/**
+ * Card informativa con recomendaciones (dimensiones/formato/tamaño/ubicación) para un tipo de imagen del Admin.
+ * Recibe: `imageType: ImageType`.
+ * Produce: card de solo lectura, sin estado.
+ */
 interface ImageGuideProps {
   imageType: ImageType
 }

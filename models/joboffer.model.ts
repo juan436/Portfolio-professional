@@ -2,6 +2,11 @@ import mongoose, { Document } from 'mongoose';
 import type { IAdditionalDetail } from '@/models/lead.model';
 import { attachmentFields, type IAttachment } from '@/models/shared-fields';
 
+/**
+ * Modelo Mongoose de JobOffer (oferta de reclutador levantada por Jevy).
+ * Recibe: datos de contacto + oferta (companyName/role/modality/contractType/etc.), adjuntos y transcript.
+ * Produce: `JobOffer`, listo para `find`/`create` contra la colección `jobOffers`.
+ */
 // JobOffer = reclutador. Separado de Lead a propósito (charla 2026-08-13,
 // dev-aguila-azul/vault/portfolio: planes/levantamiento-informacion-jevy) —
 // no matchea contra el catálogo de proyectos, no tiene sentido compartir

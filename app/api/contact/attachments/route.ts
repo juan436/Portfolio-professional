@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import { saveLeadFile } from '@/lib/uploads';
 import { isRateLimited, getClientIp } from '@/lib/rate-limit';
 
+/**
+ * `/api/contact/attachments` — POST, convierte archivos que el lead adjunta en el chat.
+ * Recibe: `FormData` con `files[]` + `sessionId`.
+ * Procesa: rate-limit por IP, reenvía cada archivo a `markdown-transformer` (`/convert`) en paralelo,
+ * guarda el original en disco (lib/uploads.ts) además de convertirlo.
+ * Produce: `{ success, results: AttachmentResult[] }` (markdown/url/error por archivo).
+ */
 const ATTACHMENTS_IP_LIMIT = 15;
 const ATTACHMENTS_IP_WINDOW_MS = 10 * 60 * 1000;
 

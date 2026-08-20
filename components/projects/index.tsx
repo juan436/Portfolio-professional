@@ -6,6 +6,12 @@ import { ProjectsGrid } from "./projects-grid"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 
+/**
+ * Sección "Proyectos" del home (categorías web/mobile/infra_backend).
+ * Recibe: nada (lee `content`/`translatedContent` de los contexts).
+ * Procesa: combina el contenido traducido con tags/imagen del contenido original (que no viaja traducido).
+ * Produce: `ProjectsGrid` con tabs por categoría + contador total.
+ */
 export default function Projects() {
   const { content, isLoading } = useContent()
   const { translatedContent } = useTranslatedContent()

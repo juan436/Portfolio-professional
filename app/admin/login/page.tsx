@@ -13,6 +13,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
 import { authenticateUser } from "@/services/client/auth"
 
+/**
+ * Página de login del Admin.
+ * Recibe: nada (form propio de username/password).
+ * Procesa: llama `authenticateUser`, si es exitoso setea cookies visibles y redirige a `/admin/dashboard`.
+ * Produce: form de login + mensaje de error si falla.
+ */
 export default function LoginPage() {
   const [credentials, setCredentials] = useState({
     username: "",

@@ -1,6 +1,12 @@
 import type { ILead, IAttachment, IAdditionalDetail } from '@/models/lead.model';
 import type { IJobOffer } from '@/models/joboffer.model';
 
+/**
+ * Arma el markdown del informe de levantamiento (mismo contenido que el PDF de lib/pdf.ts).
+ * Recibe: `Partial<ILead>` o `Partial<IJobOffer>` + datos de match (solo Lead).
+ * Produce: `buildLeadMarkdown`/`buildJobOfferMarkdown` (string markdown) y los labels
+ * `modalityLabel`/`contractTypeLabel` para traducir los enums de reclutador.
+ */
 // Arma el markdown completo del levantamiento — el mismo contenido que se
 // convierte a PDF (lib/pdf.ts) y se manda por correo a Juan. Ver
 // dev-aguila-azul/vault/portfolio: planes/levantamiento-informacion-jevy.

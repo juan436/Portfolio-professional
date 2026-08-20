@@ -24,6 +24,7 @@ function valueSizeClass(value: string): string {
   return "text-sm md:text-base"
 }
 
+/** Tile de una métrica — el tamaño de fuente se adapta al largo del valor. */
 function BigNumberTile({ label, value, index }: { label: string; value: string; index: number }) {
   return (
     <motion.div
@@ -48,6 +49,11 @@ function BigNumberTile({ label, value, index }: { label: string; value: string; 
   )
 }
 
+/**
+ * Métricas de resultado de un proyecto/automatización (detalle de proyecto).
+ * Recibe: `metrics: Metric[]`.
+ * Produce: `null` si vacío; grid centrado si hay ≤5; carrusel con flechas si hay más.
+ */
 export function TestimonialMetrics({ metrics }: { metrics: Metric[] }) {
   if (!metrics || metrics.length === 0) return null
 

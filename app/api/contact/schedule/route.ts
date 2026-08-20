@@ -4,6 +4,12 @@ import { isRateLimited, getClientIp } from '@/lib/rate-limit';
 const SCHEDULE_IP_LIMIT = 20;
 const SCHEDULE_IP_WINDOW_MS = 10 * 60 * 1000;
 
+/**
+ * `/api/contact/schedule` — proxy server-side al webhook de n8n que agenda la cita.
+ * Recibe: `{ action: 'availability' }` o `{ action: 'book', ...SchedulingData, startISO, endISO }`.
+ * Procesa: rate-limit por IP, agrega el secreto `x-javy-secret` (nunca llega al navegador), reenvía tal cual.
+ * Produce: la respuesta del webhook de n8n pasada directo (slots disponibles, o confirmación/409/500 del booking).
+ */
 // Proxy server-side al webhook real de n8n (flujo-agenda-cita-leads,
 // "Jevy — Agenda"). El secreto (x-javy-secret) nunca llega al navegador.
 // Contrato exacto sacado de arquitectura/workflow-agenda.json en ese vault:

@@ -11,6 +11,13 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { CATEGORY_LABELS, CATEGORY_ORDER, type AdminProject, type ProjectCategoryValue } from "@/hooks/admin/entities/projects/types"
 import { StringListField, TextField, TextAreaField, PairListEditor, WorkProcessEditor } from "./project-form-fields"
 
+/**
+ * Form de crear/editar/ver un Proyecto (Admin) — cubre las ~25 campos del modelo real,
+ * en secciones plegables, con bloques específicos por categoría (lab/automatización/agente/etc.).
+ * Recibe: `project`/`editMode`/`setEditMode`/`onSave`/`onCancel?`/`isNewProject?`/`isLoading?`/`category?`.
+ * Procesa: `set`/`setTop`/`setNested` actualizan por path y marcan el campo de primer nivel como modificado.
+ * Produce: al guardar edición, un patch solo con los campos realmente tocados (no el objeto completo).
+ */
 interface ProjectFormProps {
   project: AdminProject | null
   editMode: boolean

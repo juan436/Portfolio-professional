@@ -3,6 +3,12 @@ import dbConnect from '@/lib/db/conection';
 import StatType from '@/models/stat-type.model';
 import ProjectStats from '@/models/project-stats.model';
 
+/**
+ * `/api/stat-types/summary` — GET, consumido por el home para las cifras acumuladas.
+ * Recibe: nada.
+ * Procesa: por cada `StatType`, suma la parte numérica de todas las métricas que lo referencian.
+ * Produce: solo los tipos con al menos una métrica real (`count > 0`).
+ */
 // Saca la parte numérica de un valor libre ("24h", "-40%", "1,200+") para poder sumarlo.
 function extractNumber(value: string): number | null {
   const cleaned = value.replace(/,/g, '');

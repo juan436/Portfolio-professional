@@ -8,6 +8,8 @@ import type { Experience } from "@/components/admin/forms/experience-form";
  * Hook para gestionar la experiencia laboral — reescrito para usar Server
  * Actions (lib/actions/experience.ts), Fase 4 (auditoría 2026-08-19). Carga
  * inicial propia, ya no depende de ContentProvider.
+ * Recibe: nada.
+ * Produce: lista de experiencia + flujo de crear/editar/borrar con diálogo de confirmación.
  */
 export function useExperienceActions() {
   const toastNotifications = useToastNotifications();

@@ -1,6 +1,11 @@
 import React from 'react';
 import Script from 'next/script';
 
+/**
+ * Structured data (schema.org Person) para SEO, inyectado como `<script type="application/ld+json">`.
+ * Recibe: nada (datos fijos del perfil).
+ * Produce: `<Script>` con el JSON-LD embebido.
+ */
 export default function JsonLd() {
   const jsonLd = {
     '@context': 'https://schema.org',

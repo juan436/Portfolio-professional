@@ -1,3 +1,8 @@
+/**
+ * Punto de entrada único para importar modelos Mongoose.
+ * Recibe: nada.
+ * Produce: re-exporta todos los modelos (`User`, `Content`, `Project`, etc.) desde un solo path.
+ */
 export { default as User } from './user.model';
 export { default as Content } from './content.model';
 export { default as Project } from './project.model';

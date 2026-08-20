@@ -16,6 +16,11 @@ import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialo
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { TextField, TextAreaField, StringListField } from "@/components/admin/forms/project-form-fields"
 
+/**
+ * Manager de Certificaciones del Admin — lista + panel de crear/editar (Server Actions, lib/actions/certificates.ts).
+ * Recibe: nada (carga su propia lista al montar).
+ * Produce: CRUD completo con selector lateral + form.
+ */
 interface AdminCertificate {
   _id: string
   title: string

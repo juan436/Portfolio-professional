@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/conection';
 import Content from '@/models/content.model';
 
+/**
+ * `/api/content` — CRUD del documento único de contenido de la home.
+ * GET: sin body, devuelve el contenido vigente. POST: crea el documento (solo si no existe todavía).
+ * PATCH: merge recursivo del body sobre el documento existente (services[] se matchea por `_id`).
+ * Nota: las mutaciones reales del Admin ya viven en Server Actions (lib/actions/content.ts);
+ * esta ruta queda como API pública/legacy de solo lectura en la práctica (GET).
+ */
 // GET: Obtener todo el contenido
 export async function GET() {
   await dbConnect();

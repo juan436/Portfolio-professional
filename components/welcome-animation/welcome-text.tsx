@@ -2,6 +2,11 @@
 
 import { motion } from "framer-motion"
 
+/**
+ * Texto del overlay de bienvenida (nombre + saludo + spinner), con entrada escalonada.
+ * Recibe: `welcomeText: string` (traducido por el caller).
+ * Produce: el bloque de texto animado.
+ */
 interface WelcomeTextProps {
   welcomeText: string
 }

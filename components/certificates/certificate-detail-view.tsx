@@ -28,6 +28,11 @@ const LOCALES: Record<string, string> = {
   it: "it-IT",
 }
 
+/**
+ * Vista de detalle de una certificación (`/certificates/[slug]`).
+ * Recibe: `certificate` (crudo) o `null` si no existe.
+ * Produce: imagen + emisor/fecha/duración/stack + qué aprendí/cómo lo apliqué.
+ */
 interface CertificateDetailViewProps {
   certificate: RawCertificate | null
 }

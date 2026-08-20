@@ -6,6 +6,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Check } from "lucide-react"
 import { RobotAvatar } from "./robot-avatar"
 
+/**
+ * Card de agente (grid de /agents y sección Agentes en /work) — avatar animado + tooltip on hover.
+ * Recibe: id/slug/title/description/capabilities/subtype?/index (ya traducidos por el caller).
+ * Produce: link a `/agents/{slug}`, con hasta 3 capacidades visibles + contador "+N más".
+ */
 interface AgentCardProps {
   id: string
   slug: string

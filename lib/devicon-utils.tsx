@@ -1,11 +1,12 @@
 import React from 'react';
 
 /**
- * Renderiza un icono de Devicon con manejo especial para ciertos iconos
- * @param iconName Nombre del icono a renderizar
- * @param colored Si debe mostrarse coloreado o no
- * @param className Clases CSS adicionales para el icono
- * @returns Elemento JSX con el icono
+ * Arma la clase CSS de un ícono Devicon, con excepciones para los que no
+ * siguen el patrón regular `devicon-{nombre}-{plain|plain-wordmark}{ colored}`.
+ * @param iconName - Nombre del ícono a renderizar.
+ * @param colored - Si debe mostrarse coloreado o no.
+ * @param className - Clases CSS adicionales.
+ * @returns Elemento JSX (`<i>`) con la clase Devicon resuelta.
  */
 // Iconos cuyo nombre de clase Devicon no sigue el patrón regular
 // `devicon-{nombre}-{plain|plain-wordmark}{ colored}` — cada uno tiene su
@@ -51,10 +52,10 @@ export function renderDevIcon(
 }
 
 /**
- * Renderiza un icono de Devicon para un objeto skill
- * @param skill Objeto skill con propiedades name, icon y colored
- * @param className Clases CSS adicionales para el icono
- * @returns Elemento JSX con el icono
+ * Atajo de `renderDevIcon` para un objeto `Skill` completo.
+ * @param skill - Objeto skill con `name`/`icon`/`colored`.
+ * @param className - Clases CSS adicionales.
+ * @returns Elemento JSX con el ícono.
  */
 export function renderSkillIcon(
   skill: { name: string; icon: string; colored?: boolean },

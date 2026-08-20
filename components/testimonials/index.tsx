@@ -14,6 +14,11 @@ interface Testimonial {
   avatar?: string
 }
 
+/**
+ * Sección "Testimonios" del home — carrusel infinito con drag + auto-scroll.
+ * Recibe: nada (lee `testimonials.items` de i18next vía `returnObjects: true`).
+ * Produce: carrusel arrastrable con loop (o nada si no hay testimonios en el idioma actual).
+ */
 export default function Testimonials() {
   const { t } = useLanguage()
   const [isPaused, setIsPaused] = useState(false)

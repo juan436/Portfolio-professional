@@ -25,6 +25,11 @@ interface RawAgent {
   }
 }
 
+/**
+ * Página `/agents` (client) — grilla paginada de agentes.
+ * Recibe: `agents: RawAgent[]` (crudo, del Server Component).
+ * Produce: grid de `AgentCard` traducidas al idioma actual + paginación.
+ */
 export function AgentsListView({ agents }: { agents: RawAgent[] }) {
   const { language, t } = useLanguage()
   const [page, setPage] = useState(1)

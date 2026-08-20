@@ -8,6 +8,11 @@ import { motion } from "framer-motion"
 import LanguageSwitcher from "@/components/language-switcher"
 import type { NavEntry } from "./types"
 
+/**
+ * Navegación mobile (navbar) — botón hamburguesa + menú desplegable.
+ * Recibe: `isOpen`/`setIsOpen` (estado del padre) + `navItems: NavEntry[]`.
+ * Produce: menú que se cierra solo al elegir un link.
+ */
 interface MobileNavProps {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void

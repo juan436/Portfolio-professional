@@ -16,6 +16,9 @@ export const ACCEPTED_ATTACHMENT_TYPES =
  * Estado y lógica de los archivos que el lead adjunta en el chat de Jevy.
  * Vive en el componente padre (`Contact`) para que tanto el chat como la
  * card de la columna izquierda lean/actualicen el mismo estado.
+ * @param tooLargeMessage - Texto a mostrar si un archivo supera `MAX_ATTACHMENT_SIZE_BYTES`.
+ * @param genericErrorMessage - Texto a mostrar ante cualquier otro error de subida.
+ * @returns Estado de adjuntos + `handleFileSelect`/`buildAttachmentsContext` para subir a `/api/contact/attachments`.
  */
 export function useAttachments(tooLargeMessage: string, genericErrorMessage: string) {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([])

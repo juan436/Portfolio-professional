@@ -16,6 +16,11 @@ import {
 import "@xyflow/react/dist/style.css"
 import { Globe, ShieldCheck, Server, Database, HardDrive, Network, Box } from "lucide-react"
 
+/**
+ * Diagrama de infraestructura (React Flow, solo lectura) para el detalle de un proyecto.
+ * Recibe: `steps: DeploymentStep[]` (`{icon, label}`, orden = orden del diagrama).
+ * Produce: `null` si no hay steps; si no, nodos en zigzag conectados con flechas animadas.
+ */
 const X_SPACING = 240
 const Y_STAGGER = 110
 

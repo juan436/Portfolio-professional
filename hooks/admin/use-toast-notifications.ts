@@ -9,8 +9,9 @@ type ToastReference = {
 };
 
 /**
- * Hook para centralizar las notificaciones toast reutilizables
- * @returns Funciones para mostrar diferentes tipos de notificaciones toast
+ * Hook para centralizar las notificaciones toast reutilizables del Admin.
+ * Recibe: nada.
+ * @returns Funciones "show" y "update" para disparar/actualizar toasts de éxito, error y carga.
  */
 export function useToastNotifications() {
   const { toast } = useToast();

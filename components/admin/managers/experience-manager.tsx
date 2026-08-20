@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialog"
 
+/**
+ * Manager de Experiencia del Admin — tabla + form (toda la lógica vive en `useExperienceActions`).
+ * Recibe: nada.
+ * Produce: `ExperienceTable` (selector) + `ExperienceForm` (detalle/edición) + diálogo de borrado.
+ */
 export default function ExperienceManager() {
   // Usar el hook específico para experiencias que contiene toda la lógica
   const {

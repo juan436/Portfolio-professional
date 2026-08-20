@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 
+/** Ilustración SVG animada del lobo, para el overlay de bienvenida. Recibe: nada. Produce: el SVG. */
 export function RobotWolf() {
   return (
     <motion.div

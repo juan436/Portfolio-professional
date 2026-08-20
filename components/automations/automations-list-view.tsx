@@ -25,6 +25,11 @@ interface RawAutomation {
   }
 }
 
+/**
+ * Página `/automations` (client) — grilla paginada de automatizaciones.
+ * Recibe: `automations: RawAutomation[]` (crudo, del Server Component).
+ * Produce: grid de `FlowCard` traducidas al idioma actual + paginación.
+ */
 export function AutomationsListView({ automations }: { automations: RawAutomation[] }) {
   const { language, t } = useLanguage()
   const [page, setPage] = useState(1)

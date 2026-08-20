@@ -8,6 +8,12 @@ import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { useEffect, useState } from "react"
 import { AboutProfile } from "./about-profile"
 
+/**
+ * Sección "Sobre mí" del home.
+ * Recibe: nada (lee `content`/`translatedContent` de los contexts).
+ * Procesa: escucha el evento `contentUpdated` (compat con el flujo viejo de mutación por evento) para refrescar el estado local.
+ * Produce: `AboutProfile` + párrafos traducidos + link de descarga de CV según idioma.
+ */
 export default function About() {
   const { language } = useLanguage()
   const { content } = useContent()

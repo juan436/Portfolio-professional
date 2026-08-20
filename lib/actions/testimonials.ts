@@ -6,6 +6,12 @@ import Project from "@/models/project.model"
 import { requireAdminSession } from "@/lib/actions/shared"
 import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation"
 
+/**
+ * Server Actions CRUD de testimonios (Admin).
+ * Recibe: payload del form de Admin (incl. `links[]` a proyectos/automatizaciones) en create/update; `id` en delete.
+ * Procesa: revalida la ficha pública de cada proyecto citado en `links[]`.
+ * Produce: el testimonio creado/actualizado (plano) / `true` al borrar.
+ */
 // Un testimonio puede citar varios proyectos/automatizaciones (links[]) —
 // revalida la ficha pública de cada uno según su categoría real (no todos
 // los "proyecto" son /projects/[id]: puede ser laboratorio/agente también).

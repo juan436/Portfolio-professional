@@ -2,9 +2,12 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Sirve los archivos guardados por lib/uploads.ts (adjuntos de leads).
-// GET /api/uploads/leads/{sessionId}/{filename}
-
+/**
+ * `/api/uploads/[...path]` — sirve los archivos guardados por lib/uploads.ts (adjuntos de leads).
+ * Recibe: `params.path` (segmentos de ruta, ej. `leads/{sessionId}/{filename}`).
+ * Procesa: valida que no haya `..` y que el path resuelto quede dentro de `UPLOADS_ROOT`.
+ * Produce: el archivo con el Content-Type según extensión, o 400/404.
+ */
 const UPLOADS_ROOT = path.join(process.cwd(), 'uploads');
 
 const CONTENT_TYPES: Record<string, string> = {

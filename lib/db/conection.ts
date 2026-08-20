@@ -1,4 +1,10 @@
 import mongoose from 'mongoose';
+
+/**
+ * Conexión Mongoose cacheada en `global` (sobrevive Fast Refresh en dev).
+ * Recibe: nada.
+ * Produce: `dbConnect()` — reusa la conexión existente o crea/espera una nueva.
+ */
 const dbUri = process.env.MONGODB_URI;
 
 const MONGODB_URI = dbUri || 'mongodb://localhost:27017/portfolioNew';

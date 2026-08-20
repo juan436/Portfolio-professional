@@ -20,6 +20,8 @@ const emptyProjectsByCategory = (): Record<ProjectCategoryValue, AdminProject[]>
  * migra a su propio ritmo). La carga inicial sigue siendo un fetch client-side
  * propio (Admin no necesita el patrón Server Component del sitio público,
  * siempre quiere el dato más fresco al entrar).
+ * @param initialCategory - Categoría activa al montar (default `"web"`).
+ * @returns Proyectos agrupados por categoría + selección/edición/borrado con tabs.
  */
 export function useProjectsActions(initialCategory: ProjectCategoryValue = "web") {
   const toastNotifications = useToastNotifications();

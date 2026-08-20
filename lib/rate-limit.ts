@@ -1,7 +1,11 @@
-// Rate limiting en memoria, por IP — vale porque el contenedor corre un solo
-// proceso Node, sin réplicas (ver docker-compose.yml, sin deploy.replicas).
-// Si algún día se escala a más de un contenedor, esto deja de servir y hay
-// que pasar a un store compartido (Redis).
+/**
+ * Rate limiting en memoria, por IP — vale porque el contenedor corre un solo
+ * proceso Node, sin réplicas (ver docker-compose.yml, sin deploy.replicas).
+ * Si algún día se escala a más de un contenedor, esto deja de servir y hay
+ * que pasar a un store compartido (Redis).
+ * Recibe: `isRateLimited(key, limit, windowMs)`; `getClientIp(request)`.
+ * Produce: `boolean` (si superó el límite) / la IP del cliente.
+ */
 const hits = new Map<string, number[]>();
 
 export function isRateLimited(key: string, limit: number, windowMs: number): boolean {

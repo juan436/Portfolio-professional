@@ -15,6 +15,11 @@ import { useOtherSkillsActions } from "@/hooks/admin/entities/other-skills/use-o
 import { renderDevIcon } from "@/lib/devicon-utils"
 import Script from "next/script"
 
+/**
+ * Manager de Habilidades del Admin — skills técnicas por categoría (tabs) + "otras habilidades" (lista libre).
+ * Recibe: nada (`useSkillsActions`/`useOtherSkillsActions` traen sus propios datos).
+ * Produce: CRUD de ambos tipos de skill, con sus propios diálogos de confirmación/edición.
+ */
 export default function SkillsManager() {
   // Usar los hooks personalizados
   const {

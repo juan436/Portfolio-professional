@@ -10,6 +10,11 @@ import { Switch } from "@/components/ui/switch"
 import { Search, X, ChevronDown, ChevronUp, ExternalLink, Check, Palette } from "lucide-react"
 import { renderDevIcon } from "@/lib/devicon-utils"
 
+/**
+ * Selector de ícono Devicon para el form de Skills del Admin (buscador + toggle color).
+ * Recibe: `selectedIcon`/`onSelectIcon` + `category?` (filtra el catálogo fijo de abajo).
+ * Produce: popover con grid de íconos; al elegir uno llama `onSelectIcon`.
+ */
 // Lista completa de iconos de Devicon organizados por categoría
 const deviconIcons = [
   // Frontend

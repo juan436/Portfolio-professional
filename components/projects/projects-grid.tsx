@@ -14,6 +14,11 @@ interface ProjectWithCategory extends Project {
   category: CategoryKey
 }
 
+/**
+ * Grid con tabs por categoría (web/mobile/infra_backend) + paginación, para la sección Proyectos del home.
+ * Recibe: `localProjects` (por categoría) + `isLoading` + `translatedTexts`.
+ * Produce: `FullStackProjectCard` (web/mobile) o `BackendProjectCard` (infra_backend) según la tab activa.
+ */
 interface ProjectsGridProps {
   localProjects: {
     web: Project[]

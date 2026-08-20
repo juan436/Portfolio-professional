@@ -6,6 +6,11 @@ import { Bot, Code2, Workflow } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
+/**
+ * Intro de la página `/work` — título/subtítulo + 3 botones de scroll a las secciones de abajo.
+ * Recibe: nada.
+ * Produce: encabezado + botones que hacen scroll suave a `#projects`/`#automations`/`#agents`.
+ */
 export default function WorkIntro() {
   const { t, language } = useLanguage()
   const isMounted = useIsMounted()

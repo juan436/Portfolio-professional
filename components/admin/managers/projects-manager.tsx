@@ -30,6 +30,11 @@ const CATEGORY_DESCRIPTIONS: Record<ProjectCategoryValue, string> = {
   agente: "Agentes conversacionales (ej. Jevy).",
 }
 
+/**
+ * Manager de Proyectos del Admin — tabs por categoría, cada una con tabla + `ProjectForm`.
+ * Recibe: nada (toda la lógica vive en `useProjectsActions`).
+ * Produce: CRUD completo de las 6 categorías de proyecto.
+ */
 export default function ProjectsManager() {
   const {
     activeCategory,

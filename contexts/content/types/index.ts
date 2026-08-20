@@ -1,4 +1,9 @@
-// Definiciones de tipos compartidos para el contexto de contenido
+/**
+ * Definiciones de tipos compartidos para el contexto de contenido.
+ * Recibe: nada (solo tipos).
+ * Produce: `Content` y sus subtipos (Hero/About/Service/Project/Skill/Contact/Experience/OtherSkill),
+ * usados por `ContentProvider`/`useContent` y por los componentes de lectura del sitio público.
+ */
 
 // Tipo para traducciones
 export type TranslationLanguages = 'en' | 'fr' | 'it';

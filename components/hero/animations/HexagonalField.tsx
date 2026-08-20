@@ -3,6 +3,11 @@
 import { motion } from "framer-motion"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
+/**
+ * Fondo animado del Hero — hexágonos concéntricos rotando.
+ * Recibe: nada.
+ * Produce: `null` hasta el mount (evita mismatch de hidratación); después, los hexágonos animados.
+ */
 export function HexagonalField() {
   const isMounted = useIsMounted()
 

@@ -6,6 +6,12 @@ import Experience from "@/models/experience.model"
 import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
 
+/**
+ * Server Actions CRUD de experiencia laboral (Admin).
+ * Recibe: payload del form de Admin en create/update; `id` en update/delete.
+ * Procesa: traduce position/description/location si vinieron.
+ * Produce: la experiencia creada/actualizada (plana) / `true` al borrar.
+ */
 const TRANSLATABLE_FIELDS = ["position", "description", "location"] as const
 
 function revalidateExperience() {

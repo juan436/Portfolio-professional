@@ -43,6 +43,12 @@ export const metadata: Metadata = {
   },
 }
 
+/**
+ * Layout raíz del sitio — providers globales (Theme/Content/Language), chrome
+ * compartido (SiteChrome, WolfGuide, Toaster) y metadata SEO.
+ * Recibe: `children`.
+ * Produce: el árbol de providers envolviendo `children`.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

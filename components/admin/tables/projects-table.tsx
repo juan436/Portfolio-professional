@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
 import type { AdminProject } from "@/hooks/admin/entities/projects/types"
 
+/**
+ * Selector lateral de proyectos (Admin) — lista ordenada por fecha de creación + botón borrar por fila.
+ * Recibe: `projects`/`selectedProject`/`onSelectProject`/`handleOpenDeleteDialog`/`title`/`description`.
+ * Produce: lista clickeable, más reciente primero.
+ */
 interface ProjectsTableProps {
   projects: AdminProject[]
   selectedProject: AdminProject | null

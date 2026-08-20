@@ -9,6 +9,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ExperienceTimeline } from "./experience-timeline"
 import { ExperienceCard } from "./experience-card"
 
+/**
+ * Sección "Experiencia" del home — carrusel con timeline, autoplay y gestos táctiles.
+ * Recibe: nada (lee `content.experience` del `ContentProvider`).
+ * Procesa: ordena por año más reciente primero; deriva los años de la timeline del campo `period`.
+ * Produce: `ExperienceTimeline` + `ExperienceCard` + controles prev/next/dots/autoplay.
+ */
 export default function Experience() {
   const { content } = useContent()
   const [activeIndex, setActiveIndex] = useState(0)

@@ -1,6 +1,11 @@
 import dbConnect from "@/lib/db/conection"
 import Certificate from "@/models/certificate.model"
 
+/**
+ * Lectura server-only de certificaciones, directo a Mongo.
+ * Recibe: `getCertificateById(id)` / `getCertificateBySlug(slug)` / `getCertificatesList()`.
+ * Produce: la(s) certificación(es) plana(s) (o `null` si no hay match).
+ */
 export async function getCertificateById(id: string) {
   await dbConnect()
   try {

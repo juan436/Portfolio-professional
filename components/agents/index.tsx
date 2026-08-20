@@ -34,9 +34,13 @@ interface AgentsProps {
   agents: RawAgent[]
 }
 
-// Sección "Agentes" en /work — grilla simple (no carrusel con demo embebida como
-// Automatizaciones): un chat real como el de Jevy no tiene sentido pre-visualizado
-// dos veces (acá y en /agents/[id]), así que la tarjeta manda directo al detalle.
+/**
+ * Sección "Agentes" en /work — grilla simple (no carrusel con demo embebida como
+ * Automatizaciones): un chat real como el de Jevy no tiene sentido pre-visualizado
+ * dos veces (acá y en /agents/[id]), así que la tarjeta manda directo al detalle.
+ * Recibe: `agents: RawAgent[]` (crudo, del Server Component `/work`).
+ * Produce: `null` si no hay agentes; si no, grid de `AgentCard` traducidas + link "ver todos".
+ */
 export default function Agents({ agents }: AgentsProps) {
   const { language, t } = useLanguage()
 

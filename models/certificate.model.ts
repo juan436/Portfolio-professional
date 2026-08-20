@@ -1,5 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose de certificación/curso.
+ * Recibe: title/slug/issuer/date/duration/credentialUrl/techStack/learned/applied.
+ * Produce: `Certificate`, listo para `find`/`create` contra la colección `certificates`.
+ */
 export interface ICertificate extends Document {
   title: string;
   slug: string;

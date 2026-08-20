@@ -1,6 +1,7 @@
 import { createListHandlers } from '@/lib/api/crud-handlers';
 import Experience from '@/models/experience.model';
 
+/** `/api/experience` — GET (lista) + POST (crear, valida position/company/period), vía `createListHandlers`. */
 export const { GET, POST } = createListHandlers({
   Model: Experience,
   sort: { createdAt: -1 },

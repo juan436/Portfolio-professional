@@ -1,5 +1,10 @@
 import { MetadataRoute } from 'next'
 
+/**
+ * Sitemap XML del sitio (convención Next.js — `app/sitemap.ts` → `/sitemap.xml`).
+ * Recibe: nada.
+ * Produce: `MetadataRoute.Sitemap` con las rutas principales fijas (no incluye slugs dinámicos).
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseURL = 'https://jvillegas-portafolio.jvserver.com'
   

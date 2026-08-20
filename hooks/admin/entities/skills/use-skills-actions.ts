@@ -9,6 +9,8 @@ import { useToastNotifications } from "../../use-toast-notifications";
  * reescrito para usar Server Actions (lib/actions/skills.ts) en vez del
  * ContentProvider global (Fase 4, auditoría 2026-08-19). Carga inicial
  * propia (fetch client-side), igual que el resto de entidades ya migradas.
+ * Recibe: nada.
+ * Produce: estado de skills por categoría + `save`/`delete`/formulario de edición.
  */
 export function useSkillsActions() {
   const toastNotifications = useToastNotifications();

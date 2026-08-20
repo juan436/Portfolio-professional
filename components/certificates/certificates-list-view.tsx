@@ -15,6 +15,11 @@ const LOCALES: Record<string, string> = {
 
 const PAGE_SIZE = 6
 
+/**
+ * Página `/certificates` (client) — grilla paginada de certificaciones.
+ * Recibe: `certificates: Certificate[]` (crudo, del Server Component).
+ * Produce: grid de `CertificateCard` + paginación.
+ */
 export function CertificatesListView({ certificates }: { certificates: Certificate[] }) {
   const { language, t } = useLanguage()
   const [page, setPage] = useState(1)

@@ -1,5 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose de métricas de un proyecto/automatización.
+ * Recibe: `link` (a qué proyecto/automatización pertenece) + `metrics[]` (label/value medibles).
+ * Produce: `ProjectStats`, listo para `find`/`create` contra la colección `projectstats`.
+ */
 export interface IProjectStats extends Document {
   link: {
     type: 'proyecto' | 'automatizacion';

@@ -7,6 +7,9 @@ import { useState, useEffect, type ChangeEvent } from "react"
  * contact): estado local + lista de campos modificados + reset al cambiar
  * `content` + handleChange con el mismo dedup. Mismo comportamiento exacto
  * que tenía cada form por separado.
+ * @param content - Contenido inicial/actual del form.
+ * @param onChange - Callback disparado en cada cambio con el contenido actualizado y `_modifiedFields`.
+ * @returns `{ localContent, handleChange }`.
  */
 export function useModifiedFieldsForm<T extends { _modifiedFields?: string[] }>(
   content: T,

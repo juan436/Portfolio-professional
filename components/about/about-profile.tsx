@@ -3,6 +3,11 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 
+/**
+ * Tarjeta de foto + título/rol/estudios de la sección About.
+ * Recibe: `profileImage`/`heroTitle`/`role`/`engineer`/`university` (ya traducidos por el caller).
+ * Produce: card con hover effects (framer-motion), sin estado propio.
+ */
 interface AboutProfileProps {
   profileImage: string
   heroTitle: string

@@ -19,6 +19,11 @@ export interface ShowcaseAutomation {
   demoOutputTemplate: string
 }
 
+/**
+ * Card grande de automatización activa en el carrusel de /work — resumen + `FlowDiagram` embebido.
+ * Recibe: `automation: ShowcaseAutomation` + `direction` (animación entrar/salir) + labels traducidos.
+ * Produce: header con ícono/título/subtipo + botón "ver detalle" + `FlowDiagram` interactivo.
+ */
 interface AutomationShowcaseCardProps {
   automation: ShowcaseAutomation
   direction: number

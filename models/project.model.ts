@@ -1,5 +1,11 @@
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose de proyecto/automatización/agente/laboratorio (entidad central del portfolio).
+ * Recibe: campos comunes (title/slug/category/tags/etc.) + un bloque de detalle específico por
+ * categoría (labDetails/automationDetails/agentDetails/infraDetails/etc.) + `jevyProfile` (matching, no se renderiza).
+ * Produce: `Project`, listo para `find`/`create` contra la colección `projects`.
+ */
 // Interfaz para el documento de proyecto
 export interface IProject extends Document {
   title: string;

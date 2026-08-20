@@ -2,6 +2,11 @@
 
 import Link from "next/link";
 
+/**
+ * Página 404 del sitio.
+ * Recibe: nada.
+ * Produce: mensaje + link de vuelta a `/`.
+ */
 export default function NotFound() {
   
   return (

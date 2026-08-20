@@ -1,10 +1,13 @@
 "use client"
 
-// SVG solo (marca J/V/DEV) sin el wrapper de interacción — components/navbar/logo.tsx
-// lo envuelve en un <button> que hace scroll-to-top; components/projects/project-header.tsx
-// lo envuelve en un <Link href="/"> porque ahí no hay Home debajo para hacer scroll.
-// Isotipo compacto real (logos/isotipo-compacto-bicolor.svg) — J/V en blanco +
-// flecha azul. Reemplaza el logo J/V/DEV dibujado a mano.
+/**
+ * SVG solo (marca J/V/DEV) sin el wrapper de interacción — components/navbar/logo.tsx
+ * lo envuelve en un <button> que hace scroll-to-top; components/projects/project-header.tsx
+ * lo envuelve en un <Link href="/"> porque ahí no hay Home debajo para hacer scroll.
+ * Isotipo compacto real (logos/isotipo-compacto-bicolor.svg) — J/V en blanco +
+ * flecha azul. Reemplaza el logo J/V/DEV dibujado a mano.
+ * Recibe: nada. Produce: `LogoMark` (solo SVG) / `Logo` (SVG + botón scroll-to-top).
+ */
 export function LogoMark() {
   return (
     <svg

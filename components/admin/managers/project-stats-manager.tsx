@@ -17,6 +17,11 @@ import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialo
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { TextField } from "@/components/admin/forms/project-form-fields"
 
+/**
+ * Manager de Métricas de proyecto/automatización (Admin) — upsert por proyecto (lib/actions/project-stats.ts).
+ * Recibe: nada (carga stats + catálogo de proyectos al montar).
+ * Produce: lista de proyectos con métricas + panel de edición (repeater de métricas label/value/statType).
+ */
 interface Metric {
   label: string
   value: string

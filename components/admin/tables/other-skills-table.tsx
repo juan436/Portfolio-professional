@@ -4,6 +4,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Pencil, Trash2 } from "lucide-react"
 
+/**
+ * Tabla de "otras habilidades" (Admin) — editar/borrar por fila.
+ * Recibe: `skills` (acepta objetos u strings sueltos, legacy) + `onEdit`/`onDelete`.
+ * Produce: tabla simple con botones de acción.
+ */
 interface OtherSkill {
   _id?: string
   id?: string

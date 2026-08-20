@@ -3,6 +3,11 @@
 import { motion } from "framer-motion"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
+/**
+ * Fondo animado del Hero — 3 ondas concéntricas expandiéndose en loop.
+ * Recibe: nada.
+ * Produce: `null` hasta el mount (evita mismatch de hidratación, usa `Math.random()`); después, las ondas animadas.
+ */
 export function EnergyWaves() {
   const isMounted = useIsMounted()
 

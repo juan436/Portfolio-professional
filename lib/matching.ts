@@ -2,6 +2,14 @@ import type { IProject } from '@/models/project.model';
 import type { DeepSeekToolFunction } from '@/lib/deepseek';
 import type { IJevyTaxonomyEntry } from '@/models/jevy-taxonomy.model';
 
+/**
+ * Motor de matching determinístico de Jevy (lead ↔ catálogo de proyectos).
+ * Recibe: `LeadProfile` extraído de la charla (categoria/subtype/problemaCore/sector) + catálogo `IProject[]`.
+ * Procesa: puntúa por eje contra `jevyProfile` de cada proyecto (problema_core obligatorio),
+ * pasada 1 sobre catálogo entregado, pasada 2 sobre Laboratorio si la 1 no encuentra nada.
+ * Produce: `findBestMatch` → mejor candidato o `null`; `buildExtractionTool` → schema DeepSeek;
+ * `normalizeLeadProfile`/`countNoDefinido` para la extracción cruda.
+ */
 // Motor de matching determinístico — reemplaza el criterio libre del LLM.
 // Jevy no decide si hay parecido: este código lo calcula, Jevy solo narra
 // el resultado. Ver dev-aguila-azul/vault/portfolio: planes/matching-catalogo-function-calling.

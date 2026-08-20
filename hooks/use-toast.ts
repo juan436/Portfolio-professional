@@ -1,6 +1,12 @@
 "use client"
 
-// Inspired by react-hot-toast library
+/**
+ * Sistema de toasts vendored (inspirado en react-hot-toast) — estado global
+ * fuera de React (`memoryState`/`listeners`) para poder llamar `toast()` desde
+ * cualquier función, no solo componentes.
+ * Recibe: `toast(props)` — título/descripción/variant/acción.
+ * Produce: `useToast()` da `{ toasts, toast, dismiss }`; `toast()` dispara uno nuevo y devuelve `{ id, dismiss, update }`.
+ */
 import * as React from "react"
 
 import type {

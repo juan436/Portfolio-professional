@@ -5,6 +5,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useModifiedFieldsForm } from "@/hooks/use-modified-fields-form"
 
+/**
+ * Form de la sección Contacto del Admin (email/teléfono/ubicación).
+ * Recibe: `content: ContactContent` + `onChange`.
+ * Produce: campos controlados vía `useModifiedFieldsForm`.
+ */
 // Definir la interfaz para la estructura de datos de contacto
 export interface ContactContent {
   email: string

@@ -51,6 +51,11 @@ interface LocaleContent {
   subtype?: string
 }
 
+/**
+ * Vista de detalle de una automatización (`/automations/[slug]`).
+ * Recibe: `automation` (crudo, con traducciones) + `testimonials`/`resultsMetrics` + `cameFromWork`.
+ * Produce: qué hace / cómo se usa / `FlowDiagram` interactivo / tools+canales+setup / métricas / testimonios / CTA.
+ */
 interface AutomationDetailViewProps {
   automation: RawAutomation | null
   testimonials: RawTestimonial[]

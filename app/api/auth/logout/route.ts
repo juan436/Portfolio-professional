@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server'
 
+/**
+ * POST /api/auth/logout.
+ * Recibe: nada.
+ * Produce: limpia las cookies `authToken`/`isLoggedIn`/`adminUser` (maxAge 0).
+ */
 export async function POST() {
   try {
     const response = NextResponse.json(

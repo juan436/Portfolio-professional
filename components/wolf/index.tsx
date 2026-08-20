@@ -8,6 +8,13 @@ import { useLanguage } from "@/hooks/use-language"
 import { IdlePose } from "./poses/idle-pose"
 import { welcomeOverlaySignal } from "@/lib/welcome-overlay-signal"
 
+/**
+ * Widget flotante del lobo (guía persistente hacia /contact) — reescrito sesión 2026-08-18 (Plan Lobo).
+ * Recibe: nada.
+ * Procesa: espera a que termine el overlay de bienvenida (`welcomeOverlaySignal`) antes de mostrarse;
+ * saluda una vez al aparecer, después queda quieto hasta hover.
+ * Produce: `null` en /admin, /dashboard, /projects, /contact; si no, ícono flotante con link a /contact.
+ */
 export default function WolfGuide() {
   const pathname = usePathname()
   const { t } = useLanguage()

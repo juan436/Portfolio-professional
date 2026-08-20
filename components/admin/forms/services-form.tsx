@@ -12,6 +12,12 @@ import { useToast } from "@/hooks/use-toast"
 import ServiceIconSelector from "@/components/admin/common/service-icon-selector"
 import { deleteServiceAction } from "@/lib/actions/content"
 
+/**
+ * Form de la sección Servicios del Admin (array embebido, selector de tarjeta + panel de edición).
+ * Recibe: `services: Service[]` + `onChange`.
+ * Procesa: `deleteService` llama directo a `deleteServiceAction` si el servicio ya tiene `_id` en Mongo.
+ * Produce: llama `onChange` con el array actualizado en cada alta/edición/baja.
+ */
 // Definir la interfaz para un servicio
 export interface Service {
   title: string

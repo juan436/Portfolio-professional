@@ -74,6 +74,7 @@ const STATUS_STYLES: Record<string, string> = {
   evolved: "bg-purple-500/10 text-purple-400 border-purple-500/30",
 }
 
+/** Renderiza bloques de tipo párrafo o pasos numerados. Recibe: `blocks: WorkBlock[]`. */
 function WorkBlocks({ blocks }: { blocks: WorkBlock[] }) {
   return (
     <div className="space-y-6">
@@ -107,6 +108,12 @@ function WorkBlocks({ blocks }: { blocks: WorkBlock[] }) {
   )
 }
 
+/**
+ * Vista de detalle de un proyecto de Laboratorio (`/laboratory/[slug]`).
+ * Recibe: `project` (crudo, con traducciones) o `null` si no existe.
+ * Produce: estado/motivación/qué prueba/qué aprendió/comparación/limitaciones/próximo paso,
+ * más stack técnico, diagrama de despliegue y `FlowDiagram` si el proyecto los tiene.
+ */
 interface LaboratoryDetailViewProps {
   project: RawLabProject | null
 }

@@ -6,6 +6,12 @@ import Certificate from "@/models/certificate.model"
 import { requireAdminSession } from "@/lib/actions/shared"
 import { slugify, uniqueSlug } from "@/lib/slug"
 
+/**
+ * Server Actions CRUD de certificaciones (Admin).
+ * Recibe: payload del form de Admin en create/update; `id`(+`slug`) en delete.
+ * Procesa: slug único (solo se regenera si el slug pedido cambió).
+ * Produce: la certificación creada/actualizada (plana) / `true` al borrar.
+ */
 function revalidateCertificates(slug?: string) {
   revalidatePath("/certificates")
   if (slug) revalidatePath(`/certificates/${slug}`)

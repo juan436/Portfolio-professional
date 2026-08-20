@@ -1,6 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+/**
+ * Storage en disco de adjuntos de leads (fuera de `public/`).
+ * Recibe: sessionId + filename + buffer al guardar; sessionId al listar/leer.
+ * Produce: URL pública vía `app/api/uploads/[...path]` + operaciones save/read/list.
+ */
 // Storage en disco del VPS (decisión 2026-08-13, ver dev-aguila-azul/vault/
 // portfolio: planes/levantamiento-informacion-jevy) — sin servicio nuevo.
 // Los archivos quedan fuera de `public/` a propósito (no depender de que el

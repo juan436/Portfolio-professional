@@ -36,6 +36,12 @@ function applyRealTotals(base: Metric[], summary: StatTypeSummary[]): Metric[] {
   })
 }
 
+/**
+ * Sección de métricas acumuladas del home (4 cifras fijas de marketing, reemplazadas por datos reales si existen).
+ * Recibe: nada.
+ * Procesa: trae `/api/stat-types/summary` y mergea sobre `metricsData` (`applyRealTotals`) solo donde hay dato real.
+ * Produce: 4 `MetricCard` con animación de conteo al entrar en viewport.
+ */
 export default function MetricsSection() {
   const { t } = useLanguage()
   const [mounted, setMounted] = useState(false)
@@ -69,6 +75,7 @@ export default function MetricsSection() {
   )
 }
 
+/** Card individual de métrica — animación de conteo (número) desde 0 al entrar en viewport. */
 function MetricCard({ metric, label, index }: { metric: Metric; label: string; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(cardRef, { once: true, margin: "-100px" })

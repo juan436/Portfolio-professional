@@ -10,6 +10,11 @@ import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Experience } from "@/contexts/content/types"
 import { Button } from "@/components/ui/button"
 
+/**
+ * Card de la experiencia activa en el carrusel (sección Experiencia del home).
+ * Recibe: `sortedExperience`/`activeIndex` + handlers de drag opcionales (delegados desde el padre).
+ * Produce: la card animada (fade+blur al cambiar), con descripción truncable y badges de tecnologías.
+ */
 interface ExperienceCardProps {
   sortedExperience: Experience[]
   activeIndex: number

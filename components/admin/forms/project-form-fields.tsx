@@ -7,11 +7,15 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Trash2, Plus } from "lucide-react"
 
-// Piezas reutilizables del formulario de Proyecto (auditoría 2026-08-19: el
-// form viejo solo cubría 6 de ~25 campos del modelo real). Cada una es
-// deliberadamente simple (sin drag-and-drop, sin editor rico) — funcional
-// y completa, no una reconstrucción de UI de lujo.
-
+/**
+ * Piezas reutilizables del formulario de Proyecto (auditoría 2026-08-19: el
+ * form viejo solo cubría 6 de ~25 campos del modelo real). Cada una es
+ * deliberadamente simple (sin drag-and-drop, sin editor rico) — funcional
+ * y completa, no una reconstrucción de UI de lujo.
+ * Recibe (por pieza): `StringListField`/`TextField`/`TextAreaField` → label+value+onChange;
+ * `PairListEditor` → array de objetos con 2 campos de texto; `WorkProcessEditor` → bloques `{kind, text, items}`.
+ * Produce: el control controlado correspondiente; todas llaman `onChange` con el valor nuevo completo.
+ */
 export function StringListField({
   label,
   values,

@@ -6,6 +6,12 @@ import Skill from "@/models/skill.model"
 import OtherSkill from "@/models/other-skills.model"
 import type { Content as ContentShape } from "@/contexts/content/types"
 
+/**
+ * Lectura server-only del contenido de home directo a Mongo (sin round-trip HTTP).
+ * Recibe: nada.
+ * Produce: `getHomeContent()` (Content completo, mismo shape que `ContentProvider`)
+ * y `getContactInfo()` (solo el sub-objeto `contact`, para `/contact`).
+ */
 const emptyContent: ContentShape = {
   hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
   about: { paragraph1: "", paragraph2: "", paragraph3: "", translations: {} },

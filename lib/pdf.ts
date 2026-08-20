@@ -2,6 +2,12 @@ import { renderToBuffer } from '@json-render/react-pdf';
 import { validateSpec } from '@json-render/core';
 import type { Spec } from '@json-render/core';
 
+/**
+ * Convierte el markdown del informe de levantamiento (lib/report.ts) a PDF.
+ * Recibe: markdown con el formato fijo de report.ts (encabezados, "**Label:** valor", bullets).
+ * Procesa: parsea el markdown a secciones, arma un `Spec` de @json-render y lo valida.
+ * Produce: `Buffer` del PDF renderizado.
+ */
 // Convierte el markdown del levantamiento a PDF — mismo contenido que el
 // markdown (ese queda aparte, para que Juan lo siga trabajando). Construido
 // con @json-render/react-pdf (layout flexbox real sobre @react-pdf/renderer)

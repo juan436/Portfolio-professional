@@ -11,6 +11,12 @@ export interface ProjectMatch {
   isPrototype: boolean
 }
 
+/**
+ * Card de proyecto sugerido dentro de una respuesta del chat de Jevy (match del motor determinístico).
+ * Extraído de `jevy-chat.tsx` (sesión 2026-08-19) — no depende de estado del chat.
+ * Recibe: `match: ProjectMatch` (armado en `app/api/contact/chat/route.ts`) + labels traducidos.
+ * Produce: imagen/título + badge "prototipo" si aplica + links a ver más / demo.
+ */
 interface ProjectMatchCardProps {
   match: ProjectMatch
   prototypeLabel: string

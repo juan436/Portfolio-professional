@@ -37,6 +37,11 @@ interface AutomationsProps {
   automations: RawAutomation[]
 }
 
+/**
+ * Sección "Automatizaciones" en /work — carrusel con demo embebida (a diferencia de Agentes, grid simple).
+ * Recibe: `automations: RawAutomation[]` (crudo, del Server Component `/work`).
+ * Produce: `AutomationShowcaseCard` de la automatización activa + controles prev/next/dots + link "ver todas".
+ */
 export default function Automations({ automations }: AutomationsProps) {
   const { language, t } = useLanguage()
   const [activeIndex, setActiveIndex] = useState(0)

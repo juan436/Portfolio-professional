@@ -8,6 +8,12 @@ import { DesktopNav } from "./desktop-nav"
 import { MobileNav } from "./mobile-nav"
 import type { NavEntry } from "./types"
 
+/**
+ * Navbar del sitio público (no se renderiza en /admin, ver `SiteChrome`).
+ * Recibe: nada.
+ * Procesa: cambia de fondo transparente a sólido al pasar 50px de scroll.
+ * Produce: `Logo` + `DesktopNav`/`MobileNav` según viewport.
+ */
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)

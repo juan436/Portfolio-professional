@@ -14,6 +14,9 @@ const DEFAULT_PROFILE_IMAGE =
  * Hook del editor de contenido (Hero/About/Services/Contact) — reescrito
  * para usar Server Actions (lib/actions/content.ts), Fase 4 (auditoría
  * 2026-08-19). Carga inicial propia (ya no depende de ContentProvider).
+ * Recibe: nada.
+ * Procesa: solo llama a `update*Action` de las secciones que realmente cambiaron (diff contra `initialContent`).
+ * Produce: estado de las 4 secciones + `handleSave`.
  */
 export function useContentEditor() {
   const { showSuccessToast, showErrorToast } = useToastNotifications();

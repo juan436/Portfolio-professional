@@ -3,6 +3,11 @@
 import { motion } from "framer-motion"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
+/**
+ * Fondo animado del Hero — 8 rayos SVG pulsando desde el centro.
+ * Recibe: nada.
+ * Produce: `null` hasta el mount (evita mismatch de hidratación); después, el SVG animado.
+ */
 export function QuantumRays() {
   const isMounted = useIsMounted()
 

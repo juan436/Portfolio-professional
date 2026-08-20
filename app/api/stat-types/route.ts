@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/conection';
 import StatType from '@/models/stat-type.model';
 
+/** `/api/stat-types` — GET (lista completa) + POST (crear un tipo de estadística nuevo). */
 // GET: Listar todos los tipos de estadística base (para elegir al cargar una métrica)
 export async function GET() {
   await dbConnect();

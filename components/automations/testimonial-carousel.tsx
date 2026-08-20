@@ -13,6 +13,7 @@ const getInitials = (name: string) =>
     .join("")
     .toUpperCase()
 
+/** Card individual del carrusel — rating + cita + autor. Recibe: `testimonial: RawTestimonial`. */
 function TestimonialCard({ testimonial }: { testimonial: RawTestimonial }) {
   return (
     <div className="flex-shrink-0 w-[88%] sm:w-[47%] min-h-[360px] p-8 rounded-3xl bg-zinc-900/40 backdrop-blur-xl border border-white/5 flex flex-col justify-between transition-all duration-300 hover:border-blue-500/30 hover:bg-zinc-800/50">
@@ -49,6 +50,11 @@ function TestimonialCard({ testimonial }: { testimonial: RawTestimonial }) {
   )
 }
 
+/**
+ * Carrusel infinito de testimonios (detalle de automatización) — drag + auto-scroll continuo.
+ * Recibe: `testimonials: RawTestimonial[]`.
+ * Produce: `null` si vacío; carrusel arrastrable con loop si hay 2+; card única centrada si hay solo 1.
+ */
 export function TestimonialCarousel({ testimonials }: { testimonials: RawTestimonial[] }) {
   const [isPaused, setIsPaused] = useState(false)
   const constraintsRef = useRef(null)

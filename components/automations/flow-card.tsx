@@ -10,6 +10,11 @@ export const flowIconMap: Record<string, typeof MessageCircle> = {
   "social": Share2,
 }
 
+/**
+ * Card de automatización (grid de /automations).
+ * Recibe: `flow: FlowCardData` (id/slug/icon/title/description/stepsCount/subtype) + `stepsWord`/`index`.
+ * Produce: link a `/automations/{slug}`.
+ */
 export interface FlowCardData {
   id: string
   slug: string

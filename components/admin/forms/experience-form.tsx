@@ -10,6 +10,12 @@ import { Trash2, Tag, Loader2 } from "lucide-react"
 import { useToastNotifications } from "@/hooks/admin/use-toast-notifications"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
+/**
+ * Form de crear/editar/ver una experiencia laboral (Admin).
+ * Recibe: `experience`/`editMode`/`setEditMode`/`onSave`/`onCancel?`/`isNewExperience?`/`isLoading?`.
+ * Procesa: estado local propio (no usa `useModifiedFieldsForm` — maneja el array `skills` aparte), valida position/company/period antes de guardar.
+ * Produce: llama `onSave` con los datos procesados (+ `_modifiedFields` si es edición).
+ */
 // Definir la interfaz para una experiencia laboral
 export interface Experience {
   _id?: string

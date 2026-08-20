@@ -9,6 +9,13 @@ import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation
 
 export type { ProjectCategoryValue }
 
+/**
+ * Server Actions CRUD de proyectos (Admin) — cubre todas las categorías
+ * (web/mobile/infra_backend/laboratorio/automatizacion/agente).
+ * Recibe: payload del form de Admin en create/update; `id`(+`category`+`slug`) en delete.
+ * Procesa: slug único, traduce title/description si vinieron, revalida la(s) ruta(s) pública(s) según categoría.
+ * Produce: el proyecto creado/actualizado (plano) / `true` al borrar.
+ */
 const TRANSLATABLE_FIELDS = ["title", "description"] as const
 
 export async function createProjectAction(data: Record<string, any>) {

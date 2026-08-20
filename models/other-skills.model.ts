@@ -1,6 +1,11 @@
 // portfolio/models/other-skills.model.ts
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose de "otras habilidades" (skills fuera de las 4 categorías principales).
+ * Recibe: name + traducciones opcionales en/fr/it.
+ * Produce: `OtherSkill`, listo para `find`/`create` contra la colección `otherskills`.
+ */
 export interface IOtherSkill extends Document {
     name: string;
     translations?: {

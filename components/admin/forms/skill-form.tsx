@@ -11,6 +11,11 @@ import { Search, X } from "lucide-react"
 import type { Skill } from "@/contexts/content/types"
 import { renderDevIcon } from "@/lib/devicon-utils"
 
+/**
+ * Diálogo de crear/editar una Skill (Admin) — nombre + selector de ícono Devicon con buscador.
+ * Recibe: `isOpen`/`onClose`/`onSave`/`currentSkill`/`category`.
+ * Produce: llama `onSave` con el `Skill` armado (mantiene `_id` si es edición).
+ */
 // Lista de iconos disponibles en Devicon
 const availableIcons = [
   // Frontend

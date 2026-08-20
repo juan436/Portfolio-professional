@@ -9,6 +9,11 @@ import { useLanguage } from "@/hooks/use-language";
 import { getProjectTechnologies } from "@/lib/utils";
 import type { Project } from "@/contexts/content/types";
 
+/**
+ * Card de proyecto backend/infra (usada en /projects/[slug] relacionados o listados legacy).
+ * Recibe: `project: Project` + `index` (delay de animación).
+ * Produce: card con ícono variable por id, tags de tecnología, links a repo/docs.
+ */
 interface BackendProjectCardProps {
   project: Project;
   index: number;

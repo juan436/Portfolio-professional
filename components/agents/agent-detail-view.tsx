@@ -43,6 +43,11 @@ interface LocaleContent {
   subtype?: string
 }
 
+/**
+ * Vista de detalle de un agente (`/agents/[slug]`).
+ * Recibe: `agent` (crudo, con traducciones) + `cameFromWork` (si vino desde /work, muestra "ver todos").
+ * Produce: qué hace / capacidades / demo en vivo (`JevyChatDemo` si `liveDemo === "jevy-chat"`) / tools+canales+setup / CTA.
+ */
 interface AgentDetailViewProps {
   agent: RawAgent | null
   cameFromWork: boolean

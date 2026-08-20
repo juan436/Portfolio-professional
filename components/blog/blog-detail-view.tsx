@@ -52,6 +52,11 @@ function BlogBlocks({ blocks }: { blocks: ContentBlock[] }) {
   )
 }
 
+/**
+ * Vista de detalle de un post de blog (`/blog/[slug]`).
+ * Recibe: `post` (crudo, con traducciones) o `null` si no existe.
+ * Produce: fecha/título/tags/portada + cuerpo renderizado por bloques (`BlogBlocks`).
+ */
 export function BlogDetailView({ post }: { post: BlogPost | null }) {
   const { language, t } = useLanguage()
 

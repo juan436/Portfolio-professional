@@ -1,5 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose del vocabulario de matching de Jevy (singleton).
+ * Recibe: 4 listas de entradas (categorias/subtypes/problemasCore/sectores), cada una {value,label,definicion}.
+ * Produce: `JevyTaxonomy`, consumido por `lib/matching.ts` para construir el enum de function calling de DeepSeek.
+ */
 // Vocabulario cerrado del motor de matching de Jevy — vive en Mongo (no en código)
 // para poder crecer sin redeploy. Singleton: un solo documento en la colección,
 // igual que el patrón ya usado por Content. Semilla inicial: scripts/seed-jevy-taxonomy.ts.

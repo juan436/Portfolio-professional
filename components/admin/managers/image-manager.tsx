@@ -118,6 +118,11 @@ const imageServicesData: ImageService[] = [
   },
 ]
 
+/**
+ * Manager de Imágenes del Admin — informativo/de solo lectura (guías + vistazo a imágenes ya cargadas).
+ * Recibe: nada (lee `content` del `ContentProvider`).
+ * Produce: guía de dimensiones/formatos, vistazo a la imagen de perfil y a las imágenes de proyectos web/mobile/infra_backend, servicios externos recomendados.
+ */
 export default function ImageManager() {
   const { content } = useContent()
   const [activeTab, setActiveTab] = useState("profile")

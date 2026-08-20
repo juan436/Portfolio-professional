@@ -1,5 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose de habilidad técnica (frontend/backend/database/devops).
+ * Recibe: name/icon/colored/category + traducciones opcionales en/fr/it.
+ * Produce: `Skill`, listo para `find`/`create` contra la colección `skills`.
+ */
 // Interfaz para el documento de habilidad
 export interface ISkill extends Document {
   name: string;

@@ -1,5 +1,10 @@
 import mongoose, { Document, Model } from 'mongoose';
 
+/**
+ * Modelo Mongoose del contenido único de la home (singleton, un solo documento).
+ * Recibe: hero/about/services[]/contact, con traducciones opcionales en/fr/it por sección.
+ * Produce: `Content`, listo para `findOne`/`save` contra la colección `contents`.
+ */
 // El bloque translations: { en, fr, it } se repetía 4 veces (interfaz TS y
 // schema Mongoose) — colapsado acá, mismo espíritu que localeContentFields()
 // en project.model.ts. `build()` se llama 3 veces a propósito (no se reusa

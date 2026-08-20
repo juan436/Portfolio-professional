@@ -6,6 +6,11 @@ import { Globe } from "lucide-react"
 import { languages } from "@/contexts/language-context"
 import { useLanguage } from "@/hooks/use-language"
 
+/**
+ * Selector de idioma (navbar) — dropdown que cierra al hacer click afuera.
+ * Recibe: nada (lee/setea `useLanguage`).
+ * Produce: botón de globo + dropdown con los 4 idiomas disponibles.
+ */
 export default function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)

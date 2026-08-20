@@ -1,5 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 
+/**
+ * Modelo Mongoose de estadísticas de uso de un turno de charla con Jevy.
+ * Recibe: sessionId + conteo de tokens/llamadas a DeepSeek de ese turno (`calls[]`).
+ * Produce: `JevyChatStat`, un documento por turno, para reportes de costo/uso.
+ */
 // Un documento por turno de charla (una llamada POST a /api/contact/chat que
 // sí llegó a llamar a DeepSeek) — no por cada llamada individual. Un turno
 // puede disparar hasta 5 llamadas reales (reply + matching + reintento +

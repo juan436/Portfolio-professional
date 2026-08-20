@@ -14,7 +14,8 @@ interface Phase {
   range: [number, number]
 }
 
-function MethodologyCard({ 
+/** Card de una fase de metodología, con glow/elevación derivados de `elevatorY` (scroll del contenedor padre). */
+function MethodologyCard({
   phase, 
   index, 
   elevatorY 
@@ -103,6 +104,11 @@ function MethodologyCard({
   )
 }
 
+/**
+ * Sección "Metodología" del home — 4 fases con efecto de scroll (elevación/glow) sincronizado a `scrollYProgress`.
+ * Recibe: nada.
+ * Produce: `MethodologyCard` por fase, con brillo/elevación que sigue el scroll dentro del contenedor.
+ */
 export default function Methodology() {
   const { t } = useLanguage()
   const containerRef = useRef<HTMLDivElement>(null)

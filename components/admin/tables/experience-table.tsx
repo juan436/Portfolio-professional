@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Trash2, Briefcase } from "lucide-react"
 import type { Experience } from "@/components/admin/forms/experience-form"
 
+/**
+ * Selector lateral de experiencias (Admin) — lista ordenada + botón borrar por fila.
+ * Recibe: `experiences`/`selectedExperience`/`onSelectExperience`/`onDeleteExperience`/`title`/`description`.
+ * Produce: lista clickeable (solo experiencias ya guardadas, con `_id`), ordenada por período descendente.
+ */
 interface ExperienceTableProps {
   experiences: Experience[]
   selectedExperience: Experience | null

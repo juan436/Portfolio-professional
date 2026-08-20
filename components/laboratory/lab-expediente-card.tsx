@@ -29,6 +29,11 @@ export interface LabExpedienteProject {
   }
 }
 
+/**
+ * Card "expediente" de un proyecto de Laboratorio (grid de /laboratory) — estética de ficha con sello circular.
+ * Recibe: `project`/`fileNumber`/`languageCode`/`statusLabels`/`fieldLabels` (traducidos por el caller).
+ * Produce: link a `/laboratory/{slug}` con hipótesis/método/hallazgo/próximo paso resumidos.
+ */
 interface LabExpedienteCardProps {
   project: LabExpedienteProject
   fileNumber: number

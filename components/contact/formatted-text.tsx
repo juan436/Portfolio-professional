@@ -1,5 +1,11 @@
 "use client"
 
+/**
+ * Render de texto de chat con markdown mínimo (**negrita** + saltos de línea con gap si había línea en blanco).
+ * Extraído de `jevy-chat.tsx` (sesión 2026-08-19) — no depende de estado del chat.
+ * Recibe: `text: string` (crudo, tal cual devuelve DeepSeek).
+ * Produce: JSX con `<strong>` para lo marcado en negrita y `<span class="block">` por línea.
+ */
 function renderInline(text: string) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
     part.startsWith("**") && part.endsWith("**") ? (

@@ -7,6 +7,12 @@ import { requireAdminSession } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
 import { slugify, uniqueSlug } from "@/lib/slug"
 
+/**
+ * Server Actions CRUD de posts de blog (Admin).
+ * Recibe: payload del form de Admin (`Record<string, any>`) en create/update; `id`/`slug` en delete/list.
+ * Procesa: slug único, traduce title/excerpt si vinieron, marca `publishedAt` al publicar la primera vez.
+ * Produce: el post creado/actualizado (plano) / `true` al borrar / lista completa para el Admin.
+ */
 function revalidateBlog(slug?: string) {
   revalidatePath("/blog")
   if (slug) revalidatePath(`/blog/${slug}`)

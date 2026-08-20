@@ -3,6 +3,11 @@
 import { motion } from "framer-motion"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
+/**
+ * Fondo animado del Hero — 20 partículas flotando con posiciones aleatorias.
+ * Recibe: nada.
+ * Produce: `null` hasta el mount (evita mismatch de hidratación, usa `Math.random()`); después, las partículas animadas.
+ */
 export function QuantumParticles() {
   const isMounted = useIsMounted()
 

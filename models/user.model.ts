@@ -1,6 +1,12 @@
 import mongoose, { Document, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+/**
+ * Modelo Mongoose del usuario Admin (login único del sitio).
+ * Recibe: username/password en texto plano al crear/actualizar.
+ * Procesa: hashea el password con bcrypt en el hook `pre('save')` si cambió.
+ * Produce: `User`, con `comparePassword()` para validar login contra el hash guardado.
+ */
 export interface IUser extends Document {
   _id: mongoose.Types.ObjectId;
   username: string;

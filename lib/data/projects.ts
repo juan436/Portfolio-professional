@@ -1,8 +1,11 @@
 import dbConnect from "@/lib/db/conection"
 import Project from "@/models/project.model"
 
-// Server-only: mismo patrón que project-detail.ts, sin round-trip HTTP.
-
+/**
+ * Lectura server-only de proyectos, sin round-trip HTTP (mismo patrón que project-detail.ts).
+ * Recibe: `getProjectById(id)` / `getProjectBySlug(slug)` / `getProjectsByCategory(category)`.
+ * Produce: el/los proyecto(s) planos (o `null`/`[]` si no hay match).
+ */
 export async function getProjectById(id: string) {
   await dbConnect()
   try {

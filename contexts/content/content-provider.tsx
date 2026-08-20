@@ -19,10 +19,15 @@ const emptyContent: Content = {
   experience: []
 }
 
-// Caché de lectura para el sitio público (home, Footer, /contact) y para las
-// pocas pantallas de Admin que todavía leen de acá (image-manager.tsx, solo
-// lectura). Las mutaciones viven todas en Server Actions ahora — ver
-// vault/portfolio: planes/rediseno-admin-server-actions.
+/**
+ * Provider de contenido — caché de lectura para el sitio público (home, Footer,
+ * /contact) y para las pocas pantallas de Admin que todavía leen de acá
+ * (image-manager.tsx, solo lectura). Las mutaciones viven todas en Server
+ * Actions ahora — ver vault/portfolio: planes/rediseno-admin-server-actions.
+ * Recibe: `children`.
+ * Procesa: 7 fetches en paralelo al montar (salvo que `hydrateContent` ya haya corrido antes, server-side).
+ * Produce: `ContentContext.Provider` con el contenido hidratado.
+ */
 export const ContentProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState<Content>(emptyContent)
   const [isLoading, setIsLoading] = useState(true)

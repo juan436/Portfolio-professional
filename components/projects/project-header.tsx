@@ -6,6 +6,11 @@ import LanguageSwitcher from "@/components/language-switcher";
 import { useLanguage } from "@/hooks/use-language";
 import { LogoMark } from "@/components/navbar/logo";
 
+/**
+ * Header compartido de todas las páginas de detalle/listado (proyectos, automatizaciones, agentes, laboratorio, certificados).
+ * Recibe: `title`/`description`/`subtype?`/`hideHeader?` + `onBackClick?` (botón en vez de link) + `nav?` (backHref/viewMore).
+ * Produce: header fijo (logo+idioma) opcional + título/descripción centrados con botón volver y link "ver más" opcional.
+ */
 interface ProjectHeaderProps {
   title: string;
   description: string;

@@ -3,6 +3,11 @@
 import { RefObject } from "react"
 import { motion } from "framer-motion"
 
+/**
+ * Barra de progreso + marcadores de año de la sección Experiencia (home).
+ * Recibe: `timelineRef`/`activeIndex`/`timelineYears`/`experienceLength`/`handleDotClick`.
+ * Produce: barra animada + un punto clickeable por año.
+ */
 interface ExperienceTimelineProps {
   timelineRef: RefObject<HTMLDivElement | null>
   activeIndex: number

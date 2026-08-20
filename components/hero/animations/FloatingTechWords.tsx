@@ -3,6 +3,11 @@
 import { motion } from "framer-motion"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
+/**
+ * Fondo animado del Hero — palabras técnicas flotando aleatoriamente.
+ * Recibe: `words?` (default: React/Node.js/API/Database/Docker).
+ * Produce: `null` hasta el mount (evita mismatch de hidratación, usa `Math.random()`); después, las palabras animadas.
+ */
 interface FloatingTechWordsProps {
   words?: string[]
 }

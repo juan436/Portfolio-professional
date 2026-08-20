@@ -5,6 +5,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useModifiedFieldsForm } from "@/hooks/use-modified-fields-form"
 
+/**
+ * Form de la sección About del Admin (3 párrafos).
+ * Recibe: `content: AboutContent` + `onChange`.
+ * Produce: campos controlados vía `useModifiedFieldsForm` (dedupe de `_modifiedFields`).
+ */
 // Definir la interfaz para la estructura de datos de About
 export interface AboutContent {
   paragraph1: string

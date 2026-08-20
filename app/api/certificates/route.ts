@@ -1,6 +1,7 @@
 import { createListHandlers } from '@/lib/api/crud-handlers';
 import Certificate from '@/models/certificate.model';
 
+/** `/api/certificates` — GET (lista) + POST (crear), vía `createListHandlers`. */
 export const { GET, POST } = createListHandlers({
   Model: Certificate,
   sort: { date: -1 },

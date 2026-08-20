@@ -86,6 +86,11 @@ function useRealStats() {
   return { projectCount, avgRating, testimonialCount }
 }
 
+/**
+ * Panel "sobre Jevy" (columna izquierda de /contact) — estadísticas reales de proyectos/testimonios.
+ * Recibe: nada (fetch propio).
+ * Produce: badge + stats (cantidad de proyectos entregados, rating promedio).
+ */
 export function JevyAboutPanel() {
   const texts = usePanelTexts()
   const { projectCount, avgRating, testimonialCount } = useRealStats()
@@ -125,6 +130,11 @@ export function JevyAboutPanel() {
   )
 }
 
+/**
+ * Panel "cómo funciona" (columna derecha de /contact) — pasos del flujo + fallback de contacto directo.
+ * Recibe: nada (lee `content.contact.email` del `ContentProvider`).
+ * Produce: lista de pasos numerados + email/WhatsApp si `content` no llegó a tiempo.
+ */
 export function JevyGuidePanel() {
   const texts = usePanelTexts()
   const { content } = useContent()
@@ -218,6 +228,11 @@ function useAttachmentsTexts(): AttachmentsTexts {
   return texts
 }
 
+/**
+ * Card de adjuntos (columna izquierda de /contact) — vista compacta + modal con el detalle de cada archivo.
+ * Recibe: `attachments: UseAttachmentsReturn` (estado compartido con `JevyChat`, ver hooks/use-attachments.ts).
+ * Produce: preview apilado de hasta 3 archivos + modal con estado processed/pending/failed por archivo.
+ */
 export function AttachmentsCard({ attachments }: { attachments: UseAttachmentsReturn }) {
   const texts = useAttachmentsTexts()
   const [modalOpen, setModalOpen] = useState(false)

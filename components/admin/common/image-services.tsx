@@ -10,6 +10,11 @@ export interface ImageService {
   features: string[]
 }
 
+/**
+ * Lista de servicios externos recomendados para alojar imágenes (informativo, Admin).
+ * Recibe: `services: ImageService[]`.
+ * Produce: grid de cards de solo lectura con link a cada servicio.
+ */
 interface ImageServicesProps {
   services: ImageService[]
 }

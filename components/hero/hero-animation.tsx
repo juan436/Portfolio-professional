@@ -13,6 +13,12 @@ import {
   CodeCard
 } from "./animations"
 
+/**
+ * Avatar animado del Hero — foto de perfil con 5 fondos animados + flip a `CodeCard` al hacer click.
+ * Recibe: `showAnimation`/`toggleAnimation` (estado del flip, del padre) + `codeLines` (para `CodeCard`).
+ * Procesa: pausa los 5 fondos (48 animaciones infinitas) cuando el contenedor sale del viewport (`useInView`).
+ * Produce: círculo con la foto de perfil o `CodeCard`, según `showAnimation`.
+ */
 interface HeroAnimationProps {
   showAnimation: boolean
   toggleAnimation: () => void

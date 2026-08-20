@@ -9,6 +9,14 @@ import { listSessionFiles, readLeadFile, saveLeadFile } from '@/lib/uploads';
 import type { ClosingExtraction } from '@/lib/closing';
 import type { MatchResult } from '@/lib/matching';
 
+/**
+ * Cierre real de la conversación con Jevy: guarda Lead/JobOffer en Mongo,
+ * genera markdown+PDF(+ZIP de adjuntos) y arma el payload para el webhook de
+ * n8n que agenda la cita (`action:'book'`).
+ * Recibe: `{ extraction, transcript, sessionId, matchResult }` (`closeConversation`).
+ * Procesa: colecciona adjuntos del disco, arma el reporte, guarda el documento en Mongo (Lead o JobOffer según el tipo).
+ * Produce: `{ schedulingData: SchedulingData }`, listo para que el frontend lo mande al webhook al elegir horario.
+ */
 const EXT_TYPES: Record<string, string> = {
   '.pdf': 'application/pdf',
   '.doc': 'application/msword',

@@ -7,6 +7,8 @@ import { useToastNotifications } from "../../use-toast-notifications";
 /**
  * Hook para gestionar las otras habilidades — reescrito para usar Server
  * Actions (lib/actions/other-skills.ts), Fase 4 (auditoría 2026-08-19).
+ * Recibe: nada.
+ * Produce: lista de other-skills + `save`/`delete`/diálogo de edición.
  */
 export function useOtherSkillsActions() {
   const toastNotifications = useToastNotifications();

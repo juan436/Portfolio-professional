@@ -7,6 +7,13 @@ import Project from "@/models/project.model"
 import { requireAdminSession } from "@/lib/actions/shared"
 import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation"
 
+/**
+ * Server Actions de métricas de proyecto/automatización (Admin).
+ * Recibe: `{ link, metrics }` en upsert; `id`+`ref` en delete; nada en list.
+ * Procesa: upsert por `link.ref` (un solo documento de métricas por proyecto/automatización).
+ * Produce: lista completa (Admin) / el documento de stats guardado / `true` al borrar;
+ * siempre revalida también el resumen acumulado de la home.
+ */
 // Métricas de un proyecto/automatización puntual alimentan también el
 // resumen acumulado que se muestra en la home (StatType, /api/stat-types/summary).
 async function revalidateForRef(ref: string) {

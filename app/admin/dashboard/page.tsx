@@ -18,6 +18,11 @@ import { Code, FileText, FileImage, User, Briefcase, Quote, BarChart3, Award, Ne
 
 const TABS = ["projects", "skills", "experience", "content", "images", "testimonials", "stats", "certificates", "blog"]
 
+/**
+ * Página `/admin/dashboard` — shell de tabs del panel de Admin.
+ * Recibe: nada (lee `?tab` de la URL para la pestaña activa).
+ * Produce: el manager correspondiente a la pestaña activa dentro de `AdminLayout`.
+ */
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("projects")

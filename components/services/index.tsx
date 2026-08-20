@@ -25,6 +25,11 @@ function getServiceKey(title: string): "automation" | "mobile" | "infra" | "web"
   return 'web'
 }
 
+/**
+ * Sección "Servicios" del home.
+ * Recibe: nada (lee `translatedContent.services` del context).
+ * Produce: grid de cards con ícono/pitch/beneficios/CTA (la CTA varía según `getServiceKey` del título).
+ */
 export default function Services() {
   const { translatedContent } = useTranslatedContent()
   const isMounted = useIsMounted()

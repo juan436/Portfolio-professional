@@ -3,6 +3,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SkillCard } from "./skill-card"
 
+/**
+ * Tabs de categoría técnica (frontend/backend/database/devops) — sección Habilidades del home.
+ * Recibe: `activeTab`/`setActiveTab` (estado del padre) + `skills` (por categoría) + `translatedTexts`.
+ * Produce: grid de `SkillCard` por tab.
+ */
 interface SkillsTabsProps {
   activeTab: string
   setActiveTab: (value: string) => void

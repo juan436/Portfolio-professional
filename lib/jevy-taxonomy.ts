@@ -1,6 +1,13 @@
 import dbConnect from '@/lib/db/conection';
 import JevyTaxonomyModel, { type IJevyTaxonomyEntry } from '@/models/jevy-taxonomy.model';
 
+/**
+ * Vocabulario de matching de Jevy — semillas (`JEVY_*_SEED`) + acceso a la
+ * versión vigente en Mongo, con caché de 5 min.
+ * Recibe: nada.
+ * Produce: `getJevyTaxonomy()` (4 listas categorias/subtypes/problemasCore/sectores,
+ * de Mongo o semilla si el doc no tiene datos) y `invalidateJevyTaxonomyCache()`.
+ */
 // Semilla inicial del vocabulario de Jevy — se carga a Mongo una sola vez
 // (scripts/seed-jevy-taxonomy.ts). Desde ahí, la colección manda: agregar un
 // valor nuevo es editar el documento, no tocar código ni redeployar.

@@ -10,6 +10,11 @@ import { useLanguage } from "@/hooks/use-language";
 import { getProjectTechnologies } from "@/lib/utils";
 import type { Project } from "@/contexts/content/types";
 
+/**
+ * Card de proyecto web/mobile con imagen destacada (usada en el grid de Projects del home).
+ * Recibe: `project: Project` + `index` (delay de animación / prioridad de carga de imagen).
+ * Produce: card con imagen, subtipo, tags de tecnología, links a repo/demo.
+ */
 interface FullStackProjectCardProps {
   project: Project;
   index: number;

@@ -5,6 +5,11 @@ import { usePathname } from "next/navigation"
 import LanguageSwitcher from "@/components/language-switcher"
 import type { NavEntry } from "./types"
 
+/**
+ * Navegación desktop (navbar) — links + selector de idioma.
+ * Recibe: `navItems: NavEntry[]` (ya traducidos por el caller).
+ * Produce: links horizontales, resaltando el activo según `pathname`.
+ */
 interface DesktopNavProps {
   navItems: NavEntry[]
 }

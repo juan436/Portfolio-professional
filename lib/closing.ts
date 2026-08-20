@@ -1,5 +1,11 @@
 import type { DeepSeekToolFunction } from '@/lib/deepseek';
 
+/**
+ * Extracción de cierre de la charla con Jevy (function calling de DeepSeek).
+ * Recibe: nada directo — expone el schema de la tool y un normalizador de la respuesta cruda.
+ * Produce: `buildClosingTool()` (schema DeepSeek), `normalizeClosing(raw)` (→ `ClosingExtraction`),
+ * `isReadyToClose(c)` (mínimo indispensable para cerrar: nombre/email/contacto).
+ */
 // Extracción de cierre — todos los campos del levantamiento (cliente o
 // reclutador) en una sola función. Se dispara más tarde que la extracción de
 // matching (esa es rápida y liviana; esta es la foto completa antes de

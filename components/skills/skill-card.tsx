@@ -4,6 +4,11 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { renderSkillIcon } from "@/lib/devicon-utils"
 
+/**
+ * Card de una skill técnica (grid dentro de una tab de `SkillsTabs`).
+ * Recibe: `skill: { name, icon, colored? }`.
+ * Produce: card con el ícono Devicon + nombre.
+ */
 interface SkillCardProps {
   skill: {
     name: string

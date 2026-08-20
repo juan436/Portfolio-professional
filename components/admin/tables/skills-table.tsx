@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Pencil, Trash2 } from "lucide-react"
 import type { Skill } from "@/contexts/content/types"
 
+/**
+ * Tabla de skills técnicas de una categoría (Admin) — ícono + nombre + editar/borrar por fila.
+ * Recibe: `skills`/`onEdit`/`onDelete`/`renderDevIcon` (inyectado por el caller).
+ * Produce: tabla simple con botones de acción.
+ */
 interface SkillsTableProps {
   skills: Skill[]
   onEdit: (skill: Skill) => void

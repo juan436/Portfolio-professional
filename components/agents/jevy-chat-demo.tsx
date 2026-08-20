@@ -4,13 +4,17 @@ import { useEffect, useRef, useState } from "react"
 import { Calendar, Check } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 
-// Demo 100% simulada del chat de Jevy para /agents/[id] (sección Agentes en
-// /work). A diferencia del chat real de /contact (components/contact/jevy-chat.tsx),
-// esto NUNCA llama a DeepSeek, al motor de matching ni al webhook de agenda —
-// es un guion fijo que se reproduce solo. Existe para que cualquiera pueda ver
-// cómo razona y responde Jevy sin que cueste tokens reales ni genere una
-// reserva/correo/WhatsApp real en producción cada vez que alguien la mira.
-// El chat real y con efectos reales sigue viviendo únicamente en /contact.
+/**
+ * Demo 100% simulada del chat de Jevy para /agents/[id] (sección Agentes en
+ * /work). A diferencia del chat real de /contact (components/contact/jevy-chat.tsx),
+ * esto NUNCA llama a DeepSeek, al motor de matching ni al webhook de agenda —
+ * es un guion fijo que se reproduce solo. Existe para que cualquiera pueda ver
+ * cómo razona y responde Jevy sin que cueste tokens reales ni genere una
+ * reserva/correo/WhatsApp real en producción cada vez que alguien la mira.
+ * El chat real y con efectos reales sigue viviendo únicamente en /contact.
+ * Recibe: nada (usa `useLanguage` para elegir el guion `SCRIPT[idioma]`).
+ * Produce: `JevyChatDemo`, animación de charla + widget de agenda simulado, con botón "repetir" al terminar.
+ */
 
 type ScriptStep =
   | { kind: "lead"; text: string }

@@ -1,5 +1,10 @@
 import { askDeepSeek } from "@/lib/deepseek"
 
+/**
+ * Traducción server-only de campos de contenido vía DeepSeek, en paralelo.
+ * Recibe: `translateObject`/`translateAndAddToObject(obj, sourceLanguage, targetLanguages, fieldsToTranslate)`.
+ * Produce: mapa idioma→campos traducidos, o el objeto original con `translations` agregado.
+ */
 // Versión server-only de services/client/translation.ts — para usar desde
 // Server Actions (lib/actions/*.ts), sin el salto HTTP a /api/translate
 // (ese endpoint existe solo porque el navegador no puede llamar a DeepSeek

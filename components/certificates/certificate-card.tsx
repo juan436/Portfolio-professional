@@ -17,6 +17,11 @@ export interface Certificate {
   credentialUrl?: string
 }
 
+/**
+ * Card de certificación (grid de /certificates).
+ * Recibe: `certificate`/`index`/`verifyLabel`/`formatDate` (helpers inyectados por el caller).
+ * Produce: link a `/certificates/{slug}` + botón "ver credencial" si tiene `credentialUrl`.
+ */
 interface CertificateCardProps {
   certificate: Certificate
   index: number

@@ -6,6 +6,11 @@ import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { getServiceIconComponent } from "@/lib/service-icon-map"
 
+/**
+ * Selector de ícono Lucide para el form de Servicios del Admin (catálogo fijo, ver lib/service-icon-map.ts).
+ * Recibe: `selectedIcon`/`onSelectIcon`.
+ * Produce: popover con grid de íconos; al elegir uno llama `onSelectIcon`.
+ */
 // Lista de iconos disponibles para servicios
 const serviceIcons = [
   { value: "Code", label: "Código" },

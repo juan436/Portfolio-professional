@@ -10,6 +10,11 @@ import { useContent } from "@/contexts/content"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { openWhatsAppWithMessage, SOCIAL_LINKS } from "@/utils/social-links"
 
+/**
+ * Footer del sitio público (no se renderiza en /admin, ver `SiteChrome`).
+ * Recibe: nada (lee `content.contact.email` del `ContentProvider`).
+ * Produce: botón "volver arriba" + links sociales (incl. WhatsApp con mensaje traducido) + copyright.
+ */
 export default function Footer() {
   const { t } = useLanguage()
   const { content } = useContent()

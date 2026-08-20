@@ -7,6 +7,11 @@ import { openWhatsAppWithMessage, SOCIAL_LINKS } from "@/utils/social-links"
 import { useLanguage } from "@/hooks/use-language"
 import Link from "next/link"
 
+/**
+ * Fila de íconos sociales del Hero (GitHub/LinkedIn/WhatsApp/X).
+ * Recibe: nada.
+ * Produce: 4 botones circulares; WhatsApp abre con mensaje traducido, el resto son links directos.
+ */
 export function HeroSocialLinks() {
   const { t } = useLanguage();
 

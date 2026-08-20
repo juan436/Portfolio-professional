@@ -6,6 +6,12 @@ import Content from "@/models/content.model"
 import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
 import { translateAndAddToObject } from "@/lib/translate"
 
+/**
+ * Server Actions del contenido único de la home (Hero/About/Contact/Services).
+ * Recibe: `data` del form de Admin por sección (`update*Action`); `services[]` completo (`updateServicesAction`); `id` (`deleteServiceAction`).
+ * Procesa: crea el documento único si no existe, traduce los campos que cambiaron, mergea `services[]` por `_id`.
+ * Produce: la sección actualizada (plana) / lista de servicios / `true` al borrar un servicio.
+ */
 // Content es un documento único (Content.findOne()) — hero/about/contact son
 // sub-objetos anidados, no colecciones propias. Si todavía no existe (primera
 // vez), se crea.

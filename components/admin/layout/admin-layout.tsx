@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Home, LogOut } from "lucide-react"
 import { logout, redirectToLogin } from "@/services/client/logout"
 
+/**
+ * Chrome del panel Admin — header con link al sitio público y logout.
+ * Recibe: `children`.
+ * Produce: header fijo + `children` como contenido principal.
+ */
 interface AdminLayoutProps {
   children: React.ReactNode
 }

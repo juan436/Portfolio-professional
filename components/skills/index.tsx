@@ -7,6 +7,11 @@ import { useTranslatedTexts } from "@/hooks/use-translated-texts"
 import { SkillsTabs } from "./skills-tabs"
 import { OtherSkills } from "./other-skills"
 
+/**
+ * Sección "Habilidades" del home.
+ * Recibe: nada (lee `content.skills`/`content.otherSkills`; también escucha el evento legacy `contentUpdated`).
+ * Produce: `SkillsTabs` (por categoría técnica) + `OtherSkills` (lista libre).
+ */
 export default function Skills() {
   const { content } = useContent()
   const [activeTab, setActiveTab] = useState("frontend")

@@ -3,6 +3,12 @@ import dbConnect from '@/lib/db/conection'
 import User from '@/models/user.model'
 import jwt from 'jsonwebtoken'
 
+/**
+ * POST /api/auth/login.
+ * Recibe: `{ username, password }` en el body.
+ * Procesa: valida contra `User` (bcrypt), firma un JWT de 2h.
+ * Produce: `{ success, token, user }` + cookies `authToken`(httpOnly)/`isLoggedIn`/`adminUser`.
+ */
 export async function POST(request: Request) {
   await dbConnect()
 

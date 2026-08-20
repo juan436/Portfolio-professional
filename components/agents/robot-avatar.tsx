@@ -2,10 +2,14 @@
 
 import { motion } from "framer-motion"
 
-// Robot literal (busto: antena, cabeza, pantalla con ojos, hombros) en vez de
-// un ícono genérico — así una card de Agente se reconoce a simple vista, sin
-// leer el texto. Colores reaccionan a :hover del `group` (la card entera)
-// vía utilidades fill-*/stroke-* de Tailwind sobre SVG, sin JS.
+/**
+ * Robot literal (busto: antena, cabeza, pantalla con ojos, hombros) en vez de
+ * un ícono genérico — así una card de Agente se reconoce a simple vista, sin
+ * leer el texto. Colores reaccionan a :hover del `group` (la card entera)
+ * vía utilidades "fill-" / "stroke-" de Tailwind sobre SVG, sin JS.
+ * Recibe: nada.
+ * Produce: SVG animado (bobbing vertical), pensado para vivir dentro de un contenedor con clase `group`.
+ */
 export function RobotAvatar() {
   return (
     <motion.div
