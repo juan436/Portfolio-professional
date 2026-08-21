@@ -359,7 +359,7 @@
     "sendLabel": "Send",
     "outputLabel": "Result",
     "stepsWord": "steps",
-    "viewMore": "View all automations",
+    "viewMore": "See more",
     "detail": {
       "whatItDoes": "What it does",
       "howItsUsed": "How it's used",
@@ -370,7 +370,8 @@
       "viewDetail": "View detail",
       "toolsHeading": "Built with",
       "channelsHeading": "Supported channels",
-      "setupTimeHeading": "Setup time"
+      "setupTimeHeading": "Setup time",
+      "demoReplay": "Try again"
     }
   },
   "agents": {
@@ -391,6 +392,13 @@
       "setupTimeHeading": "Setup time",
       "demoBadge": "Simulated example — no live connection",
       "demoReplay": "Play again"
+    },
+    "synapseDemo": {
+      "windowTitle": "synapse> cli — diego@team",
+      "typing": "searching the team's knowledge...",
+      "syncing": "syncing with git...",
+      "synced": "synced",
+      "commitPrefix": "commit"
     }
   },
   "testimonials": {

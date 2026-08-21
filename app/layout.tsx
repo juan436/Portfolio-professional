@@ -56,9 +56,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
-      <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/devicon.min.css" />
-      </head>
       <body className={`${inter.className} bg-[#0a0a0a] text-slate-200`}>
         <JsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>

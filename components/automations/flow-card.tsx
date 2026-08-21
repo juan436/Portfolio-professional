@@ -2,12 +2,14 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { MessageCircle, ShoppingCart, Share2 } from "lucide-react"
+import { MessageCircle, ShoppingCart, Share2, Receipt, CalendarClock } from "lucide-react"
 
 export const flowIconMap: Record<string, typeof MessageCircle> = {
   "customer-service": MessageCircle,
   "sales": ShoppingCart,
   "social": Share2,
+  "invoice": Receipt,
+  "calendar": CalendarClock,
 }
 
 /**

@@ -60,6 +60,10 @@ export default function Skills() {
 
   return (
     <section id="skills" className="py-20 bg-black/50 relative">
+      {/* Fuente de íconos Devicon: solo se carga acá (no en app/layout.tsx),
+          esta es la única sección pública que la usa (vía SkillCard).
+          `precedence` hace que React la suba a <head> y la dedupe. */}
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/devicon.min.css" precedence="default" />
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />

@@ -27,7 +27,7 @@ export function AgentCard({ slug, title, description, capabilities, subtype, ind
   const extraCount = capabilities.length - visibleCapabilities.length
 
   return (
-    <Link href={`/agents/${slug}`}>
+    <Link href={`/agents/${slug}?from=work`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

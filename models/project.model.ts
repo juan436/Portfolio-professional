@@ -106,6 +106,8 @@ export interface IProject extends Document {
       steps?: string[];
       demoPlaceholder?: string;
       demoOutputTemplate?: string;
+      demoMode?: 'text' | 'file';
+      demoFileLabel?: string;
     };
   };
   agentDetails?: {
@@ -115,7 +117,7 @@ export interface IProject extends Document {
     channels?: string[];
     tools?: string[];
     setupTime?: string;
-    liveDemo?: 'jevy-chat' | 'none';
+    liveDemo?: 'jevy-chat' | 'synapse-chat' | 'none';
   };
   // Objeto dedicado a Jevy (motor de matching) — nunca se renderiza en el front.
   // Nomenclatura propia para la IA, separada de category/subtype/sector (esos son
@@ -322,6 +324,8 @@ const ProjectSchema = new mongoose.Schema({
       steps: { type: [String], default: [] },
       demoPlaceholder: String,
       demoOutputTemplate: String,
+      demoMode: { type: String, enum: ['text', 'file'] },
+      demoFileLabel: String,
     },
   },
   agentDetails: {
@@ -331,7 +335,7 @@ const ProjectSchema = new mongoose.Schema({
     channels: { type: [String], default: [] },
     tools: { type: [String], default: [] },
     setupTime: String,
-    liveDemo: { type: String, enum: ['jevy-chat', 'none'] },
+    liveDemo: { type: String, enum: ['jevy-chat', 'synapse-chat', 'none'] },
   },
   // Sin `enum` de Mongoose a propósito: el vocabulario vive en Mongo (colección
   // JevyTaxonomy, dinámico, ver lib/jevy-taxonomy.ts), no se puede fijar acá en

@@ -1,10 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
-import Link from "next/link"
 import { useLanguage } from "@/hooks/use-language"
-import { ArrowRight } from "lucide-react"
 import { AgentCard } from "./agent-card"
+import { PaginationControls } from "@/components/pagination-controls"
 
 interface RawAgent {
   _id: string
@@ -34,21 +34,26 @@ interface AgentsProps {
   agents: RawAgent[]
 }
 
+const PAGE_SIZE = 6
+
 /**
- * Sección "Agentes" en /work — grilla simple (no carrusel con demo embebida como
- * Automatizaciones): un chat real como el de Jevy no tiene sentido pre-visualizado
- * dos veces (acá y en /agents/[id]), así que la tarjeta manda directo al detalle.
+ * Sección "Agentes" en /work — grilla paginada in-place (mismo patrón que
+ * "Proyectos"), sin página de listado aparte: un chat real como el de Jevy no
+ * tiene sentido pre-visualizado dos veces, así que la tarjeta manda directo
+ * al detalle (`/agents/[slug]`), pero el listado completo vive acá.
  * Recibe: `agents: RawAgent[]` (crudo, del Server Component `/work`).
- * Produce: `null` si no hay agentes; si no, grid de `AgentCard` traducidas + link "ver todos".
+ * Produce: `null` si no hay agentes; si no, grid de `AgentCard` traducidas + paginación.
  */
 export default function Agents({ agents }: AgentsProps) {
   const { language, t } = useLanguage()
+  const [page, setPage] = useState(1)
 
   const title = String(t("agents.title") || "Agentes")
   const subtitle = String(t("agents.subtitle") || "")
-  const viewMore = String(t("agents.viewMore") || "Ver todos los agentes")
 
   if (agents.length === 0) return null
+
+  const paginatedAgents = agents.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   return (
     <section id="agents" className="py-24 bg-black relative overflow-hidden">
@@ -81,7 +86,7 @@ export default function Agents({ agents }: AgentsProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {agents.map((agent, index) => {
+          {paginatedAgents.map((agent, index) => {
             const translated = agent.translations?.[language.code as "en" | "fr" | "it"]
             const isEs = language.code === "es"
             const details = agent.agentDetails
@@ -106,21 +111,11 @@ export default function Agents({ agents }: AgentsProps) {
           })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mt-12 flex justify-center"
-        >
-          <Link
-            href="/agents"
-            className="group inline-flex items-center border border-blue-700/50 text-blue-500 hover:bg-blue-700/10 hover:border-blue-500 transition-all duration-300 rounded-md px-4 py-2 text-sm font-medium"
-          >
-            {viewMore}
-            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </motion.div>
+        <PaginationControls
+          currentPage={page}
+          totalPages={Math.ceil(agents.length / PAGE_SIZE)}
+          onPageChange={setPage}
+        />
       </div>
     </section>
   )

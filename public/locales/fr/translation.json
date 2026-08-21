@@ -356,7 +356,7 @@
     "sendLabel": "Envoyer",
     "outputLabel": "Résultat",
     "stepsWord": "étapes",
-    "viewMore": "Voir toutes les automatisations",
+    "viewMore": "Voir plus",
     "detail": {
       "whatItDoes": "Ce qu'il fait",
       "howItsUsed": "Comment il est utilisé",
@@ -367,7 +367,8 @@
       "viewDetail": "Voir le détail",
       "toolsHeading": "Construit avec",
       "channelsHeading": "Canaux pris en charge",
-      "setupTimeHeading": "Délai de mise en place"
+      "setupTimeHeading": "Délai de mise en place",
+      "demoReplay": "Réessayer"
     }
   },
   "agents": {
@@ -388,6 +389,13 @@
       "setupTimeHeading": "Délai de mise en place",
       "demoBadge": "Exemple simulé — sans connexion réelle",
       "demoReplay": "Rejouer"
+    },
+    "synapseDemo": {
+      "windowTitle": "synapse> cli — diego@equipe",
+      "typing": "recherche dans la connaissance de l'équipe...",
+      "syncing": "synchronisation avec git...",
+      "synced": "synchronisé",
+      "commitPrefix": "commit"
     }
   }
 }

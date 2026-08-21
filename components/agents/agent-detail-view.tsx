@@ -7,6 +7,8 @@ import { ArrowLeft, MessageCircle, Radio, Sparkles, Timer, Wrench } from "lucide
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/hooks/use-language"
 import { JevyChatDemo } from "@/components/agents/jevy-chat-demo"
+import { SynapseChatDemo } from "@/components/agents/synapse-chat-demo"
+import { SynapseIdeExample } from "@/components/agents/synapse-ide-example"
 import { ProjectHeader } from "@/components/projects/project-header"
 import { agentIconMap } from "@/components/agents/agent-icon-map"
 import { Bot } from "lucide-react"
@@ -23,7 +25,7 @@ interface RawAgent {
     channels?: string[]
     tools?: string[]
     setupTime?: string
-    liveDemo?: "jevy-chat" | "none"
+    liveDemo?: "jevy-chat" | "synapse-chat" | "none"
   }
   translations?: {
     en?: LocaleContent
@@ -75,7 +77,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
     if (typeof window !== "undefined" && window.history.length > 1) {
       router.back()
     } else {
-      router.push("/agents")
+      router.push("/work#agents")
     }
   }
 
@@ -83,7 +85,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
     return (
       <main className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
         <p className="text-slate-400 mb-6">{notFoundLabel}</p>
-        <Link href="/agents" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
+        <Link href="/work#agents" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {backToList}
         </Link>
@@ -119,7 +121,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
             title={title}
             description={description}
             nav={{
-              viewMoreHref: cameFromWork ? "/agents" : undefined,
+              viewMoreHref: cameFromWork ? "/work#agents" : undefined,
               viewMoreLabel: cameFromWork ? viewMoreLabel : undefined,
             }}
             subtype={subtype}
@@ -127,13 +129,13 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
             onBackClick={handleBack}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16 max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="bg-zinc-900/40 border border-white/10 rounded-xl p-6"
+              className="bg-zinc-900/40 border border-white/10 rounded-xl p-8"
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-blue-500/10">
@@ -143,7 +145,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
                   {whatItDoes}
                 </h2>
               </div>
-              <p className="text-slate-300 leading-relaxed">{description}</p>
+              <p className="text-slate-300 leading-relaxed text-justify whitespace-pre-line">{useCase || description}</p>
             </motion.div>
 
             <motion.div
@@ -151,12 +153,11 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               viewport={{ once: true }}
-              className="bg-zinc-900/40 border border-white/10 rounded-xl p-6"
+              className="bg-zinc-900/40 border border-white/10 rounded-xl p-8"
             >
               <h2 className="text-lg font-bold text-blue-400 uppercase tracking-wide mb-4">
                 {capabilitiesHeading}
               </h2>
-              {useCase && <p className="text-slate-300 leading-relaxed mb-4">{useCase}</p>}
               <ul className="space-y-2">
                 {capabilities.map((capability, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
@@ -180,6 +181,11 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
               <div className="max-w-3xl mx-auto">
                 <JevyChatDemo />
               </div>
+            ) : details?.liveDemo === "synapse-chat" ? (
+              <div className="max-w-3xl mx-auto space-y-10">
+                <SynapseChatDemo />
+                <SynapseIdeExample />
+              </div>
             ) : (
               <p className="text-center text-slate-500 text-sm">{liveDemoUnavailable}</p>
             )}
@@ -191,7 +197,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="flex flex-wrap items-stretch justify-center gap-4 max-w-5xl mx-auto mb-16"
+              className="flex flex-wrap items-stretch justify-center gap-4 max-w-6xl mx-auto mb-16"
             >
               {tools.length > 0 && (
                 <div className="min-w-[180px] max-w-[300px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5">

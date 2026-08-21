@@ -29,6 +29,8 @@ interface RawAutomation {
       steps?: string[]
       demoPlaceholder?: string
       demoOutputTemplate?: string
+      demoMode?: "text" | "file"
+      demoFileLabel?: string
     }
   }
   translations?: {
@@ -93,6 +95,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
   const toolsHeading = String(t("automations.detail.toolsHeading") || "Construido con")
   const channelsHeading = String(t("automations.detail.channelsHeading") || "Canales soportados")
   const setupTimeHeading = String(t("automations.detail.setupTimeHeading") || "Tiempo de puesta en marcha")
+  const replayLabel = String(t("automations.detail.demoReplay") || "Probar de nuevo")
 
   if (!automation) {
     return (
@@ -161,18 +164,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
                   {whatItDoes}
                 </h2>
               </div>
-              <p className="text-slate-300 leading-relaxed mb-4">{description}</p>
-              {stepsHeading && (
-                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">{stepsHeading}</p>
-              )}
-              <ol className="space-y-2">
-                {steps.map((step, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
-                    <ListChecks className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                    {step}
-                  </li>
-                ))}
-              </ol>
+              <p className="text-slate-300 leading-relaxed">{useCase || description}</p>
             </motion.div>
 
             <motion.div
@@ -185,7 +177,17 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
               <h2 className="text-lg font-bold text-blue-400 uppercase tracking-wide mb-4">
                 {howItsUsed}
               </h2>
-              <p className="text-slate-300 leading-relaxed">{useCase}</p>
+              {stepsHeading && (
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">{stepsHeading}</p>
+              )}
+              <ol className="space-y-2">
+                {steps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
+                    <ListChecks className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                    {step}
+                  </li>
+                ))}
+              </ol>
             </motion.div>
           </div>
 
@@ -205,10 +207,13 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
                 steps,
                 demoPlaceholder,
                 demoOutputTemplate,
+                demoMode: details?.flow?.demoMode,
+                demoFileLabel: details?.flow?.demoFileLabel,
               }}
               tryPrompt={tryPrompt}
               sendLabel={sendLabel}
               outputLabel={outputLabel}
+              replayLabel={replayLabel}
             />
           </motion.div>
 

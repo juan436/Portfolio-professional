@@ -14,7 +14,7 @@ import {
   type NodeProps,
 } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
-import { Check, Send, Sparkles, Cog } from "lucide-react"
+import { Check, Send, Sparkles, Cog, FileText } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
@@ -35,10 +35,14 @@ interface AutomationFlow {
   steps: string[]
   demoPlaceholder: string
   demoOutputTemplate: string
+  demoMode?: "text" | "file"
+  demoFileLabel?: string
 }
 
 type TriggerData = {
   label: string
+  mode: "text" | "file"
+  fileLabel: string
   value: string
   disabled: boolean
   placeholder: string
@@ -71,25 +75,33 @@ function TriggerNode({ data }: NodeProps & { data: TriggerData }) {
           {data.label}
         </span>
       </div>
-      <div className="flex gap-2">
-        <Input
-          value={data.value}
-          onChange={(e) => data.onChange(e.target.value)}
-          placeholder={data.placeholder}
-          disabled={data.disabled}
-          onKeyDown={(e) => e.key === "Enter" && data.onSubmit()}
-          className="h-9 flex-1 min-w-0 text-sm bg-white/5 border-white/10 text-white placeholder:text-slate-500 nodrag nopan nowheel"
-        />
-        <Button
-          onClick={data.onSubmit}
-          disabled={data.disabled || !data.value.trim()}
-          size="icon"
-          aria-label={data.sendLabel}
-          className="h-9 w-9 bg-blue-600 hover:bg-blue-700 flex-shrink-0 nodrag nopan"
-        >
-          <Send className="h-4 w-4" />
-        </Button>
-      </div>
+      {data.mode === "file" ? (
+        <div className="flex items-center gap-2.5 h-9 px-3 rounded-md bg-white/5 border border-white/10">
+          <FileText className="h-4 w-4 text-blue-300 flex-shrink-0" />
+          <span className="text-sm text-slate-200 truncate">{data.fileLabel}</span>
+          <Check className="h-3.5 w-3.5 text-blue-400 ml-auto flex-shrink-0" />
+        </div>
+      ) : (
+        <div className="flex gap-2">
+          <Input
+            value={data.value}
+            onChange={(e) => data.onChange(e.target.value)}
+            placeholder={data.placeholder}
+            disabled={data.disabled}
+            onKeyDown={(e) => e.key === "Enter" && data.onSubmit()}
+            className="h-9 flex-1 min-w-0 text-sm bg-white/5 border-white/10 text-white placeholder:text-slate-500 nodrag nopan nowheel"
+          />
+          <Button
+            onClick={data.onSubmit}
+            disabled={data.disabled || !data.value.trim()}
+            size="icon"
+            aria-label={data.sendLabel}
+            className="h-9 w-9 bg-blue-600 hover:bg-blue-700 flex-shrink-0 nodrag nopan"
+          >
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
       <Handle type="source" position={Position.Right} className={handleDot} />
     </div>
   )
@@ -175,12 +187,14 @@ export function FlowDiagram({
   tryPrompt,
   sendLabel,
   outputLabel,
+  replayLabel,
   heightClassName = "h-[560px] sm:h-[680px]",
 }: {
   flow: AutomationFlow
   tryPrompt: string
   sendLabel: string
   outputLabel: string
+  replayLabel?: string
   heightClassName?: string
 }) {
   const [input, setInput] = useState("")
@@ -188,18 +202,32 @@ export function FlowDiagram({
   const [isRunning, setIsRunning] = useState(false)
   const [output, setOutput] = useState("")
 
+  const isFileMode = flow.demoMode === "file"
+  const fileLabel = flow.demoFileLabel || "factura.pdf"
+
   const runFlow = () => {
-    if (!input.trim() || isRunning) return
+    if (isRunning) return
+    if (!isFileMode && !input.trim()) return
     setOutput("")
     setIsRunning(true)
     setActiveStep(0)
   }
 
+  // Modo archivo: no hay input que escribir, así que el flujo se dispara
+  // solo (sin interacción) apenas se monta o tras un replay.
+  useEffect(() => {
+    if (!isFileMode || isRunning || output || activeStep >= 0) return
+    const t = setTimeout(runFlow, 900)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFileMode, isRunning, output, activeStep])
+
   useEffect(() => {
     if (!isRunning) return
 
     if (activeStep >= flow.steps.length) {
-      setOutput(flow.demoOutputTemplate.replace("{input}", input.trim()))
+      const value = isFileMode ? fileLabel : input.trim()
+      setOutput(flow.demoOutputTemplate.replace("{input}", value))
       setIsRunning(false)
       return
     }
@@ -209,7 +237,13 @@ export function FlowDiagram({
     }, STEP_DELAY_MS)
 
     return () => clearTimeout(timer)
-  }, [isRunning, activeStep, flow, input])
+  }, [isRunning, activeStep, flow, input, isFileMode, fileLabel])
+
+  const replay = () => {
+    setOutput("")
+    setActiveStep(-1)
+    setIsRunning(false)
+  }
 
   // Posiciones en zigzag: cada nodo alterna arriba/abajo para que el
   // canvas no se lea como una lista recta, más parecido a un editor de
@@ -225,6 +259,8 @@ export function FlowDiagram({
         draggable: false,
         data: {
           label: tryPrompt,
+          mode: isFileMode ? "file" : "text",
+          fileLabel,
           value: input,
           disabled: isRunning,
           placeholder: flow.demoPlaceholder,
@@ -352,6 +388,15 @@ export function FlowDiagram({
         <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} color="#3b82f640" />
         <Controls showInteractive={false} position="bottom-right" />
       </ReactFlow>
+      {isFileMode && output && (
+        <button
+          type="button"
+          onClick={replay}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 text-xs px-3 py-1.5 rounded-md border border-blue-600/50 bg-black/70 backdrop-blur text-blue-400 hover:bg-blue-600/10 transition-colors"
+        >
+          {replayLabel}
+        </button>
+      )}
     </div>
   )
 }

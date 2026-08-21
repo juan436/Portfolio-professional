@@ -377,6 +377,7 @@ export default function ProjectForm({
                         <SelectContent>
                           <SelectItem value="none">Ninguna</SelectItem>
                           <SelectItem value="jevy-chat">Chat de Jevy</SelectItem>
+                          <SelectItem value="synapse-chat">Chat de Synapse</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
