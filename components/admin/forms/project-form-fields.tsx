@@ -149,6 +149,8 @@ export function PairListEditor<T extends PairRow>({
   labelA,
   labelB,
   makeEmpty,
+  iconField,
+  iconLabel,
 }: {
   label: string
   rows: T[] | undefined
@@ -159,6 +161,8 @@ export function PairListEditor<T extends PairRow>({
   labelA: string
   labelB: string
   makeEmpty: () => T
+  iconField?: keyof T
+  iconLabel?: string
 }) {
   const list = rows || []
 
@@ -182,6 +186,15 @@ export function PairListEditor<T extends PairRow>({
                 </Button>
               )}
             </div>
+            {iconField && (
+              <Input
+                value={(row[iconField] as string) || ""}
+                onChange={(e) => update(i, iconField, e.target.value)}
+                disabled={disabled}
+                placeholder={iconLabel}
+                className="bg-black/40 border-blue-700/20 text-xs"
+              />
+            )}
             <Input
               value={(row[fieldA] as string) || ""}
               onChange={(e) => update(i, fieldA, e.target.value)}

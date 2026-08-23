@@ -22,6 +22,10 @@ export interface IProject extends Document {
   duration?: string;
   sector?: string;
   role?: string;
+  relatedProject?: {
+    name: string;
+    href: string;
+  };
   workProcess?: {
     kind: 'paragraph' | 'steps';
     text?: string;
@@ -44,6 +48,17 @@ export interface IProject extends Document {
     solution: string;
   };
   technicalDecisions?: {
+    title: string;
+    description: string;
+  }[];
+  uiStructure?: {
+    title: string;
+    description: string;
+    icon?: string;
+    href?: string;
+    hrefLabel?: string;
+  }[];
+  seoDiscoverability?: {
     title: string;
     description: string;
   }[];
@@ -201,6 +216,10 @@ const ProjectSchema = new mongoose.Schema({
   duration: String,
   sector: String,
   role: String,
+  relatedProject: {
+    name: String,
+    href: String,
+  },
   workProcess: {
     type: [
       {
@@ -231,6 +250,27 @@ const ProjectSchema = new mongoose.Schema({
     solution: String,
   },
   technicalDecisions: {
+    type: [
+      {
+        title: String,
+        description: String,
+      }
+    ],
+    default: []
+  },
+  uiStructure: {
+    type: [
+      {
+        title: String,
+        description: String,
+        icon: String,
+        href: String,
+        hrefLabel: String,
+      }
+    ],
+    default: []
+  },
+  seoDiscoverability: {
     type: [
       {
         title: String,

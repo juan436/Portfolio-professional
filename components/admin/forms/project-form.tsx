@@ -242,6 +242,42 @@ export default function ProjectForm({
                 </AccordionContent>
               </AccordionItem>
 
+              <AccordionItem value="ui-estructura" className="border border-blue-700/20 rounded-md px-3">
+                <AccordionTrigger className="text-sm font-medium">Estructura y funcionalidad (UI)</AccordionTrigger>
+                <AccordionContent className="pt-2">
+                  <PairListEditor
+                    label="Secciones"
+                    rows={formData.uiStructure}
+                    onChange={(v) => setTop("uiStructure", v as any)}
+                    disabled={disabled}
+                    iconField="icon"
+                    iconLabel="Ícono (home, work, lab, award, chat, sliders, globe, compass — vacío = genérico)"
+                    fieldA="title"
+                    fieldB="description"
+                    labelA="Nombre de la pantalla/sección"
+                    labelB="Qué hace"
+                    makeEmpty={() => ({ icon: "", title: "", description: "" })}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="seo" className="border border-blue-700/20 rounded-md px-3">
+                <AccordionTrigger className="text-sm font-medium">Visibilidad en buscadores (SEO)</AccordionTrigger>
+                <AccordionContent className="pt-2">
+                  <PairListEditor
+                    label="Aspectos"
+                    rows={formData.seoDiscoverability}
+                    onChange={(v) => setTop("seoDiscoverability", v as any)}
+                    disabled={disabled}
+                    fieldA="title"
+                    fieldB="description"
+                    labelA="Aspecto"
+                    labelB="Qué logra"
+                    makeEmpty={() => ({ title: "", description: "" })}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="seguridad" className="border border-blue-700/20 rounded-md px-3">
                 <AccordionTrigger className="text-sm font-medium">Seguridad</AccordionTrigger>
                 <AccordionContent className="pt-2">

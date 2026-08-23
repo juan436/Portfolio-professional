@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Activity, ArrowLeft, BarChart3, Briefcase, Clock, ExternalLink, Github, Layers, Lightbulb, MessageCircle, Quote, Repeat, Server, Settings2, ShieldCheck, ShoppingCart, Smartphone, Star, TrendingUp, User, Workflow, Wrench } from "lucide-react"
+import { ArrowLeft, Award, BarChart3, Brain, Briefcase, Building2, Clock, Compass, ExternalLink, FlaskConical, Github, Globe, Home, Layers, LayoutGrid, Lightbulb, MessageCircle, Package, Quote, RefreshCw, Repeat, Search, Server, Settings2, Share2, ShieldCheck, ShoppingCart, SlidersHorizontal, Smartphone, Star, Store, TrendingUp, Upload, User, Users, Workflow, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import type { RawTestimonial } from "@/services/api/testimonials"
 import type { ProjectMetric } from "@/services/api/project-stats"
@@ -10,8 +10,37 @@ import { ProjectHeader } from "@/components/projects/project-header"
 import { ProjectImageCarousel } from "@/components/projects/project-image-carousel"
 import { DeploymentDiagram, type DeploymentIconKey } from "@/components/projects/deployment-diagram"
 import { TestimonialMetrics } from "@/components/projects/testimonial-metrics"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+
+// Claves editables desde el Admin (campo "icon" de cada fila de uiStructure).
+// Cualquier clave no reconocida cae en LayoutGrid.
+const uiIconMap = {
+  home: Home,
+  work: Briefcase,
+  lab: FlaskConical,
+  award: Award,
+  chat: MessageCircle,
+  sliders: SlidersHorizontal,
+  globe: Globe,
+  compass: Compass,
+  cart: ShoppingCart,
+  package: Package,
+  chart: BarChart3,
+  store: Store,
+  sync: RefreshCw,
+  upload: Upload,
+  team: Users,
+  org: Building2,
+  review: Star,
+  layout: LayoutGrid,
+  clock: Clock,
+  share: Share2,
+  shield: ShieldCheck,
+  learn: Brain,
+  api: Server,
+} as const
 
 /**
  * Vista de detalle de un proyecto web/mobile/infra_backend (`/projects/[slug]`).
@@ -25,6 +54,7 @@ interface RawProject {
   description: string
   image?: string
   images?: string[]
+  category?: string
   github?: string
   demo?: string
   tags?: string[]
@@ -32,6 +62,7 @@ interface RawProject {
   sector?: string
   subtype?: string
   role?: string
+  relatedProject?: { name: string; href: string }
   workProcess?: { kind: 'paragraph' | 'steps'; text?: string; items?: string[] }[]
   techStack?: {
     frontend?: string[]
@@ -41,6 +72,8 @@ interface RawProject {
   }
   challenge?: { problem: string; solution: string }
   technicalDecisions?: { title: string; description: string }[]
+  uiStructure?: { title: string; description: string; icon?: string; href?: string; hrefLabel?: string }[]
+  seoDiscoverability?: { title: string; description: string }[]
   securityHardening?: string[]
   deploymentDiagram?: { icon: string; label: string }[]
   infraDetails?: { uptime?: string; capacity?: string; monitoring?: string[]; backupStrategy?: string; costOptimized?: string }
@@ -72,6 +105,8 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const challengeHeading = String(t("projects.challengeHeading") || "El Reto")
   const solutionHeading = String(t("projects.solutionHeading") || "La Solución")
   const decisionsHeading = String(t("projects.decisionsHeading") || "Decisiones Técnicas")
+  const uiStructureHeading = String(t("projects.uiStructureHeading") || "Estructura y funcionalidad")
+  const seoHeading = String(t("projects.seoHeading") || "Visibilidad en buscadores")
   const securityHeading = String(t("projects.securityHeading") || "Qué protege en producción")
   const deploymentHeading = String(t("projects.deploymentHeading") || "Cómo está desplegado")
   const infraDetailsHeading = String(t("projects.infraDetailsHeading") || "Infraestructura en producción")
@@ -83,6 +118,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const ctaButton = String(t("projects.ctaButton") || "Hablemos")
   const durationQuestionLabel = String(t("projects.durationQuestionLabel") || "Tiempo de desarrollo")
   const sectorQuestionLabel = String(t("projects.sectorQuestionLabel") || "Enfocado a")
+  const relatedProjectLabel = String(t("projects.relatedProjectLabel") || "Proyecto relacionado")
   const roleHeading = String(t("projects.roleHeading") || "Rol en el proyecto")
   const workProcessHeading = String(t("projects.workProcessHeading") || "Cómo trabajé")
   const techStackCategoryLabels: Record<string, string> = {
@@ -114,14 +150,19 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const translated = project.translations?.[language.code as "en" | "fr" | "it"]
   const title = language.code === "es" ? project.title : translated?.title || project.title
   const description = language.code === "es" ? project.description : translated?.description || project.description
-  const galleryImages = project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : []
+  const rawGalleryImages = project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : []
+  // Mobile nunca tiene el banner "Infraestructura & Backend" (no tiene sentido para una app cliente):
+  // si no hay imagen real, cae a un placeholder en vez del banner pensado para fichas API sin capturas.
+  const galleryImages = rawGalleryImages.length > 0 ? rawGalleryImages : project.category === 'mobile' ? ['/placeholder.svg'] : []
   const hasGallery = galleryImages.length > 0
   const backendBannerLabel = String(t("projects.backendBanner") || "Infraestructura & Backend")
   const techStackEntries = Object.entries(project.techStack || {}).filter(
     ([, items]) => Array.isArray(items) && items.length > 0
   ) as [string, string[]][]
 
-  const infraRows = [
+  // "Infraestructura en producción" es un concepto de servidor: una app mobile no tiene la suya
+  // propia (vive en la ficha API hermana, si existe), así que esta card nunca aplica a `mobile`.
+  const infraRows = project.category === 'mobile' ? [] : [
     project.infraDetails?.uptime,
     project.infraDetails?.capacity,
     project.infraDetails?.monitoring?.length ? project.infraDetails.monitoring.join(', ') : undefined,
@@ -223,7 +264,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
                 </motion.div>
               )}
 
-              {(project.duration || project.sector || project.role) && (
+              {(project.duration || project.relatedProject || project.sector || project.role) && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -237,91 +278,193 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
                         <Clock className="h-3.5 w-3.5 text-blue-500" />
                         {durationQuestionLabel}
                       </p>
-                      <p className="text-sm font-bold text-white break-words">{project.duration}</p>
+                      <p className="text-sm text-slate-300 break-words">{project.duration}</p>
                     </div>
                   )}
-                  {project.sector && (
+                  {project.relatedProject ? (
+                    <Link
+                      href={project.relatedProject.href}
+                      className="min-w-[180px] max-w-[220px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5 hover:border-blue-500/40 transition-colors"
+                    >
+                      <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-1.5">
+                        <Briefcase className="h-3.5 w-3.5 text-blue-500" />
+                        {relatedProjectLabel}
+                      </p>
+                      <p className="text-sm text-blue-400 break-words inline-flex items-center gap-1">
+                        {project.relatedProject.name}
+                        <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                      </p>
+                    </Link>
+                  ) : project.sector ? (
                     <div className="min-w-[180px] max-w-[220px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5">
                       <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-1.5">
                         <Briefcase className="h-3.5 w-3.5 text-blue-500" />
                         {sectorQuestionLabel}
                       </p>
-                      <p className="text-sm font-bold text-white break-words">{project.sector}</p>
+                      <p className="text-sm text-slate-300 break-words">{project.sector}</p>
                     </div>
-                  )}
+                  ) : null}
                   {project.role && (
                     <div className="min-w-[220px] flex-1 text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5">
                       <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-1.5">
                         <User className="h-3.5 w-3.5 text-blue-500" />
                         {roleHeading}
                       </p>
-                      <p className="text-sm font-bold text-white">{project.role}</p>
+                      <p className="text-sm text-slate-300">{project.role}</p>
                     </div>
                   )}
                 </motion.div>
               )}
 
-              {project.workProcess && project.workProcess.length > 0 && (
+              {(
+                (project.uiStructure && project.uiStructure.length > 0) ||
+                (project.seoDiscoverability && project.seoDiscoverability.length > 0) ||
+                (project.workProcess && project.workProcess.length > 0) ||
+                (project.technicalDecisions && project.technicalDecisions.length > 0)
+              ) && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                   viewport={{ once: true }}
-                  className="p-6 rounded-xl bg-zinc-900/40 border border-white/5"
                 >
-                  <h3 className="text-sm font-bold uppercase tracking-wide text-blue-400 mb-6 flex items-center gap-2">
-                    <Repeat className="h-4 w-4" />
-                    {workProcessHeading}
-                  </h3>
-                  <div className="space-y-6">
-                    {project.workProcess.map((block, bi) =>
-                      block.kind === 'paragraph' ? (
-                        block.text && (
-                          <p key={bi} className="text-sm text-slate-300 leading-relaxed">
-                            {block.text}
-                          </p>
-                        )
-                      ) : (
-                        block.items && block.items.length > 0 && (
-                          <div key={bi} className="space-y-6">
-                            {block.items.map((step, i) => (
-                              <div key={i} className="relative pl-11">
-                                {i < block.items!.length - 1 && (
-                                  <div className="absolute left-[15px] top-8 bottom-[-24px] w-px bg-blue-500/20" />
-                                )}
-                                <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-xs font-bold text-blue-300">
-                                  {i + 1}
-                                </div>
-                                <p className="text-sm text-slate-300 leading-relaxed pt-1.5">{step}</p>
-                              </div>
-                            ))}
-                          </div>
-                        )
-                      )
-                    )}
-                  </div>
-                </motion.div>
-              )}
+                  <Accordion type="multiple" className="space-y-3">
 
-              {project.technicalDecisions && project.technicalDecisions.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
-                >
-                  <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                    <Settings2 className="h-5 w-5 text-blue-500" />
-                    {decisionsHeading}
-                  </h2>
-                  <div className="space-y-4">
-                    {project.technicalDecisions.map((decision, i) => (
-                      <div key={i} className="p-6 rounded-xl bg-zinc-900/40 border border-white/5">
-                        <h3 className="text-base font-bold text-white mb-2">{decision.title}</h3>
-                        <p className="text-slate-300 leading-relaxed text-sm">{decision.description}</p>
-                      </div>
-                    ))}
-                  </div>
+                    {project.uiStructure && project.uiStructure.length > 0 && (
+                      <AccordionItem value="ui-estructura" className="border border-white/5 rounded-xl bg-zinc-900/40 px-6">
+                        <AccordionTrigger className="text-base font-bold text-white hover:no-underline hover:text-blue-300 py-5 [&>svg]:text-blue-500">
+                          <span className="flex items-center gap-2.5">
+                            <LayoutGrid className="h-5 w-5 text-blue-500" />
+                            {uiStructureHeading}
+                          </span>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div>
+                            {project.uiStructure.map((section, i) => {
+                              const Icon = uiIconMap[section.icon as keyof typeof uiIconMap] || LayoutGrid
+                              const isLast = i === project.uiStructure!.length - 1
+                              return (
+                                <div key={i} className={`relative pl-11 ${isLast ? "" : "pb-6"}`}>
+                                  {!isLast && (
+                                    <div className="absolute left-[15px] top-8 bottom-0 w-px bg-blue-500/20" />
+                                  )}
+                                  <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-blue-300">
+                                    <Icon className="h-4 w-4" />
+                                  </div>
+                                  <h3 className="text-sm font-bold text-white pt-1.5 mb-1.5">{section.title}</h3>
+                                  <p className="text-slate-300 leading-relaxed text-sm">{section.description}</p>
+                                  {section.href && (
+                                    <Link
+                                      href={section.href}
+                                      className="inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 mt-2 font-medium"
+                                    >
+                                      {section.hrefLabel || "Ver más"}
+                                      <ExternalLink className="h-3.5 w-3.5" />
+                                    </Link>
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    )}
+
+                    {project.seoDiscoverability && project.seoDiscoverability.length > 0 && (
+                      <AccordionItem value="seo" className="border border-white/5 rounded-xl bg-zinc-900/40 px-6">
+                        <AccordionTrigger className="text-base font-bold text-white hover:no-underline hover:text-blue-300 py-5 [&>svg]:text-blue-500">
+                          <span className="flex items-center gap-2.5">
+                            <Search className="h-5 w-5 text-blue-500" />
+                            {seoHeading}
+                          </span>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-4">
+                            {project.seoDiscoverability.map((section, i) => {
+                              const isLast = i === project.seoDiscoverability!.length - 1
+                              return (
+                                <div key={i} className={isLast ? "" : "pb-4 border-b border-white/5"}>
+                                  <p className="text-sm leading-relaxed">
+                                    <span className="font-bold text-blue-400">{section.title}</span>
+                                    <span className="text-slate-600 mx-1">:</span>
+                                    <span className="text-slate-300">{section.description}</span>
+                                  </p>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    )}
+
+                    {project.workProcess && project.workProcess.length > 0 && (
+                      <AccordionItem value="como-trabaje" className="border border-white/5 rounded-xl bg-zinc-900/40 px-6">
+                        <AccordionTrigger className="text-base font-bold text-white hover:no-underline hover:text-blue-300 py-5 [&>svg]:text-blue-500">
+                          <span className="flex items-center gap-2.5">
+                            <Repeat className="h-5 w-5 text-blue-500" />
+                            {workProcessHeading}
+                          </span>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-6">
+                            {project.workProcess.map((block, bi) =>
+                              block.kind === 'paragraph' ? (
+                                block.text && (
+                                  <p key={bi} className="text-sm text-slate-300 leading-relaxed">
+                                    {block.text}
+                                  </p>
+                                )
+                              ) : (
+                                block.items && block.items.length > 0 && (
+                                  <div key={bi} className="space-y-6">
+                                    {block.items.map((step, i) => (
+                                      <div key={i} className="relative pl-11">
+                                        {i < block.items!.length - 1 && (
+                                          <div className="absolute left-[15px] top-8 bottom-[-24px] w-px bg-blue-500/20" />
+                                        )}
+                                        <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-xs font-bold text-blue-300">
+                                          {i + 1}
+                                        </div>
+                                        <p className="text-sm text-slate-300 leading-relaxed pt-1.5">{step}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )
+                              )
+                            )}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    )}
+
+                    {project.technicalDecisions && project.technicalDecisions.length > 0 && (
+                      <AccordionItem value="decisiones" className="border border-white/5 rounded-xl bg-zinc-900/40 px-6">
+                        <AccordionTrigger className="text-base font-bold text-white hover:no-underline hover:text-blue-300 py-5 [&>svg]:text-blue-500">
+                          <span className="flex items-center gap-2.5">
+                            <Settings2 className="h-5 w-5 text-blue-500" />
+                            {decisionsHeading}
+                          </span>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-4">
+                            {project.technicalDecisions.map((decision, i) => {
+                              const isLast = i === project.technicalDecisions!.length - 1
+                              return (
+                                <div key={i} className={isLast ? "" : "pb-4 border-b border-white/5"}>
+                                  <p className="text-sm leading-relaxed">
+                                    <span className="font-bold text-blue-400">{decision.title}</span>
+                                    <span className="text-slate-600 mx-1">:</span>
+                                    <span className="text-slate-300">{decision.description}</span>
+                                  </p>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    )}
+
+                  </Accordion>
                 </motion.div>
               )}
 
@@ -353,7 +496,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
 
                 {techStackEntries.length > 0 && (
                   <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
+                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
                       <Layers className="h-4 w-4 text-blue-500" />
                       {techStackHeading}
                     </h2>
@@ -381,14 +524,14 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
 
                 {project.securityHardening && project.securityHardening.length > 0 && (
                   <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
+                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
                       <ShieldCheck className="h-4 w-4 text-blue-500" />
                       {securityHeading}
                     </h2>
                     <ul className="space-y-2">
                       {project.securityHardening.map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <ShieldCheck className="h-3.5 w-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <span className="mt-2 w-1 h-1 rounded-full bg-blue-500 flex-shrink-0" />
                           {item}
                         </li>
                       ))}
@@ -398,14 +541,14 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
 
                 {infraRows.length > 0 && (
                   <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
-                      <Activity className="h-4 w-4 text-blue-500" />
+                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
+                      <Server className="h-4 w-4 text-blue-500" />
                       {infraDetailsHeading}
                     </h2>
                     <ul className="space-y-2">
                       {infraRows.map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <Activity className="h-3.5 w-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <span className="mt-2 w-1 h-1 rounded-full bg-blue-500 flex-shrink-0" />
                           {item}
                         </li>
                       ))}
@@ -415,7 +558,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
 
                 {systemRows.length > 0 && (
                   <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
+                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
                       <BarChart3 className="h-4 w-4 text-blue-500" />
                       {systemDetailsHeading}
                     </h2>
@@ -432,7 +575,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
 
                 {ecommerceRows.length > 0 && (
                   <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
+                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
                       <ShoppingCart className="h-4 w-4 text-blue-500" />
                       {ecommerceDetailsHeading}
                     </h2>
@@ -449,7 +592,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
 
                 {mobileRows.length > 0 && (
                   <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
+                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
                       <Smartphone className="h-4 w-4 text-blue-500" />
                       {mobileDetailsHeading}
                     </h2>

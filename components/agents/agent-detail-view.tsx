@@ -145,7 +145,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
                   {whatItDoes}
                 </h2>
               </div>
-              <p className="text-slate-300 leading-relaxed text-justify whitespace-pre-line">{useCase || description}</p>
+              <p className="text-slate-300 leading-relaxed text-base whitespace-pre-line">{useCase || description}</p>
             </motion.div>
 
             <motion.div
@@ -160,7 +160,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
               </h2>
               <ul className="space-y-2">
                 {capabilities.map((capability, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
+                  <li key={i} className="flex items-start gap-2 text-base text-slate-400">
                     <Sparkles className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
                     {capability}
                   </li>
@@ -241,7 +241,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
                     <Timer className="h-3.5 w-3.5 text-blue-500" />
                     {setupTimeHeading}
                   </p>
-                  <p className="text-sm font-bold text-white break-words">{setupTime}</p>
+                  <p className="text-sm text-slate-300 break-words">{setupTime}</p>
                 </div>
               )}
             </motion.div>

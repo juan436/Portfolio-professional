@@ -83,7 +83,6 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
   const whatItDoes = String(t("automations.detail.whatItDoes") || "Qué hace")
   const howItsUsed = String(t("automations.detail.howItsUsed") || "Cómo se usa")
   const tryLive = String(t("automations.detail.tryLive") || "Probalo en vivo")
-  const stepsHeading = String(t("automations.detail.stepsHeading") || "")
   const notFoundLabel = String(t("automations.detail.notFound") || "")
   const backToList = String(t("automations.detail.backToList") || "Volver")
   const viewMoreLabel = String(t("automations.viewMore") || "Ver todas las automatizaciones")
@@ -164,7 +163,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
                   {whatItDoes}
                 </h2>
               </div>
-              <p className="text-slate-300 leading-relaxed">{useCase || description}</p>
+              <p className="text-slate-300 leading-relaxed text-base">{useCase || description}</p>
             </motion.div>
 
             <motion.div
@@ -177,12 +176,9 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
               <h2 className="text-lg font-bold text-blue-400 uppercase tracking-wide mb-4">
                 {howItsUsed}
               </h2>
-              {stepsHeading && (
-                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">{stepsHeading}</p>
-              )}
               <ol className="space-y-2">
                 {steps.map((step, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
+                  <li key={i} className="flex items-start gap-2 text-base text-slate-400">
                     <ListChecks className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
                     {step}
                   </li>
@@ -267,7 +263,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
                     <Timer className="h-3.5 w-3.5 text-blue-500" />
                     {setupTimeHeading}
                   </p>
-                  <p className="text-sm font-bold text-white break-words">{setupTime}</p>
+                  <p className="text-sm text-slate-300 break-words">{setupTime}</p>
                 </div>
               )}
             </motion.div>

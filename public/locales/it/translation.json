@@ -84,6 +84,8 @@
     "challengeHeading": "La Sfida",
     "solutionHeading": "La Soluzione",
     "decisionsHeading": "Decisioni Tecniche",
+    "uiStructureHeading": "Struttura e funzionalità",
+    "seoHeading": "Visibilità sui motori di ricerca",
     "backendBanner": "Infrastruttura & Backend",
     "securityHeading": "Cosa protegge in produzione",
     "deploymentHeading": "Come è distribuito",
@@ -96,6 +98,7 @@
     "mobileDetailsHeading": "Dettagli dell'app",
     "durationQuestionLabel": "Tempo di sviluppo",
     "sectorQuestionLabel": "Rivolto a",
+    "relatedProjectLabel": "Progetto correlato",
     "roleHeading": "Ruolo nel progetto",
     "workProcessHeading": "Come ho lavorato"
   },
