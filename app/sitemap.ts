@@ -6,7 +6,7 @@ import { MetadataRoute } from 'next'
  * Produce: `MetadataRoute.Sitemap` con las rutas principales fijas (no incluye slugs dinámicos).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseURL = 'https://jvillegas-portafolio.jvserver.com'
+  const baseURL = 'https://jevy.dev'
   
   const currentDate = new Date()
 

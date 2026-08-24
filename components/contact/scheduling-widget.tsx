@@ -23,9 +23,9 @@ export interface SchedulingData {
   modality?: string
   contractType?: string
   selectionProcess?: string
-  reportMarkdownBase64: string
-  reportPdfBase64: string
-  attachmentsZipBase64?: string
+  reportMarkdownUrl: string
+  reportPdfUrl: string
+  attachmentsZipUrl?: string
   additionalDetailsHtml: string
 }
 

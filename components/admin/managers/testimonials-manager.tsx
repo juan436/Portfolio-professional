@@ -1,17 +1,19 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Trash2, Star } from "lucide-react"
-import { fetchTestimonials } from "@/services/api/testimonials"
+import { Plus, Trash2, Star, Check, X, TrendingUp } from "lucide-react"
 import { fetchProjects } from "@/services/api/projects"
 import {
+  listTestimonialsAction,
   createTestimonialAction,
   updateTestimonialAction,
   deleteTestimonialAction,
+  approveTestimonialAction,
+  promoteSuggestedMetricAction,
 } from "@/lib/actions/testimonials"
 import { useToastNotifications } from "@/hooks/admin/use-toast-notifications"
 import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialog"
@@ -19,13 +21,22 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { TextField, TextAreaField } from "@/components/admin/forms/project-form-fields"
 
 /**
- * Manager de Testimonios del Admin — lista + panel de crear/editar (Server Actions, lib/actions/testimonials.ts).
- * Recibe: nada (carga testimonios + catálogo de proyectos al montar).
- * Produce: CRUD completo, con repeater de `links[]` a proyectos/automatizaciones para testimonios tipo "resultado".
+ * Manager de Testimonios del Admin — lista (con tabs pendiente/aprobado) + panel de crear/editar
+ * (Server Actions, lib/actions/testimonials.ts). Los `pending` llegan del form público
+ * (app/api/testimonials/route.ts) y se aprueban/rechazan acá; también se promueven acá las
+ * `suggestedMetrics` que el cliente sugirió a `ProjectStats` real.
+ * Recibe: nada (carga TODOS los testimonios, cualquier status, + catálogo de proyectos al montar).
+ * Produce: CRUD completo + moderación pending/approved, con repeater de `links[]` a proyectos/automatizaciones.
  */
 interface TestimonialLink {
   type: "proyecto" | "automatizacion"
   ref: string
+}
+
+interface SuggestedMetric {
+  label: string
+  value: string
+  statType?: string
 }
 
 interface AdminTestimonial {
@@ -38,6 +49,8 @@ interface AdminTestimonial {
   type: "personal" | "resultado"
   rating?: number
   links: TestimonialLink[]
+  status?: "pending" | "approved"
+  suggestedMetrics?: SuggestedMetric[]
 }
 
 interface ProjectOption {
@@ -54,6 +67,8 @@ const emptyTestimonial: AdminTestimonial = {
   type: "resultado",
   rating: 5,
   links: [],
+  status: "approved",
+  suggestedMetrics: [],
 }
 
 export default function TestimonialsManager() {
@@ -68,20 +83,28 @@ export default function TestimonialsManager() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [toDelete, setToDelete] = useState<string | null>(null)
   const [formData, setFormData] = useState<AdminTestimonial | null>(null)
+  const [statusTab, setStatusTab] = useState<"pending" | "approved">("pending")
+
+  const load = async () => {
+    setIsFetching(true)
+    try {
+      const [testimonials, projects] = await Promise.all([listTestimonialsAction(), fetchProjects()])
+      setItems(testimonials)
+      setProjectOptions((projects as any[]).map((p) => ({ _id: p._id, title: p.title, category: p.category })))
+    } finally {
+      setIsFetching(false)
+    }
+  }
 
   useEffect(() => {
-    const load = async () => {
-      setIsFetching(true)
-      try {
-        const [testimonials, projects] = await Promise.all([fetchTestimonials(), fetchProjects()])
-        setItems(testimonials)
-        setProjectOptions((projects as any[]).map((p) => ({ _id: p._id, title: p.title, category: p.category })))
-      } finally {
-        setIsFetching(false)
-      }
-    }
     load()
   }, [])
+
+  const visibleItems = useMemo(
+    () => items.filter((item) => (item.status || "approved") === statusTab),
+    [items, statusTab]
+  )
+  const pendingCount = useMemo(() => items.filter((item) => (item.status || "approved") === "pending").length, [items])
 
   useEffect(() => {
     setFormData(selected)
@@ -141,6 +164,52 @@ export default function TestimonialsManager() {
     }
   }
 
+  // "Rechazar" un pending no tiene estado propio en el modelo — nunca llegó
+  // a mostrarse en el sitio, así que rechazar es borrarlo directo (sin el
+  // diálogo de confirmación del delete normal, ya es una acción de moderación).
+  const handleReject = async (id: string) => {
+    try {
+      await deleteTestimonialAction(id)
+      setItems((prev) => prev.filter((t) => t._id !== id))
+      if (selected?._id === id) setSelected(null)
+      toastNotifications.showSuccessToast("Rechazado", "El testimonio fue descartado.")
+    } catch (error) {
+      console.error(error)
+      toastNotifications.showErrorToast("Error", "No se pudo rechazar el testimonio.")
+    }
+  }
+
+  const handleApprove = async (id: string) => {
+    setIsLoading(true)
+    try {
+      const updated = await approveTestimonialAction(id)
+      setItems((prev) => prev.map((t) => (t._id === updated._id ? updated : t)))
+      setSelected(updated)
+      setStatusTab("approved")
+      toastNotifications.showSuccessToast("Aprobado", "El testimonio ya es visible en el sitio.")
+    } catch (error) {
+      console.error(error)
+      toastNotifications.showErrorToast("Error", "No se pudo aprobar el testimonio.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handlePromoteMetric = async (testimonialId: string, metricIndex: number) => {
+    setIsLoading(true)
+    try {
+      const { testimonial } = await promoteSuggestedMetricAction(testimonialId, metricIndex)
+      setItems((prev) => prev.map((t) => (t._id === testimonial._id ? { ...t, suggestedMetrics: testimonial.suggestedMetrics } : t)))
+      setSelected((prev) => (prev && prev._id === testimonial._id ? { ...prev, suggestedMetrics: testimonial.suggestedMetrics } : prev))
+      toastNotifications.showSuccessToast("Métrica promovida", "Se agregó a las métricas reales del proyecto.")
+    } catch (error) {
+      console.error(error)
+      toastNotifications.showErrorToast("Error", "No se pudo promover la métrica.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const addLink = () => {
     if (!formData) return
     setFormData({ ...formData, links: [...formData.links, { type: "proyecto", ref: "" }] })
@@ -173,11 +242,31 @@ export default function TestimonialsManager() {
           <Card className="bg-black/40 border-blue-700/20">
             <CardHeader>
               <CardTitle>Testimonios</CardTitle>
-              <CardDescription>{isFetching ? "Cargando..." : `${items.length} en total`}</CardDescription>
+              <CardDescription>{isFetching ? "Cargando..." : `${visibleItems.length} en total`}</CardDescription>
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setStatusTab("pending")}
+                  className={`flex-1 text-xs font-medium rounded-md px-2 py-1.5 border transition-colors ${
+                    statusTab === "pending" ? "bg-amber-500/20 border-amber-500/50 text-amber-400" : "border-blue-700/20 text-slate-400 hover:border-blue-700/50"
+                  }`}
+                >
+                  Pendientes {pendingCount > 0 && `(${pendingCount})`}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusTab("approved")}
+                  className={`flex-1 text-xs font-medium rounded-md px-2 py-1.5 border transition-colors ${
+                    statusTab === "approved" ? "bg-blue-900/30 border-blue-500 text-blue-400" : "border-blue-700/20 text-slate-400 hover:border-blue-700/50"
+                  }`}
+                >
+                  Aprobados
+                </button>
+              </div>
             </CardHeader>
             <CardContent className="p-4">
               <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
-                {items.map((item) => (
+                {visibleItems.map((item) => (
                   <div
                     key={item._id}
                     className={`p-3 rounded-md cursor-pointer relative group ${
@@ -204,7 +293,11 @@ export default function TestimonialsManager() {
                     <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wide">{item.type}</p>
                   </div>
                 ))}
-                {items.length === 0 && !isFetching && <p className="text-center text-slate-400 py-4">No hay testimonios.</p>}
+                {visibleItems.length === 0 && !isFetching && (
+                  <p className="text-center text-slate-400 py-4">
+                    {statusTab === "pending" ? "No hay testimonios pendientes." : "No hay testimonios aprobados."}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -224,6 +317,21 @@ export default function TestimonialsManager() {
                 <p className="text-center text-slate-400 py-4">Seleccioná un testimonio o creá uno nuevo.</p>
               ) : (
                 <div className="space-y-4">
+                  {!isNew && (formData.status || "approved") === "pending" && (
+                    <div className="flex items-center justify-between p-3 rounded-md border border-amber-500/40 bg-amber-500/10">
+                      <p className="text-sm text-amber-400">Pendiente de moderación — llegó por el form público, todavía no se muestra en el sitio.</p>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" className="border-red-700/50 text-red-500" onClick={() => handleReject(formData._id)}>
+                          <X className="mr-1.5 h-3.5 w-3.5" />
+                          Rechazar
+                        </Button>
+                        <Button size="sm" className="bg-green-700 hover:bg-green-800" onClick={() => handleApprove(formData._id)}>
+                          <Check className="mr-1.5 h-3.5 w-3.5" />
+                          Aprobar
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                   {!editMode && (
                     <div className="flex justify-end">
                       <Button onClick={() => setEditMode(true)} variant="outline" className="border-blue-700/50 text-blue-500">
@@ -297,6 +405,34 @@ export default function TestimonialsManager() {
                           Vincular proyecto
                         </Button>
                       )}
+                    </div>
+                  )}
+
+                  {!isNew && (formData.suggestedMetrics?.length || 0) > 0 && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium flex items-center gap-1">
+                        <TrendingUp className="h-3.5 w-3.5" />
+                        Métricas sugeridas por el cliente (sin verificar)
+                      </label>
+                      <p className="text-xs text-slate-500">
+                        No se publican solas — revisá si son verificables y promovelas a las métricas reales del proyecto.
+                      </p>
+                      <div className="space-y-2">
+                        {formData.suggestedMetrics!.map((metric, i) => (
+                          <div key={i} className="p-3 rounded-md border border-blue-700/20 bg-black/20 flex items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="text-sm text-white truncate">
+                                <span className="font-semibold">{metric.value}</span>{" "}
+                                <span className="text-slate-400">{metric.label}</span>
+                              </p>
+                              {metric.statType && <p className="text-[10px] text-slate-500 uppercase tracking-wide">suma a: {metric.statType}</p>}
+                            </div>
+                            <Button size="sm" variant="outline" className="border-blue-700/50 text-blue-500 shrink-0" onClick={() => handlePromoteMetric(formData._id, i)}>
+                              Promover a métrica real
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 

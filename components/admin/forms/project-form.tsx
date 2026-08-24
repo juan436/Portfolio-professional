@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ImageIcon, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useToastNotifications } from "@/hooks/admin/use-toast-notifications"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { CATEGORY_LABELS, CATEGORY_ORDER, type AdminProject, type ProjectCategoryValue } from "@/hooks/admin/entities/projects/types"
 import { StringListField, TextField, TextAreaField, PairListEditor, WorkProcessEditor } from "./project-form-fields"
+import { MediaUploader } from "@/components/admin/media-uploader"
 
 /**
  * Form de crear/editar/ver un Proyecto (Admin) — cubre las ~25 campos del modelo real,
@@ -163,24 +164,17 @@ export default function ProjectForm({
 
                   <TextField label="Subtipo" value={formData.subtype} onChange={(v) => setTop("subtype", v)} disabled={disabled} placeholder="ej. E-commerce, Chatbot, CRM..." />
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">URL de la Imagen</label>
-                    <div className="flex gap-2">
-                      <input
-                        value={formData.image || ""}
-                        onChange={(e) => setTop("image", e.target.value)}
-                        disabled={disabled}
-                        className="flex h-10 w-full rounded-md border border-blue-700/20 bg-black/40 px-3 py-2 text-sm text-white"
-                      />
-                      {formData.image && (
-                        <Button variant="outline" size="icon" className="border-blue-700/50 text-blue-500" onClick={() => window.open(formData.image, "_blank")}>
-                          <ImageIcon className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
+                  <MediaUploader kind="image" label="Imagen principal" value={formData.image} onChange={(v) => setTop("image", v)} disabled={disabled} />
                   <StringListField label="Galería de imágenes (URLs)" values={formData.images} onChange={(v) => setTop("images", v)} disabled={disabled} placeholder="URL de imagen" />
-                  <TextField label="Video (URL)" value={formData.video} onChange={(v) => setTop("video", v)} disabled={disabled} />
+                  {!disabled && (
+                    <MediaUploader
+                      kind="image"
+                      label="Agregar a la galería"
+                      value=""
+                      onChange={(v) => v && setTop("images", [...(formData.images || []), v])}
+                    />
+                  )}
+                  <MediaUploader kind="video" label="Video" value={formData.video} onChange={(v) => setTop("video", v)} disabled={disabled} />
                   <StringListField label="Etiquetas" values={formData.tags} onChange={(v) => setTop("tags", v)} disabled={disabled} placeholder="React, Node.js..." />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <TextField label="URL de GitHub" value={formData.github} onChange={(v) => setTop("github", v)} disabled={disabled} />

@@ -12,7 +12,7 @@ export const getBaseUrl = (): string => {
     return window.location.origin;
   }
   // En el servidor, usa la variable de entorno o un valor por defecto
-  return process.env.NEXT_PUBLIC_API_URL || 'https://jvillegas-portafolio.jvserver.com';
+  return process.env.NEXT_PUBLIC_API_URL || 'https://jevy.dev';
 };
 
 /**

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://jvillegas-portafolio.jvserver.com/sitemap.xml
+Sitemap: https://jevy.dev/sitemap.xml

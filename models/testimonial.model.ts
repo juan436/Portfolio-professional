@@ -18,6 +18,20 @@ export interface ITestimonial extends Document {
     type: 'proyecto' | 'automatizacion';
     ref: string;
   }[];
+  // Moderación: los testimonios cargados por Juan desde el Admin pueden entrar
+  // directo en 'approved'; los que llegan por el form público SIEMPRE nacen
+  // 'pending' (forzado en app/api/testimonials/route.ts, no confía en el body).
+  // El GET público solo devuelve 'approved'.
+  status: 'pending' | 'approved';
+  // Métricas que el cliente sugiere en el form público — candidatas sin
+  // verificar. Mismo shape que ProjectStats.metrics para que promoverlas sea
+  // directo, pero viven acá hasta que Juan las revisa y las promueve a mano
+  // (ProjectStats nunca se escribe directo desde este modelo).
+  suggestedMetrics: {
+    label: string;
+    value: string;
+    statType?: string;
+  }[];
   createdAt: Date;
 }
 
@@ -49,6 +63,21 @@ const TestimonialSchema = new mongoose.Schema({
       {
         type: { type: String, enum: ['proyecto', 'automatizacion'] },
         ref: String,
+      }
+    ],
+    default: []
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved'],
+    default: 'pending',
+  },
+  suggestedMetrics: {
+    type: [
+      {
+        label: String,
+        value: String,
+        statType: String,
       }
     ],
     default: []

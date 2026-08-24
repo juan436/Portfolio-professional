@@ -11,7 +11,7 @@ export default function JsonLd() {
     '@context': 'https://schema.org',
     '@type': 'Person',
     'name': 'Juan Villegas',
-    'url': 'https://jvillegas-portafolio.jvserver.com/',
+    'url': 'https://jevy.dev/',
     'jobTitle': 'Desarrollador Full Stack',
     'description': 'Desarrollador Full Stack especializado en Next.js, React, Node.js, Express, PHP y Laravel.',
     'knowsAbout': ['Desarrollo Web', 'React', 'Next.js', 'Node.js', 'PHP', 'Laravel'],

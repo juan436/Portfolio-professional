@@ -5,7 +5,7 @@ import type { IAttachment, IAdditionalDetail } from '@/models/lead.model';
 import { buildLeadMarkdown, buildJobOfferMarkdown, modalityLabel, contractTypeLabel } from '@/lib/report';
 import { markdownToPdf } from '@/lib/pdf';
 import { buildZip } from '@/lib/zip';
-import { listSessionFiles, readLeadFile, saveLeadFile } from '@/lib/uploads';
+import { listSessionFiles, readLeadFile, saveLeadFile, leadFileUrl } from '@/lib/uploads';
 import type { ClosingExtraction } from '@/lib/closing';
 import type { MatchResult } from '@/lib/matching';
 
@@ -33,7 +33,7 @@ async function collectAttachments(sessionId: string): Promise<IAttachment[]> {
   return filenames.map((filename) => ({
     filename,
     type: EXT_TYPES[path.extname(filename).toLowerCase()] || 'application/octet-stream',
-    url: `/api/uploads/leads/${sessionId}/${filename}`,
+    url: leadFileUrl(sessionId, filename),
   }));
 }
 
@@ -67,13 +67,17 @@ export interface SchedulingData {
   modality?: string;
   contractType?: string;
   selectionProcess?: string;
-  // Informe generado (markdown/PDF, siempre; ZIP solo si hubo adjuntos) en
-  // base64 — n8n (flujo-agenda-cita-leads) los recibe en el payload de
-  // `action:'book'` y los adjunta al correo a Juan. Sin URL pública porque el
-  // portfolio todavía corre solo local, no hay dominio que n8n pueda alcanzar.
-  reportMarkdownBase64: string;
-  reportPdfBase64: string;
-  attachmentsZipBase64?: string;
+  // Informe generado (markdown/PDF, siempre; ZIP solo si hubo adjuntos) como
+  // URL pública de R2 (antes iban en base64 dentro del payload — decisión
+  // 2026-08-24, ver dev-aguila-azul/vault/portfolio: planes/admin-upload-
+  // media-cloudflare-r2.md, Parte B). n8n (flujo-agenda-cita-leads) descarga
+  // cada URL y adjunta el binario al correo a Juan — ajuste pendiente del
+  // lado de n8n (2 nodos: el Code que arma los adjuntos y el IF que hoy mira
+  // `attachmentsZipBase64`), lo hace el usuario manualmente cuando esto ya
+  // esté probado.
+  reportMarkdownUrl: string;
+  reportPdfUrl: string;
+  attachmentsZipUrl?: string;
   // Renderizado ya como HTML (mismo estilo "jevy> cat" del resto del correo
   // a Juan) — n8n solo lo inserta en un placeholder, no arma nada. Vacío si
   // Jevy no identificó ningún tema fuera de los campos fijos.
@@ -93,6 +97,21 @@ function renderAdditionalDetailsHtml(details: IAdditionalDetail[]): string {
 
 function transcriptToText(transcript: { role: 'jevy' | 'lead'; text: string }[]): string {
   return transcript.map((m) => `${m.role === 'lead' ? 'Lead' : 'Jevy'}: ${m.text}`).join('\n');
+}
+
+// Sube un archivo generado (informe/zip) a R2 sin tumbar el cierre completo
+// si R2 todavía no está configurado (PENDIENTE en .env) — el Lead/JobOffer
+// en Mongo es lo crítico de guardar, la URL del reporte puede faltar sin
+// que se pierda el contacto. `saveLeadFile` antes escribía a disco local y
+// nunca fallaba por esto; con R2 sí puede fallar mientras el usuario no haya
+// cargado las credenciales reales.
+async function trySaveReportFile(sessionId: string, filename: string, buffer: Buffer): Promise<string> {
+  try {
+    return (await saveLeadFile(sessionId, filename, buffer)).url;
+  } catch (error) {
+    console.error(`Error subiendo ${filename} a R2 (¿credenciales R2 pendientes en .env?):`, error);
+    return '';
+  }
 }
 
 export async function closeConversation(params: {
@@ -124,12 +143,13 @@ export async function closeConversation(params: {
     });
     const pdf = await markdownToPdf(markdown);
     let zip: Buffer | undefined;
+    let attachmentsZipUrl: string | undefined;
     if (attachments.length) {
       zip = await buildZip(await Promise.all(attachments.map(async (a) => ({ filename: a.filename, buffer: await readLeadFile(sessionId, a.filename) }))));
-      await saveLeadFile(sessionId, 'adjuntos.zip', zip);
+      attachmentsZipUrl = await trySaveReportFile(sessionId, 'adjuntos.zip', zip);
     }
-    await saveLeadFile(sessionId, 'informe.pdf', pdf);
-    await saveLeadFile(sessionId, 'informe.md', Buffer.from(markdown, 'utf-8'));
+    const reportPdfUrl = await trySaveReportFile(sessionId, 'informe.pdf', pdf);
+    const reportMarkdownUrl = await trySaveReportFile(sessionId, 'informe.md', Buffer.from(markdown, 'utf-8'));
 
     await JobOffer.create({
       name: c.name,
@@ -174,9 +194,9 @@ export async function closeConversation(params: {
         modality: c.modality === 'no_definido' ? 'N/D' : modalityLabel(c.modality),
         contractType: c.contractType === 'no_definido' ? 'N/D' : contractTypeLabel(c.contractType),
         selectionProcess: c.selectionProcess || 'N/D',
-        reportMarkdownBase64: Buffer.from(markdown, 'utf-8').toString('base64'),
-        reportPdfBase64: pdf.toString('base64'),
-        attachmentsZipBase64: zip?.toString('base64'),
+        reportMarkdownUrl,
+        reportPdfUrl,
+        attachmentsZipUrl,
         additionalDetailsHtml: renderAdditionalDetailsHtml(c.additionalDetails),
       },
     };
@@ -204,12 +224,13 @@ export async function closeConversation(params: {
   );
   const pdf = await markdownToPdf(markdown);
   let zip: Buffer | undefined;
+  let attachmentsZipUrl: string | undefined;
   if (attachments.length) {
     zip = await buildZip(await Promise.all(attachments.map(async (a) => ({ filename: a.filename, buffer: await readLeadFile(sessionId, a.filename) }))));
-    await saveLeadFile(sessionId, 'adjuntos.zip', zip);
+    attachmentsZipUrl = await trySaveReportFile(sessionId, 'adjuntos.zip', zip);
   }
-  await saveLeadFile(sessionId, 'informe.pdf', pdf);
-  await saveLeadFile(sessionId, 'informe.md', Buffer.from(markdown, 'utf-8'));
+  const reportPdfUrl = await trySaveReportFile(sessionId, 'informe.pdf', pdf);
+  const reportMarkdownUrl = await trySaveReportFile(sessionId, 'informe.md', Buffer.from(markdown, 'utf-8'));
 
   await Lead.create({
     name: c.name,
@@ -248,9 +269,9 @@ export async function closeConversation(params: {
       projectMatch: matchResult?.project.title || 'Ninguno',
       interestLevel: c.interestLevel === 'no_definido' ? 'medium' : c.interestLevel,
       transcript: transcriptText,
-      reportMarkdownBase64: Buffer.from(markdown, 'utf-8').toString('base64'),
-      reportPdfBase64: pdf.toString('base64'),
-      attachmentsZipBase64: zip?.toString('base64'),
+      reportMarkdownUrl,
+      reportPdfUrl,
+      attachmentsZipUrl,
       additionalDetailsHtml: renderAdditionalDetailsHtml(c.additionalDetails),
     },
   };
