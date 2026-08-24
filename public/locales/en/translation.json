@@ -57,7 +57,7 @@
   },
   "work": {
     "title": "I detect, architect, automate, and build agents",
-    "subtitle": "Here you'll find the systems I built end-to-end —front, back, and infrastructure— plus the automations and AI agents already running in production, eliminating manual work and talking to real customers.",
+    "subtitle": "Here you'll find the systems I built end-to-end, front, back, and infrastructure, plus the automations and AI agents already running in production, eliminating manual work and talking to real customers.",
     "ctaProjects": "View Projects",
     "ctaAutomations": "View Automations",
     "ctaAgents": "View Agents"
@@ -107,7 +107,7 @@
   },
   "laboratory": {
     "title": "R&D Laboratory",
-    "subtitle": "Before an idea reaches production, it passes through here. Every file documents the hypothesis, the method I tried, and what I learned — including what didn't work. This isn't a showcase of finished products, it's real curiosity logged as it happened.",
+    "subtitle": "Before an idea reaches production, it passes through here. Every file documents the hypothesis, the method I tried, and what I learned, including what didn't work. This isn't a showcase of finished products, it's real curiosity logged as it happened.",
     "legendHeading": "How to read the statuses",
     "viewMore": "View all experiments",
     "card": {
@@ -148,14 +148,14 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Technical articles and real lessons from projects.",
-    "comingSoon": "Coming soon — I'm preparing technical articles and real lessons from projects.",
+    "comingSoon": "Coming soon. I'm preparing technical articles and real lessons from projects.",
     "empty": "No articles published yet.",
     "notFound": "We couldn't find this article.",
     "readMore": "Read more"
   },
   "certificates": {
     "title": "Certified Learning",
-    "subtitle": "Real, verifiable credentials — the technical foundation behind every project and automation in this portfolio, not just a list of courses.",
+    "subtitle": "Real, verifiable credentials: the technical foundation behind every project and automation in this portfolio, not just a list of courses.",
     "verify": "View credential",
     "viewMore": "View all certifications",
     "empty": "No certifications published at this time.",
@@ -175,7 +175,7 @@
     "phone": "Phone",
     "location": "Location",
     "jevy": {
-      "windowTitle": "jevy@jevy.dev — let's talk",
+      "windowTitle": "jevy@jevy.dev: let's talk",
       "greeting": "Tell me about your project. What do you want to build?",
       "greetingByService": {
         "web": "I saw you want your own web platform. Tell me how you imagine it.",
@@ -198,7 +198,7 @@
       "typing": "typing...",
       "errorFallback": "I had trouble replying. Try again in a moment.",
       "limitReached": "We've chatted quite a bit already. If you'd like to continue, reach Eng. Juan Villegas directly by WhatsApp or email.",
-      "areYouThere": "Are you still there? If you don't reply in a bit, I'll close this chat — you can start a new one anytime.",
+      "areYouThere": "Are you still there? If you don't reply in a bit, I'll close this chat, but you can start a new one anytime.",
       "attachTooltip": "Attach a file (PDF, Word, Excel, PowerPoint, image)",
       "attachTooLarge": "File is too large (max. 20MB)",
       "attachError": "Couldn't process this file",
@@ -230,7 +230,7 @@
       },
       "about": {
         "badge": "AI Assistant",
-        "text": "Jevy is a conversational agent, not a live person. The chat takes a few minutes — at the end, I'll reach out directly through the channel you prefer."
+        "text": "Jevy is a conversational agent, not a live person. The chat takes a few minutes. At the end, I'll reach out directly through the channel you prefer."
       },
       "stats": {
         "heading": "By the numbers",
@@ -379,7 +379,7 @@
   },
   "agents": {
     "title": "Agents",
-    "subtitle": "Conversational systems that reason, decide and act — not fixed-step automations. Each entry shows a real agent, running.",
+    "subtitle": "Conversational systems that reason, decide, and act, not fixed-step automations. Each entry shows a real agent, running.",
     "capabilitiesWord": "capabilities",
     "viewMore": "View all agents",
     "detail": {

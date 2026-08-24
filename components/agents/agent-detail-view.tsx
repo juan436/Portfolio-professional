@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { ArrowLeft, MessageCircle, Radio, Sparkles, Timer, Wrench } from "lucide-react"
+import { ArrowLeft, ExternalLink, MessageCircle, Radio, Server, Sparkles, Timer, Wrench } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/hooks/use-language"
 import { JevyChatDemo } from "@/components/agents/jevy-chat-demo"
@@ -18,6 +18,7 @@ interface RawAgent {
   title: string
   description: string
   subtype?: string
+  relatedProject?: { name: string; href: string }
   agentDetails?: {
     icon?: string
     useCase?: string
@@ -69,6 +70,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
   const toolsHeading = String(t("agents.detail.toolsHeading") || "Construido con")
   const channelsHeading = String(t("agents.detail.channelsHeading") || "Canales soportados")
   const setupTimeHeading = String(t("agents.detail.setupTimeHeading") || "Tiempo de puesta en marcha")
+  const relatedProjectLabel = String(t("projects.relatedProjectLabel") || "Proyecto relacionado")
   const ctaHeading = String(t("projects.ctaHeading") || "¿Necesitas algo similar?")
   const ctaText = String(t("projects.ctaText") || "Hablemos sobre tu proyecto.")
   const ctaButton = String(t("projects.ctaButton") || "Hablemos")
@@ -191,7 +193,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
             )}
           </motion.div>
 
-          {(tools.length > 0 || channels.length > 0 || setupTime) && (
+          {(tools.length > 0 || channels.length > 0 || setupTime || agent.relatedProject) && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -243,6 +245,21 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
                   </p>
                   <p className="text-sm text-slate-300 break-words">{setupTime}</p>
                 </div>
+              )}
+              {agent.relatedProject && (
+                <Link
+                  href={agent.relatedProject.href}
+                  className="min-w-[180px] max-w-[220px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5 hover:border-blue-500/40 transition-colors"
+                >
+                  <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-1.5">
+                    <Server className="h-3.5 w-3.5 text-blue-500" />
+                    {relatedProjectLabel}
+                  </p>
+                  <p className="text-sm text-blue-400 break-words inline-flex items-center gap-1">
+                    {agent.relatedProject.name}
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                  </p>
+                </Link>
               )}
             </motion.div>
           )}

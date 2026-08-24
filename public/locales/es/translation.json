@@ -57,7 +57,7 @@
   },
   "work": {
     "title": "Detecto, arquitecto, automatizo y creo agentes",
-    "subtitle": "Acá vas a ver los sistemas que construí completos —front, back e infraestructura— y las automatizaciones y agentes de IA que ya operan en producción, eliminando trabajo manual y conversando con clientes reales.",
+    "subtitle": "Acá vas a ver los sistemas que construí completos, con front, back e infraestructura, y las automatizaciones y agentes de IA que ya operan en producción, eliminando trabajo manual y conversando con clientes reales.",
     "ctaProjects": "Ver Proyectos",
     "ctaAutomations": "Ver Automatizaciones",
     "ctaAgents": "Ver Agentes"
@@ -107,7 +107,7 @@
   },
   "laboratory": {
     "title": "Laboratorio R&D",
-    "subtitle": "Antes de que una idea llegue a producción, pasa por aquí. Cada expediente documenta la hipótesis, el método que probé y lo que aprendí — incluyendo lo que no funcionó. No es una vitrina de productos terminados, es curiosidad real registrada tal cual pasó.",
+    "subtitle": "Antes de que una idea llegue a producción, pasa por aquí. Cada expediente documenta la hipótesis, el método que probé y lo que aprendí, incluyendo lo que no funcionó. No es una vitrina de productos terminados, es curiosidad real registrada tal cual pasó.",
     "legendHeading": "Cómo leer los estados",
     "viewMore": "Ver todos los experimentos",
     "card": {
@@ -148,14 +148,14 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Artículos técnicos y aprendizajes reales de proyectos.",
-    "comingSoon": "Próximamente — estoy preparando artículos técnicos y aprendizajes reales de proyectos.",
+    "comingSoon": "Próximamente. Estoy preparando artículos técnicos y aprendizajes reales de proyectos.",
     "empty": "Sin artículos publicados por el momento.",
     "notFound": "No encontramos este artículo.",
     "readMore": "Leer más"
   },
   "certificates": {
     "title": "Formación Certificada",
-    "subtitle": "Credenciales reales y verificables — la base técnica detrás de cada proyecto y automatización de este portafolio, no una lista de cursos sueltos.",
+    "subtitle": "Credenciales reales y verificables: la base técnica detrás de cada proyecto y automatización de este portafolio, no una lista de cursos sueltos.",
     "verify": "Ver credencial",
     "viewMore": "Ver todas las certificaciones",
     "empty": "Sin certificaciones publicadas por el momento.",
@@ -175,7 +175,7 @@
     "phone": "Teléfono",
     "location": "Ubicación",
     "jevy": {
-      "windowTitle": "jevy@jevy.dev — hablemos",
+      "windowTitle": "jevy@jevy.dev: hablemos",
       "greeting": "Cuéntame tu proyecto. ¿Qué quieres construir?",
       "greetingByService": {
         "web": "Vi que quieres tu propia plataforma web. Cuéntame cómo la imaginas.",
@@ -198,7 +198,7 @@
       "typing": "escribiendo...",
       "errorFallback": "Tuve un problema para responder. Intenta de nuevo en un momento.",
       "limitReached": "Ya charlamos bastante por acá. Si querés seguir, escribile directo al Ing. Juan Villegas por WhatsApp o correo.",
-      "areYouThere": "¿Sigues ahí? Si no respondés en un ratito, voy a cerrar la charla — podés arrancar una nueva cuando quieras.",
+      "areYouThere": "¿Sigues ahí? Si no respondés en un ratito, voy a cerrar la charla, pero podés arrancar una nueva cuando quieras.",
       "attachTooltip": "Adjuntar archivo (PDF, Word, Excel, PowerPoint, imagen)",
       "attachTooLarge": "El archivo es muy grande (máx. 20MB)",
       "attachError": "No se pudo procesar este archivo",
@@ -230,7 +230,7 @@
       },
       "about": {
         "badge": "Asistente de IA",
-        "text": "Jevy es un agente conversacional, no una persona en vivo. La charla dura unos minutos — al final, te contacto yo directo por el canal que prefieras."
+        "text": "Jevy es un agente conversacional, no una persona en vivo. La charla dura unos minutos. Al final, te contacto yo directo por el canal que prefieras."
       },
       "stats": {
         "heading": "En números",
@@ -379,7 +379,7 @@
   },
   "agents": {
     "title": "Agentes",
-    "subtitle": "Sistemas conversacionales que razonan, deciden y actúan — no automatizaciones de pasos fijos. Cada expediente muestra un agente real, funcionando.",
+    "subtitle": "Sistemas conversacionales que razonan, deciden y actúan, no automatizaciones de pasos fijos. Cada expediente muestra un agente real, funcionando.",
     "capabilitiesWord": "capacidades",
     "viewMore": "Ver todos los agentes",
     "detail": {

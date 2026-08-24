@@ -14,7 +14,7 @@ import {
   type NodeProps,
 } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
-import { Globe, ShieldCheck, Server, Database, HardDrive, Network, Box } from "lucide-react"
+import { Globe, ShieldCheck, Server, Database, HardDrive, Network, Box, Smartphone, Monitor } from "lucide-react"
 
 /**
  * Diagrama de infraestructura (React Flow, solo lectura) para el detalle de un proyecto.
@@ -32,6 +32,8 @@ export const deploymentIconMap = {
   storage: HardDrive,
   network: Network,
   box: Box,
+  device: Smartphone,
+  browser: Monitor,
 } as const
 
 export type DeploymentIconKey = keyof typeof deploymentIconMap

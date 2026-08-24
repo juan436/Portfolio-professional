@@ -13,7 +13,10 @@ import JsonLd from "@/app/components/json-ld"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Juan Villegas | Desarrollador Full Stack",
+  title: {
+    default: "Juan Villegas | Desarrollador Full Stack",
+    template: "%s | Juan Villegas",
+  },
   description:
     "Portafolio profesional de Juan Villegas, desarrollador Full Stack especializado en Next.js, React, Node.js, Express, PHP y Laravel.",
   keywords: "Juan Villegas, portafolio, desarrollador, full stack, programador, react, next.js, node.js",

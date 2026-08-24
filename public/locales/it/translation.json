@@ -16,11 +16,12 @@
   },
   "services": {
     "title": "Servizi",
-    "subtitle": "Soluzioni tecnologiche complete per potenziare la tua presenza digitale."
+    "subtitle": "Soluzioni tecnologiche complete per potenziare la tua presenza digitale.",
+    "consultSolution": "Consulta la Soluzione →"
   },
   "methodology": {
     "title": "Metodologia",
-    "subtitle": "La Tabella di Marcia verso la Crescita",
+    "subtitle": "Ingegneria in 4 fasi: dalla diagnosi per eliminare i colli di bottiglia allo scaling automatizzato.",
     "phases": {
       "phase1": {
         "title": "DIAGNOSI STRATEGICA",
@@ -56,17 +57,20 @@
   },
   "work": {
     "title": "Rilevo, progetto, automatizzo e creo agenti",
-    "subtitle": "Qui trovi i sistemi che ho costruito end-to-end —front, back e infrastruttura— e le automazioni e gli agenti IA già in produzione, che eliminano il lavoro manuale e conversano con clienti reali.",
+    "subtitle": "Qui trovi i sistemi che ho costruito end-to-end, front, back e infrastruttura, e le automazioni e gli agenti IA già in produzione, che eliminano il lavoro manuale e conversano con clienti reali.",
     "ctaProjects": "Vedi Progetti",
     "ctaAutomations": "Vedi Automazioni",
     "ctaAgents": "Vedi Agenti"
   },
   "projects": {
     "title": "I Miei Progetti",
-    "subtitle": "Una selección dei miei progetti più recenti e importanti. Ogni progetto riflette la mia attenzione alla qualità, all'esperienza utente e al codice pulito.",
+    "subtitle": "Una selezione dei miei progetti più recenti e importanti. Ogni progetto riflette la mia attenzione alla qualità, all'esperienza utente e al codice pulito.",
     "all": "Tutti",
     "fullstack": "Full Stack",
     "backend": "Backend",
+    "systems": "Soluzioni Web",
+    "mobile": "App Mobili",
+    "automation": "Automazione & IA",
     "code": "Codice",
     "demo": "Demo",
     "repo": "Repository",
@@ -104,7 +108,7 @@
   },
   "laboratory": {
     "title": "Laboratorio R&D",
-    "subtitle": "Prima che un'idea arrivi in produzione, passa da qui. Ogni fascicolo documenta l'ipotesi, il metodo provato e cosa ho imparato — incluso ciò che non ha funzionato. Non è una vetrina di prodotti finiti, è curiosità reale registrata così com'è successa.",
+    "subtitle": "Prima che un'idea arrivi in produzione, passa da qui. Ogni fascicolo documenta l'ipotesi, il metodo provato e cosa ho imparato, incluso ciò che non ha funzionato. Non è una vetrina di prodotti finiti, è curiosità reale registrata così com'è successa.",
     "legendHeading": "Come leggere gli stati",
     "viewMore": "Vedi tutti gli esperimenti",
     "card": {
@@ -145,14 +149,14 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Articoli tecnici e lezioni reali dai miei progetti.",
-    "comingSoon": "Prossimamente — sto preparando articoli tecnici e lezioni reali dai miei progetti.",
+    "comingSoon": "Prossimamente. Sto preparando articoli tecnici e lezioni reali dai miei progetti.",
     "empty": "Nessun articolo pubblicato al momento.",
     "notFound": "Non abbiamo trovato questo articolo.",
     "readMore": "Leggi di più"
   },
   "certificates": {
     "title": "Formazione Certificata",
-    "subtitle": "Credenziali reali e verificabili — la base tecnica dietro ogni progetto e automazione di questo portfolio, non un semplice elenco di corsi.",
+    "subtitle": "Credenziali reali e verificabili: la base tecnica dietro ogni progetto e automazione di questo portfolio, non un semplice elenco di corsi.",
     "verify": "Vedi credenziale",
     "viewMore": "Vedi tutte le certificazioni",
     "empty": "Nessuna certificazione pubblicata al momento.",
@@ -172,7 +176,7 @@
     "phone": "Telefono",
     "location": "Posizione",
     "jevy": {
-      "windowTitle": "jevy@jevy.dev — parliamone",
+      "windowTitle": "jevy@jevy.dev: parliamone",
       "greeting": "Parlami del tuo progetto. Cosa vuoi costruire?",
       "greetingByService": {
         "web": "Ho visto che vuoi la tua piattaforma web. Dimmi come la immagini.",
@@ -195,7 +199,7 @@
       "typing": "sto scrivendo...",
       "errorFallback": "Ho avuto un problema a rispondere. Riprova tra un momento.",
       "limitReached": "Abbiamo già chiacchierato parecchio qui. Per continuare, contatta direttamente l'Ing. Juan Villegas via WhatsApp o email.",
-      "areYouThere": "Sei ancora lì? Se non rispondi tra un po', chiudo questa chat — puoi iniziarne una nuova quando vuoi.",
+      "areYouThere": "Sei ancora lì? Se non rispondi tra un po', chiudo questa chat, ma puoi iniziarne una nuova quando vuoi.",
       "attachTooltip": "Allega un file (PDF, Word, Excel, PowerPoint, immagine)",
       "attachTooLarge": "Il file è troppo grande (max. 20MB)",
       "attachError": "Impossibile elaborare questo file",
@@ -227,7 +231,7 @@
       },
       "about": {
         "badge": "Assistente IA",
-        "text": "Jevy è un agente conversazionale, non una persona in diretta. La chat dura pochi minuti — alla fine, ti contatto direttamente tramite il canale che preferisci."
+        "text": "Jevy è un agente conversazionale, non una persona in diretta. La chat dura pochi minuti. Alla fine, ti contatto direttamente tramite il canale che preferisci."
       },
       "stats": {
         "heading": "In numeri",
@@ -376,7 +380,7 @@
   },
   "agents": {
     "title": "Agenti",
-    "subtitle": "Sistemi conversazionali che ragionano, decidono e agiscono — non automazioni a passi fissi. Ogni scheda mostra un agente reale, funzionante.",
+    "subtitle": "Sistemi conversazionali che ragionano, decidono e agiscono, non automazioni a passi fissi. Ogni scheda mostra un agente reale, funzionante.",
     "capabilitiesWord": "capacità",
     "viewMore": "Vedi tutti gli agenti",
     "detail": {
@@ -400,5 +404,35 @@
       "synced": "sincronizzato",
       "commitPrefix": "commit"
     }
+  },
+  "testimonials": {
+    "title": "CASI DI SUCCESSO VERIFICATI",
+    "subtitle": "Cosa dicono i leader che si sono affidati alla mia architettura tecnica.",
+    "items": [
+      {
+        "content": "Juan ha trasformato la nostra infrastruttura legacy in una soluzione cloud moderna e scalabile. La sua capacità di comprendere il business è eccezionale.",
+        "author": "Carlos Rodríguez",
+        "role": "CTO presso TechFlow",
+        "avatar": ""
+      },
+      {
+        "content": "L'automazione dei processi che ha implementato ci ha fatto risparmiare oltre 20 ore a settimana. È uno sviluppatore che pensa al ROI.",
+        "author": "Elena Martínez",
+        "role": "Operations Manager presso LogiCorp",
+        "avatar": ""
+      },
+      {
+        "content": "Ottimo professionista. Ha consegnato la nostra app mobile in anticipo sui tempi e con una qualità del codice impeccabile. Consigliatissimo.",
+        "author": "Roberto Gómez",
+        "role": "Founder presso StartUp X",
+        "avatar": ""
+      },
+      {
+        "content": "Il sistema e-commerce che ha sviluppato per noi gestisce migliaia di transazioni giornaliere senza intoppi. Un lavoro di ingegneria solido.",
+        "author": "Marina Silva",
+        "role": "E-commerce Director presso ModaExpress",
+        "avatar": ""
+      }
+    ]
   }
 }
