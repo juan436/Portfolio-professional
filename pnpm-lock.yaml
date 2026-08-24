@@ -206,7 +206,7 @@ importers:
         specifier: 2.15.0
         version: 2.15.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       sharp:
-        specifier: ^0.35.3
+        specifier: '>=0.35.0'
         version: 0.35.3(@types/node@22.20.1)
       sonner:
         specifier: ^1.7.1
