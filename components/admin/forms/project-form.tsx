@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2 } from "lucide-react"
+import { Loader2, Link2 } from "lucide-react"
 import { useToastNotifications } from "@/hooks/admin/use-toast-notifications"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { CATEGORY_LABELS, CATEGORY_ORDER, type AdminProject, type ProjectCategoryValue } from "@/hooks/admin/entities/projects/types"
 import { StringListField, TextField, TextAreaField, PairListEditor, WorkProcessEditor } from "./project-form-fields"
 import { MediaUploader } from "@/components/admin/media-uploader"
+import { getBaseUrl } from "@/utils/url"
 
 /**
  * Form de crear/editar/ver un Proyecto (Admin) — cubre las ~25 campos del modelo real,
@@ -94,6 +95,16 @@ export default function ProjectForm({
     else setEditMode(false)
   }
 
+  const handleCopyTestimonialLink = () => {
+    if (!formData?.slug) {
+      toastNotifications.showErrorToast("Falta el slug", "Guardá el proyecto primero — el link necesita su slug real.")
+      return
+    }
+    const link = `${getBaseUrl()}/testimonial?project=${formData.slug}`
+    navigator.clipboard.writeText(link)
+    toastNotifications.showSuccessToast("Link copiado", link)
+  }
+
   if (!formData) {
     return (
       <Card className="bg-black/40 border-blue-700/20">
@@ -132,11 +143,17 @@ export default function ProjectForm({
           </div>
         ) : (
           <div className="space-y-4">
-            {!editMode && !isNewProject && (
-              <div className="flex justify-end">
-                <Button onClick={() => setEditMode(true)} variant="outline" className="border-blue-700/50 text-blue-500 hover:bg-blue-700/10">
-                  Editar
+            {!isNewProject && (
+              <div className="flex justify-end gap-2">
+                <Button onClick={handleCopyTestimonialLink} variant="outline" className="border-blue-700/50 text-blue-500 hover:bg-blue-700/10">
+                  <Link2 className="mr-2 h-4 w-4" />
+                  Copiar link de testimonio
                 </Button>
+                {!editMode && (
+                  <Button onClick={() => setEditMode(true)} variant="outline" className="border-blue-700/50 text-blue-500 hover:bg-blue-700/10">
+                    Editar
+                  </Button>
+                )}
               </div>
             )}
 

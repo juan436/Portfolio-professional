@@ -7,7 +7,7 @@ import { useLanguage } from "@/hooks/use-language"
 import type { RawTestimonial } from "@/services/api/testimonials"
 import type { ProjectMetric } from "@/services/api/project-stats"
 import { ProjectHeader } from "@/components/projects/project-header"
-import { ProjectImageCarousel } from "@/components/projects/project-image-carousel"
+import { ProjectImageCarousel, type MediaItem } from "@/components/projects/project-image-carousel"
 import { DeploymentDiagram, type DeploymentIconKey } from "@/components/projects/deployment-diagram"
 import { TestimonialMetrics } from "@/components/projects/testimonial-metrics"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -54,6 +54,7 @@ interface RawProject {
   description: string
   image?: string
   images?: string[]
+  video?: string
   category?: string
   github?: string
   demo?: string
@@ -150,11 +151,22 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const translated = project.translations?.[language.code as "en" | "fr" | "it"]
   const title = language.code === "es" ? project.title : translated?.title || project.title
   const description = language.code === "es" ? project.description : translated?.description || project.description
-  const rawGalleryImages = project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : []
+  // Orden del carrusel (decisión del usuario): hero (`image`) primero, video segundo,
+  // el resto de la galería (`images[]`) después — antes, si `images[]` tenía contenido,
+  // el hero quedaba fuera del carrusel por completo.
+  const hasHero = Boolean(project.image)
+  const galleryImages = project.images || []
   // Mobile nunca tiene el banner "Infraestructura & Backend" (no tiene sentido para una app cliente):
   // si no hay imagen real, cae a un placeholder en vez del banner pensado para fichas API sin capturas.
-  const galleryImages = rawGalleryImages.length > 0 ? rawGalleryImages : project.category === 'mobile' ? ['/placeholder.svg'] : []
-  const hasGallery = galleryImages.length > 0
+  const noRealMedia = !hasHero && galleryImages.length === 0
+  const fallbackImages = noRealMedia && project.category === 'mobile' ? ['/placeholder.svg'] : []
+  const galleryMedia: MediaItem[] = [
+    ...(hasHero ? [{ type: "image", url: project.image! } as MediaItem] : []),
+    ...(project.video ? [{ type: "video", url: project.video } as MediaItem] : []),
+    ...galleryImages.map((url): MediaItem => ({ type: "image", url })),
+    ...fallbackImages.map((url): MediaItem => ({ type: "image", url })),
+  ]
+  const hasGallery = galleryMedia.length > 0
   const backendBannerLabel = String(t("projects.backendBanner") || "Infraestructura & Backend")
   const techStackEntries = Object.entries(project.techStack || {}).filter(
     ([, items]) => Array.isArray(items) && items.length > 0
@@ -219,7 +231,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <ProjectImageCarousel images={galleryImages} alt={title} />
+              <ProjectImageCarousel media={galleryMedia} alt={title} />
             </motion.div>
           ) : (
             <motion.div

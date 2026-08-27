@@ -151,7 +151,17 @@
     "comingSoon": "Coming soon. I'm preparing technical articles and real lessons from projects.",
     "empty": "No articles published yet.",
     "notFound": "We couldn't find this article.",
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "backToBlog": "Back to blog",
+    "authorRole": "Solutions Architect & Full Stack Dev",
+    "latest": "Latest article",
+    "readingTime": "{{min}} min read",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "relatedTitle": "Keep reading",
+    "allTags": "All",
+    "topics": "Topics"
   },
   "certificates": {
     "title": "Certified Learning",

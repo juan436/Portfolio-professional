@@ -7,8 +7,6 @@ import { translateAndAddToObject } from "@/lib/translate"
 import { slugify, uniqueSlug } from "@/lib/slug"
 import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation"
 
-export type { ProjectCategoryValue }
-
 /**
  * Server Actions CRUD de proyectos (Admin) — cubre todas las categorías
  * (web/mobile/infra_backend/laboratorio/automatizacion/agente).

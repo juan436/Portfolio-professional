@@ -13,9 +13,13 @@ interface BuildMetadataInput {
   description: string
   path: string
   image?: string
+  /** `"article"` para posts de blog — agrega `article:published_time`/`author` al OG. Default `"website"`. */
+  type?: "website" | "article"
+  publishedTime?: string
+  authorName?: string
 }
 
-export function buildMetadata({ title, description, path, image }: BuildMetadataInput): Metadata {
+export function buildMetadata({ title, description, path, image, type = "website", publishedTime, authorName }: BuildMetadataInput): Metadata {
   return {
     title,
     description,
@@ -26,7 +30,13 @@ export function buildMetadata({ title, description, path, image }: BuildMetadata
       url: path,
       siteName: SITE_NAME,
       locale: "es_ES",
-      type: "website",
+      ...(type === "article"
+        ? {
+            type: "article",
+            ...(publishedTime ? { publishedTime } : {}),
+            ...(authorName ? { authors: [authorName] } : {}),
+          }
+        : { type: "website" }),
       ...(image ? { images: [{ url: image }] } : {}),
     },
     twitter: {

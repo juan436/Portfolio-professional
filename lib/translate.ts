@@ -43,6 +43,35 @@ async function translateText(text: string, source: SupportedLanguage | "auto", t
   }
 }
 
+const HTML_MAX_TOKENS = 4000
+
+/**
+ * Traduce el texto visible de un fragmento HTML preservando etiquetas y
+ * atributos exactos — para `body` de blog (HTML generado por Tiptap).
+ * `max_tokens` del chat normal (400) alcanza para title/excerpt pero no para
+ * el cuerpo completo de un post, por eso usa un límite propio más alto.
+ */
+export async function translateHtml(html: string, targetLang: SupportedLanguage): Promise<string> {
+  if (!html || html.trim() === "") return html
+  try {
+    const targetName = LANGUAGE_NAMES[targetLang] || targetLang
+    const reply = await askDeepSeek(
+      [
+        {
+          role: "system",
+          content: `Traducí a ${targetName} SOLO el texto visible del HTML del usuario. Conservá las etiquetas y atributos exactamente igual (mismas etiquetas, mismo orden, mismos atributos, mismos href). No traduzcas el contenido de bloques <code> o <pre>. Devolvé ÚNICAMENTE el HTML resultante, sin comillas, sin markdown, sin explicaciones.`,
+        },
+        { role: "user", content: html },
+      ],
+      HTML_MAX_TOKENS
+    )
+    return reply.content || html
+  } catch (error) {
+    console.error("Error traduciendo HTML:", error)
+    return html
+  }
+}
+
 /**
  * Traduce un objeto con campos de texto a varios idiomas destino, en
  * paralelo (todos los campos x todos los idiomas a la vez).

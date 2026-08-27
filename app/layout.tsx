@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://jevy.dev/'),
   alternates: {
     canonical: '/',
+    types: {
+      'application/rss+xml': [{ url: '/feed.xml', title: 'Blog — Ing. Juan Villegas' }],
+    },
   },
   openGraph: {
     title: "Juan Villegas | Desarrollador Full Stack",

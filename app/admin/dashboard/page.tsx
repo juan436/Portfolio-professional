@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
+import Link from "next/link"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import AdminLayout from "@/components/admin/layout/admin-layout"
@@ -13,10 +14,9 @@ import ExperienceManager from "@/components/admin/managers/experience-manager"
 import TestimonialsManager from "@/components/admin/managers/testimonials-manager"
 import ProjectStatsManager from "@/components/admin/managers/project-stats-manager"
 import CertificatesManager from "@/components/admin/managers/certificates-manager"
-import BlogManager from "@/components/admin/managers/blog-manager"
 import { Code, FileText, FileImage, User, Briefcase, Quote, BarChart3, Award, Newspaper } from "lucide-react"
 
-const TABS = ["projects", "skills", "experience", "content", "images", "testimonials", "stats", "certificates", "blog"]
+const TABS = ["projects", "skills", "experience", "content", "images", "testimonials", "stats", "certificates"]
 
 /**
  * Página `/admin/dashboard` — shell de tabs del panel de Admin.
@@ -128,13 +128,13 @@ export default function DashboardPage() {
                 <Award className="mr-2 h-4 w-4" />
                 Certificados
               </TabsTrigger>
-              <TabsTrigger
-                value="blog"
-                className="data-[state=active]:bg-blue-700/20 data-[state=active]:text-blue-500 flex items-center"
+              <Link
+                href="/admin/blog"
+                className="inline-flex items-center rounded-sm px-3 py-1.5 text-sm font-medium text-slate-400 hover:text-blue-500 transition-colors"
               >
                 <Newspaper className="mr-2 h-4 w-4" />
                 Blog
-              </TabsTrigger>
+              </Link>
             </TabsList>
           </Tabs>
         </div>
@@ -148,7 +148,6 @@ export default function DashboardPage() {
           {activeTab === "testimonials" && <TestimonialsManager />}
           {activeTab === "stats" && <ProjectStatsManager />}
           {activeTab === "certificates" && <CertificatesManager />}
-          {activeTab === "blog" && <BlogManager />}
         </div>
       </div>
     </AdminLayout>

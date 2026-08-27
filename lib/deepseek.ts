@@ -29,7 +29,7 @@ export interface DeepSeekReply {
   usage: DeepSeekUsage;
 }
 
-export async function askDeepSeek(messages: DeepSeekMessage[]): Promise<DeepSeekReply> {
+export async function askDeepSeek(messages: DeepSeekMessage[], maxTokens = 400): Promise<DeepSeekReply> {
   const token = process.env.TOKEN_DEEPSEEK;
   if (!token) {
     throw new Error('TOKEN_DEEPSEEK no está configurado');
@@ -45,7 +45,7 @@ export async function askDeepSeek(messages: DeepSeekMessage[]): Promise<DeepSeek
       model: 'deepseek-chat',
       messages,
       temperature: 0.6,
-      max_tokens: 400,
+      max_tokens: maxTokens,
     }),
   });
 

@@ -152,7 +152,17 @@
     "comingSoon": "Bientôt disponible. Je prépare des articles techniques et des leçons réelles tirées de mes projets.",
     "empty": "Aucun article publié pour le moment.",
     "notFound": "Nous n'avons pas trouvé cet article.",
-    "readMore": "Lire la suite"
+    "readMore": "Lire la suite",
+    "backToBlog": "Retour au blog",
+    "authorRole": "Architecte de Solutions et Dev Full Stack",
+    "latest": "Dernier article",
+    "readingTime": "{{min}} min de lecture",
+    "share": "Partager",
+    "copyLink": "Copier le lien",
+    "linkCopied": "Lien copié",
+    "relatedTitle": "Continuer la lecture",
+    "allTags": "Tous",
+    "topics": "Thèmes"
   },
   "certificates": {
     "title": "Formation Certifiée",

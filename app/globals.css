@@ -96,6 +96,164 @@ html {
   animation: fadeInOut 3s ease-in-out forwards;
 }
 
+/* Tipografía del contenido de blog (HTML de Tiptap) — compartida entre el
+   editor del Admin y la vista pública de /blog/[slug] */
+.blog-content {
+  color: rgb(203 213 225);
+  line-height: 1.75;
+}
+
+.blog-content > * + * {
+  margin-top: 1.25em;
+}
+
+.blog-content h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 2em;
+}
+
+.blog-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 1.75em;
+}
+
+.blog-content strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.blog-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-content ul,
+.blog-content ol {
+  padding-left: 1.5em;
+}
+
+.blog-content ul {
+  list-style: disc;
+}
+
+.blog-content ol {
+  list-style: decimal;
+}
+
+.blog-content li + li {
+  margin-top: 0.5em;
+}
+
+.blog-content blockquote {
+  border-left: 3px solid rgba(59, 130, 246, 0.5);
+  padding-left: 1em;
+  color: rgb(148 163 184);
+  font-style: italic;
+}
+
+.blog-content pre {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(29, 78, 216, 0.2);
+  border-radius: 0.5rem;
+  padding: 1em;
+  overflow-x: auto;
+}
+
+.blog-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.875em;
+}
+
+.blog-content pre code {
+  color: #cbd5e1;
+}
+
+.blog-content p code {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+/* Resaltado de sintaxis (highlight.js / lowlight) — paleta azul/oscura del sitio.
+   Compartido entre el editor del Admin (ProseMirror) y la vista pública. */
+.blog-content .hljs-comment,
+.blog-content .hljs-quote {
+  color: #64748b;
+  font-style: italic;
+}
+.blog-content .hljs-keyword,
+.blog-content .hljs-selector-tag,
+.blog-content .hljs-literal,
+.blog-content .hljs-doctag,
+.blog-content .hljs-name {
+  color: #7dd3fc;
+}
+.blog-content .hljs-string,
+.blog-content .hljs-regexp,
+.blog-content .hljs-addition {
+  color: #86efac;
+}
+.blog-content .hljs-number,
+.blog-content .hljs-variable,
+.blog-content .hljs-template-variable,
+.blog-content .hljs-attr,
+.blog-content .hljs-attribute,
+.blog-content .hljs-property {
+  color: #fca5a5;
+}
+.blog-content .hljs-operator,
+.blog-content .hljs-punctuation {
+  color: #94a3b8;
+}
+.blog-content .hljs-title,
+.blog-content .hljs-function .hljs-title,
+.blog-content .hljs-section,
+.blog-content .hljs-built_in,
+.blog-content .hljs-type {
+  color: #93c5fd;
+}
+.blog-content .hljs-symbol,
+.blog-content .hljs-bullet,
+.blog-content .hljs-meta {
+  color: #c4b5fd;
+}
+.blog-content .hljs-emphasis {
+  font-style: italic;
+}
+.blog-content .hljs-strong {
+  font-weight: 700;
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(29, 78, 216, 0.2);
+}
+
+.blog-content mark {
+  background: rgba(250, 204, 21, 0.25);
+  color: inherit;
+  border-radius: 0.2rem;
+  padding: 0.05em 0.15em;
+}
+
+.blog-content hr {
+  border: none;
+  border-top: 1px solid rgba(29, 78, 216, 0.2);
+  margin: 2em 0;
+}
+
+.blog-content u {
+  text-decoration-color: rgba(59, 130, 246, 0.6);
+}
+
 /* Gradientes y efectos */
 .bg-gradient-blue {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%);

@@ -17,3 +17,4 @@ export { default as JevyChatStat } from './jevy-chat-stat.model';
 export { default as Certificate } from './certificate.model';
 export { default as JobOffer } from './joboffer.model';
 export { default as JevyTaxonomy } from './jevy-taxonomy.model';
+export { default as BlogPost } from './blog.model';

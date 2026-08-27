@@ -15,11 +15,17 @@ export const metadata: Metadata = {
 }
 
 /** Página `/testimonial` (Server Component) — wrapper mínimo del wizard público de 2 steps. */
-export default function TestimonialPage() {
+export default async function TestimonialPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ project?: string }>
+}) {
+  const { project } = await searchParams
+
   return (
     <main className="min-h-screen bg-black flex flex-col">
       <div className="flex-grow">
-        <TestimonialForm />
+        <TestimonialForm initialProjectSlug={project} />
       </div>
     </main>
   )

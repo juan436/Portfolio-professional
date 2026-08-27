@@ -1,5 +1,5 @@
 import type { IProject } from "@/models/project.model"
-import type { ProjectCategoryValue } from "@/lib/actions/projects"
+import type { ProjectCategoryValue } from "@/lib/actions/revalidation"
 
 /**
  * Tipos y constantes compartidas por el módulo de Proyectos del Admin.
