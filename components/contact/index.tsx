@@ -32,9 +32,24 @@ export default function Contact() {
       return undefined
     }
   })
+  // Ficha ({slug, title}) de la que viene el visitante al tocar "¿Necesitas algo
+  // similar?" — mismo mecanismo y misma razón (URL limpia + lectura síncrona)
+  // que `jevy_initial_service`. Lo escribe el onClick de `SimilarWorkCTA`.
+  const [referenceProject] = useState<{ slug: string; title: string } | undefined>(() => {
+    if (typeof window === "undefined") return undefined
+    try {
+      const stored = sessionStorage.getItem("jevy_reference_project")
+      if (!stored) return undefined
+      const parsed = JSON.parse(stored)
+      return parsed && typeof parsed.slug === "string" && typeof parsed.title === "string" ? parsed : undefined
+    } catch {
+      return undefined
+    }
+  })
   useEffect(() => {
     try {
       sessionStorage.removeItem("jevy_initial_service")
+      sessionStorage.removeItem("jevy_reference_project")
     } catch {}
   }, [])
   const translatedTexts = useTranslatedTexts(
@@ -92,7 +107,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="order-1 lg:order-2 min-w-0"
           >
-            <JevyChat initialService={initialService} attachments={attachments} />
+            <JevyChat initialService={initialService} referenceProject={referenceProject} attachments={attachments} />
           </motion.div>
 
           <motion.div

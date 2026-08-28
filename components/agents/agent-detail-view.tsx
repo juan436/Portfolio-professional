@@ -15,6 +15,7 @@ import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
 
 interface RawAgent {
   _id: string
+  slug: string
   title: string
   description: string
   subtype?: string
@@ -222,7 +223,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
             </FadeIn>
           )}
 
-          <SimilarWorkCTA href="/contact" />
+          <SimilarWorkCTA reference={{ slug: agent.slug, title }} />
     </DetailPageShell>
   )
 }

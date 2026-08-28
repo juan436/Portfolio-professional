@@ -43,10 +43,11 @@ type ServiceKey = (typeof SERVICES_WITH_GREETING)[number]
  */
 interface JevyChatProps {
   initialService?: string
+  referenceProject?: { slug: string; title: string }
   attachments: UseAttachmentsReturn
 }
 
-export function JevyChat({ initialService, attachments }: JevyChatProps) {
+export function JevyChat({ initialService, referenceProject, attachments }: JevyChatProps) {
   const { t } = useLanguage()
 
   const translatedTexts = useTranslatedTexts(
@@ -308,6 +309,7 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
           sessionId,
           alreadyMatched,
           ...(attachmentsContext ? { attachmentsContext } : {}),
+          ...(referenceProject ? { referenceProjectSlug: referenceProject.slug } : {}),
         }),
       })
       const data = await response.json()
@@ -348,6 +350,21 @@ export function JevyChat({ initialService, attachments }: JevyChatProps) {
     pushLeadLine(defaultMessage)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines.length, initialService, t])
+
+  // Si se llegó desde el CTA "¿Necesitas algo similar?" de una ficha, manda
+  // automáticamente "quiero algo parecido a X" como si lo hubiera escrito el
+  // lead — mismo mecanismo que el de Servicios de arriba. Mutuamente exclusivo
+  // con initialService (vienen de páginas distintas). Una sola vez.
+  const autoSentReferenceRef = useRef(false)
+  useEffect(() => {
+    if (autoSentReferenceRef.current) return
+    if (!referenceProject || initialService) return
+    if (lines.length !== 1) return
+    autoSentReferenceRef.current = true
+    const message = String(t("contact.jevy.referenceProjectMessage")).replace("{title}", referenceProject.title)
+    pushLeadLine(message)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lines.length, referenceProject, initialService, t])
 
   const handleChipClick = (label: string) => {
     pushLeadLine(label)

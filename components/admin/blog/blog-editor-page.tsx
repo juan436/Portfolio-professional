@@ -39,7 +39,6 @@ type Translations = Record<LocaleCode, LocaleFields>
 
 interface FormState {
   title: string
-  slug: string
   excerpt: string
   coverImage: string
   tags: string[]
@@ -53,7 +52,6 @@ const emptyTranslations = (): Translations => ({ en: emptyLocale(), fr: emptyLoc
 
 const emptyForm: FormState = {
   title: "",
-  slug: "",
   excerpt: "",
   coverImage: "",
   tags: [],
@@ -97,7 +95,6 @@ export function BlogEditorPage({ postId }: { postId?: string }) {
         }
         setForm({
           title: post.title || "",
-          slug: post.slug || "",
           excerpt: post.excerpt || "",
           coverImage: post.coverImage || "",
           tags: post.tags || [],
@@ -233,7 +230,7 @@ export function BlogEditorPage({ postId }: { postId?: string }) {
           </button>
           <button
             type="button"
-            title="Detalles (slug, extracto, portada)"
+            title="Detalles (extracto, portada)"
             aria-label="Detalles"
             onClick={() => setDetailsOpen(true)}
             className="h-9 w-9 inline-flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
@@ -300,7 +297,7 @@ export function BlogEditorPage({ postId }: { postId?: string }) {
               onClick={() => setDetailsOpen(true)}
               className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-400"
             >
-              Slug, extracto y portada
+              Extracto y portada
             </button>
           </div>
 
@@ -323,12 +320,6 @@ export function BlogEditorPage({ postId }: { postId?: string }) {
             <DialogTitle>Detalles del artículo</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
-            <TextField
-              label="Slug (vacío = se genera del título)"
-              value={form.slug}
-              onChange={(v) => setForm({ ...form, slug: v })}
-              placeholder="mi-articulo-nuevo"
-            />
             <TextAreaField
               label="Extracto (resumen corto, se muestra en el listado)"
               value={form.excerpt}

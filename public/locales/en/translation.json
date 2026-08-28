@@ -199,6 +199,7 @@
         "automation": "I need to automate a process",
         "infra": "I need help with infrastructure and deployment"
       },
+      "referenceProjectMessage": "I want something similar to the «{title}» project",
       "chips": {
         "app": "I want my own app",
         "automation": "I need an automation",

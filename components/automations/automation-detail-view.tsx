@@ -16,6 +16,7 @@ import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
 
 interface RawAutomation {
   _id: string
+  slug: string
   title: string
   description: string
   subtype?: string
@@ -247,7 +248,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
               </div>
             </FadeIn>
           )}
-          <SimilarWorkCTA href="/#contact" />
+          <SimilarWorkCTA reference={{ slug: automation.slug, title }} />
     </DetailPageShell>
   )
 }

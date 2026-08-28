@@ -12,7 +12,7 @@ import { isRateLimited, getClientIp } from '@/lib/rate-limit';
 /**
  * `/api/contact/chat` — POST, motor conversacional de Jevy (el endpoint más
  * complejo del sitio).
- * Recibe: `{ messages, service?, sessionId, alreadyMatched, attachmentsContext? }`.
+ * Recibe: `{ messages, service?, sessionId, alreadyMatched, attachmentsContext?, referenceProjectSlug? }`.
  * Procesa por turno: rate-limit por IP + tope de turnos por sesión; arma el system
  * prompt con reglas de tono/dominio; a partir del 2do mensaje corre extracción de
  * matching (function calling + reintento si hay señal parcial, ver lib/matching.ts);
@@ -37,7 +37,9 @@ function detailPath(category: string, slug: string) {
   return `/projects/${slug}`;
 }
 
-function buildSystemPrompt(matchResult: MatchResult | null, service?: string, attachmentsContext?: string) {
+type ReferenceInfo = { title: string; pitch: string; problem: string };
+
+function buildSystemPrompt(matchResult: MatchResult | null, service?: string, attachmentsContext?: string, referenceInfo?: ReferenceInfo) {
   return `Eres Jevy, el asistente conversacional del Ing. Juan Villegas, un ingeniero de software full-stack. Actúas como su secretario: entrevistas al lead que llega al chat, lo guías, y al final coordinas que Juan le agende una reunión.
 
 QUIÉN ES QUIÉN (regla estricta): tú eres Jevy, el asistente — NO eres Juan. Juan Villegas es tu jefe, el dueño del trabajo. Cuando hables de proyectos, decisiones o trabajo, refiérete a él SIEMPRE por su nombre completo con título: "el Ing. Juan Villegas" o "Juan Villegas" — NUNCA "Juan" a secas, ni una sola vez en toda la charla. Es una regla de etiqueta estricta, como la de un secretario que jamás llama a su jefe cirujano por el nombre de pila solo. Nunca digas "yo hice", "estoy trabajando en", "tengo un proyecto" ni nada que suene a que tú construiste algo — di "el Ing. Juan Villegas está trabajando en...", "el Ing. Juan Villegas tiene algo similar...", "el Ing. Juan Villegas hizo...". Tú (Jevy) sí hablas en primera persona sobre tu propio rol de asistente (yo te acompaño, yo te ayudo a definir esto).
@@ -88,6 +90,13 @@ Fijate: hay un salto de línea en blanco entre "datos:" y el primer guion — el
 IMPORTANTE: no prometas tiempos de respuesta específicos (nunca digas "en menos de 24 horas" ni similar) — el seguimiento real lo hace Juan directamente. Responde siempre en el mismo idioma en el que te escribe el usuario.
 
 ${service ? `El lead llegó interesado en este servicio: ${service}.` : ''}
+${
+  referenceInfo
+    ? `PUNTO DE PARTIDA DEL LEVANTAMIENTO: el lead tocó "¿Necesitas algo similar?" en el proyecto "${referenceInfo.title}" del Ing. Juan Villegas. De qué va ese proyecto: "${referenceInfo.pitch}"${
+        referenceInfo.problem ? `. Problema que resolvía: "${referenceInfo.problem}"` : ''
+      }. Ya tenés una referencia concreta de lo que el lead quiere — usala como ancla toda la charla: en vez de arrancar de cero, indagá qué quiere IGUAL a ese proyecto y qué DISTINTO (otro rubro, otra escala, funciones que sobran o faltan), y aprovechá lo que sabés de ese proyecto para preguntar más preciso. En tu PRIMERA respuesta: confirmá en una frase que es un proyecto real de él, resumí muy corto de qué va, y hacé UNA sola pregunta para empezar. NO pegues links ni rutas entre corchetes, NO repitas el nombre más de una vez, NADA de relleno tipo "¿es algo así lo que tenés en mente?". Breve, como siempre.`
+    : ''
+}
 
 RESULTADO DEL MOTOR DE MATCHING (ya calculado por código, no lo cuestiones ni inventes otro):
 ${
@@ -109,7 +118,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, reply: null, matches: [], closed: true, limited: true });
     }
 
-    const { messages, service, attachmentsContext, sessionId, alreadyMatched } = await request.json();
+    const { messages, service, attachmentsContext, sessionId, alreadyMatched, referenceProjectSlug } = await request.json();
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ success: false, message: 'messages es requerido' }, { status: 400 });
@@ -123,6 +132,21 @@ export async function POST(request: Request) {
     await dbConnect();
     const projects = await Project.find({}).select('title slug description category image demo jevyProfile').limit(50);
 
+    // El lead viene del CTA "¿Necesitas algo similar?" de una ficha concreta —
+    // se sabe EXACTO cuál es (por slug: clave exacta, sin acentos, igual en
+    // todos los idiomas). NO se toca el motor de matching ni la tarjeta — solo
+    // se le pasa a Jevy el nombre + pitch por el system prompt para que
+    // reconozca el proyecto en su primera respuesta, breve y sin link.
+    const referenceSlug = typeof referenceProjectSlug === 'string' ? referenceProjectSlug.trim() : '';
+    const referenceMatchDoc = referenceSlug ? projects.find((p) => p.slug === referenceSlug) : undefined;
+    const referenceInfo = referenceMatchDoc
+      ? {
+          title: String(referenceMatchDoc.title),
+          pitch: String(referenceMatchDoc.jevyProfile?.pitchCorto || referenceMatchDoc.description || ''),
+          problem: String(referenceMatchDoc.jevyProfile?.problemaCore || ''),
+        }
+      : undefined;
+
     // Estadísticas de tokens del turno — un doc por request que sí llegó a
     // llamar a DeepSeek, ver models/jevy-chat-stat.model.ts.
     const calls: IJevyChatStatCall[] = [];
@@ -135,9 +159,12 @@ export async function POST(request: Request) {
     // la conversación. Ver planes/matching-catalogo-function-calling. Una vez
     // que el frontend ya mostró un match (alreadyMatched), no se vuelve a
     // calcular — evita que la misma tarjeta se reenvíe en cada turno siguiente.
+    // Si el lead vino del CTA de una ficha (referenceInfo), el "match" ya lo
+    // eligió él al tocar "quiero algo parecido a esto" — no se corre el motor
+    // difuso: la conversación entera está anclada a ese proyecto.
     let matchResult: MatchResult | null = null;
 
-    if (userMessageCount >= 2 && !alreadyMatched) {
+    if (userMessageCount >= 2 && !alreadyMatched && !referenceInfo) {
       try {
         const taxonomy = await getJevyTaxonomy();
         const tool = buildExtractionTool(taxonomy);
@@ -228,6 +255,7 @@ export async function POST(request: Request) {
       matchResult,
       typeof service === 'string' ? service : undefined,
       typeof attachmentsContext === 'string' ? attachmentsContext : undefined,
+      referenceInfo,
     );
 
     const deepSeekMessages: DeepSeekMessage[] = [

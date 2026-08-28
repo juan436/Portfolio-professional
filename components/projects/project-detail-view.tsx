@@ -53,6 +53,7 @@ const uiIconMap = {
  */
 interface RawProject {
   _id: string
+  slug: string
   title: string
   description: string
   image?: string
@@ -670,7 +671,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
               </div>
             </motion.div>
           )}
-          <SimilarWorkCTA href="/#contact" />
+          <SimilarWorkCTA reference={{ slug: project.slug, title }} />
     </DetailPageShell>
   )
 }
