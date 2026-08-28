@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import Certificate from "@/models/certificate.model"
 import { requireAdminSession } from "@/lib/actions/shared"
@@ -13,6 +13,7 @@ import { slugify, uniqueSlug } from "@/lib/slug"
  * Produce: la certificación creada/actualizada (plana) / `true` al borrar.
  */
 function revalidateCertificates(slug?: string) {
+  updateTag("certificates")
   revalidatePath("/certificates")
   if (slug) revalidatePath(`/certificates/${slug}`)
 }

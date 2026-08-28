@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import Content from "@/models/content.model"
 import Project from "@/models/project.model"
@@ -52,7 +53,7 @@ function mapProject(p: any) {
 // fetchOtherSkills), consultados directo a Mongo en paralelo. Usado para
 // hidratar el Context antes del primer paint en las páginas que lo necesitan
 // completo (home).
-export async function getHomeContent(): Promise<ContentShape> {
+async function fetchHomeContent(): Promise<ContentShape> {
   await dbConnect()
 
   const [contentDoc, webProjects, mobileProjects, infraBackendProjects, experienceDocs, skillDocs, otherSkillDocs] =
@@ -102,13 +103,29 @@ export async function getHomeContent(): Promise<ContentShape> {
   return JSON.parse(JSON.stringify(result))
 }
 
+// Cacheado (unstable_cache) para no pegarle a Mongo en cada request — el sitio
+// está en `force-dynamic` (build sin acceso a DB) así que la ruta igual se
+// re-renderiza, pero el dato se reusa. Se invalida con `revalidateTag("home")`
+// desde las Server Actions del Admin (además del `revalidatePath` que ya hacen).
+// `revalidate: 3600` = red de seguridad por si algún tag se olvida.
+// Ver portfolio: planes/seo-jevy-2026-08-27 (Tanda 5) + planes/i18n-... (Stage 5).
+export const getHomeContent = unstable_cache(fetchHomeContent, ["home-content"], {
+  tags: ["home"],
+  revalidate: 3600,
+})
+
 // Server-only, liviano: solo el sub-objeto `contact` (email/teléfono/ubicación)
 // — lo único que /contact necesita (Footer y JevyGuidePanel), sin traer
 // proyectos/skills/experiencia que esa página nunca usa.
-export async function getContactInfo(): Promise<ContentShape["contact"] | null> {
+async function fetchContactInfo(): Promise<ContentShape["contact"] | null> {
   await dbConnect()
   const contentDoc = await Content.findOne().sort({ createdAt: -1 }).select("contact").lean()
   const contact = (contentDoc as any)?.contact
   if (!contact) return null
   return JSON.parse(JSON.stringify({ ...contact, translations: contact.translations || {} }))
 }
+
+export const getContactInfo = unstable_cache(fetchContactInfo, ["contact-info"], {
+  tags: ["home"],
+  revalidate: 3600,
+})

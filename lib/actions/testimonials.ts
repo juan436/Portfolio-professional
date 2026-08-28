@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import Testimonial from "@/models/testimonial.model"
 import Project from "@/models/project.model"
@@ -122,6 +122,7 @@ export async function promoteSuggestedMetricAction(testimonialId: string, metric
 
   const project = await Project.findById(link.ref).select("category")
   if (project) revalidateForCategory(project.category as ProjectCategoryValue, link.ref)
+  updateTag("testimonials")
   revalidatePath("/")
 
   return {

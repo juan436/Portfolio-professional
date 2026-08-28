@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import ProjectStats from "@/models/project-stats.model"
 import Project from "@/models/project.model"
@@ -19,6 +19,7 @@ import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation
 async function revalidateForRef(ref: string) {
   const project = await Project.findById(ref).select("category")
   if (project) revalidateForCategory(project.category as ProjectCategoryValue, ref)
+  updateTag("projects")
   revalidatePath("/")
 }
 

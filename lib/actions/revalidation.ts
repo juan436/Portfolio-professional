@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 
 /**
  * Helpers de revalidación compartidos entre Server Actions (lib/actions/*.ts).
@@ -11,6 +11,10 @@ import { revalidatePath } from "next/cache"
 export type ProjectCategoryValue = "web" | "mobile" | "infra_backend" | "laboratorio" | "automatizacion" | "agente"
 
 export function revalidateForCategory(category: ProjectCategoryValue, id?: string) {
+  // Invalida el caché de datos (unstable_cache) además del caché de rutas.
+  updateTag("projects")
+  updateTag("home") // la home muestra proyectos web/mobile/infra
+
   switch (category) {
     case "web":
     case "mobile":

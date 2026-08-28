@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import OtherSkill from "@/models/other-skills.model"
 import { requireAdminSession } from "@/lib/actions/shared"
@@ -13,6 +13,7 @@ import { translateAndAddToObject } from "@/lib/translate"
  * Produce: la skill creada/actualizada (plana) / `true` al borrar.
  */
 function revalidateOtherSkills() {
+  updateTag("home")
   revalidatePath("/")
 }
 

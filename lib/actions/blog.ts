@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import BlogPost from "@/models/blog.model"
 import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
@@ -19,6 +19,7 @@ import { sanitizeBlogHtml } from "@/lib/blog/sanitize"
 const TARGET_LANGUAGES: SupportedLanguage[] = ["en", "fr", "it"]
 
 function revalidateBlog(slug?: string) {
+  updateTag("blog")
   revalidatePath("/blog")
   if (slug) revalidatePath(`/blog/${slug}`)
 }

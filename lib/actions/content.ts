@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import Content from "@/models/content.model"
 import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
@@ -30,6 +30,7 @@ function plainOf(sub: any) {
 // server-side, ver ContentHydrator) — igual hay que revalidar el caché de
 // Next para que el cambio se vea sin esperar el próximo deploy/restart.
 function revalidateHome() {
+  updateTag("home")
   revalidatePath("/")
   revalidatePath("/contact")
 }

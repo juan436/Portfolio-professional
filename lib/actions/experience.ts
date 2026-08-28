@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import Experience from "@/models/experience.model"
 import { requireAdminSession, mergeTranslations } from "@/lib/actions/shared"
@@ -15,6 +15,7 @@ import { translateAndAddToObject } from "@/lib/translate"
 const TRANSLATABLE_FIELDS = ["position", "description", "location"] as const
 
 function revalidateExperience() {
+  updateTag("home")
   revalidatePath("/")
 }
 

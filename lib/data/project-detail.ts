@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import Project from "@/models/project.model"
 import Testimonial from "@/models/testimonial.model"
@@ -20,31 +21,37 @@ export interface ProjectDetailData {
 // que corría en cada navegación a /projects/[slug]. Busca por slug (URL
 // pública) — el _id de Mongo sigue siendo la clave interna para
 // Testimonial/ProjectStats, nunca se expone en la URL.
-export async function getProjectDetail(slug: string): Promise<ProjectDetailData | null> {
-  await dbConnect()
+// Cacheado (unstable_cache) — tags "projects" + "testimonials", invalidados
+// desde las Server Actions del Admin con `revalidateTag`.
+export const getProjectDetail = unstable_cache(
+  async (slug: string): Promise<ProjectDetailData | null> => {
+    await dbConnect()
 
-  let project: any
-  try {
-    project = await Project.findOne({ slug }).lean()
-  } catch {
-    // Error de consulta -> mismo tratamiento que "no encontrado"
-    return null
-  }
+    let project: any
+    try {
+      project = await Project.findOne({ slug }).lean()
+    } catch {
+      // Error de consulta -> mismo tratamiento que "no encontrado"
+      return null
+    }
 
-  if (!project) return null
+    if (!project) return null
 
-  const projectId = project._id.toString()
+    const projectId = project._id.toString()
 
-  const [testimonials, stats] = await Promise.all([
-    Testimonial.find({ type: "resultado", "links.ref": projectId }).sort({ createdAt: -1 }).lean(),
-    ProjectStats.findOne({ "link.ref": projectId }).lean(),
-  ])
+    const [testimonials, stats] = await Promise.all([
+      Testimonial.find({ type: "resultado", "links.ref": projectId }).sort({ createdAt: -1 }).lean(),
+      ProjectStats.findOne({ "link.ref": projectId }).lean(),
+    ])
 
-  return JSON.parse(
-    JSON.stringify({
-      project,
-      testimonials,
-      metrics: (stats as any)?.metrics || [],
-    })
-  )
-}
+    return JSON.parse(
+      JSON.stringify({
+        project,
+        testimonials,
+        metrics: (stats as any)?.metrics || [],
+      })
+    )
+  },
+  ["project-detail"],
+  { tags: ["projects", "testimonials"], revalidate: 3600 },
+)
