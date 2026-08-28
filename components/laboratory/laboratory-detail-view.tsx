@@ -1,7 +1,5 @@
 "use client"
 
-import Link from "next/link"
-import { motion } from "framer-motion"
 import {
   ArrowLeft,
   Briefcase,
@@ -21,12 +19,9 @@ import { ProjectHeader } from "@/components/projects/project-header"
 import { DeploymentDiagram, type DeploymentIconKey } from "@/components/projects/deployment-diagram"
 import { FlowDiagram } from "@/components/automations/flow-diagram"
 import { Button } from "@/components/ui/button"
-
-interface WorkBlock {
-  kind: "paragraph" | "steps"
-  text?: string
-  items?: string[]
-}
+import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
+import { FadeIn } from "@/components/common/fade-in"
+import { WorkBlocks, type WorkBlock } from "@/components/projects/work-blocks"
 
 interface RawLabProject {
   _id: string
@@ -72,40 +67,6 @@ const STATUS_STYLES: Record<string, string> = {
   completed: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
   discontinued: "bg-slate-500/10 text-slate-400 border-slate-500/30",
   evolved: "bg-purple-500/10 text-purple-400 border-purple-500/30",
-}
-
-/** Renderiza bloques de tipo párrafo o pasos numerados. Recibe: `blocks: WorkBlock[]`. */
-function WorkBlocks({ blocks }: { blocks: WorkBlock[] }) {
-  return (
-    <div className="space-y-6">
-      {blocks.map((block, bi) =>
-        block.kind === "paragraph" ? (
-          block.text && (
-            <p key={bi} className="text-sm text-slate-300 leading-relaxed">
-              {block.text}
-            </p>
-          )
-        ) : (
-          block.items &&
-          block.items.length > 0 && (
-            <div key={bi} className="space-y-6">
-              {block.items.map((step, i) => (
-                <div key={i} className="relative pl-11">
-                  {i < block.items!.length - 1 && (
-                    <div className="absolute left-[15px] top-8 bottom-[-24px] w-px bg-blue-500/20" />
-                  )}
-                  <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-xs font-bold text-blue-300">
-                    {i + 1}
-                  </div>
-                  <p className="text-sm text-slate-300 leading-relaxed pt-1.5">{step}</p>
-                </div>
-              ))}
-            </div>
-          )
-        )
-      )}
-    </div>
-  )
 }
 
 /**
@@ -154,15 +115,7 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
   const outputLabel = String(t("automations.outputLabel") || "Resultado")
 
   if (!project) {
-    return (
-      <main className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
-        <p className="text-slate-400 mb-6">{noProjectsLabel}</p>
-        <Link href="/laboratory" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {backLabel}
-        </Link>
-      </main>
-    )
+    return <DetailNotFound message={noProjectsLabel} backHref="/laboratory" backLabel={backLabel} />
   }
 
   const translated = project.translations?.[language.code as "en" | "fr" | "it"]
@@ -175,14 +128,7 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
   ) as [string, string[]][]
 
   return (
-    <main className="min-h-screen bg-black">
-      <section className="pt-32 pb-20 relative">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-        </div>
-
-        <div className="container mx-auto px-6 relative z-10 max-w-6xl">
+    <DetailPageShell maxWidthClass="max-w-6xl">
           <ProjectHeader title={title} description={description} hideHeader nav={{ backHref: "/laboratory" }} />
 
           {labDetails?.status && (
@@ -196,19 +142,13 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
             </div>
           )}
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="relative aspect-video rounded-xl overflow-hidden border border-white/10 mb-8 bg-black"
-          >
+          <FadeIn className="relative aspect-video rounded-xl overflow-hidden border border-white/10 mb-8 bg-black">
             {project.video ? (
               <video src={project.video} controls autoPlay className="w-full h-full object-contain" />
             ) : (
-              <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+              <img src={imageUrl} alt={title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
             )}
-          </motion.div>
+          </FadeIn>
 
           <div className="flex flex-wrap items-center justify-between gap-4 mb-12">
             <div className="flex flex-wrap gap-2">
@@ -369,13 +309,7 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
           </div>
 
           {project.deploymentDiagram && project.deploymentDiagram.length > 1 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="mt-16"
-            >
+            <FadeIn className="mt-16">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                 <Layers className="h-5 w-5 text-blue-500" />
                 {deploymentHeading}
@@ -386,17 +320,11 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
                   label: step.label,
                 }))}
               />
-            </motion.div>
+            </FadeIn>
           )}
 
           {labDetails?.flow?.steps && labDetails.flow.steps.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="mt-16"
-            >
+            <FadeIn className="mt-16">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                 <Target className="h-5 w-5 text-blue-500" />
                 {flowHeading}
@@ -414,10 +342,8 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
                 sendLabel={sendLabel}
                 outputLabel={outputLabel}
               />
-            </motion.div>
+            </FadeIn>
           )}
-        </div>
-      </section>
-    </main>
+    </DetailPageShell>
   )
 }

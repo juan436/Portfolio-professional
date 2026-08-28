@@ -1,10 +1,7 @@
 "use client"
 
-import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
-import { ArrowLeft, ListChecks, MessageCircle, Radio, Timer, TrendingUp, Wrench } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ListChecks, Radio, Timer, TrendingUp, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import type { RawTestimonial } from "@/services/api/testimonials"
 import type { ProjectMetric } from "@/services/api/project-stats"
@@ -13,6 +10,9 @@ import { FlowDiagram } from "@/components/automations/flow-diagram"
 import { flowIconMap } from "@/components/automations/flow-card"
 import { TestimonialCarousel } from "@/components/automations/testimonial-carousel"
 import { TestimonialMetrics } from "@/components/projects/testimonial-metrics"
+import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
+import { FadeIn } from "@/components/common/fade-in"
+import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
 
 interface RawAutomation {
   _id: string
@@ -88,24 +88,13 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
   const viewMoreLabel = String(t("automations.viewMore") || "Ver todas las automatizaciones")
   const testimonialHeading = String(t("projects.testimonialHeading") || "Testimonio")
   const resultsHeading = String(t("projects.resultsHeading") || "Métricas y Resultados")
-  const ctaHeading = String(t("projects.ctaHeading") || "¿Necesitas algo similar?")
-  const ctaText = String(t("projects.ctaText") || "Hablemos sobre tu proyecto.")
-  const ctaButton = String(t("projects.ctaButton") || "Hablemos")
   const toolsHeading = String(t("automations.detail.toolsHeading") || "Construido con")
   const channelsHeading = String(t("automations.detail.channelsHeading") || "Canales soportados")
   const setupTimeHeading = String(t("automations.detail.setupTimeHeading") || "Tiempo de puesta en marcha")
   const replayLabel = String(t("automations.detail.demoReplay") || "Probar de nuevo")
 
   if (!automation) {
-    return (
-      <main className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
-        <p className="text-slate-400 mb-6">{notFoundLabel}</p>
-        <Link href="/automations" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {backToList}
-        </Link>
-      </main>
-    )
+    return <DetailNotFound message={notFoundLabel} backHref="/automations" backLabel={backToList} />
   }
 
   const translated = automation.translations?.[language.code as "en" | "fr" | "it"]
@@ -127,14 +116,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
   const Icon = flowIconMap[details?.icon || ""]
 
   return (
-    <main className="min-h-screen bg-black">
-      <section className="pt-32 pb-20 relative">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-        </div>
-
-        <div className="container mx-auto px-6 relative z-10">
+    <DetailPageShell>
           <ProjectHeader
             title={title}
             description={description}
@@ -148,13 +130,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16 max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="bg-zinc-900/40 border border-white/10 rounded-xl p-6"
-            >
+            <FadeIn className="bg-zinc-900/40 border border-white/10 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-blue-500/10">
                   {Icon && <Icon className="h-6 w-6 text-blue-500" />}
@@ -164,15 +140,9 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
                 </h2>
               </div>
               <p className="text-slate-300 leading-relaxed text-base">{useCase || description}</p>
-            </motion.div>
+            </FadeIn>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="bg-zinc-900/40 border border-white/10 rounded-xl p-6"
-            >
+            <FadeIn delay={0.1} className="bg-zinc-900/40 border border-white/10 rounded-xl p-6">
               <h2 className="text-lg font-bold text-blue-400 uppercase tracking-wide mb-4">
                 {howItsUsed}
               </h2>
@@ -184,16 +154,10 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
                   </li>
                 ))}
               </ol>
-            </motion.div>
+            </FadeIn>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="w-full mb-16"
-          >
+          <FadeIn className="w-full mb-16">
             <h2 className="text-2xl font-bold text-center mb-8">{tryLive}</h2>
             <FlowDiagram
               flow={{
@@ -211,16 +175,10 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
               outputLabel={outputLabel}
               replayLabel={replayLabel}
             />
-          </motion.div>
+          </FadeIn>
 
           {(tools.length > 0 || channels.length > 0 || setupTime) && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="flex flex-wrap items-stretch justify-center gap-4 max-w-5xl mx-auto mb-16"
-            >
+            <FadeIn className="flex flex-wrap items-stretch justify-center gap-4 max-w-5xl mx-auto mb-16">
               {tools.length > 0 && (
                 <div className="min-w-[180px] max-w-[300px] text-left p-4 rounded-xl bg-zinc-900/40 border border-white/5">
                   <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-2">
@@ -266,17 +224,11 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
                   <p className="text-sm text-slate-300 break-words">{setupTime}</p>
                 </div>
               )}
-            </motion.div>
+            </FadeIn>
           )}
 
           {resultsMetrics.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="mt-16"
-            >
+            <FadeIn className="mt-16">
               <h2 className="text-xl font-bold text-center mb-8 flex items-center justify-center gap-2">
                 <TrendingUp className="h-5 w-5 text-blue-500" />
                 {resultsHeading}
@@ -284,41 +236,18 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
               <div className="max-w-6xl mx-auto px-6 sm:px-10">
                 <TestimonialMetrics metrics={resultsMetrics} />
               </div>
-            </motion.div>
+            </FadeIn>
           )}
 
           {testimonials.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="mt-16"
-            >
+            <FadeIn className="mt-16">
               <h2 className="text-xl font-bold text-center mb-8">{testimonialHeading}</h2>
               <div className="max-w-6xl mx-auto px-6 sm:px-10">
                 <TestimonialCarousel testimonials={testimonials} />
               </div>
-            </motion.div>
+            </FadeIn>
           )}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="mt-16 rounded-xl border border-blue-500/20 bg-blue-500/5 p-8 text-center"
-          >
-            <h2 className="text-xl font-bold mb-2">{ctaHeading}</h2>
-            <p className="text-slate-400 mb-6">{ctaText}</p>
-            <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-500">
-              <Link href="/#contact">
-                <MessageCircle className="mr-2 h-4 w-4" />
-                {ctaButton}
-              </Link>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
-    </main>
+          <SimilarWorkCTA href="/#contact" />
+    </DetailPageShell>
   )
 }

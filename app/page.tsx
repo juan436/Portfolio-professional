@@ -1,5 +1,6 @@
 import { getHomeContent } from "@/lib/data/home-content"
 import { ContentHydrator } from "@/components/content-hydrator"
+import { ProfilePageJsonLd } from "@/components/seo/profile-page-json-ld"
 import Hero from "@/components/hero"
 import MetricsSection from "@/components/metrics"
 import Services from "@/components/services"
@@ -20,6 +21,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen">
+      <ProfilePageJsonLd />
       <ContentHydrator full={homeContent} />
       <WelcomeAnimation />
       <Hero />

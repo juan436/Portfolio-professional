@@ -1,11 +1,12 @@
 "use client"
 
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { ArrowLeft, Award, Briefcase, Calendar, Clock, ExternalLink, Layers, Lightbulb } from "lucide-react"
+import { Award, Briefcase, Calendar, Clock, ExternalLink, Layers, Lightbulb } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { ProjectHeader } from "@/components/projects/project-header"
 import { Button } from "@/components/ui/button"
+import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
+import { FadeIn } from "@/components/common/fade-in"
+import { localeFor } from "@/lib/i18n/locales"
 
 interface RawCertificate {
   _id: string
@@ -21,12 +22,6 @@ interface RawCertificate {
   applied?: string
 }
 
-const LOCALES: Record<string, string> = {
-  es: "es-ES",
-  en: "en-US",
-  fr: "fr-FR",
-  it: "it-IT",
-}
 
 /**
  * Vista de detalle de una certificación (`/certificates/[slug]`).
@@ -51,43 +46,22 @@ export function CertificateDetailView({ certificate }: CertificateDetailViewProp
   const durationLabel = String(t("certificates.durationLabel") || "Duración")
 
   if (!certificate) {
-    return (
-      <main className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
-        <p className="text-slate-400 mb-6">{notFoundLabel}</p>
-        <Link href="/certificates" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {backLabel}
-        </Link>
-      </main>
-    )
+    return <DetailNotFound message={notFoundLabel} backHref="/certificates" backLabel={backLabel} />
   }
 
   const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString(LOCALES[language.code] || "es-ES", { year: "numeric", month: "long" })
+    new Date(date).toLocaleDateString(localeFor(language.code), { year: "numeric", month: "long" })
 
   return (
-    <main className="min-h-screen bg-black">
-      <section className="pt-32 pb-20 relative">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-        </div>
+    <DetailPageShell maxWidthClass="max-w-6xl">
+      <ProjectHeader title={certificate.title} description={certificate.issuer} hideHeader nav={{ backHref: "/certificates" }} />
 
-        <div className="container mx-auto px-6 relative z-10 max-w-6xl">
-          <ProjectHeader title={certificate.title} description={certificate.issuer} hideHeader nav={{ backHref: "/certificates" }} />
-
-          <div className="grid grid-cols-1 lg:grid-cols-9 gap-8 mb-12 items-start">
-            {certificate.image && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-                className="lg:col-span-7 rounded-xl overflow-hidden border border-white/10 bg-white"
-              >
-                <img src={certificate.image} alt={certificate.title} className="w-full h-auto" />
-              </motion.div>
-            )}
+      <div className="grid grid-cols-1 lg:grid-cols-9 gap-8 mb-12 items-start">
+        {certificate.image && (
+          <FadeIn className="lg:col-span-7 rounded-xl overflow-hidden border border-white/10 bg-white">
+            <img src={certificate.image} alt={certificate.title} loading="lazy" decoding="async" className="w-full h-auto" />
+          </FadeIn>
+        )}
 
             <div className="lg:col-span-2 flex flex-col gap-3">
               {certificate.credentialUrl && (
@@ -164,8 +138,6 @@ export function CertificateDetailView({ certificate }: CertificateDetailViewProp
               </div>
             )}
           </div>
-        </div>
-      </section>
-    </main>
+    </DetailPageShell>
   )
 }

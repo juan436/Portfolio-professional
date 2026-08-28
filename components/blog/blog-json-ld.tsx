@@ -1,4 +1,4 @@
-import Script from "next/script"
+import { SITE_URL, AUTHOR_NAME, AUTHOR_DISPLAY_NAME } from "@/lib/site-config"
 
 /**
  * Structured data del listado `/blog`.
@@ -6,8 +6,6 @@ import Script from "next/script"
  * Produce: un `@graph` con `Blog` (nombre/url + `blogPost[]`) + `BreadcrumbList`
  * (Inicio › Blog) — le dice a Google que esto es un blog y cuáles son sus artículos.
  */
-const SITE_URL = "https://jevy.dev"
-
 export function BlogJsonLd({
   posts,
 }: {
@@ -18,10 +16,10 @@ export function BlogJsonLd({
     "@graph": [
       {
         "@type": "Blog",
-        name: "Blog — Ing. Juan Villegas",
+        name: `Blog — ${AUTHOR_DISPLAY_NAME}`,
         url: `${SITE_URL}/blog`,
         inLanguage: "es",
-        author: { "@type": "Person", name: "Juan Villegas", url: `${SITE_URL}/` },
+        author: { "@type": "Person", name: AUTHOR_NAME, url: `${SITE_URL}/` },
         blogPost: posts.slice(0, 20).map((post) => ({
           "@type": "BlogPosting",
           headline: post.title,
@@ -40,12 +38,5 @@ export function BlogJsonLd({
     ],
   }
 
-  return (
-    <Script
-      id="blog-json-ld"
-      type="application/ld+json"
-      strategy="afterInteractive"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 }

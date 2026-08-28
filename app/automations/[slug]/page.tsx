@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { getProjectDetail } from "@/lib/data/project-detail"
 import { AutomationDetailView } from "@/components/automations/automation-detail-view"
+import { WorkJsonLd } from "@/components/seo/work-json-ld"
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld"
 import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
 
 export async function generateMetadata({
@@ -34,11 +36,25 @@ export default async function AutomationDetailPage({
   const data = await getProjectDetail(slug)
 
   return (
-    <AutomationDetailView
-      automation={data?.project ?? null}
-      testimonials={data?.testimonials ?? []}
-      resultsMetrics={data?.metrics ?? []}
-      cameFromWork={cameFromWork}
-    />
+    <>
+      {data?.project && (
+        <>
+          <WorkJsonLd item={data.project} kind="automation" />
+          <BreadcrumbJsonLd
+            items={[
+              { name: "Inicio", path: "/" },
+              { name: "Automatizaciones", path: "/automations" },
+              { name: data.project.title },
+            ]}
+          />
+        </>
+      )}
+      <AutomationDetailView
+        automation={data?.project ?? null}
+        testimonials={data?.testimonials ?? []}
+        resultsMetrics={data?.metrics ?? []}
+        cameFromWork={cameFromWork}
+      />
+    </>
   )
 }

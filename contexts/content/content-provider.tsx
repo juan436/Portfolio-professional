@@ -3,21 +3,11 @@
 import { useState, useEffect, useRef, type ReactNode } from "react"
 import ContentContext, { ContentContextType } from "./content-context"
 import { Content } from "./types"
+import { assembleContent, emptyContent } from "@/lib/content/assemble-content"
 
 import {
   fetchContent, fetchProjects, fetchExperiences, fetchSkills, fetchOtherSkills
 } from "@/services/api"
-
-const emptyContent: Content = {
-  hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
-  about: { paragraph1: "", paragraph2: "", paragraph3: "", translations: {} },
-  services: [],
-  projects: { web: [], mobile: [], infra_backend: [] },
-  skills: { frontend: [], backend: [], database: [], devops: [] },
-  otherSkills: [],
-  contact: { email: "", phone: "", location: "", translations: {} },
-  experience: []
-}
 
 /**
  * Provider de contenido — caché de lectura para el sitio público (home, Footer,
@@ -68,78 +58,17 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
         ])
 
         if (contentData) {
-          const mapProject = (p: any) => ({
-            id: p._id,
-            slug: p.slug,
-            title: p.title,
-            description: p.description,
-            image: p.image,
-            images: p.images || [],
-            tags: p.tags || [],
-            subtype: p.subtype,
-            github: p.github || "#",
-            demo: p.demo || "#",
-            createdAt: p.createdAt,
-            testimonial: p.testimonial,
-            techStack: p.techStack,
-            challenge: p.challenge,
-            technicalDecisions: p.technicalDecisions || [],
-            securityHardening: p.securityHardening || [],
-            deploymentDiagram: p.deploymentDiagram || [],
-            translations: p.translations || {}
-          });
-
-          const projectsData = {
-            web: webProjects.map(mapProject),
-            mobile: mobileProjects.map(mapProject),
-            infra_backend: infraBackendProjects.map(mapProject)
-          }
-
-          setContent({
-            hero: contentData.hero ? {
-              ...contentData.hero,
-              translations: contentData.hero.translations || {}
-            } : emptyContent.hero,
-            about: contentData.about ? {
-              ...contentData.about,
-              translations: contentData.about.translations || {}
-            } : emptyContent.about,
-            services: contentData.services?.map((service: any) => ({
-              ...service,
-              translations: service.translations || {}
-            })) || [],
-            projects: projectsData,
-            skills: {
-              frontend: skillsData?.frontend?.map((skill: any) => ({
-                ...skill,
-                translations: skill.translations || {}
-              })) || [],
-              backend: skillsData?.backend?.map((skill: any) => ({
-                ...skill,
-                translations: skill.translations || {}
-              })) || [],
-              database: skillsData?.database?.map((skill: any) => ({
-                ...skill,
-                translations: skill.translations || {}
-              })) || [],
-              devops: skillsData?.devops?.map((skill: any) => ({
-                ...skill,
-                translations: skill.translations || {}
-              })) || []
-            },
-            otherSkills: otherSkillsData.data?.map((skill: any) => ({
-              ...skill,
-              translations: skill.translations || {}
-            })) || [],
-            contact: contentData.contact ? {
-              ...contentData.contact,
-              translations: contentData.contact.translations || {}
-            } : emptyContent.contact,
-            experience: experienceData?.map((exp: any) => ({
-              ...exp,
-              translations: exp.translations || {}
-            })) || []
-          });
+          setContent(
+            assembleContent({
+              contentData,
+              webProjects,
+              mobileProjects,
+              infraBackendProjects,
+              experienceData,
+              skillsData,
+              otherSkillsData,
+            })
+          )
         }
       } catch (error) {
         console.error("Error cargando datos:", error)

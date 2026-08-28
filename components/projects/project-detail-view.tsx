@@ -13,6 +13,9 @@ import { TestimonialMetrics } from "@/components/projects/testimonial-metrics"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
+import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
+import { WorkBlocks } from "@/components/projects/work-blocks"
 
 // Claves editables desde el Admin (campo "icon" de cada fila de uiStructure).
 // Cualquier clave no reconocida cae en LayoutGrid.
@@ -114,9 +117,6 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const systemDetailsHeading = String(t("projects.systemDetailsHeading") || "Impacto en el negocio")
   const ecommerceDetailsHeading = String(t("projects.ecommerceDetailsHeading") || "Comercio electrónico")
   const mobileDetailsHeading = String(t("projects.mobileDetailsHeading") || "Detalles de la app")
-  const ctaHeading = String(t("projects.ctaHeading") || "¿Necesitas algo similar?")
-  const ctaText = String(t("projects.ctaText") || "Hablemos sobre tu proyecto.")
-  const ctaButton = String(t("projects.ctaButton") || "Hablemos")
   const durationQuestionLabel = String(t("projects.durationQuestionLabel") || "Tiempo de desarrollo")
   const sectorQuestionLabel = String(t("projects.sectorQuestionLabel") || "Enfocado a")
   const relatedProjectLabel = String(t("projects.relatedProjectLabel") || "Proyecto relacionado")
@@ -137,15 +137,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
       .toUpperCase()
 
   if (!project) {
-    return (
-      <main className="min-h-screen bg-black flex flex-col items-center justify-center px-6 text-center">
-        <p className="text-slate-400 mb-6">{String(t("projects.noProjects") || "")}</p>
-        <Link href="/work" className="text-blue-500 hover:text-blue-400 inline-flex items-center">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {backLabel}
-        </Link>
-      </main>
-    )
+    return <DetailNotFound message={String(t("projects.noProjects") || "")} backHref="/work" backLabel={backLabel} />
   }
 
   const translated = project.translations?.[language.code as "en" | "fr" | "it"]
@@ -208,14 +200,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   ].filter(Boolean) as string[]
 
   return (
-    <main className="min-h-screen bg-black">
-      <section className="pt-32 pb-20 relative">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />
-        </div>
-
-        <div className="container mx-auto px-6 relative z-10 max-w-6xl">
+    <DetailPageShell maxWidthClass="max-w-6xl">
           <ProjectHeader
             title={title}
             description={description}
@@ -418,33 +403,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
                           </span>
                         </AccordionTrigger>
                         <AccordionContent>
-                          <div className="space-y-6">
-                            {project.workProcess.map((block, bi) =>
-                              block.kind === 'paragraph' ? (
-                                block.text && (
-                                  <p key={bi} className="text-sm text-slate-300 leading-relaxed">
-                                    {block.text}
-                                  </p>
-                                )
-                              ) : (
-                                block.items && block.items.length > 0 && (
-                                  <div key={bi} className="space-y-6">
-                                    {block.items.map((step, i) => (
-                                      <div key={i} className="relative pl-11">
-                                        {i < block.items!.length - 1 && (
-                                          <div className="absolute left-[15px] top-8 bottom-[-24px] w-px bg-blue-500/20" />
-                                        )}
-                                        <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-xs font-bold text-blue-300">
-                                          {i + 1}
-                                        </div>
-                                        <p className="text-sm text-slate-300 leading-relaxed pt-1.5">{step}</p>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )
-                              )
-                            )}
-                          </div>
+                          <WorkBlocks blocks={project.workProcess} />
                         </AccordionContent>
                       </AccordionItem>
                     )}
@@ -711,24 +670,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
               </div>
             </motion.div>
           )}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="mt-16 rounded-xl border border-blue-500/20 bg-blue-500/5 p-8 text-center"
-          >
-            <h2 className="text-xl font-bold mb-2">{ctaHeading}</h2>
-            <p className="text-slate-400 mb-6">{ctaText}</p>
-            <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-500">
-              <Link href="/#contact">
-                <MessageCircle className="mr-2 h-4 w-4" />
-                {ctaButton}
-              </Link>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
-    </main>
+          <SimilarWorkCTA href="/#contact" />
+    </DetailPageShell>
   )
 }

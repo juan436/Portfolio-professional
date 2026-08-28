@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { SITE_NAME } from "@/lib/site-config"
 
 /**
  * Construye el bloque de metadata (title/description/canonical/OG/Twitter) de una página.
@@ -6,7 +7,6 @@ import type { Metadata } from "next"
  * `path` relativo (se resuelve contra `metadataBase` del layout) e imagen opcional.
  * Produce: objeto `Metadata` listo para exportar desde `generateMetadata`.
  */
-const SITE_NAME = "Juan Villegas Portfolio"
 
 interface BuildMetadataInput {
   title: string

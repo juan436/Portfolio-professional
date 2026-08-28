@@ -1,4 +1,4 @@
-import Script from "next/script"
+import { SITE_URL, AUTHOR_NAME, AUTHOR_PHOTO } from "@/lib/site-config"
 
 /**
  * Structured data de un post de blog, inyectado como `<script type="application/ld+json">`.
@@ -7,9 +7,6 @@ import Script from "next/script"
  * publisher, mainEntityOfPage) + `BreadcrumbList` (Inicio › Blog › Artículo)
  * para que Google muestre la ruta en el resultado de búsqueda.
  */
-const SITE_URL = "https://jevy.dev"
-const AUTHOR_NAME = "Juan Villegas"
-const AUTHOR_IMAGE = "https://images.jvserver.com/images/profile/perfil-1751953703604-489800455.jpeg"
 
 export function BlogPostingJsonLd({
   post,
@@ -34,13 +31,13 @@ export function BlogPostingJsonLd({
           "@type": "Person",
           name: AUTHOR_NAME,
           url: `${SITE_URL}/`,
-          image: AUTHOR_IMAGE,
+          image: AUTHOR_PHOTO,
         },
         publisher: {
           "@type": "Person",
           name: AUTHOR_NAME,
           url: `${SITE_URL}/`,
-          logo: { "@type": "ImageObject", url: AUTHOR_IMAGE },
+          logo: { "@type": "ImageObject", url: AUTHOR_PHOTO },
         },
       },
       {
@@ -54,12 +51,5 @@ export function BlogPostingJsonLd({
     ],
   }
 
-  return (
-    <Script
-      id="blog-posting-json-ld"
-      type="application/ld+json"
-      strategy="afterInteractive"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 }

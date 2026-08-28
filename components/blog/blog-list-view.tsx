@@ -6,25 +6,11 @@ import { motion } from "framer-motion"
 import { ArrowRight, Clock } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { PaginationControls } from "@/components/pagination-controls"
-import { deriveLongDescription, readingMinutes } from "@/lib/blog/text"
+import { deriveLongDescription } from "@/lib/blog/text"
+import { slugify } from "@/lib/slug"
+import type { BlogPostView as BlogPost } from "@/lib/blog/types"
+import { useBlogFormatters } from "@/hooks/use-blog-formatters"
 
-interface BlogPost {
-  _id: string
-  title: string
-  slug: string
-  excerpt: string
-  body: string
-  coverImage?: string
-  tags?: string[]
-  publishedAt?: string
-  translations?: {
-    en?: { title?: string; excerpt?: string; body?: string }
-    fr?: { title?: string; excerpt?: string; body?: string }
-    it?: { title?: string; excerpt?: string; body?: string }
-  }
-}
-
-const LOCALES: Record<string, string> = { es: "es-ES", en: "en-US", fr: "fr-FR", it: "it-IT" }
 const PAGE_SIZE = 10
 
 function translate(post: BlogPost, langCode: string) {
@@ -55,11 +41,7 @@ export function BlogListView({ posts, activeTag }: { posts: BlogPost[]; activeTa
   const latestLabel = String(t("blog.latest") || "Último artículo")
   const allTagsLabel = String(t("blog.allTags") || "Todos")
 
-  const formatDate = (date?: string) =>
-    date ? new Date(date).toLocaleDateString(LOCALES[language.code] || "es-ES", { year: "numeric", month: "long", day: "numeric" }) : ""
-
-  const readingLabel = (html: string) =>
-    String(t("blog.readingTime") || "{{min}} min de lectura").replace("{{min}}", String(readingMinutes(html)))
+  const { formatDate, readingLabel } = useBlogFormatters()
 
   const topics = useMemo(() => {
     const counts = new Map<string, number>()
@@ -69,7 +51,9 @@ export function BlogListView({ posts, activeTag }: { posts: BlogPost[]; activeTa
       .sort((a, b) => a.tag.localeCompare(b.tag))
   }, [posts])
 
-  const filtered = activeTag ? posts.filter((post) => (post.tags || []).includes(activeTag)) : posts
+  const filtered = activeTag
+    ? posts.filter((post) => (post.tags || []).some((tag) => slugify(tag) === activeTag))
+    : posts
 
   const [featured, ...rest] = filtered
   const visibleRest = rest.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -99,10 +83,10 @@ export function BlogListView({ posts, activeTag }: { posts: BlogPost[]; activeTa
                     {topics.map(({ tag, count }) => (
                       <TopicLink
                         key={tag}
-                        href={`/blog?tag=${encodeURIComponent(tag)}`}
+                        href={`/blog?tag=${slugify(tag)}`}
                         label={tag}
                         count={count}
-                        active={activeTag === tag}
+                        active={activeTag === slugify(tag)}
                       />
                     ))}
                   </ul>

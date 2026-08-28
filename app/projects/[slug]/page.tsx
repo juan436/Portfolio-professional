@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { getProjectDetail } from "@/lib/data/project-detail"
 import { ProjectDetailView } from "@/components/projects/project-detail-view"
+import { WorkJsonLd } from "@/components/seo/work-json-ld"
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld"
 import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
 
 export async function generateMetadata({
@@ -30,10 +32,24 @@ export default async function ProjectDetailPage({
   const data = await getProjectDetail(slug)
 
   return (
-    <ProjectDetailView
-      project={data?.project ?? null}
-      testimonials={data?.testimonials ?? []}
-      resultsMetrics={data?.metrics ?? []}
-    />
+    <>
+      {data?.project && (
+        <>
+          <WorkJsonLd item={data.project} kind="project" />
+          <BreadcrumbJsonLd
+            items={[
+              { name: "Inicio", path: "/" },
+              { name: "Trabajo", path: "/work" },
+              { name: data.project.title },
+            ]}
+          />
+        </>
+      )}
+      <ProjectDetailView
+        project={data?.project ?? null}
+        testimonials={data?.testimonials ?? []}
+        resultsMetrics={data?.metrics ?? []}
+      />
+    </>
   )
 }

@@ -14,19 +14,18 @@ export function stripHtml(html: string): string {
     .trim()
 }
 
-/** Extracto corto (SEO / meta description / JSON-LD). Cae al título si el cuerpo está vacío. */
-export function deriveExcerpt(html: string, maxLen = 160): string {
+/** Texto plano truncado a `maxLen` con `…`. Devuelve `""` si no hay contenido. */
+function truncatePlain(html: string, maxLen: number): string {
   const text = stripHtml(html)
   if (!text) return ""
   return text.length > maxLen ? `${text.slice(0, maxLen).trimEnd()}…` : text
 }
 
+/** Extracto corto (SEO / meta description / JSON-LD). Cae al título si el cuerpo está vacío. */
+export const deriveExcerpt = (html: string, maxLen = 160): string => truncatePlain(html, maxLen)
+
 /** Descripción larga (3-4 líneas) para las tarjetas del listado `/blog`. */
-export function deriveLongDescription(html: string, maxLen = 380): string {
-  const text = stripHtml(html)
-  if (!text) return ""
-  return text.length > maxLen ? `${text.slice(0, maxLen).trimEnd()}…` : text
-}
+export const deriveLongDescription = (html: string): string => truncatePlain(html, 380)
 
 const WORDS_PER_MINUTE = 200
 

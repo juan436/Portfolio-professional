@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo/metadata"
 
 export const metadata: Metadata = buildMetadata({
   title: "Hablemos",
-  description: "Contactá a Juan Villegas para tu próximo proyecto de desarrollo, automatización o integración de IA.",
+  description: "Contacta a Juan Villegas para tu próximo proyecto de desarrollo, infraestructura, automatización o integración de IA.",
   path: "/contact",
 })
 

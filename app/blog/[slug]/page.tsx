@@ -6,8 +6,7 @@ import { highlightBlogHtml } from "@/lib/blog/highlight"
 import { BlogDetailView } from "@/components/blog/blog-detail-view"
 import { BlogPostingJsonLd } from "@/components/blog/blog-posting-json-ld"
 import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
-
-const AUTHOR_NAME = "Juan Villegas"
+import { AUTHOR_NAME } from "@/lib/site-config"
 
 /** Cuerpo con resaltado de sintaxis por idioma (el switch de idioma es client-side). */
 function highlightAllBodies(post: any): Record<string, string> {

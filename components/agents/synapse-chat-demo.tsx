@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { GitBranch, Check } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
+import { renderInline } from "@/components/common/formatted-text"
 
 /**
  * Demo 100% simulada del chat de Synapse para /agents/[id]. Guion fijo que se
@@ -115,16 +116,6 @@ function GitSyncWidget({ texts }: { texts: { syncing: string; synced: string; co
         )}
       </div>
     </div>
-  )
-}
-
-function renderInline(text: string) {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-    part.startsWith("**") && part.endsWith("**") ? (
-      <strong key={i}>{part.slice(2, -2)}</strong>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
   )
 }
 

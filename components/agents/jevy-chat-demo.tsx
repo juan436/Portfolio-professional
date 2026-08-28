@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Calendar, Check } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
+import { FormattedText } from "@/components/common/formatted-text"
 
 /**
  * Demo 100% simulada del chat de Jevy para /agents/[id] (sección Agentes en
@@ -86,39 +87,6 @@ const SCRIPT: Record<"es" | "en" | "fr" | "it", ScriptStep[]> = {
     { kind: "jevy", text: "Scegli l'orario che preferisci:" },
     { kind: "widget" },
   ],
-}
-
-function renderInline(text: string) {
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
-    part.startsWith("**") && part.endsWith("**") ? (
-      <strong key={i}>{part.slice(2, -2)}</strong>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
-  )
-}
-
-function FormattedText({ text }: { text: string }) {
-  const rawLines = text.split("\n")
-  const lines: { text: string; gap: boolean }[] = []
-  let pendingGap = false
-  for (const line of rawLines) {
-    if (line.trim() === "") {
-      pendingGap = true
-      continue
-    }
-    lines.push({ text: line, gap: pendingGap && lines.length > 0 })
-    pendingGap = false
-  }
-  return (
-    <>
-      {lines.map((line, i) => (
-        <span key={i} className={i === 0 ? "" : "block" + (line.gap ? " mt-2" : "")}>
-          {renderInline(line.text)}
-        </span>
-      ))}
-    </>
-  )
 }
 
 // Días/horas ficticios pero calculados sobre "hoy" para que el calendario de

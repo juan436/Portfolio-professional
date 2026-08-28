@@ -5,31 +5,12 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowLeft, ArrowRight, Calendar, Check, Clock, Linkedin, LinkIcon } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
-import { readingMinutes } from "@/lib/blog/text"
+import { SITE_URL, AUTHOR_PHOTO, AUTHOR_DISPLAY_NAME } from "@/lib/site-config"
+import { slugify } from "@/lib/slug"
+import type { BlogPostView as BlogPost } from "@/lib/blog/types"
+import { useBlogFormatters } from "@/hooks/use-blog-formatters"
 
-interface BlogPost {
-  _id: string
-  title: string
-  slug: string
-  excerpt: string
-  coverImage?: string
-  body: string
-  tags?: string[]
-  publishedAt?: string
-  translations?: {
-    en?: { title?: string; excerpt?: string; body?: string }
-    fr?: { title?: string; excerpt?: string; body?: string }
-    it?: { title?: string; excerpt?: string; body?: string }
-  }
-}
-
-const LOCALES: Record<string, string> = { es: "es-ES", en: "en-US", fr: "fr-FR", it: "it-IT" }
-
-// Foto real ya usada en el JSON-LD global (Person) — mismo activo, sin
-// inventar una nueva. Ver app/components/json-ld.tsx.
-const AUTHOR_PHOTO = "https://images.jvserver.com/images/profile/perfil-1751953703604-489800455.jpeg"
-const AUTHOR_NAME = "Ing. Juan Villegas"
-const SITE_URL = "https://jevy.dev"
+const AUTHOR_NAME = AUTHOR_DISPLAY_NAME
 
 function pickTranslated(post: BlogPost, code: string) {
   const translated = post.translations?.[code as "en" | "fr" | "it"]
@@ -58,6 +39,7 @@ export function BlogDetailView({
   isPreview?: boolean
 }) {
   const { language, t } = useLanguage()
+  const { formatDate, readingLabel } = useBlogFormatters()
   const [copied, setCopied] = useState(false)
 
   const backLabel = String(t("blog.backToBlog") || "Volver al blog")
@@ -67,12 +49,6 @@ export function BlogDetailView({
   const copyLabel = String(t("blog.copyLink") || "Copiar enlace")
   const copiedLabel = String(t("blog.linkCopied") || "Enlace copiado")
   const relatedLabel = String(t("blog.relatedTitle") || "Seguir leyendo")
-
-  const formatDate = (date?: string) =>
-    date ? new Date(date).toLocaleDateString(LOCALES[language.code] || "es-ES", { year: "numeric", month: "long", day: "numeric" }) : ""
-
-  const readingLabel = (html: string) =>
-    String(t("blog.readingTime") || "{{min}} min de lectura").replace("{{min}}", String(readingMinutes(html)))
 
   if (!post) {
     return (
@@ -118,7 +94,7 @@ export function BlogDetailView({
             <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-6">{title}</h1>
 
             <div className="flex items-center gap-3 mb-8">
-              <img src={AUTHOR_PHOTO} alt={AUTHOR_NAME} className="w-11 h-11 rounded-full object-cover border border-blue-500/30" />
+              <img src={AUTHOR_PHOTO} alt={AUTHOR_NAME} width={44} height={44} loading="lazy" decoding="async" className="w-11 h-11 rounded-full object-cover border border-blue-500/30" />
               <div>
                 <p className="text-sm font-semibold text-white leading-tight">{AUTHOR_NAME}</p>
                 <p className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500 leading-tight mt-0.5">
@@ -138,7 +114,7 @@ export function BlogDetailView({
                 {post.tags.map((tag) => (
                   <Link
                     key={tag}
-                    href={`/blog?tag=${encodeURIComponent(tag)}`}
+                    href={`/blog?tag=${slugify(tag)}`}
                     className="bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:border-blue-500/50 text-xs px-2 py-0.5 rounded uppercase font-bold tracking-tighter transition-colors"
                   >
                     {tag}
@@ -149,7 +125,7 @@ export function BlogDetailView({
 
             {post.coverImage && (
               <div className="rounded-xl overflow-hidden border border-white/10 mb-10">
-                <img src={post.coverImage} alt={title} className="w-full h-auto" />
+                <img src={post.coverImage} alt={title} loading="lazy" decoding="async" className="w-full h-auto" />
               </div>
             )}
 

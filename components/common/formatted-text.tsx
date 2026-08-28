@@ -1,12 +1,14 @@
-"use client"
-
 /**
- * Render de texto de chat con markdown mínimo (**negrita** + saltos de línea con gap si había línea en blanco).
- * Extraído de `jevy-chat.tsx` (sesión 2026-08-19) — no depende de estado del chat.
- * Recibe: `text: string` (crudo, tal cual devuelve DeepSeek).
- * Produce: JSX con `<strong>` para lo marcado en negrita y `<span class="block">` por línea.
+ * Render de texto de chat con markdown mínimo: `**negrita**` + saltos de línea
+ * (con gap extra si había una línea en blanco). Sin estado ni hooks — se usa
+ * dentro de los componentes de chat (`jevy-chat`, demos de agentes).
+ * Extraído de `jevy-chat.tsx` (2026-08-19), consolidado acá (2026-08-27) al
+ * estar copiado 3 veces.
+ * Recibe: `text: string` (crudo, tal cual devuelve el LLM o el guion del demo).
+ * Produce: `renderInline` → JSX con `<strong>` para negritas; `FormattedText` →
+ * el texto completo con saltos de línea como `<span class="block">`.
  */
-function renderInline(text: string) {
+export function renderInline(text: string) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
     part.startsWith("**") && part.endsWith("**") ? (
       <strong key={i}>{part.slice(2, -2)}</strong>

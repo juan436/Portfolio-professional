@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { getProjectBySlug } from "@/lib/data/projects"
 import { AgentDetailView } from "@/components/agents/agent-detail-view"
+import { WorkJsonLd } from "@/components/seo/work-json-ld"
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld"
 import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
 
 export async function generateMetadata({
@@ -33,5 +35,21 @@ export default async function AgentDetailPage({
   const cameFromWork = sp.from === "work"
   const agent = await getProjectBySlug(slug)
 
-  return <AgentDetailView agent={agent} cameFromWork={cameFromWork} />
+  return (
+    <>
+      {agent && (
+        <>
+          <WorkJsonLd item={agent} kind="agent" />
+          <BreadcrumbJsonLd
+            items={[
+              { name: "Inicio", path: "/" },
+              { name: "Agentes", path: "/work#agents" },
+              { name: agent.title },
+            ]}
+          />
+        </>
+      )}
+      <AgentDetailView agent={agent} cameFromWork={cameFromWork} />
+    </>
+  )
 }

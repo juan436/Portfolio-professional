@@ -8,7 +8,7 @@ import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
 import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
 import { SchedulingWidget, type SchedulingData } from "@/components/contact/scheduling-widget"
 import { ProjectMatchCard, type ProjectMatch } from "@/components/contact/project-match-card"
-import { FormattedText } from "@/components/contact/formatted-text"
+import { FormattedText } from "@/components/common/formatted-text"
 
 const CHAT_STORAGE_KEY = "jevy-chat-state"
 // 5 min sin actividad real (mensaje enviado/recibido): se manda un aviso

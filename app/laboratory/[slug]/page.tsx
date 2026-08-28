@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { getProjectBySlug } from "@/lib/data/projects"
 import { LaboratoryDetailView } from "@/components/laboratory/laboratory-detail-view"
+import { WorkJsonLd } from "@/components/seo/work-json-ld"
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld"
 import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
 
 export async function generateMetadata({
@@ -29,5 +31,21 @@ export default async function LaboratoryDetailPage({
   const { slug } = await params
   const project = await getProjectBySlug(slug)
 
-  return <LaboratoryDetailView project={project} />
+  return (
+    <>
+      {project && (
+        <>
+          <WorkJsonLd item={project} kind="laboratory" />
+          <BreadcrumbJsonLd
+            items={[
+              { name: "Inicio", path: "/" },
+              { name: "Laboratorio", path: "/laboratory" },
+              { name: project.title },
+            ]}
+          />
+        </>
+      )}
+      <LaboratoryDetailView project={project} />
+    </>
+  )
 }

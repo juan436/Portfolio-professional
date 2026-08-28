@@ -80,6 +80,8 @@ export function ProjectImageCarousel({ media, alt }: ProjectImageCarouselProps) 
                 src={current.url}
                 alt={`${alt} ${index + 1}`}
                 draggable={false}
+                loading="lazy"
+                decoding="async"
                 onClick={() => setLightboxOpen(true)}
                 className="w-full h-full object-contain select-none cursor-zoom-in"
               />
