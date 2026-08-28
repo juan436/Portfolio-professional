@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { getBlogPosts } from "@/lib/data/blog"
 import { BlogListView } from "@/components/blog/blog-list-view"
 import { BlogJsonLd } from "@/components/blog/blog-json-ld"
@@ -6,10 +7,11 @@ import { buildMetadata } from "@/lib/seo/metadata"
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
+  const t = getServerT(locale)
   return buildMetadata({
-  title: "Blog",
-  description: "Artículos técnicos y aprendizajes reales de los proyectos de Juan Villegas.",
-  path: "/blog",
+    title: t("seo.blog.title"),
+    description: t("seo.blog.description"),
+    path: "/blog",
     locale,
   })
 }

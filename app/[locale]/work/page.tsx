@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { getProjectsByCategory } from "@/lib/data/projects"
 import WorkIntro from "@/components/work"
 import Projects from "@/components/projects"
@@ -8,11 +9,11 @@ import { buildMetadata } from "@/lib/seo/metadata"
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
+  const t = getServerT(locale)
   return buildMetadata({
-  title: "Trabajo",
-  description:
-    "Sistemas web, backends, apps móviles, automatizaciones y agentes de IA construidos de punta a punta por Juan Villegas, ya en producción.",
-  path: "/work",
+    title: t("seo.work.title"),
+    description: t("seo.work.description"),
+    path: "/work",
     locale,
   })
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { getHomeContent } from "@/lib/data/home-content"
 import { buildMetadata } from "@/lib/seo/metadata"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { ContentHydrator } from "@/components/content-hydrator"
 import { ProfilePageJsonLd } from "@/components/seo/profile-page-json-ld"
 import Hero from "@/components/hero"
@@ -20,10 +21,14 @@ import WelcomeAnimation from "@/components/welcome-animation"
  */
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
-  // El title/description de la home los pone el layout raíz; acá solo se fija
-  // el canonical de esta versión de idioma + el hreflang a las 4.
-  const m = buildMetadata({ title: "", description: "", path: "/", locale })
-  return { alternates: m.alternates, openGraph: { url: m.openGraph?.url, locale: (m.openGraph as { locale?: string })?.locale } }
+  const t = getServerT(locale)
+  return buildMetadata({
+    title: t("seo.home.title"),
+    description: t("seo.home.description"),
+    path: "/",
+    locale,
+    titleAbsolute: true,
+  })
 }
 
 export default async function Home() {

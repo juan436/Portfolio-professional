@@ -17,6 +17,8 @@ interface BuildMetadataInput {
   /** Path relativo SIN prefijo de idioma (`/work`, `/projects/x`). `buildMetadata` lo prefija. */
   path: string
   locale?: string
+  /** `true` = el título va tal cual, sin el template `%s | Juan Villegas` del layout raíz (para la home). */
+  titleAbsolute?: boolean
   image?: string
   /** `"article"` para posts de blog — agrega `article:published_time`/`author` al OG. Default `"website"`. */
   type?: "website" | "article"
@@ -24,7 +26,7 @@ interface BuildMetadataInput {
   authorName?: string
 }
 
-export function buildMetadata({ title, description, path, locale = "es", image, type = "website", publishedTime, authorName }: BuildMetadataInput): Metadata {
+export function buildMetadata({ title, description, path, locale = "es", titleAbsolute, image, type = "website", publishedTime, authorName }: BuildMetadataInput): Metadata {
   const clean = (path.startsWith("/") ? path : `/${path}`).replace(/\/$/, "")
   const localized = (l: string) => `/${l}${clean}` || `/${l}`
   const languages: Record<string, string> = {}
@@ -32,7 +34,7 @@ export function buildMetadata({ title, description, path, locale = "es", image, 
   languages["x-default"] = localized("es")
 
   return {
-    title,
+    title: titleAbsolute ? { absolute: title } : title,
     description,
     alternates: {
       canonical: localized(locale),

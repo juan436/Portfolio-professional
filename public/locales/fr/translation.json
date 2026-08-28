@@ -445,5 +445,31 @@
         "avatar": ""
       }
     ]
+  },
+  "seo": {
+    "home": {
+      "title": "Juan Villegas — Architecte de Solutions & Développeur Full Stack",
+      "description": "Site officiel de Juan Villegas (Jevy) : systèmes complets, infrastructure, automatisations et agents IA en production."
+    },
+    "work": {
+      "title": "Travail",
+      "description": "Systèmes web, backends, applications mobiles, automatisations et agents IA construits de bout en bout par Juan Villegas, déjà en production."
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Articles techniques et retours d'expérience réels des projets de Juan Villegas."
+    },
+    "certificates": {
+      "title": "Certifications",
+      "description": "Certifications réelles et vérifiables de Juan Villegas : la base technique derrière chaque projet et automatisation."
+    },
+    "laboratory": {
+      "title": "Labo R&D",
+      "description": "Expériences techniques réelles de Juan Villegas : hypothèse, méthode testée, et ce qui a fonctionné ou non, avant qu'une idée n'arrive en production."
+    },
+    "contact": {
+      "title": "Parlons-en",
+      "description": "Contactez Juan Villegas pour votre prochain projet de développement, d'infrastructure, d'automatisation ou d'intégration d'IA."
+    }
   }
 }

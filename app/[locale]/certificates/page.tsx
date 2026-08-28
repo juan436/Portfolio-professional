@@ -1,15 +1,16 @@
 import type { Metadata } from "next"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { getCertificatesList } from "@/lib/data/certificates"
 import { CertificatesListView } from "@/components/certificates/certificates-list-view"
 import { buildMetadata } from "@/lib/seo/metadata"
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
+  const t = getServerT(locale)
   return buildMetadata({
-  title: "Certificaciones",
-  description:
-    "Certificaciones reales y verificables de Juan Villegas: la base técnica detrás de cada proyecto y automatización de este portafolio.",
-  path: "/certificates",
+    title: t("seo.certificates.title"),
+    description: t("seo.certificates.description"),
+    path: "/certificates",
     locale,
   })
 }
