@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { pickLocalized } from "@/lib/i18n/pick-localized"
 import { getProjectDetail } from "@/lib/data/project-detail"
 import { AutomationDetailView } from "@/components/automations/automation-detail-view"
 import { WorkJsonLd } from "@/components/seo/work-json-ld"
@@ -8,17 +9,18 @@ import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { slug, locale } = await params
   const data = await getProjectDetail(slug)
   if (!data?.project) return NOT_FOUND_METADATA
 
   return buildMetadata({
-    title: data.project.title,
-    description: data.project.description,
+    title: pickLocalized(data.project, locale, "title"),
+    description: pickLocalized(data.project, locale, "description"),
     path: `/automations/${slug}`,
     image: data.project.image,
+    locale,
   })
 }
 
@@ -27,10 +29,10 @@ export default async function AutomationDetailPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const { slug } = await params
+  const { slug, locale } = await params
   const sp = await searchParams
   const cameFromWork = sp.from === "work"
   const data = await getProjectDetail(slug)

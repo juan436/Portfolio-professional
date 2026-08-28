@@ -11,7 +11,7 @@ import { verifyAdminToken } from '@/lib/auth/jwt'
  *     raíz por el header `x-locale` para el `<html lang>`.
  * Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Parte C).
  */
-const LOCALES = ['es', 'en'] as const
+const LOCALES = ['es', 'en', 'fr', 'it'] as const
 const DEFAULT_LOCALE = 'es'
 
 // Rutas de API que requieren autenticación (mutaciones de datos)

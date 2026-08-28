@@ -4,11 +4,15 @@ import { BlogListView } from "@/components/blog/blog-list-view"
 import { BlogJsonLd } from "@/components/blog/blog-json-ld"
 import { buildMetadata } from "@/lib/seo/metadata"
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return buildMetadata({
   title: "Blog",
   description: "Artículos técnicos y aprendizajes reales de los proyectos de Juan Villegas.",
   path: "/blog",
-})
+    locale,
+  })
+}
 
 /**
  * Página `/blog` (Server Component). Recibe: `searchParams.tag` opcional.

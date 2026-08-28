@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { pickLocalized } from "@/lib/i18n/pick-localized"
 import { getProjectBySlug } from "@/lib/data/projects"
 import { LaboratoryDetailView } from "@/components/laboratory/laboratory-detail-view"
 import { WorkJsonLd } from "@/components/seo/work-json-ld"
@@ -8,17 +9,18 @@ import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { slug, locale } = await params
   const project = await getProjectBySlug(slug)
   if (!project) return NOT_FOUND_METADATA
 
   return buildMetadata({
-    title: project.title,
-    description: project.description,
+    title: pickLocalized(project, locale, "title"),
+    description: pickLocalized(project, locale, "description"),
     path: `/laboratory/${slug}`,
     image: project.image,
+    locale,
   })
 }
 
@@ -26,9 +28,9 @@ export async function generateMetadata({
 export default async function LaboratoryDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
 }) {
-  const { slug } = await params
+  const { slug, locale } = await params
   const project = await getProjectBySlug(slug)
 
   return (

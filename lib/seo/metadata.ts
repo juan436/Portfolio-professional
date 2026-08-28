@@ -2,16 +2,21 @@ import type { Metadata } from "next"
 import { SITE_NAME } from "@/lib/site-config"
 
 /**
- * Construye el bloque de metadata (title/description/canonical/OG/Twitter) de una página.
+ * Construye el bloque de metadata (title/description/canonical/OG/Twitter/hreflang) de una página.
  * Recibe: título corto (el template del layout raíz agrega " | Juan Villegas"), descripción,
- * `path` relativo (se resuelve contra `metadataBase` del layout) e imagen opcional.
- * Produce: objeto `Metadata` listo para exportar desde `generateMetadata`.
+ * `path` relativo SIN prefijo de idioma (`/work`, `/projects/x`), `locale`, imagen opcional.
+ * Produce: `Metadata` con `canonical` a la versión del propio idioma + `alternates.languages`
+ * (hreflang) a las 4 versiones + `x-default`. Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Stage 3).
  */
+const HREFLANG_LOCALES = ["es", "en", "fr", "it"] as const
+const OG_LOCALE: Record<string, string> = { es: "es_ES", en: "en_US", fr: "fr_FR", it: "it_IT" }
 
 interface BuildMetadataInput {
   title: string
   description: string
+  /** Path relativo SIN prefijo de idioma (`/work`, `/projects/x`). `buildMetadata` lo prefija. */
   path: string
+  locale?: string
   image?: string
   /** `"article"` para posts de blog — agrega `article:published_time`/`author` al OG. Default `"website"`. */
   type?: "website" | "article"
@@ -19,17 +24,26 @@ interface BuildMetadataInput {
   authorName?: string
 }
 
-export function buildMetadata({ title, description, path, image, type = "website", publishedTime, authorName }: BuildMetadataInput): Metadata {
+export function buildMetadata({ title, description, path, locale = "es", image, type = "website", publishedTime, authorName }: BuildMetadataInput): Metadata {
+  const clean = (path.startsWith("/") ? path : `/${path}`).replace(/\/$/, "")
+  const localized = (l: string) => `/${l}${clean}` || `/${l}`
+  const languages: Record<string, string> = {}
+  for (const l of HREFLANG_LOCALES) languages[l] = localized(l)
+  languages["x-default"] = localized("es")
+
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: localized(locale),
+      languages,
+    },
     openGraph: {
       title,
       description,
-      url: path,
+      url: localized(locale),
       siteName: SITE_NAME,
-      locale: "es_ES",
+      locale: OG_LOCALE[locale] ?? "es_ES",
       ...(type === "article"
         ? {
             type: "article",

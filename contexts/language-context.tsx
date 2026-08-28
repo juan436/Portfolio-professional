@@ -34,8 +34,8 @@ export const languages: Language[] = [
   { code: "fr", name: "Français", flag: "🇫🇷" },
 ]
 
-// Idiomas con rutas reales hoy (Fase 1). FR/IT llegan en Fase 2.
-export const ROUTABLE_LOCALES: LanguageCode[] = ["es", "en"]
+// Idiomas con rutas reales.
+export const ROUTABLE_LOCALES: LanguageCode[] = ["es", "en", "fr", "it"]
 const DEFAULT_LOCALE: LanguageCode = "es"
 
 const RESOURCES = {

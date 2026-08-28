@@ -8,7 +8,7 @@ import type { ReactNode } from "react"
  * locale del segmento y se declaran los params estáticos.
  * Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Parte C).
  */
-export const LOCALES = ["es", "en"] as const
+export const LOCALES = ["es", "en", "fr", "it"] as const
 export type Locale = (typeof LOCALES)[number]
 
 export const dynamicParams = false

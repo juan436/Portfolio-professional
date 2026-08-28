@@ -4,11 +4,15 @@ import { ContentHydrator } from "@/components/content-hydrator"
 import Contact from "@/components/contact"
 import { buildMetadata } from "@/lib/seo/metadata"
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return buildMetadata({
   title: "Hablemos",
   description: "Contacta a Juan Villegas para tu próximo proyecto de desarrollo, infraestructura, automatización o integración de IA.",
   path: "/contact",
-})
+    locale,
+  })
+}
 
 /** Página `/contact` (Server Component). Recibe: nada. Produce: hidrata solo `content.contact` + el chat de Jevy. */
 export default async function ContactPage() {

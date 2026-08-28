@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
 import type { ComponentProps } from "react"
 
-const LOCALES = ["es", "en"]
+const LOCALES = ["es", "en", "fr", "it"]
 const DEFAULT_LOCALE = "es"
 
 /** Locale actual leído del segmento `/[locale]/` de la ruta. */

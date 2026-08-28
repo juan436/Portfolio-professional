@@ -6,12 +6,16 @@ import Automations from "@/components/automations"
 import Agents from "@/components/agents"
 import { buildMetadata } from "@/lib/seo/metadata"
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return buildMetadata({
   title: "Trabajo",
   description:
     "Sistemas web, backends, apps móviles, automatizaciones y agentes de IA construidos de punta a punta por Juan Villegas, ya en producción.",
   path: "/work",
-})
+    locale,
+  })
+}
 
 /**
  * Página `/work` (Server Component) — resumen de las 3 categorías con lista fija (web/mobile/infra_backend leídas por `Projects`).

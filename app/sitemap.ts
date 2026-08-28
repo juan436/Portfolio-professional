@@ -7,13 +7,34 @@ import { SITE_URL } from '@/lib/site-config'
 /**
  * Sitemap XML del sitio (`app/sitemap.ts` → `/sitemap.xml`).
  * Recibe: nada.
- * Produce: rutas fijas indexables + todos los slugs de detalle (proyectos/
- * automatizaciones/agentes/laboratorio/certificados) + los posts de blog.
- * `lastModified` real por doc (`updatedAt`/`date`). Excluye `/admin`, `/api`,
- * `/testimonial` (noindex), `/projects` (redirige a `/work`) y `/agents`
- * (redirige a `/work#agents`).
+ * Produce: cada ruta indexable × 4 idiomas (`/es/…`, `/en/…`, `/fr/…`, `/it/…`)
+ * con `alternates.languages` (hreflang) apuntando a las 4 versiones + `x-default`.
+ * `lastModified` real por doc. Excluye `/admin`, `/api`, `/testimonial` (noindex),
+ * `/projects` y `/agents` (redirects).
+ * Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Stage 3).
  */
 const BASE = SITE_URL
+const LOCALES = ['es', 'en', 'fr', 'it'] as const
+
+/** Una entrada por idioma para un path base (`/work`, `/projects/x`), cada una con hreflang a las 4. */
+function localizedEntries(
+  path: string,
+  lastModified: Date,
+  changeFrequency: 'weekly' | 'monthly' | 'yearly',
+  priority: number,
+): MetadataRoute.Sitemap {
+  const clean = path === '/' ? '' : path
+  const languages: Record<string, string> = {}
+  for (const l of LOCALES) languages[l] = `${BASE}/${l}${clean}`
+  languages['x-default'] = `${BASE}/es${clean}`
+  return LOCALES.map((l) => ({
+    url: `${BASE}/${l}${clean}`,
+    lastModified,
+    changeFrequency,
+    priority,
+    alternates: { languages },
+  }))
+}
 
 // category del modelo Project → prefijo de ruta pública de detalle
 const CATEGORY_ROUTES: Record<string, string> = {
@@ -43,41 +64,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ])
 
   const staticEntries: MetadataRoute.Sitemap = [
-    { url: `${BASE}/`, lastModified: now, changeFrequency: 'monthly', priority: 1 },
-    { url: `${BASE}/work`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE}/automations`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/laboratory`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE}/certificates`, lastModified: now, changeFrequency: 'yearly', priority: 0.6 },
-    { url: `${BASE}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.7 },
-    { url: `${BASE}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    ...localizedEntries('/', now, 'monthly', 1),
+    ...localizedEntries('/work', now, 'monthly', 0.9),
+    ...localizedEntries('/automations', now, 'monthly', 0.8),
+    ...localizedEntries('/laboratory', now, 'monthly', 0.6),
+    ...localizedEntries('/certificates', now, 'yearly', 0.6),
+    ...localizedEntries('/contact', now, 'yearly', 0.7),
+    ...localizedEntries('/blog', now, 'weekly', 0.7),
   ]
 
   const projectEntries: MetadataRoute.Sitemap = categories.flatMap((category, i) =>
     (projectBuckets[i] as Doc[])
       .filter((p) => p.slug)
-      .map((p) => ({
-        url: `${BASE}${CATEGORY_ROUTES[category]}/${p.slug}`,
-        lastModified: lastMod(p, now),
-        changeFrequency: 'monthly' as const,
-        priority: category === 'laboratorio' ? 0.5 : 0.7,
-      }))
+      .flatMap((p) =>
+        localizedEntries(
+          `${CATEGORY_ROUTES[category]}/${p.slug}`,
+          lastMod(p, now),
+          'monthly',
+          category === 'laboratorio' ? 0.5 : 0.7,
+        ),
+      )
   )
 
   const certificateEntries: MetadataRoute.Sitemap = (certificates as Doc[])
     .filter((c) => c.slug)
-    .map((c) => ({
-      url: `${BASE}/certificates/${c.slug}`,
-      lastModified: lastMod(c, now),
-      changeFrequency: 'yearly' as const,
-      priority: 0.4,
-    }))
+    .flatMap((c) => localizedEntries(`/certificates/${c.slug}`, lastMod(c, now), 'yearly', 0.4))
 
-  const postEntries: MetadataRoute.Sitemap = (posts as Doc[]).map((post) => ({
-    url: `${BASE}/blog/${post.slug}`,
-    lastModified: lastMod(post, now),
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-  }))
+  const postEntries: MetadataRoute.Sitemap = (posts as Doc[]).flatMap((post) =>
+    localizedEntries(`/blog/${post.slug}`, lastMod(post, now), 'monthly', 0.6),
+  )
 
   return [...staticEntries, ...projectEntries, ...certificateEntries, ...postEntries]
 }

@@ -8,9 +8,9 @@ import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { slug, locale } = await params
   const certificate = await getCertificateBySlug(slug)
   if (!certificate) return NOT_FOUND_METADATA
 
@@ -19,6 +19,7 @@ export async function generateMetadata({
     description: certificate.learned || `Certificación de ${certificate.issuer}.`,
     path: `/certificates/${slug}`,
     image: certificate.image,
+    locale,
   })
 }
 
@@ -26,9 +27,9 @@ export async function generateMetadata({
 export default async function CertificateDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
 }) {
-  const { slug } = await params
+  const { slug, locale } = await params
   const certificate = await getCertificateBySlug(slug)
 
   return (
