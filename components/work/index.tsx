@@ -1,10 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Bot, Code2, Workflow } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
-import { useIsMounted } from "@/hooks/use-is-mounted"
 
 /**
  * Intro de la página `/work` — título/subtítulo + 3 botones de scroll a las secciones de abajo.
@@ -12,25 +10,14 @@ import { useIsMounted } from "@/hooks/use-is-mounted"
  * Produce: encabezado + botones que hacen scroll suave a `#projects`/`#automations`/`#agents`.
  */
 export default function WorkIntro() {
-  const { t, language } = useLanguage()
-  const isMounted = useIsMounted()
-  const [texts, setTexts] = useState({
-    title: "",
-    subtitle: "",
-    ctaProjects: "",
-    ctaAutomations: "",
-    ctaAgents: "",
-  })
-
-  useEffect(() => {
-    setTexts({
-      title: String(t("work.title")),
-      subtitle: String(t("work.subtitle")),
-      ctaProjects: String(t("work.ctaProjects")),
-      ctaAutomations: String(t("work.ctaAutomations")),
-      ctaAgents: String(t("work.ctaAgents")),
-    })
-  }, [t, language])
+  const { t } = useLanguage()
+  const texts = {
+    title: String(t("work.title")),
+    subtitle: String(t("work.subtitle")),
+    ctaProjects: String(t("work.ctaProjects")),
+    ctaAutomations: String(t("work.ctaAutomations")),
+    ctaAgents: String(t("work.ctaAgents")),
+  }
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -52,7 +39,7 @@ export default function WorkIntro() {
           transition={{ duration: 0.6 }}
           className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight text-blue-500"
         >
-          {isMounted ? texts.title : ""}
+          {texts.title}
         </motion.h1>
 
         <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
@@ -63,7 +50,7 @@ export default function WorkIntro() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-slate-400 text-lg leading-relaxed mb-6"
         >
-          {isMounted ? texts.subtitle : ""}
+          {texts.subtitle}
         </motion.p>
 
         <motion.div
@@ -77,21 +64,21 @@ export default function WorkIntro() {
             className="inline-flex items-center gap-2 rounded-full px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)]"
           >
             <Code2 className="h-4 w-4" />
-            {isMounted ? texts.ctaProjects : ""}
+            {texts.ctaProjects}
           </button>
           <button
             onClick={() => scrollToSection("automations")}
             className="inline-flex items-center gap-2 rounded-full px-6 py-3 border border-blue-600/50 text-blue-400 hover:bg-blue-600/10 font-bold transition-all duration-300"
           >
             <Workflow className="h-4 w-4" />
-            {isMounted ? texts.ctaAutomations : ""}
+            {texts.ctaAutomations}
           </button>
           <button
             onClick={() => scrollToSection("agents")}
             className="inline-flex items-center gap-2 rounded-full px-6 py-3 border border-blue-600/50 text-blue-400 hover:bg-blue-600/10 font-bold transition-all duration-300"
           >
             <Bot className="h-4 w-4" />
-            {isMounted ? texts.ctaAgents : ""}
+            {texts.ctaAgents}
           </button>
         </motion.div>
       </div>

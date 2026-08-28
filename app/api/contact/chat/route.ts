@@ -12,7 +12,7 @@ import { isRateLimited, getClientIp } from '@/lib/rate-limit';
 /**
  * `/api/contact/chat` — POST, motor conversacional de Jevy (el endpoint más
  * complejo del sitio).
- * Recibe: `{ messages, service?, sessionId, alreadyMatched, attachmentsContext?, referenceProjectSlug? }`.
+ * Recibe: `{ messages, service?, sessionId, alreadyMatched, attachmentsContext?, referenceProjectSlug?, locale? }`.
  * Procesa por turno: rate-limit por IP + tope de turnos por sesión; arma el system
  * prompt con reglas de tono/dominio; a partir del 2do mensaje corre extracción de
  * matching (function calling + reintento si hay señal parcial, ver lib/matching.ts);
@@ -39,8 +39,15 @@ function detailPath(category: string, slug: string) {
 
 type ReferenceInfo = { title: string; pitch: string; problem: string };
 
-function buildSystemPrompt(matchResult: MatchResult | null, service?: string, attachmentsContext?: string, referenceInfo?: ReferenceInfo) {
-  return `Eres Jevy, el asistente conversacional del Ing. Juan Villegas, un ingeniero de software full-stack. Actúas como su secretario: entrevistas al lead que llega al chat, lo guías, y al final coordinas que Juan le agende una reunión.
+const LOCALE_NAMES: Record<string, string> = { en: 'INGLÉS', fr: 'FRANCÉS', it: 'ITALIANO' };
+
+function buildSystemPrompt(matchResult: MatchResult | null, service?: string, attachmentsContext?: string, referenceInfo?: ReferenceInfo, locale?: string) {
+  const localeName = locale && LOCALE_NAMES[locale] ? LOCALE_NAMES[locale] : null;
+  return `${
+    localeName
+      ? `IDIOMA (regla máxima, por encima de todo lo demás): el lead está usando el sitio en ${localeName}. Respondé SIEMPRE en ${localeName}, en TODOS los turnos, sin importar en qué idioma esté escrito este prompt, el saludo inicial, o los mensajes anteriores de la charla. Si un mensaje viejo tuyo quedó en español, igual seguí en ${localeName} de acá en adelante. En ${localeName}, para referirte a tu jefe usá SIEMPRE "Juan Villegas" a secas, sin ningún título ni abreviatura (nada de "Ing.", "Eng.", "M.", "Mr." delante) — el "Ing." es solo para el español.\n\n`
+      : ''
+  }Eres Jevy, el asistente conversacional del Ing. Juan Villegas, un ingeniero de software full-stack. Actúas como su secretario: entrevistas al lead que llega al chat, lo guías, y al final coordinas que Juan le agende una reunión.
 
 QUIÉN ES QUIÉN (regla estricta): tú eres Jevy, el asistente — NO eres Juan. Juan Villegas es tu jefe, el dueño del trabajo. Cuando hables de proyectos, decisiones o trabajo, refiérete a él SIEMPRE por su nombre completo con título: "el Ing. Juan Villegas" o "Juan Villegas" — NUNCA "Juan" a secas, ni una sola vez en toda la charla. Es una regla de etiqueta estricta, como la de un secretario que jamás llama a su jefe cirujano por el nombre de pila solo. Nunca digas "yo hice", "estoy trabajando en", "tengo un proyecto" ni nada que suene a que tú construiste algo — di "el Ing. Juan Villegas está trabajando en...", "el Ing. Juan Villegas tiene algo similar...", "el Ing. Juan Villegas hizo...". Tú (Jevy) sí hablas en primera persona sobre tu propio rol de asistente (yo te acompaño, yo te ayudo a definir esto).
 
@@ -118,7 +125,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, reply: null, matches: [], closed: true, limited: true });
     }
 
-    const { messages, service, attachmentsContext, sessionId, alreadyMatched, referenceProjectSlug } = await request.json();
+    const { messages, service, attachmentsContext, sessionId, alreadyMatched, referenceProjectSlug, locale } = await request.json();
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ success: false, message: 'messages es requerido' }, { status: 400 });
@@ -256,6 +263,7 @@ export async function POST(request: Request) {
       typeof service === 'string' ? service : undefined,
       typeof attachmentsContext === 'string' ? attachmentsContext : undefined,
       referenceInfo,
+      typeof locale === 'string' ? locale : undefined,
     );
 
     const deepSeekMessages: DeepSeekMessage[] = [
@@ -279,7 +287,15 @@ export async function POST(request: Request) {
         ]
       : [];
 
-    const reply = rawReply
+    // "Ing." es un tratamiento solo del español. En EN/FR/IT el modelo lo
+    // arrastra igual (todo el prompt repite "el Ing. Juan Villegas") — se limpia
+    // acá de forma determinística en vez de pelear con el prompt.
+    const stripIngForLocale = (text: string) =>
+      typeof locale === 'string' && locale !== 'es'
+        ? text.replace(/\b(?:the|le|la|il|lo|del|du|de la|dell'|dello)?\s*ing\.\s+(juan\s+villegas)/gi, 'Juan Villegas')
+        : text;
+
+    const reply = stripIngForLocale(rawReply)
       .replace(/\[(\/(?:projects|laboratory|automations|agents|certificates)\/[a-zA-Z0-9]+)\]/g, '')
       .replace(/[ \t]+([.,:;!?])/g, '$1')
       .replace(/[ \t]{2,}/g, ' ')

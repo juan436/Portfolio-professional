@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect, useRef } from "react"
 import { motion, useMotionValue, useAnimationFrame } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
-import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Star, Quote } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -22,7 +21,6 @@ interface Testimonial {
 export default function Testimonials() {
   const { t } = useLanguage()
   const [isPaused, setIsPaused] = useState(false)
-  const isMounted = useIsMounted()
   const constraintsRef = useRef(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const halfWidthRef = useRef(0)
@@ -30,10 +28,9 @@ export default function Testimonials() {
 
   // Usamos returnObjects: true para obtener el array de testimonios desde i18n
   const testimonials = useMemo(() => {
-    if (!isMounted) return [];
     const items = t("testimonials.items", { returnObjects: true });
     return Array.isArray(items) ? items as Testimonial[] : [];
-  }, [t, isMounted])
+  }, [t])
 
   const title = String(t("testimonials.title") || "CASOS DE ÉXITO VERIFICADOS")
   const subtitle = String(t("testimonials.subtitle") || "Lo que dicen los líderes que han confiado en mi arquitectura técnica.")
@@ -82,17 +79,17 @@ export default function Testimonials() {
           className="flex flex-col items-center text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-            {isMounted ? title : "CASOS DE ÉXITO VERIFICADOS"}
+            {title}
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto mb-8 text-lg leading-relaxed">
-            {isMounted ? subtitle : "..."}
+            {subtitle}
           </p>
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-8" />
         </motion.div>
       </div>
 
-      {/* Infinite Marquee Carousel - Solo renderiza si hay testimonios y está montado */}
-      {isMounted && testimonials.length > 0 && (
+      {/* Infinite Marquee Carousel - Solo renderiza si hay testimonios */}
+      {testimonials.length > 0 && (
         <div
           ref={constraintsRef}
           className="container mx-auto px-6 relative flex overflow-hidden py-10 select-none cursor-grab active:cursor-grabbing"

@@ -48,7 +48,7 @@ interface JevyChatProps {
 }
 
 export function JevyChat({ initialService, referenceProject, attachments }: JevyChatProps) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const translatedTexts = useTranslatedTexts(
     (t) => {
@@ -150,7 +150,12 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
       if (raw) {
         const saved = JSON.parse(raw)
         const isStale = typeof saved?.updatedAt !== "number" || Date.now() - saved.updatedAt > INACTIVITY_WARNING_MS
-        if (isStale) {
+        // Una charla guardada pertenece al idioma en que se creó. Si el visitante
+        // está ahora en otro idioma (o la entrada es de un formato viejo sin
+        // `locale`), se descarta y arranca de cero en el idioma actual — si no,
+        // el saludo y los mensajes viejos quedan en el idioma equivocado.
+        const wrongLocale = saved?.locale !== language.code
+        if (isStale || wrongLocale) {
           localStorage.removeItem(CHAT_STORAGE_KEY)
         } else if (saved?.sessionId && Array.isArray(saved.lines) && saved.lines.length > 0) {
           setSessionId(saved.sessionId)
@@ -175,7 +180,7 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     try {
       localStorage.setItem(
         CHAT_STORAGE_KEY,
-        JSON.stringify({ sessionId, lines, history, isClosed, chipsVisible, updatedAt: Date.now() }),
+        JSON.stringify({ sessionId, lines, history, isClosed, chipsVisible, locale: language.code, updatedAt: Date.now() }),
       )
     } catch {
       // localStorage lleno o inaccesible — no rompe el chat
@@ -222,6 +227,25 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
       scheduleInactivityWarning()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [translatedTexts.greeting])
+
+  // Si el idioma cambia ANTES de que el lead escriba nada, re-pintar el saludo
+  // en el idioma nuevo — lines[0] se guarda como string literal (estado +
+  // localStorage), un t() no lo re-traduce solo. Una vez que arrancó la charla
+  // (lines.length > 1), lo viejo queda como está: el idioma se elige antes de chatear.
+  useEffect(() => {
+    const greeting = translatedTexts.greeting
+    if (!greeting) return
+    setLines((prev) =>
+      prev.length === 1 && prev[0].role === "jevy" && prev[0].text !== greeting
+        ? [{ ...prev[0], text: greeting }]
+        : prev,
+    )
+    setHistory((prev) =>
+      prev.length === 1 && prev[0].role === "assistant" && prev[0].content !== greeting
+        ? [{ role: "assistant", content: greeting }]
+        : prev,
+    )
   }, [translatedTexts.greeting])
 
   // Refs para leer el valor más reciente desde dentro de los setTimeout —
@@ -308,6 +332,7 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
           service: initialService,
           sessionId,
           alreadyMatched,
+          locale: language.code,
           ...(attachmentsContext ? { attachmentsContext } : {}),
           ...(referenceProject ? { referenceProjectSlug: referenceProject.slug } : {}),
         }),

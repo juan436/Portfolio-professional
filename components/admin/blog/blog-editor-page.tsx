@@ -152,7 +152,7 @@ export function BlogEditorPage({ postId }: { postId?: string }) {
       return
     }
     if (!savedSlug) return
-    window.open(`/blog/${savedSlug}?preview=1`, "_blank", "noopener")
+    window.open(`/es/blog/${savedSlug}?preview=1`, "_blank", "noopener")
   }
 
   const setTranslationField = (code: LocaleCode, field: keyof LocaleFields, value: string) => {

@@ -1,28 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 import { useLanguage } from "@/hooks/use-language"
 
 /**
- * Reemplaza el patrón repetido "useState(objeto vacío) + useEffect que llena
- * las traducciones tras la hidratación" — mismo comportamiento, un solo lugar.
+ * Arma un objeto de textos traducidos a partir de `t`, de forma SÍNCRONA
+ * (durante el render). Antes era `useState(inicial) + useEffect` para evitar
+ * mismatch de hidratación cuando las traducciones cargaban async — ya no hace
+ * falta: los 4 idiomas van embebidos y el locale lo fija la URL en el server
+ * (ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28, Parte C).
+ * Devolver el texto en el primer render es lo que hace que los crawlers lo vean.
  * @param build - Arma el objeto de textos a partir de `t`.
- * @param initial - Valor devuelto antes de que el efecto corra (primer render).
- * @param extraDeps - Dependencias extra para recalcular, además de `t`/`language`.
- * @returns `T` — el objeto de textos, recalculado cuando cambian `t`/`language`/`extraDeps`.
+ * @param _initial - (Ignorado; se mantiene la firma por compatibilidad con los call sites.)
+ * @param extraDeps - Dependencias extra para recalcular, además del idioma.
  */
 export function useTranslatedTexts<T>(
   build: (t: (key: string, options?: unknown) => string | object) => T,
-  initial: T,
+  _initial: T,
   extraDeps: unknown[] = []
 ): T {
   const { t, language } = useLanguage()
-  const [translatedTexts, setTranslatedTexts] = useState<T>(initial)
-
-  useEffect(() => {
-    setTranslatedTexts(build(t))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t, language, ...extraDeps])
-
-  return translatedTexts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => build(t as never), [language.code, ...extraDeps])
 }

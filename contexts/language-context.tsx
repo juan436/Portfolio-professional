@@ -1,21 +1,24 @@
 "use client"
 
-import { createContext, useState, useContext, type ReactNode, useEffect } from "react"
-import i18next from "i18next"
-import { initReactI18next, useTranslation } from "react-i18next"
-import LanguageDetector from "i18next-browser-languagedetector"
-import Backend from "i18next-http-backend"
+import { createContext, useState, useContext, useEffect, useMemo, type ReactNode } from "react"
+import { createInstance, type i18n as I18nInstance } from "i18next"
+import { I18nextProvider, initReactI18next, useTranslation } from "react-i18next"
+import { useParams, usePathname, useRouter } from "next/navigation"
 import esTranslation from "@/public/locales/es/translation.json"
+import enTranslation from "@/public/locales/en/translation.json"
+import frTranslation from "@/public/locales/fr/translation.json"
+import itTranslation from "@/public/locales/it/translation.json"
 
 /**
- * Provider de idioma — envuelve i18next/react-i18next para todo el sitio.
- * Recibe: `children`.
- * Procesa: detecta idioma (localStorage/navigator) y sincroniza con i18next; "es" va embebido
- * síncrono (ver comentario de `.init()` abajo) para que el primer render del server no dispare
- * mismatch de hidratación.
- * Produce: `LanguageContext.Provider` con `{ language, setLanguage, t }`.
+ * Provider de idioma. El idioma lo manda la URL (`/es/*`, `/en/*`) — el
+ * middleware lo resuelve y lo pasa como `serverLocale` para que el PRIMER
+ * render del server ya salga en el idioma correcto (clave para crawlers).
+ * En cliente, el locale se lee de `useParams()` para reaccionar a la
+ * navegación entre idiomas. Se usa una instancia de i18next PROPIA por
+ * render (createInstance), no el singleton del módulo — así no hay carrera
+ * entre requests concurrentes de idiomas distintos.
+ * Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Parte C, Stage 2).
  */
-// Definir los idiomas disponibles
 export type LanguageCode = "es" | "en" | "it" | "fr"
 
 export type Language = {
@@ -31,39 +34,37 @@ export const languages: Language[] = [
   { code: "fr", name: "Français", flag: "🇫🇷" },
 ]
 
-// Inicializar i18next
-i18next
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: "es",
-    interpolation: {
-      escapeValue: false,
-    },
-    // "es" va embebido de forma síncrona: el server siempre renderiza en "es"
-    // (no tiene localStorage/navigator para detectar idioma) y el Backend HTTP
-    // es async, así que sin esto el primer render del server usa el diccionario
-    // vacío (t() devuelve la key cruda) mientras el cliente ya lo tiene cargado
-    // -> hydration mismatch. Los demás idiomas se siguen cargando por HTTP vía
-    // Backend, solo cuando el usuario cambia de idioma en el cliente.
-    resources: {
-      es: { translation: esTranslation },
-    },
-    // Cargamos el resto de los recursos desde la carpeta public/locales
+// Idiomas con rutas reales hoy (Fase 1). FR/IT llegan en Fase 2.
+export const ROUTABLE_LOCALES: LanguageCode[] = ["es", "en"]
+const DEFAULT_LOCALE: LanguageCode = "es"
+
+const RESOURCES = {
+  es: { translation: esTranslation },
+  en: { translation: enTranslation },
+  fr: { translation: frTranslation },
+  it: { translation: itTranslation },
+}
+
+function buildI18n(locale: LanguageCode): I18nInstance {
+  const instance = createInstance()
+  instance.use(initReactI18next).init({
+    lng: locale,
+    fallbackLng: DEFAULT_LOCALE,
+    resources: RESOURCES,
     ns: ["translation"],
     defaultNS: "translation",
-    backend: {
-      loadPath: "/locales/{{lng}}/{{ns}}.json",
-    },
-    detection: {
-      order: ["localStorage", "navigator"],
-      caches: ["localStorage"],
-    },
-  }).then(() => {
-  });
+    interpolation: { escapeValue: false },
+    initImmediate: false, // init síncrono: todos los recursos ya están embebidos
+  })
+  return instance
+}
 
-// Crear el contexto
+function normalizeLocale(value: unknown): LanguageCode | null {
+  return typeof value === "string" && ROUTABLE_LOCALES.includes(value as LanguageCode)
+    ? (value as LanguageCode)
+    : null
+}
+
 export type LanguageContextType = {
   language: Language
   setLanguage: (language: Language) => void
@@ -72,36 +73,72 @@ export type LanguageContextType = {
 
 export const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-// Crear el proveedor
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  // Inicializar con el idioma detectado o el primero de la lista
-  const [language, setLanguage] = useState<Language>(() => {
-    const detectedLng = i18next.language;
-    const foundLang = languages.find(lang => lang.code === detectedLng);
-    return foundLang || languages[0];
-  });
-  
-  const { t, i18n } = useTranslation()
+export const LanguageProvider = ({
+  children,
+  serverLocale,
+}: {
+  children: ReactNode
+  serverLocale?: string
+}) => {
+  const params = useParams()
+  const router = useRouter()
+  const pathname = usePathname() || "/"
 
-  // Cambiar el idioma en i18next cuando cambia el idioma en el contexto
+  const locale: LanguageCode =
+    normalizeLocale(params?.locale) ?? normalizeLocale(serverLocale) ?? DEFAULT_LOCALE
+
+  // Una instancia por vida del provider (por render en server, por mount en cliente).
+  const [i18nInstance] = useState(() => buildI18n(locale))
+
+  // Navegación entre idiomas en cliente: el locale de la URL cambió → sincronizar.
   useEffect(() => {
-    i18n.changeLanguage(language.code)
-  }, [language, i18n])
+    if (i18nInstance.language !== locale) i18nInstance.changeLanguage(locale)
+  }, [locale, i18nInstance])
 
-  // Función para cambiar el idioma
-  const handleSetLanguage = (newLanguage: Language) => {
-    setLanguage(newLanguage)
-  }
+  const language = useMemo(
+    () => languages.find((l) => l.code === locale) ?? languages[0],
+    [locale],
+  )
 
-  // Función para obtener traducciones con soporte para opciones
-  const translate = (key: string, options?: any): string | object => {
-    return t(key, options)
+  const setLanguage = (newLanguage: Language) => {
+    if (newLanguage.code === locale) return
+    try {
+      document.cookie = `NEXT_LOCALE=${newLanguage.code}; path=/; max-age=31536000; samesite=lax`
+    } catch {
+      /* cookies bloqueadas: igual navega */
+    }
+    // Misma ruta, otro prefijo de idioma.
+    const seg = pathname.split("/")[1]
+    const rest = ROUTABLE_LOCALES.includes(seg as LanguageCode)
+      ? pathname.slice(seg.length + 1)
+      : pathname
+    router.push(`/${newLanguage.code}${rest || ""}`)
   }
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t: translate }}>
-      {children}
-    </LanguageContext.Provider>
+    <I18nextProvider i18n={i18nInstance}>
+      <LanguageBridge language={language} setLanguage={setLanguage}>
+        {children}
+      </LanguageBridge>
+    </I18nextProvider>
   )
 }
 
+/** Expone `t` del `I18nextProvider` de arriba por el `LanguageContext` que ya usa todo el sitio. */
+function LanguageBridge({
+  children,
+  language,
+  setLanguage,
+}: {
+  children: ReactNode
+  language: Language
+  setLanguage: (language: Language) => void
+}) {
+  const { t } = useTranslation()
+  const value: LanguageContextType = {
+    language,
+    setLanguage,
+    t: (key, options) => t(key, options as never),
+  }
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
+}

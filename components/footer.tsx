@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { Github, Linkedin, ArrowUp, X, Mail } from "lucide-react"
 import { WhatsappIcon } from "@/components/icons/whatsapp-icon"
 import { Button } from "@/components/ui/button"

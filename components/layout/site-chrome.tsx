@@ -1,6 +1,6 @@
 "use client"
 
-import { usePathname } from "next/navigation"
+import { usePathWithoutLocale } from "@/components/common/localized-link"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 
@@ -11,8 +11,8 @@ import Footer from "@/components/footer"
  * Produce: `Navbar` + `children` + `Footer`, o solo `children` en esas rutas.
  */
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  const noChrome = pathname?.startsWith("/admin") || pathname?.startsWith("/testimonial")
+  const pathname = usePathWithoutLocale()
+  const noChrome = pathname.startsWith("/admin") || pathname.startsWith("/testimonial")
 
   if (noChrome) return <>{children}</>
 

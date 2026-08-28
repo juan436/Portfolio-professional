@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 
-/** Página `/agents` (Server Component). El listado completo ahora vive en `/work#agents` (paginado in-place). */
-export default function AgentsPage() {
-  redirect("/work#agents")
+/** Página `/[locale]/agents` (Server Component). El listado completo vive en `/work#agents` (paginado in-place). */
+export default async function AgentsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  redirect(`/${locale}/work#agents`)
 }

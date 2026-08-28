@@ -1,5 +1,5 @@
 // components/projects/project-header.tsx
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import LanguageSwitcher from "@/components/language-switcher";

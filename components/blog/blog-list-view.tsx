@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { motion } from "framer-motion"
 import { ArrowRight, Clock } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"

@@ -3,8 +3,11 @@
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Globe } from "lucide-react"
-import { languages } from "@/contexts/language-context"
+import { languages, ROUTABLE_LOCALES } from "@/contexts/language-context"
 import { useLanguage } from "@/hooks/use-language"
+
+// Fase 1: solo se ofrecen los idiomas con rutas reales (ES + EN). FR/IT en Fase 2.
+const availableLanguages = languages.filter((l) => ROUTABLE_LOCALES.includes(l.code))
 
 /**
  * Selector de idioma (navbar) — dropdown que cierra al hacer click afuera.
@@ -62,7 +65,7 @@ export default function LanguageSwitcher() {
             className="absolute right-0 mt-2 w-40 bg-black/80 backdrop-blur-sm border border-blue-700/20 rounded-md shadow-lg z-50"
           >
             <div className="py-1">
-              {languages.map((lang) => (
+              {availableLanguages.map((lang) => (
                 <button
                   key={lang.code}
                   onClick={() => handleLanguageChange(lang)}

@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { motion } from "framer-motion"
 import { Award, ExternalLink } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"

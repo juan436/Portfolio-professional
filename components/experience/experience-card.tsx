@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { Building2, Calendar, ChevronDown, ChevronUp } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
-import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Experience } from "@/contexts/content/types"
 import { Button } from "@/components/ui/button"
 
@@ -34,7 +33,6 @@ export function ExperienceCard({
   handleMouseUp,
 }: ExperienceCardProps) {
   const { t, language } = useLanguage()
-  const isMounted = useIsMounted()
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
   const contentRef = useRef<HTMLDivElement>(null)
   const techContainerRef = useRef<HTMLDivElement>(null)
@@ -172,7 +170,7 @@ export function ExperienceCard({
                           {getFormattedDescription(experience)}
                         </motion.p>
 
-                        {shouldTruncate(getTranslatedField(experience, "description")) && isMounted && (
+                        {shouldTruncate(getTranslatedField(experience, "description")) && (
                           <motion.div
                             layout
                             transition={{
@@ -212,7 +210,7 @@ export function ExperienceCard({
                       className="px-6 sm:px-8 pb-6 sm:pb-8"
                     >
                       <h4 className="text-xs sm:text-sm uppercase tracking-wider text-slate-400 mb-4 font-medium">
-                        {isMounted ? translatedTexts.technologies : ""}
+                        {translatedTexts.technologies}
                       </h4>
                       <motion.div
                         className="flex flex-wrap gap-2"

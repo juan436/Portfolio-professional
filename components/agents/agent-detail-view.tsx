@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { LocalizedLink as Link, useLocale } from "@/components/common/localized-link"
 import { useRouter } from "next/navigation"
 import { Bot, ExternalLink, Radio, Server, Sparkles, Timer, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
@@ -59,6 +59,7 @@ interface AgentDetailViewProps {
 
 export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
   const router = useRouter()
+  const locale = useLocale()
   const { language, t } = useLanguage()
 
   const whatItDoes = String(t("agents.detail.whatItDoes") || "Qué hace")
@@ -77,7 +78,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
     if (typeof window !== "undefined" && window.history.length > 1) {
       router.back()
     } else {
-      router.push("/work#agents")
+      router.push(`/${locale}/work#agents`)
     }
   }
 

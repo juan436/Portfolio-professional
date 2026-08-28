@@ -1,7 +1,6 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { LocalizedLink as Link, usePathWithoutLocale } from "@/components/common/localized-link"
 import LanguageSwitcher from "@/components/language-switcher"
 import type { NavEntry } from "./types"
 
@@ -15,7 +14,7 @@ interface DesktopNavProps {
 }
 
 export function DesktopNav({ navItems }: DesktopNavProps) {
-  const pathname = usePathname()
+  const pathname = usePathWithoutLocale()
 
   return (
     <div className="hidden md:flex items-center">

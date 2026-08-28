@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { motion } from "framer-motion"
 import { ArrowLeft, Award, BarChart3, Brain, Briefcase, Building2, Clock, Compass, ExternalLink, FlaskConical, Github, Globe, Home, Layers, LayoutGrid, Lightbulb, MessageCircle, Package, Quote, RefreshCw, Repeat, Search, Server, Settings2, Share2, ShieldCheck, ShoppingCart, SlidersHorizontal, Smartphone, Star, Store, TrendingUp, Upload, User, Users, Workflow, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"

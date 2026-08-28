@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink, Github, Server, Database, Terminal } from "lucide-react";
-import Link from "next/link";
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/hooks/use-language";

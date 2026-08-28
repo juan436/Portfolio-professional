@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { useLanguage } from "@/hooks/use-language"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { AutomationShowcaseCard, type ShowcaseAutomation } from "./automation-showcase-card"

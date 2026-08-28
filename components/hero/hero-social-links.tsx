@@ -5,7 +5,7 @@ import { Github, Linkedin, X } from "lucide-react"
 import { WhatsappIcon } from "@/components/icons/whatsapp-icon"
 import { openWhatsAppWithMessage, SOCIAL_LINKS } from "@/utils/social-links"
 import { useLanguage } from "@/hooks/use-language"
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 
 /**
  * Fila de íconos sociales del Hero (GitHub/LinkedIn/WhatsApp/X).

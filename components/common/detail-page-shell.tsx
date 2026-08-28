@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { ArrowLeft } from "lucide-react"
 
 /**

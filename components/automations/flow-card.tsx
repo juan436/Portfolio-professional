@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { motion } from "framer-motion"
 import { MessageCircle, ShoppingCart, Share2, Receipt, CalendarClock } from "lucide-react"
 

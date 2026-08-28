@@ -1,10 +1,9 @@
 "use client"
 
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { motion } from "framer-motion"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
-import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Card, CardContent } from "@/components/ui/card"
 import { Code2, Check, ArrowRight } from "lucide-react"
 import { getServiceIconComponent, serviceIconMap } from "@/lib/service-icon-map"
@@ -30,7 +29,6 @@ function getServiceKey(title: string): "automation" | "mobile" | "infra" | "web"
  */
 export default function Services() {
   const { translatedContent } = useTranslatedContent()
-  const isMounted = useIsMounted()
   const translatedTexts = useTranslatedTexts(
     (t) => ({
       title: String(t("services.title")),
@@ -50,21 +48,6 @@ export default function Services() {
     // ya existente en producción, documentada en lib/service-icon-map.ts.
     const Icon = iconName !== "Code" && iconName in serviceIconMap ? getServiceIconComponent(iconName) : Code2
     return <Icon className={iconClass} />
-  }
-
-  // Si no está montado, renderizamos una estructura vacía o con placeholders para evitar mismatch
-  if (!isMounted) {
-    return (
-      <section id="services" className="py-20 bg-black relative">
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 opacity-0">Title</h2>
-            <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
-            <p className="text-slate-400 max-w-2xl mx-auto mb-8 opacity-0">Subtitle</p>
-          </div>
-        </div>
-      </section>
-    )
   }
 
   return (

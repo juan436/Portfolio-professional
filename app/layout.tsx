@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import type React from "react"
 import type { Metadata } from "next"
+import { headers } from "next/headers"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -61,18 +62,22 @@ export const metadata: Metadata = {
  * Recibe: `children`.
  * Produce: el árbol de providers envolviendo `children`.
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // El middleware setea `x-locale` según el prefijo de la ruta (`/en/...` → en).
+  // `/admin`, `/api` y demás rutas sin prefijo caen en "es".
+  const locale = (await headers()).get("x-locale") || "es"
+
   return (
-    <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
       <body className={`${inter.className} bg-[#0a0a0a] text-slate-200`}>
         <JsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <ContentProvider>
-            <LanguageProvider>
+            <LanguageProvider serverLocale={locale}>
               <SiteChrome>{children}</SiteChrome>
               <WolfGuide />
             </LanguageProvider>

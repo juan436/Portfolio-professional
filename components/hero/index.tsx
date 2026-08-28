@@ -1,13 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import Link from "next/link"
+import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedContent } from "@/hooks/use-translated-content"
-import { useIsMounted } from "@/hooks/use-is-mounted"
 import { HeroSocialLinks } from "./hero-social-links"
 import { HeroAnimation } from "./hero-animation"
 
@@ -20,27 +19,12 @@ export default function Hero() {
   const { t, language } = useLanguage()
   const { translatedContent } = useTranslatedContent()
   const [showAnimation, setShowAnimation] = useState(false)
-  const isMounted = useIsMounted()
-  const [translatedTexts, setTranslatedTexts] = useState<{
-    projects: string;
-    contact: string;
-    primary: string;
-    secondary: string;
-  }>({
-    projects: "",
-    contact: "",
-    primary: "",
-    secondary: ""
-  })
-
-  useEffect(() => {
-    setTranslatedTexts({
-      projects: String(t("hero.projects")),
-      contact: String(t("hero.contact")),
-      primary: String(t("ctas.hero.primary")),
-      secondary: String(t("ctas.hero.secondary"))
-    })
-  }, [t, language])
+  const translatedTexts = {
+    projects: String(t("hero.projects")),
+    contact: String(t("hero.contact")),
+    primary: String(t("ctas.hero.primary")),
+    secondary: String(t("ctas.hero.secondary")),
+  }
 
   const toggleAnimation = () => {
     setShowAnimation(!showAnimation)
@@ -73,7 +57,7 @@ export default function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
               </span>
-              {isMounted ? t("hero.consultantBadge") : ""}
+              {String(t("hero.consultantBadge"))}
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight">

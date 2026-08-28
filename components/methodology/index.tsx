@@ -1,9 +1,8 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useRef } from "react"
 import { motion, useScroll, useSpring, useTransform, MotionValue } from "framer-motion"
 import { useLanguage } from "@/hooks/use-language"
-import { useIsMounted } from "@/hooks/use-is-mounted"
 import { Search, Layout, Zap, TrendingUp, LucideIcon } from "lucide-react"
 
 interface Phase {
@@ -112,9 +111,17 @@ function MethodologyCard({
 export default function Methodology() {
   const { t } = useLanguage()
   const containerRef = useRef<HTMLDivElement>(null)
-  const isMounted = useIsMounted()
-  const [translatedTexts, setTranslatedTexts] = useState({ title: "", subtitle: "" })
-  const [translatedPhases, setTranslatedPhases] = useState<Phase[]>([])
+
+  const translatedTexts = {
+    title: String(t("methodology.title")),
+    subtitle: String(t("methodology.subtitle")),
+  }
+  const translatedPhases: Phase[] = [
+    { id: "phase1", icon: Search, title: String(t("methodology.phases.phase1.title")), description: String(t("methodology.phases.phase1.description")), range: [0, 0.25] },
+    { id: "phase2", icon: Layout, title: String(t("methodology.phases.phase2.title")), description: String(t("methodology.phases.phase2.description")), range: [0.25, 0.5] },
+    { id: "phase3", icon: Zap, title: String(t("methodology.phases.phase3.title")), description: String(t("methodology.phases.phase3.description")), range: [0.5, 0.75] },
+    { id: "phase4", icon: TrendingUp, title: String(t("methodology.phases.phase4.title")), description: String(t("methodology.phases.phase4.description")), range: [0.75, 1] },
+  ]
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -129,43 +136,6 @@ export default function Methodology() {
 
   const yPercent = useTransform(elevatorY, [0, 1], ["0%", "100%"])
 
-  useEffect(() => {
-    setTranslatedTexts({
-      title: String(t("methodology.title")),
-      subtitle: String(t("methodology.subtitle"))
-    })
-    setTranslatedPhases([
-      {
-        id: "phase1",
-        icon: Search,
-        title: String(t("methodology.phases.phase1.title")),
-        description: String(t("methodology.phases.phase1.description")),
-        range: [0, 0.25]
-      },
-      {
-        id: "phase2",
-        icon: Layout,
-        title: String(t("methodology.phases.phase2.title")),
-        description: String(t("methodology.phases.phase2.description")),
-        range: [0.25, 0.5]
-      },
-      {
-        id: "phase3",
-        icon: Zap,
-        title: String(t("methodology.phases.phase3.title")),
-        description: String(t("methodology.phases.phase3.description")),
-        range: [0.5, 0.75]
-      },
-      {
-        id: "phase4",
-        icon: TrendingUp,
-        title: String(t("methodology.phases.phase4.title")),
-        description: String(t("methodology.phases.phase4.description")),
-        range: [0.75, 1]
-      }
-    ])
-  }, [t])
-
   return (
     <section 
       id="methodology" 
@@ -174,7 +144,7 @@ export default function Methodology() {
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black pointer-events-none" />
 
-      <div className="container mx-auto px-6 relative z-10" style={{ opacity: isMounted ? 1 : 0 }}>
+      <div className="container mx-auto px-6 relative z-10" >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

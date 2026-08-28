@@ -1,7 +1,6 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { LocalizedLink as Link, usePathWithoutLocale } from "@/components/common/localized-link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
@@ -20,7 +19,7 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ isOpen, setIsOpen, navItems }: MobileNavProps) {
-  const pathname = usePathname()
+  const pathname = usePathWithoutLocale()
 
   return (
     <div className="md:hidden flex items-center gap-2">

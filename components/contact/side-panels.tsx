@@ -27,41 +27,21 @@ interface PanelTexts {
 
 function usePanelTexts(): PanelTexts {
   const { t } = useLanguage()
-  const [texts, setTexts] = useState<PanelTexts>({
-    aboutBadge: "",
-    aboutText: "",
-    statsHeading: "",
-    projectsSuffix: "",
-    ratingSuffix: "",
-    stepsHeading: "",
-    step1: "",
-    step2: "",
-    step3: "",
-    step4: "",
-    fallbackHeading: "",
-    fallbackText: "",
-    fallbackWhatsappLabel: "",
-  })
-
-  useEffect(() => {
-    setTexts({
-      aboutBadge: String(t("contact.jevy.about.badge")),
-      aboutText: String(t("contact.jevy.about.text")),
-      statsHeading: String(t("contact.jevy.stats.heading")),
-      projectsSuffix: String(t("contact.jevy.stats.projectsSuffix")),
-      ratingSuffix: String(t("contact.jevy.stats.ratingSuffix")),
-      stepsHeading: String(t("contact.jevy.steps.heading")),
-      step1: String(t("contact.jevy.steps.step1")),
-      step2: String(t("contact.jevy.steps.step2")),
-      step3: String(t("contact.jevy.steps.step3")),
-      step4: String(t("contact.jevy.steps.step4")),
-      fallbackHeading: String(t("contact.jevy.fallback.heading")),
-      fallbackText: String(t("contact.jevy.fallback.text")),
-      fallbackWhatsappLabel: String(t("contact.jevy.fallback.whatsappLabel")),
-    })
-  }, [t])
-
-  return texts
+  return {
+    aboutBadge: String(t("contact.jevy.about.badge")),
+    aboutText: String(t("contact.jevy.about.text")),
+    statsHeading: String(t("contact.jevy.stats.heading")),
+    projectsSuffix: String(t("contact.jevy.stats.projectsSuffix")),
+    ratingSuffix: String(t("contact.jevy.stats.ratingSuffix")),
+    stepsHeading: String(t("contact.jevy.steps.heading")),
+    step1: String(t("contact.jevy.steps.step1")),
+    step2: String(t("contact.jevy.steps.step2")),
+    step3: String(t("contact.jevy.steps.step3")),
+    step4: String(t("contact.jevy.steps.step4")),
+    fallbackHeading: String(t("contact.jevy.fallback.heading")),
+    fallbackText: String(t("contact.jevy.fallback.text")),
+    fallbackWhatsappLabel: String(t("contact.jevy.fallback.whatsappLabel")),
+  }
 }
 
 function useRealStats() {
