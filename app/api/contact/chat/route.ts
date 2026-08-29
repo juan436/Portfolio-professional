@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/conection';
 import Project from '@/models/project.model';
+import SessionAttachment from '@/models/session-attachment.model';
 import JevyChatStat, { type IJevyChatStatCall, type JevyCallType } from '@/models/jevy-chat-stat.model';
 import { askDeepSeek, askDeepSeekTool, type DeepSeekMessage, type DeepSeekUsage } from '@/lib/deepseek';
 import { getJevyTaxonomy } from '@/lib/jevy-taxonomy';
@@ -258,10 +259,26 @@ export async function POST(request: Request) {
       }
     }
 
+    // Contexto de adjuntos: se arma desde `SessionAttachment` (Mongo, por
+    // sessionId) para que sobreviva un reload. `attachmentsContext` del body
+    // queda solo como fallback si el guardado en Mongo falló.
+    let attachmentsCtx: string | undefined =
+      typeof attachmentsContext === 'string' && attachmentsContext ? attachmentsContext : undefined;
+    if (typeof sessionId === 'string' && sessionId) {
+      try {
+        const stored = await SessionAttachment.find({ sessionId }).select('filename markdown').sort({ createdAt: 1 }).lean();
+        if (stored.length) {
+          attachmentsCtx = stored.map((a) => `## ${a.filename}\n${a.markdown}`).join('\n\n');
+        }
+      } catch (error) {
+        console.error('Error leyendo adjuntos de la sesión:', error);
+      }
+    }
+
     const systemPrompt = buildSystemPrompt(
       matchResult,
       typeof service === 'string' ? service : undefined,
-      typeof attachmentsContext === 'string' ? attachmentsContext : undefined,
+      attachmentsCtx,
       referenceInfo,
       typeof locale === 'string' ? locale : undefined,
     );

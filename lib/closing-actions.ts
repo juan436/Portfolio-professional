@@ -1,6 +1,7 @@
 import path from 'path';
 import Lead from '@/models/lead.model';
 import JobOffer from '@/models/joboffer.model';
+import SessionAttachment from '@/models/session-attachment.model';
 import type { IAttachment, IAdditionalDetail } from '@/models/lead.model';
 import { buildLeadMarkdown, buildJobOfferMarkdown, modalityLabel, contractTypeLabel } from '@/lib/report';
 import { markdownToPdf } from '@/lib/pdf';
@@ -30,10 +31,16 @@ const EXT_TYPES: Record<string, string> = {
 
 async function collectAttachments(sessionId: string): Promise<IAttachment[]> {
   const filenames = await listSessionFiles(sessionId);
+  // El markdown convertido vive en `SessionAttachment` (caché con TTL). Se copia
+  // al Lead/JobOffer para que el registro sea autocontenido cuando el TTL borre
+  // la caché.
+  const converted = await SessionAttachment.find({ sessionId }).select('filename markdown').lean();
+  const markdownByName = new Map(converted.map((c) => [c.filename, c.markdown]));
   return filenames.map((filename) => ({
     filename,
     type: EXT_TYPES[path.extname(filename).toLowerCase()] || 'application/octet-stream',
     url: leadFileUrl(sessionId, filename),
+    ...(markdownByName.get(filename) ? { markdown: markdownByName.get(filename) } : {}),
   }));
 }
 

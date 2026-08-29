@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 
 export interface AttachmentResult {
   filename: string
@@ -16,18 +16,25 @@ export const ACCEPTED_ATTACHMENT_TYPES =
  * Estado y lógica de los archivos que el lead adjunta en el chat de Jevy.
  * Vive en el componente padre (`Contact`) para que tanto el chat como la
  * card de la columna izquierda lean/actualicen el mismo estado.
+ *
+ * El contenido convertido (markdown) NO se maneja acá: `/api/contact/attachments`
+ * lo guarda en Mongo por `sessionId` y `/api/contact/chat` lo arma solo. Este
+ * hook solo lleva la lista para la UI (nombre / estado / link), que se repuebla
+ * tras un reload con `loadForSession`.
+ *
  * @param tooLargeMessage - Texto a mostrar si un archivo supera `MAX_ATTACHMENT_SIZE_BYTES`.
  * @param genericErrorMessage - Texto a mostrar ante cualquier otro error de subida.
- * @returns Estado de adjuntos + `handleFileSelect`/`buildAttachmentsContext` para subir a `/api/contact/attachments`.
  */
 export function useAttachments(tooLargeMessage: string, genericErrorMessage: string) {
-  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
   const [attachmentResults, setAttachmentResults] = useState<AttachmentResult[]>([])
   const [isUploadingAttachment, setIsUploadingAttachment] = useState(false)
   const [attachError, setAttachError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileSelect = async (files: File[], sessionId: string): Promise<{ succeeded: AttachmentResult[]; mergedContext: string } | null> => {
+  const handleFileSelect = async (
+    files: File[],
+    sessionId: string,
+  ): Promise<{ succeeded: AttachmentResult[] } | null> => {
     if (files.length === 0) return null
 
     const validFiles = files.filter((f) => f.size <= MAX_ATTACHMENT_SIZE_BYTES)
@@ -36,7 +43,6 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
     setAttachError(tooLarge > 0 ? tooLargeMessage : null)
     if (validFiles.length === 0) return null
 
-    setAttachedFiles((prev) => [...prev, ...validFiles])
     setIsUploadingAttachment(true)
 
     try {
@@ -58,15 +64,7 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
       }
 
       const succeeded = results.filter((r) => r.markdown)
-      if (succeeded.length === 0) return null
-
-      // Merge manual (no depender del estado, que todavía no se actualizó — setState es asíncrono)
-      const mergedContext = [...attachmentResults, ...results]
-        .filter((r) => r.markdown)
-        .map((r) => `## ${r.filename}\n${r.markdown}`)
-        .join("\n\n")
-
-      return { succeeded, mergedContext }
+      return succeeded.length > 0 ? { succeeded } : null
     } catch (error) {
       console.error("Error subiendo adjuntos a Jevy:", error)
       setAttachError(genericErrorMessage)
@@ -76,20 +74,32 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
     }
   }
 
-  const buildAttachmentsContext = () =>
-    attachmentResults
-      .filter((r) => r.markdown)
-      .map((r) => `## ${r.filename}\n${r.markdown}`)
-      .join("\n\n")
+  // Repuebla la lista tras un reload: pregunta al server qué adjuntos ya tiene
+  // esta sesión. Se llama cuando cambia el `sessionId` (mount con charla
+  // restaurada, o reset por inactividad → lista vacía). `lastLoadRef` descarta
+  // la respuesta si mientras tanto salió una carga para otra sesión (en el
+  // mount hay un id fresco que enseguida lo reemplaza el restaurado).
+  const lastLoadRef = useRef("")
+  const loadForSession = useCallback(async (sessionId: string) => {
+    if (!sessionId) return
+    lastLoadRef.current = sessionId
+    try {
+      const response = await fetch(`/api/contact/attachments?sessionId=${encodeURIComponent(sessionId)}`)
+      const data = await response.json()
+      if (lastLoadRef.current !== sessionId) return
+      setAttachmentResults(data.success && Array.isArray(data.results) ? data.results : [])
+    } catch {
+      if (lastLoadRef.current === sessionId) setAttachmentResults([])
+    }
+  }, [])
 
   return {
-    attachedFiles,
     attachmentResults,
     isUploadingAttachment,
     attachError,
     fileInputRef,
     handleFileSelect,
-    buildAttachmentsContext,
+    loadForSession,
   }
 }
 

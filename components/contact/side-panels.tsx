@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { X, Loader2, Check, AlertTriangle } from "lucide-react"
+import { X, Check, AlertTriangle } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { useContent } from "@/contexts/content"
 import { fetchProjects } from "@/services/api/projects"
@@ -175,7 +175,6 @@ interface AttachmentsTexts {
   viewHint: string
   modalTitle: string
   processed: string
-  pending: string
   failed: string
 }
 
@@ -188,7 +187,6 @@ function useAttachmentsTexts(): AttachmentsTexts {
     viewHint: "",
     modalTitle: "",
     processed: "",
-    pending: "",
     failed: "",
   })
 
@@ -200,7 +198,6 @@ function useAttachmentsTexts(): AttachmentsTexts {
       viewHint: String(t("contact.jevy.attachmentsCard.viewHint")),
       modalTitle: String(t("contact.jevy.attachmentsCard.modalTitle")),
       processed: String(t("contact.jevy.attachmentsCard.processed")),
-      pending: String(t("contact.jevy.attachmentsCard.pending")),
       failed: String(t("contact.jevy.attachmentsCard.failed")),
     })
   }, [t])
@@ -216,7 +213,8 @@ function useAttachmentsTexts(): AttachmentsTexts {
 export function AttachmentsCard({ attachments }: { attachments: UseAttachmentsReturn }) {
   const texts = useAttachmentsTexts()
   const [modalOpen, setModalOpen] = useState(false)
-  const count = attachments.attachedFiles.length
+  const results = attachments.attachmentResults
+  const count = results.length
 
   return (
     <>
@@ -238,9 +236,9 @@ export function AttachmentsCard({ attachments }: { attachments: UseAttachmentsRe
         ) : (
           <>
             <div className="h-[70px] relative flex items-center justify-center">
-              {attachments.attachedFiles.slice(0, 3).map((file, i) => (
+              {results.slice(0, 3).map((r, i) => (
                 <div
-                  key={file.name}
+                  key={r.filename}
                   className="absolute w-[54px] h-[70px] rounded border border-blue-700/30 bg-[#0e1013] flex items-end p-1.5 font-mono text-[0.55rem] text-slate-500"
                   style={{
                     transform: `rotate(${[-9, 4, -2][i]}deg) translateX(${[-18, 4, 20][i]}px)`,
@@ -248,7 +246,7 @@ export function AttachmentsCard({ attachments }: { attachments: UseAttachmentsRe
                     borderColor: i === 2 ? "rgba(29,78,216,0.5)" : undefined,
                   }}
                 >
-                  .{fileExtLabel(file.name).toLowerCase()}
+                  .{fileExtLabel(r.filename).toLowerCase()}
                 </div>
               ))}
             </div>
@@ -280,22 +278,18 @@ export function AttachmentsCard({ attachments }: { attachments: UseAttachmentsRe
               </button>
             </div>
             <div className="flex flex-col h-[420px] overflow-y-auto">
-              {attachments.attachedFiles.map((file) => {
-                const result = attachments.attachmentResults.find((r) => r.filename === file.name)
-                const failed = Boolean(result?.error)
-                const done = Boolean(result?.markdown)
+              {results.map((r) => {
+                const failed = Boolean(r.error)
                 return (
-                  <div key={file.name} className="flex items-center gap-4 px-6 py-4 border-b border-blue-700/10 last:border-b-0">
+                  <div key={r.filename} className="flex items-center gap-4 px-6 py-4 border-b border-blue-700/10 last:border-b-0">
                     <span className="w-10 h-12 shrink-0 rounded border border-blue-700/30 bg-[#0e1013] flex items-center justify-center font-mono text-xs font-bold text-blue-300">
-                      {fileExtLabel(file.name)}
+                      {fileExtLabel(r.filename)}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="text-base text-slate-300 truncate">{file.name}</div>
-                      <div className={`font-mono text-xs mt-1 flex items-center gap-1.5 ${failed ? "text-red-400" : done ? "text-green-500" : "text-slate-500"}`}>
-                        {failed && <AlertTriangle className="h-3.5 w-3.5" />}
-                        {done && <Check className="h-3.5 w-3.5" />}
-                        {!result && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                        {failed ? texts.failed : done ? texts.processed : texts.pending}
+                      <div className="text-base text-slate-300 truncate">{r.filename}</div>
+                      <div className={`font-mono text-xs mt-1 flex items-center gap-1.5 ${failed ? "text-red-400" : "text-green-500"}`}>
+                        {failed ? <AlertTriangle className="h-3.5 w-3.5" /> : <Check className="h-3.5 w-3.5" />}
+                        {failed ? texts.failed : texts.processed}
                       </div>
                     </div>
                   </div>

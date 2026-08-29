@@ -163,7 +163,15 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     }
   }, [])
 
-  const pushLeadLine = async (text: string, contextOverride?: string) => {
+  // Repoblar la lista de adjuntos desde el server cuando cambia la sesión
+  // (mount con charla restaurada → trae los que había; reset por inactividad →
+  // sesión nueva, lista vacía).
+  const { loadForSession } = attachments
+  useEffect(() => {
+    loadForSession(sessionId)
+  }, [sessionId, loadForSession])
+
+  const pushLeadLine = async (text: string) => {
     if (!text.trim() || isTyping || isClosed) return
     scheduleInactivityWarning()
     const nextHistory = [...history, { role: "user" as const, content: text }]
@@ -171,8 +179,9 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     setIsTyping(true)
 
     try {
-      const attachmentsContext = contextOverride ?? attachments.buildAttachmentsContext()
       const alreadyMatched = lines.some((line) => (line.matches?.length ?? 0) > 0)
+      // El contexto de los adjuntos lo arma el server desde Mongo por sessionId
+      // (ver /api/contact/attachments + /api/contact/chat) — el cliente no lo manda.
       const response = await fetch("/api/contact/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -182,7 +191,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
           sessionId,
           alreadyMatched,
           locale: language.code,
-          ...(attachmentsContext ? { attachmentsContext } : {}),
           ...(referenceProject ? { referenceProjectSlug: referenceProject.slug } : {}),
         }),
       })
@@ -252,8 +260,10 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
   const processFiles = async (files: File[]) => {
     const processed = await attachments.handleFileSelect(files, sessionId)
     if (processed) {
+      // El markdown ya quedó guardado en Mongo por `handleFileSelect` — el
+      // server lo va a ver en este mismo turno vía sessionId.
       const notice = `${translatedTexts.attachedNotice}: ${processed.succeeded.map((r) => r.filename).join(", ")}`
-      await pushLeadLine(notice, processed.mergedContext)
+      await pushLeadLine(notice)
     }
   }
 
