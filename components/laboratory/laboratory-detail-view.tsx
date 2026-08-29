@@ -1,5 +1,6 @@
 "use client"
 
+import { techStackEntries } from "@/lib/utils"
 import {
   ArrowLeft,
   Briefcase,
@@ -22,6 +23,7 @@ import { Button } from "@/components/ui/button"
 import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
 import { FadeIn } from "@/components/common/fade-in"
 import { WorkBlocks, type WorkBlock } from "@/components/projects/work-blocks"
+import { TechStackCard, SidebarListCard } from "@/components/projects/tech-stack-card"
 
 interface RawLabProject {
   _id: string
@@ -123,9 +125,7 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
   const description = language.code === "es" ? project.description : translated?.description || project.description
   const imageUrl = project.image || "/placeholder.svg?height=400&width=600"
   const labDetails = project.labDetails
-  const techStackEntries = Object.entries(project.techStack || {}).filter(
-    ([, items]) => Array.isArray(items) && items.length > 0
-  ) as [string, string[]][]
+  const stackEntries = techStackEntries(project.techStack)
 
   return (
     <DetailPageShell maxWidthClass="max-w-6xl">
@@ -260,50 +260,20 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
 
             <aside className="lg:col-span-1">
               <div className="lg:sticky lg:top-28 space-y-6">
-                {techStackEntries.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
-                      <Layers className="h-4 w-4 text-blue-500" />
-                      {techStackHeading}
-                    </h2>
-                    <div className="space-y-4">
-                      {techStackEntries.map(([category, items]) => (
-                        <div key={category}>
-                          <p className="text-xs uppercase tracking-wider text-blue-400 font-bold mb-2">
-                            {techStackCategoryLabels[category] || category}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {items.map((item) => (
-                              <span
-                                key={item}
-                                className="bg-white/5 border border-white/10 text-slate-300 text-xs px-2 py-1 rounded"
-                              >
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <TechStackCard
+                  entries={stackEntries}
+                  categoryLabels={techStackCategoryLabels}
+                  heading={techStackHeading}
+                  headingBold
+                />
 
-                {labDetails?.limitations && labDetails.limitations.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm font-bold mb-4 flex items-center gap-2 text-white">
-                      <ShieldAlert className="h-4 w-4 text-blue-500" />
-                      {limitationsHeading}
-                    </h2>
-                    <ul className="space-y-2">
-                      {labDetails.limitations.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <ShieldAlert className="h-3.5 w-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <SidebarListCard
+                  icon={ShieldAlert}
+                  heading={limitationsHeading}
+                  items={labDetails?.limitations ?? []}
+                  itemIcon={ShieldAlert}
+                  headingBold
+                />
               </div>
             </aside>
           </div>

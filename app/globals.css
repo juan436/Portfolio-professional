@@ -320,3 +320,46 @@ html {
   animation: floatCard 6s ease-in-out infinite;
   box-shadow: 0 10px 30px -15px rgba(59, 130, 246, 0.3);
 }
+
+/* Overrides de React Flow para el FlowDiagram de automatizaciones
+   (antes en un <style> inline dentro de components/automations/flow-diagram.tsx).
+   Los selectores van prefijados con `.react-flow` a propósito: la hoja de estilos
+   de @xyflow/react se importa en el componente y en Next carga DESPUÉS de este
+   globals.css, así que sin subir la especificidad sus reglas de un solo class
+   (botones blancos por defecto) ganarían por orden de cascada. */
+.react-flow .react-flow__attribution {
+  background: transparent;
+  color: #52525b;
+  font-size: 10px;
+}
+.react-flow .react-flow__attribution a {
+  color: #3b82f6;
+}
+.react-flow .react-flow__node.selected {
+  box-shadow: none !important;
+  outline: none !important;
+}
+.react-flow .react-flow__node {
+  cursor: default;
+}
+.react-flow .react-flow__controls {
+  background: transparent;
+  box-shadow: none;
+  gap: 4px;
+}
+.react-flow .react-flow__controls-button {
+  background: rgba(24, 24, 27, 0.9);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 6px;
+  color: #bfdbfe;
+}
+.react-flow .react-flow__controls-button svg {
+  fill: currentColor;
+}
+.react-flow .react-flow__controls-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: #fff;
+}
+.react-flow .react-flow__controls-button:disabled {
+  opacity: 0.4;
+}

@@ -36,3 +36,14 @@ export function getProjectTechnologies(project: {
 
   return flattened.length > 0 ? flattened : project.tags || []
 }
+
+/**
+ * Entradas no vacías de `techStack` (`[categoría, items[]]`), para renderizar la
+ * tarjeta de stack en las vistas de detalle. Idéntico en project- y
+ * laboratory-detail-view (auditoría 2026-08-27 §4.14).
+ */
+export function techStackEntries(techStack?: Record<string, unknown>): [string, string[]][] {
+  return Object.entries(techStack || {}).filter(
+    ([, items]) => Array.isArray(items) && items.length > 0,
+  ) as [string, string[]][]
+}

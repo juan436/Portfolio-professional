@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -12,6 +11,7 @@ import {
   deleteCertificateAction,
 } from "@/lib/actions/certificates"
 import { useToastNotifications } from "@/hooks/admin/use-toast-notifications"
+import { useEntityManager } from "@/hooks/admin/use-entity-manager"
 import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialog"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { TextField, TextAreaField, StringListField } from "@/components/admin/forms/project-form-fields"
@@ -45,44 +45,16 @@ const emptyCertificate: AdminCertificate = {
 
 export default function CertificatesManager() {
   const toastNotifications = useToastNotifications()
-  const [items, setItems] = useState<AdminCertificate[]>([])
-  const [isFetching, setIsFetching] = useState(true)
-  const [selected, setSelected] = useState<AdminCertificate | null>(null)
-  const [formData, setFormData] = useState<AdminCertificate | null>(null)
-  const [editMode, setEditMode] = useState(false)
-  const [isNew, setIsNew] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [toDelete, setToDelete] = useState<string | null>(null)
-
-  useEffect(() => {
-    const load = async () => {
-      setIsFetching(true)
-      try {
-        const result = await fetchCertificates()
-        setItems(result)
-      } finally {
-        setIsFetching(false)
-      }
-    }
-    load()
-  }, [])
-
-  useEffect(() => {
-    setFormData(selected)
-  }, [selected])
-
-  const selectItem = (item: AdminCertificate) => {
-    setSelected(item)
-    setEditMode(false)
-    setIsNew(false)
-  }
-
-  const addNew = () => {
-    setSelected({ ...emptyCertificate })
-    setIsNew(true)
-    setEditMode(true)
-  }
+  const {
+    items, setItems, isFetching,
+    selected, setSelected, formData, setFormData,
+    editMode, setEditMode, isNew, setIsNew, isLoading, setIsLoading,
+    selectItem, startNew: addNew, cancelEdit,
+    deleteTarget: toDelete, isDeleteOpen, askDelete, closeDelete,
+  } = useEntityManager<AdminCertificate, string>({
+    list: fetchCertificates,
+    empty: () => ({ ...emptyCertificate }),
+  })
 
   const handleSave = async () => {
     if (!formData) return
@@ -122,8 +94,7 @@ export default function CertificatesManager() {
       console.error(error)
       toastNotifications.showErrorToast("Error", "No se pudo eliminar el certificado.")
     } finally {
-      setIsDeleteOpen(false)
-      setToDelete(null)
+      closeDelete()
     }
   }
 
@@ -164,8 +135,7 @@ export default function CertificatesManager() {
                         className="h-6 w-6 p-1 absolute right-2 top-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 hover:bg-red-500/10"
                         onClick={(e) => {
                           e.stopPropagation()
-                          setIsDeleteOpen(true)
-                          setToDelete(item._id)
+                          askDelete(item._id)
                         }}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -226,7 +196,7 @@ export default function CertificatesManager() {
 
                   {editMode && (
                     <div className="flex justify-end gap-2 pt-4">
-                      <Button variant="outline" className="border-red-700/50 text-red-500" onClick={() => { setEditMode(false); setIsNew(false); if (isNew) setSelected(null) }}>
+                      <Button variant="outline" className="border-red-700/50 text-red-500" onClick={cancelEdit}>
                         Cancelar
                       </Button>
                       <Button onClick={handleSave} className="bg-blue-700 hover:bg-blue-800">
@@ -243,7 +213,7 @@ export default function CertificatesManager() {
 
       <ConfirmationDialog
         isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
+        onClose={closeDelete}
         onConfirm={handleDelete}
         title="Eliminar Certificado"
         description="¿Estás seguro de que deseas eliminar este certificado?"

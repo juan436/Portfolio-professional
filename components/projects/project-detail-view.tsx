@@ -1,8 +1,9 @@
 "use client"
 
 import { LocalizedLink as Link, useLocale } from "@/components/common/localized-link"
+import { techStackEntries } from "@/lib/utils"
 import { motion } from "framer-motion"
-import { ArrowLeft, Award, BarChart3, Brain, Briefcase, Building2, Clock, Compass, ExternalLink, FlaskConical, Github, Globe, Home, Layers, LayoutGrid, Lightbulb, MessageCircle, Package, Quote, RefreshCw, Repeat, Search, Server, Settings2, Share2, ShieldCheck, ShoppingCart, SlidersHorizontal, Smartphone, Star, Store, TrendingUp, Upload, User, Users, Workflow, Wrench } from "lucide-react"
+import { ArrowLeft, Award, BarChart3, Brain, Briefcase, Building2, Clock, Compass, ExternalLink, FlaskConical, Github, Globe, Home, LayoutGrid, Lightbulb, MessageCircle, Package, Quote, RefreshCw, Repeat, Search, Server, Settings2, Share2, ShieldCheck, ShoppingCart, SlidersHorizontal, Smartphone, Star, Store, TrendingUp, Upload, User, Users, Workflow, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import type { RawTestimonial } from "@/services/api/testimonials"
 import type { ProjectMetric } from "@/services/api/project-stats"
@@ -18,6 +19,7 @@ import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
 import { ShareRow } from "@/components/common/share-row"
 import { SITE_URL } from "@/lib/site-config"
 import { WorkBlocks } from "@/components/projects/work-blocks"
+import { TechStackCard, SidebarListCard } from "@/components/projects/tech-stack-card"
 
 // Claves editables desde el Admin (campo "icon" de cada fila de uiStructure).
 // Cualquier clave no reconocida cae en LayoutGrid.
@@ -164,9 +166,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   ]
   const hasGallery = galleryMedia.length > 0
   const backendBannerLabel = String(t("projects.backendBanner") || "Infraestructura & Backend")
-  const techStackEntries = Object.entries(project.techStack || {}).filter(
-    ([, items]) => Array.isArray(items) && items.length > 0
-  ) as [string, string[]][]
+  const stackEntries = techStackEntries(project.techStack)
 
   // "Infraestructura en producción" es un concepto de servidor: una app mobile no tiene la suya
   // propia (vive en la ficha API hermana, si existe), así que esta card nunca aplica a `mobile`.
@@ -469,118 +469,40 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
                   </div>
                 )}
 
-                {techStackEntries.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
-                      <Layers className="h-4 w-4 text-blue-500" />
-                      {techStackHeading}
-                    </h2>
-                    <div className="space-y-4">
-                      {techStackEntries.map(([category, items]) => (
-                        <div key={category}>
-                          <p className="text-xs uppercase tracking-wider text-blue-400 font-bold mb-2">
-                            {techStackCategoryLabels[category] || category}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {items.map((item) => (
-                              <span
-                                key={item}
-                                className="bg-white/5 border border-white/10 text-slate-300 text-xs px-2 py-1 rounded"
-                              >
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <TechStackCard
+                  entries={stackEntries}
+                  categoryLabels={techStackCategoryLabels}
+                  heading={techStackHeading}
+                />
 
-                {project.securityHardening && project.securityHardening.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
-                      <ShieldCheck className="h-4 w-4 text-blue-500" />
-                      {securityHeading}
-                    </h2>
-                    <ul className="space-y-2">
-                      {project.securityHardening.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <span className="mt-2 w-1 h-1 rounded-full bg-blue-500 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <SidebarListCard
+                  icon={ShieldCheck}
+                  heading={securityHeading}
+                  items={project.securityHardening ?? []}
+                />
 
-                {infraRows.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
-                      <Server className="h-4 w-4 text-blue-500" />
-                      {infraDetailsHeading}
-                    </h2>
-                    <ul className="space-y-2">
-                      {infraRows.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <span className="mt-2 w-1 h-1 rounded-full bg-blue-500 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <SidebarListCard icon={Server} heading={infraDetailsHeading} items={infraRows} />
 
-                {systemRows.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
-                      <BarChart3 className="h-4 w-4 text-blue-500" />
-                      {systemDetailsHeading}
-                    </h2>
-                    <ul className="space-y-2">
-                      {systemRows.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <BarChart3 className="h-3.5 w-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <SidebarListCard
+                  icon={BarChart3}
+                  heading={systemDetailsHeading}
+                  items={systemRows}
+                  itemIcon={BarChart3}
+                />
 
-                {ecommerceRows.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
-                      <ShoppingCart className="h-4 w-4 text-blue-500" />
-                      {ecommerceDetailsHeading}
-                    </h2>
-                    <ul className="space-y-2">
-                      {ecommerceRows.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <ShoppingCart className="h-3.5 w-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <SidebarListCard
+                  icon={ShoppingCart}
+                  heading={ecommerceDetailsHeading}
+                  items={ecommerceRows}
+                  itemIcon={ShoppingCart}
+                />
 
-                {mobileRows.length > 0 && (
-                  <div className="p-5 rounded-xl bg-zinc-900/40 border border-white/5">
-                    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
-                      <Smartphone className="h-4 w-4 text-blue-500" />
-                      {mobileDetailsHeading}
-                    </h2>
-                    <ul className="space-y-2">
-                      {mobileRows.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                          <Smartphone className="h-3.5 w-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <SidebarListCard
+                  icon={Smartphone}
+                  heading={mobileDetailsHeading}
+                  items={mobileRows}
+                  itemIcon={Smartphone}
+                />
               </div>
             </aside>
           </div>

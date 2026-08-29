@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Calendar, Check } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { FormattedText } from "@/components/common/formatted-text"
+import { ScriptedChatDemo, type ScriptStep as ChatStep } from "@/components/agents/scripted-chat-demo"
 
 /**
  * Demo 100% simulada del chat de Jevy para /agents/[id] (sección Agentes en
@@ -198,138 +199,40 @@ function DemoSchedulingWidget({ locale, texts }: { locale: string; texts: { load
   )
 }
 
-interface DemoLine {
-  id: number
-  role: "jevy" | "lead"
-  text: string
-  widget?: boolean
-}
+// Ver `ScriptedChatDemo` (components/agents/scripted-chat-demo.tsx) para la
+// máquina de estados y los timings — acá solo se arma el guion y el widget.
+const LOCALE_MAP: Record<string, string> = { es: "es-VE", en: "en-US", fr: "fr-FR", it: "it-IT" }
 
 export function JevyChatDemo() {
   const { language, t } = useLanguage()
   const localeCode = (language.code as "es" | "en" | "fr" | "it") in SCRIPT ? (language.code as "es" | "en" | "fr" | "it") : "es"
-  const script = SCRIPT[localeCode]
-  const localeMap: Record<string, string> = { es: "es-VE", en: "en-US", fr: "fr-FR", it: "it-IT" }
-  const dateLocale = localeMap[localeCode]
+  const dateLocale = LOCALE_MAP[localeCode]
 
-  const [lines, setLines] = useState<DemoLine[]>([])
-  const [stepIndex, setStepIndex] = useState(0)
-  const [isTyping, setIsTyping] = useState(false)
-  const [finished, setFinished] = useState(false)
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const texts = {
-    windowTitle: String(t("contact.jevy.windowTitle")),
-    typing: String(t("contact.jevy.typing")),
-    badge: String(t("agents.detail.demoBadge")),
-    replay: String(t("agents.detail.demoReplay")),
-    scheduling: {
-      loadingSlots: String(t("contact.jevy.scheduling.loadingSlots")),
-      pickDay: String(t("contact.jevy.scheduling.pickDay")),
-      confirming: String(t("contact.jevy.scheduling.confirming")),
-      successTitle: String(t("contact.jevy.scheduling.successTitle")),
-      successBody: String(t("contact.jevy.scheduling.successBody")),
-    },
+  const scheduling = {
+    loadingSlots: String(t("contact.jevy.scheduling.loadingSlots")),
+    pickDay: String(t("contact.jevy.scheduling.pickDay")),
+    confirming: String(t("contact.jevy.scheduling.confirming")),
+    successTitle: String(t("contact.jevy.scheduling.successTitle")),
+    successBody: String(t("contact.jevy.scheduling.successBody")),
   }
 
-  const runFrom = (index: number) => {
-    if (index >= script.length) {
-      setFinished(true)
-      return
-    }
-    const step = script[index]
-
-    if (step.kind === "lead") {
-      setLines((prev) => [...prev, { id: prev.length, role: "lead", text: step.text }])
-      timerRef.current = setTimeout(() => runFrom(index + 1), 900)
-      return
-    }
-
-    if (step.kind === "jevy") {
-      setIsTyping(true)
-      const delay = Math.min(2200, 700 + step.text.length * 12)
-      timerRef.current = setTimeout(() => {
-        setIsTyping(false)
-        setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: step.text }])
-        timerRef.current = setTimeout(() => runFrom(index + 1), 500)
-      }, delay)
-      return
-    }
-
-    // widget: se marca en la última línea de jevy para que se renderice debajo.
-    // El botón de repetir espera a que el widget termine su propia animación
-    // (loading -> picking -> booking -> success, ver DemoSchedulingWidget)
-    // para no aparecer mientras todavía se está "reservando".
-    setLines((prev) => {
-      const next = [...prev]
-      if (next.length > 0) next[next.length - 1] = { ...next[next.length - 1], widget: true }
-      return next
-    })
-    timerRef.current = setTimeout(() => setFinished(true), 4000)
-  }
-
-  const startDemo = () => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-    setLines([])
-    setStepIndex((s) => s + 1)
-    setFinished(false)
-    setIsTyping(false)
-    runFrom(0)
-  }
-
-  useEffect(() => {
-    runFrom(0)
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const script: ChatStep[] = SCRIPT[localeCode].map((step) =>
+    step.kind === "widget" ? { widget: true } : { from: step.kind === "lead" ? "user" : "bot", text: step.text },
+  )
 
   return (
-    <div className="relative max-w-none mx-auto rounded-xl overflow-hidden border border-blue-700/30 bg-[#0b0d10] shadow-[0_20px_60px_-25px_rgba(0,0,0,0.6)]">
-      <div className="flex items-center gap-2 px-5 py-3 bg-[#0e1013] border-b border-blue-700/20">
-        <span className="w-3 h-3 rounded-full bg-red-500" />
-        <span className="w-3 h-3 rounded-full bg-amber-500" />
-        <span className="w-3 h-3 rounded-full bg-green-500" />
-        <span className="ml-2 text-sm text-slate-500 font-mono">{texts.windowTitle}</span>
-        <span className="ml-auto text-[10px] uppercase tracking-wide text-amber-400 border border-amber-400/30 rounded-full px-2 py-0.5">
-          {texts.badge}
-        </span>
-      </div>
-
-      <div className="p-6 h-[420px] overflow-y-auto font-mono text-base leading-relaxed">
-        <div className="space-y-4" key={stepIndex}>
-          {lines.map((line) => (
-            <div key={line.id} className={line.role === "jevy" ? "" : "text-slate-400"}>
-              <span className={line.role === "jevy" ? "text-blue-500" : "text-green-500"}>
-                {line.role === "jevy" ? "jevy>" : "tú>"}
-              </span>{" "}
-              <FormattedText text={line.text} />
-              {line.widget && (
-                <DemoSchedulingWidget locale={dateLocale} texts={texts.scheduling} />
-              )}
-            </div>
-          ))}
-
-          {isTyping && (
-            <div className="text-blue-500/70">
-              <span className="text-blue-500">jevy&gt;</span> {texts.typing}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {finished && (
-        <div className="flex justify-end px-5 py-3 border-t border-blue-700/20 bg-[#0e1013]">
-          <button
-            type="button"
-            onClick={startDemo}
-            className="text-xs px-3 py-1.5 rounded-md border border-blue-600/50 text-blue-400 hover:bg-blue-600/10 transition-colors"
-          >
-            {texts.replay}
-          </button>
-        </div>
-      )}
-    </div>
+    <ScriptedChatDemo
+      script={script}
+      prefixes={{ bot: "jevy>", user: "tú>" }}
+      texts={{
+        windowTitle: String(t("contact.jevy.windowTitle")),
+        typing: String(t("contact.jevy.typing")),
+        badge: String(t("agents.detail.demoBadge")),
+        replay: String(t("agents.detail.demoReplay")),
+      }}
+      renderText={(text) => <FormattedText text={text} />}
+      widget={<DemoSchedulingWidget locale={dateLocale} texts={scheduling} />}
+      widgetFinishDelay={4000}
+    />
   )
 }

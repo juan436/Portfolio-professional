@@ -26,7 +26,10 @@ export interface IProjectStats extends Document {
 const ProjectStatsSchema = new mongoose.Schema({
   link: {
     type: { type: String, enum: ['proyecto', 'automatizacion'], required: true },
-    ref: { type: String, required: true },
+    // Foreign key real a Project (proyectos/automatizaciones/agentes viven todos
+    // ahí). Antes era `String` libre → se llenó de refs huérfanas al re-sembrar
+    // proyectos, ver scripts/wipe-metrics-and-testimonials.ts.
+    ref: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
   },
   metrics: {
     type: [

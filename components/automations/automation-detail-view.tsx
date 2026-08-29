@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useBackNavigation } from "@/hooks/use-back-navigation"
 import { useLocale } from "@/components/common/localized-link"
 import { ListChecks, Radio, Timer, TrendingUp, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
@@ -70,17 +70,9 @@ interface AutomationDetailViewProps {
 }
 
 export function AutomationDetailView({ automation, testimonials, resultsMetrics, cameFromWork }: AutomationDetailViewProps) {
-  const router = useRouter()
   const locale = useLocale()
+  const handleBack = useBackNavigation(`/${locale}/automations`)
   const { language, t } = useLanguage()
-
-  const handleBack = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      router.back()
-    } else {
-      router.push(`/${locale}/automations`)
-    }
-  }
 
   const tryPrompt = String(t("automations.tryPrompt") || "")
   const sendLabel = String(t("automations.sendLabel") || "")

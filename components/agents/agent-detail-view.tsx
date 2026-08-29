@@ -1,7 +1,7 @@
 "use client"
 
 import { LocalizedLink as Link, useLocale } from "@/components/common/localized-link"
-import { useRouter } from "next/navigation"
+import { useBackNavigation } from "@/hooks/use-back-navigation"
 import { Bot, ExternalLink, Radio, Server, Sparkles, Timer, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { JevyChatDemo } from "@/components/agents/jevy-chat-demo"
@@ -60,8 +60,8 @@ interface AgentDetailViewProps {
 }
 
 export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
-  const router = useRouter()
   const locale = useLocale()
+  const handleBack = useBackNavigation(`/${locale}/work#agents`)
   const { language, t } = useLanguage()
 
   const whatItDoes = String(t("agents.detail.whatItDoes") || "Qué hace")
@@ -75,14 +75,6 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
   const channelsHeading = String(t("agents.detail.channelsHeading") || "Canales soportados")
   const setupTimeHeading = String(t("agents.detail.setupTimeHeading") || "Tiempo de puesta en marcha")
   const relatedProjectLabel = String(t("projects.relatedProjectLabel") || "Proyecto relacionado")
-
-  const handleBack = () => {
-    if (typeof window !== "undefined" && window.history.length > 1) {
-      router.back()
-    } else {
-      router.push(`/${locale}/work#agents`)
-    }
-  }
 
   if (!agent) {
     return <DetailNotFound message={notFoundLabel} backHref="/work#agents" backLabel={backToList} />

@@ -59,10 +59,14 @@ const TestimonialSchema = new mongoose.Schema({
     default: 5
   },
   links: {
+    // `ref` es una foreign key real a la colección Project (los proyectos,
+    // automatizaciones y agentes viven todos ahí, distinguidos por `category`).
+    // Antes era `String` libre y se llenó de refs huérfanas al re-sembrar
+    // proyectos — ver scripts/wipe-metrics-and-testimonials.ts.
     type: [
       {
         type: { type: String, enum: ['proyecto', 'automatizacion'] },
-        ref: String,
+        ref: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
       }
     ],
     default: []

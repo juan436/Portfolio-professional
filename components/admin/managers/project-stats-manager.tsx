@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,7 @@ import {
   deleteProjectStatsAction,
 } from "@/lib/actions/project-stats"
 import { useToastNotifications } from "@/hooks/admin/use-toast-notifications"
+import { useEntityManager } from "@/hooks/admin/use-entity-manager"
 import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialog"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { TextField } from "@/components/admin/forms/project-form-fields"
@@ -42,47 +43,21 @@ interface ProjectOption {
 
 export default function ProjectStatsManager() {
   const toastNotifications = useToastNotifications()
-  const [items, setItems] = useState<AdminProjectStats[]>([])
   const [projectOptions, setProjectOptions] = useState<ProjectOption[]>([])
-  const [isFetching, setIsFetching] = useState(true)
-  const [selected, setSelected] = useState<AdminProjectStats | null>(null)
-  const [formData, setFormData] = useState<AdminProjectStats | null>(null)
-  const [editMode, setEditMode] = useState(false)
-  const [isNew, setIsNew] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [toDelete, setToDelete] = useState<AdminProjectStats | null>(null)
-
-  const load = async () => {
-    setIsFetching(true)
-    try {
+  const {
+    items, setItems, isFetching, reload: load,
+    selected, setSelected, formData, setFormData,
+    editMode, setEditMode, isNew, setIsNew, isLoading, setIsLoading,
+    selectItem, startNew: addNew, cancelEdit,
+    deleteTarget: toDelete, isDeleteOpen, askDelete, closeDelete,
+  } = useEntityManager<AdminProjectStats, AdminProjectStats>({
+    list: async () => {
       const [stats, projects] = await Promise.all([listProjectStatsAction(), fetchProjects()])
-      setItems(stats)
       setProjectOptions((projects as any[]).map((p) => ({ _id: p._id, title: p.title, category: p.category })))
-    } finally {
-      setIsFetching(false)
-    }
-  }
-
-  useEffect(() => {
-    load()
-  }, [])
-
-  useEffect(() => {
-    setFormData(selected)
-  }, [selected])
-
-  const selectItem = (item: AdminProjectStats) => {
-    setSelected(item)
-    setEditMode(false)
-    setIsNew(false)
-  }
-
-  const addNew = () => {
-    setSelected({ _id: "", link: { type: "proyecto", ref: "" }, metrics: [] })
-    setIsNew(true)
-    setEditMode(true)
-  }
+      return stats
+    },
+    empty: () => ({ _id: "", link: { type: "proyecto", ref: "" }, metrics: [] }),
+  })
 
   const addMetric = () => {
     if (!formData) return
@@ -131,8 +106,7 @@ export default function ProjectStatsManager() {
       console.error(error)
       toastNotifications.showErrorToast("Error", "No se pudo eliminar.")
     } finally {
-      setIsDeleteOpen(false)
-      setToDelete(null)
+      closeDelete()
     }
   }
 
@@ -174,8 +148,7 @@ export default function ProjectStatsManager() {
                         className="h-6 w-6 p-1 absolute right-2 top-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 hover:bg-red-500/10"
                         onClick={(e) => {
                           e.stopPropagation()
-                          setIsDeleteOpen(true)
-                          setToDelete(item)
+                          askDelete(item)
                         }}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -260,7 +233,7 @@ export default function ProjectStatsManager() {
 
                   {editMode && (
                     <div className="flex justify-end gap-2 pt-4">
-                      <Button variant="outline" className="border-red-700/50 text-red-500" onClick={() => { setEditMode(false); setIsNew(false); if (isNew) setSelected(null) }}>
+                      <Button variant="outline" className="border-red-700/50 text-red-500" onClick={cancelEdit}>
                         Cancelar
                       </Button>
                       <Button onClick={handleSave} className="bg-blue-700 hover:bg-blue-800">
@@ -277,7 +250,7 @@ export default function ProjectStatsManager() {
 
       <ConfirmationDialog
         isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
+        onClose={closeDelete}
         onConfirm={handleDelete}
         title="Eliminar Métricas"
         description="¿Estás seguro de que deseas eliminar estas métricas?"
