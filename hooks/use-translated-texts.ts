@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 import { useLanguage } from "@/hooks/use-language"
+import type { TranslateFn } from "@/lib/i18n/dictionary"
 
 /**
  * Arma un objeto de textos traducidos a partir de `t`, de forma SÍNCRONA
@@ -15,11 +16,11 @@ import { useLanguage } from "@/hooks/use-language"
  * @param extraDeps - Dependencias extra para recalcular, además del idioma.
  */
 export function useTranslatedTexts<T>(
-  build: (t: (key: string, options?: unknown) => string | object) => T,
+  build: (t: TranslateFn) => T,
   _initial: T,
   extraDeps: unknown[] = []
 ): T {
   const { t, language } = useLanguage()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useMemo(() => build(t as never), [language.code, ...extraDeps])
+  return useMemo(() => build(t), [language.code, ...extraDeps])
 }

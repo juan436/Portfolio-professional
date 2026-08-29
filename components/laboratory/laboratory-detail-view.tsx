@@ -264,7 +264,6 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
                   entries={stackEntries}
                   categoryLabels={techStackCategoryLabels}
                   heading={techStackHeading}
-                  headingBold
                 />
 
                 <SidebarListCard
@@ -272,7 +271,6 @@ export function LaboratoryDetailView({ project }: LaboratoryDetailViewProps) {
                   heading={limitationsHeading}
                   items={labDetails?.limitations ?? []}
                   itemIcon={ShieldAlert}
-                  headingBold
                 />
               </div>
             </aside>

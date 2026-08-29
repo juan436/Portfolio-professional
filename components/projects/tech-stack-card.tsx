@@ -5,16 +5,15 @@ import { Layers } from "lucide-react"
  * Tarjetas del sidebar de las vistas de detalle (`project` / `laboratory`).
  * Extraídas de `project-detail-view` y `laboratory-detail-view` en la auditoría
  * 2026-08-27 §3 — el markup estaba calcado (stack técnico ×2, lista con bullets ×6).
- *
- * `headingBold` refleja una diferencia real preexistente entre los dos archivos
- * (laboratory usa `font-bold` en estos `<h2>`, project no) — se preserva tal cual.
+ * laboratory usaba `font-bold` en estos `<h2>` y project no; era derivación, no
+ * intención — unificado a peso normal (decisión del usuario, 2026-08-29).
  */
 
 const CARD = "p-5 rounded-xl bg-zinc-900/40 border border-white/5"
 
-function CardHeading({ icon: Icon, bold, children }: { icon: LucideIcon; bold?: boolean; children: string }) {
+function CardHeading({ icon: Icon, children }: { icon: LucideIcon; children: string }) {
   return (
-    <h2 className={`text-sm ${bold ? "font-bold " : ""}mb-4 flex items-center gap-2 text-white`}>
+    <h2 className="text-sm mb-4 flex items-center gap-2 text-white">
       <Icon className="h-4 w-4 text-blue-500" />
       {children}
     </h2>
@@ -25,16 +24,13 @@ interface TechStackCardProps {
   entries: [string, string[]][]
   categoryLabels: Record<string, string>
   heading: string
-  headingBold?: boolean
 }
 
-export function TechStackCard({ entries, categoryLabels, heading, headingBold }: TechStackCardProps) {
+export function TechStackCard({ entries, categoryLabels, heading }: TechStackCardProps) {
   if (entries.length === 0) return null
   return (
     <div className={CARD}>
-      <CardHeading icon={Layers} bold={headingBold}>
-        {heading}
-      </CardHeading>
+      <CardHeading icon={Layers}>{heading}</CardHeading>
       <div className="space-y-4">
         {entries.map(([category, items]) => (
           <div key={category}>
@@ -64,16 +60,13 @@ interface SidebarListCardProps {
   items: string[]
   /** Icono por ítem. Si se omite, se usa el punto azul (`•`). */
   itemIcon?: LucideIcon
-  headingBold?: boolean
 }
 
-export function SidebarListCard({ icon, heading, items, itemIcon: ItemIcon, headingBold }: SidebarListCardProps) {
+export function SidebarListCard({ icon, heading, items, itemIcon: ItemIcon }: SidebarListCardProps) {
   if (items.length === 0) return null
   return (
     <div className={CARD}>
-      <CardHeading icon={icon} bold={headingBold}>
-        {heading}
-      </CardHeading>
+      <CardHeading icon={icon}>{heading}</CardHeading>
       <ul className="space-y-2">
         {items.map((item, i) => (
           <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
