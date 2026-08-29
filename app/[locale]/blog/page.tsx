@@ -21,14 +21,22 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
  * Produce: lista de posts publicados, filtrada por etiqueta si viene `?tag=`.
  */
 export default async function BlogPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>
   searchParams: Promise<{ tag?: string }>
 }) {
-  const [posts, { tag }] = await Promise.all([getBlogPosts(), searchParams])
+  const [posts, { tag }, { locale }] = await Promise.all([getBlogPosts(), searchParams, params])
+  const st = getServerT(locale)
+  const localizedPosts = posts.map((p: any) => ({
+    ...p,
+    title: p.translations?.[locale]?.title || p.title,
+    excerpt: p.translations?.[locale]?.excerpt || p.excerpt,
+  }))
   return (
     <>
-      <BlogJsonLd posts={posts} />
+      <BlogJsonLd posts={localizedPosts} locale={locale} homeLabel={st("nav.home")} />
       <BlogListView posts={posts} activeTag={tag} />
     </>
   )

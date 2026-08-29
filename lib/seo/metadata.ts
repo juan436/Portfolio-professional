@@ -56,6 +56,8 @@ export function buildMetadata({ title, description, path, locale = "es", titleAb
       ...(image ? { images: [{ url: image }] } : {}),
     },
     twitter: {
+      // Siempre `summary_large_image`: cada ficha tiene imagen real o, si no, la
+      // OG generada de respaldo (`opengraph-image.tsx`, 1200×630 de marca).
       card: "summary_large_image",
       title,
       description,

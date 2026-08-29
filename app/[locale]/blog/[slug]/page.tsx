@@ -6,7 +6,11 @@ import { highlightBlogHtml } from "@/lib/blog/highlight"
 import { BlogDetailView } from "@/components/blog/blog-detail-view"
 import { BlogPostingJsonLd } from "@/components/blog/blog-posting-json-ld"
 import { buildMetadata, NOT_FOUND_METADATA } from "@/lib/seo/metadata"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { AUTHOR_NAME } from "@/lib/site-config"
+
+const pick = (post: any, locale: string, field: string): string =>
+  (locale !== "es" && post.translations?.[locale]?.[field]) || post[field]
 
 /** Cuerpo con resaltado de sintaxis por idioma (el switch de idioma es client-side). */
 function highlightAllBodies(post: any): Record<string, string> {
@@ -22,10 +26,10 @@ export async function generateMetadata({
   params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
   searchParams: Promise<{ preview?: string }>
 }): Promise<Metadata> {
-  const [{ slug }, { preview }] = await Promise.all([params, searchParams])
+  const [{ slug, locale }, { preview }] = await Promise.all([params, searchParams])
   const isPreview = preview === "1" && (await isAdminSession())
   const post = await getBlogPostBySlug(slug, { includeDrafts: isPreview })
   if (!post) return NOT_FOUND_METADATA
@@ -33,9 +37,10 @@ export async function generateMetadata({
   if (isPreview) return { ...NOT_FOUND_METADATA, title: `Vista previa — ${post.title}` }
 
   return buildMetadata({
-    title: post.title,
-    description: post.excerpt,
+    title: pick(post, locale, "title"),
+    description: pick(post, locale, "excerpt"),
     path: `/blog/${slug}`,
+    locale,
     image: post.coverImage,
     type: "article",
     publishedTime: post.publishedAt,
@@ -52,10 +57,10 @@ export default async function BlogDetailPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
   searchParams: Promise<{ preview?: string }>
 }) {
-  const [{ slug }, { preview }] = await Promise.all([params, searchParams])
+  const [{ slug, locale }, { preview }] = await Promise.all([params, searchParams])
   const isPreview = preview === "1" && (await isAdminSession())
 
   const post = await getBlogPostBySlug(slug, { includeDrafts: isPreview })
@@ -63,10 +68,17 @@ export default async function BlogDetailPage({
 
   const bodyByLang = highlightAllBodies(post)
   const related = isPreview ? [] : await getRelatedPosts(slug, post.tags || [], 3)
+  const st = getServerT(locale)
 
   return (
     <>
-      {!isPreview && <BlogPostingJsonLd post={post} />}
+      {!isPreview && (
+        <BlogPostingJsonLd
+          post={{ ...post, title: pick(post, locale, "title"), excerpt: pick(post, locale, "excerpt") }}
+          locale={locale}
+          homeLabel={st("nav.home")}
+        />
+      )}
       <BlogDetailView post={post} bodyByLang={bodyByLang} related={related} isPreview={isPreview} />
     </>
   )

@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
-import { LocalizedLink as Link } from "@/components/common/localized-link"
+import { LocalizedLink as Link, useLocale } from "@/components/common/localized-link"
 import { motion } from "framer-motion"
-import { ArrowLeft, ArrowRight, Calendar, Check, Clock, Linkedin, LinkIcon } from "lucide-react"
+import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
+import { ShareRow } from "@/components/common/share-row"
 import { SITE_URL, AUTHOR_PHOTO, AUTHOR_DISPLAY_NAME } from "@/lib/site-config"
 import { slugify } from "@/lib/slug"
 import type { BlogPostView as BlogPost } from "@/lib/blog/types"
@@ -39,15 +39,12 @@ export function BlogDetailView({
   isPreview?: boolean
 }) {
   const { language, t } = useLanguage()
+  const locale = useLocale()
   const { formatDate, readingLabel } = useBlogFormatters()
-  const [copied, setCopied] = useState(false)
 
   const backLabel = String(t("blog.backToBlog") || "Volver al blog")
   const authorRole = String(t("blog.authorRole") || "")
   const notFoundLabel = String(t("blog.notFound") || "No encontramos este artículo.")
-  const shareLabel = String(t("blog.share") || "Compartir")
-  const copyLabel = String(t("blog.copyLink") || "Copiar enlace")
-  const copiedLabel = String(t("blog.linkCopied") || "Enlace copiado")
   const relatedLabel = String(t("blog.relatedTitle") || "Seguir leyendo")
 
   if (!post) {
@@ -64,17 +61,7 @@ export function BlogDetailView({
 
   const { title, body } = pickTranslated(post, language.code)
   const renderedBody = bodyByLang[language.code] || bodyByLang.es || body
-  const url = `${SITE_URL}/blog/${post.slug}`
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      /* clipboard bloqueado: sin acción */
-    }
-  }
+  const url = `${SITE_URL}/${locale}/blog/${post.slug}`
 
   return (
     <main className="min-h-screen bg-black">
@@ -131,28 +118,7 @@ export function BlogDetailView({
 
             <div className="blog-content" dangerouslySetInnerHTML={{ __html: renderedBody }} />
 
-            {!isPreview && (
-              <div className="mt-12 pt-6 border-t border-white/10 flex flex-wrap items-center gap-3">
-                <span className="text-xs font-bold uppercase tracking-widest text-slate-500">{shareLabel}</span>
-                <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-400 transition-colors"
-                >
-                  <Linkedin className="h-4 w-4" />
-                  LinkedIn
-                </a>
-                <button
-                  type="button"
-                  onClick={copyLink}
-                  className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-400 transition-colors"
-                >
-                  {copied ? <Check className="h-4 w-4 text-blue-400" /> : <LinkIcon className="h-4 w-4" />}
-                  {copied ? copiedLabel : copyLabel}
-                </button>
-              </div>
-            )}
+            {!isPreview && <ShareRow url={url} />}
           </motion.div>
 
           {!isPreview && related.length > 0 && (

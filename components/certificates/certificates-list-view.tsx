@@ -51,15 +51,21 @@ export function CertificatesListView({ certificates }: { certificates: Certifica
         {certificates.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-              {certificates.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((cert, index) => (
-                <CertificateCard
-                  key={cert._id}
-                  certificate={cert}
-                  index={index}
-                  verifyLabel={verifyLabel}
-                  formatDate={formatDate}
-                />
-              ))}
+              {certificates.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((cert, index) => {
+                const tr =
+                  language.code === "es"
+                    ? undefined
+                    : (cert as { translations?: Record<string, { title?: string; issuer?: string }> }).translations?.[language.code]
+                return (
+                  <CertificateCard
+                    key={cert._id}
+                    certificate={{ ...cert, title: tr?.title || cert.title, issuer: tr?.issuer || cert.issuer }}
+                    index={index}
+                    verifyLabel={verifyLabel}
+                    formatDate={formatDate}
+                  />
+                )
+              })}
             </div>
             <PaginationControls
               currentPage={page}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { pickLocalized } from "@/lib/i18n/pick-localized"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { getProjectDetail } from "@/lib/data/project-detail"
 import { AutomationDetailView } from "@/components/automations/automation-detail-view"
 import { WorkJsonLd } from "@/components/seo/work-json-ld"
@@ -33,6 +34,7 @@ export default async function AutomationDetailPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const { slug, locale } = await params
+  const st = getServerT(locale)
   const sp = await searchParams
   const cameFromWork = sp.from === "work"
   const data = await getProjectDetail(slug)
@@ -41,12 +43,12 @@ export default async function AutomationDetailPage({
     <>
       {data?.project && (
         <>
-          <WorkJsonLd item={data.project} kind="automation" />
+          <WorkJsonLd item={{ ...data.project, title: pickLocalized(data.project, locale, "title"), description: pickLocalized(data.project, locale, "description") }} kind="automation" locale={locale} />
           <BreadcrumbJsonLd
             items={[
-              { name: "Inicio", path: "/" },
-              { name: "Automatizaciones", path: "/automations" },
-              { name: data.project.title },
+              { name: st("nav.home"), path: `/${locale}` },
+              { name: st("nav.automations"), path: `/${locale}/automations` },
+              { name: pickLocalized(data.project, locale, "title") },
             ]}
           />
         </>

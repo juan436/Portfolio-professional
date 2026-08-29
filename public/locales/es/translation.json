@@ -324,7 +324,10 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "seeMore": "Ver más",
-    "seeLess": "Ver menos"
+    "seeLess": "Ver menos",
+    "share": "Compartir",
+    "copyLink": "Copiar enlace",
+    "linkCopied": "Enlace copiado"
   },
   "wolf": {
     "welcome": "¡Hola! Soy Juan Villegas. Bienvenido a mi espacio virtual donde la tecnología y la creatividad se encuentran.",
@@ -469,6 +472,13 @@
     "contact": {
       "title": "Hablemos",
       "description": "Contacta a Juan Villegas para tu próximo proyecto de desarrollo, infraestructura, automatización o integración de IA."
+    },
+    "ogLabel": {
+      "web": "Proyecto web",
+      "mobile": "App móvil",
+      "infra_backend": "Infraestructura y backend",
+      "automatizacion": "Automatización",
+      "agente": "Agente de IA"
     }
   }
 }

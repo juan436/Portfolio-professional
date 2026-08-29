@@ -12,6 +12,8 @@ import { agentIconMap } from "@/components/agents/agent-icon-map"
 import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
 import { FadeIn } from "@/components/common/fade-in"
 import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
+import { ShareRow } from "@/components/common/share-row"
+import { SITE_URL } from "@/lib/site-config"
 
 interface RawAgent {
   _id: string
@@ -224,6 +226,7 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
             </FadeIn>
           )}
 
+          <ShareRow url={`${SITE_URL}/${locale}/agents/${agent.slug}`} />
           <SimilarWorkCTA reference={{ slug: agent.slug, title }} />
     </DetailPageShell>
   )

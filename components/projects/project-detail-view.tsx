@@ -1,6 +1,6 @@
 "use client"
 
-import { LocalizedLink as Link } from "@/components/common/localized-link"
+import { LocalizedLink as Link, useLocale } from "@/components/common/localized-link"
 import { motion } from "framer-motion"
 import { ArrowLeft, Award, BarChart3, Brain, Briefcase, Building2, Clock, Compass, ExternalLink, FlaskConical, Github, Globe, Home, Layers, LayoutGrid, Lightbulb, MessageCircle, Package, Quote, RefreshCw, Repeat, Search, Server, Settings2, Share2, ShieldCheck, ShoppingCart, SlidersHorizontal, Smartphone, Star, Store, TrendingUp, Upload, User, Users, Workflow, Wrench } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
@@ -15,6 +15,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
 import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
+import { ShareRow } from "@/components/common/share-row"
+import { SITE_URL } from "@/lib/site-config"
 import { WorkBlocks } from "@/components/projects/work-blocks"
 
 // Claves editables desde el Admin (campo "icon" de cada fila de uiStructure).
@@ -100,6 +102,7 @@ interface ProjectDetailViewProps {
 
 export function ProjectDetailView({ project, testimonials, resultsMetrics }: ProjectDetailViewProps) {
   const { language, t } = useLanguage()
+  const locale = useLocale()
 
   const backLabel = String(t("projects.backToHome") || "Volver")
   const testimonialHeading = String(t("projects.testimonialHeading") || "Testimonio")
@@ -671,6 +674,7 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
               </div>
             </motion.div>
           )}
+          <ShareRow url={`${SITE_URL}/${locale}/projects/${project.slug}`} />
           <SimilarWorkCTA reference={{ slug: project.slug, title }} />
     </DetailPageShell>
   )

@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { pickLocalized } from "@/lib/i18n/pick-localized"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { getCertificateBySlug } from "@/lib/data/certificates"
 import { CertificateDetailView } from "@/components/certificates/certificate-detail-view"
 import { CertificateJsonLd } from "@/components/seo/certificate-json-ld"
@@ -15,8 +17,10 @@ export async function generateMetadata({
   if (!certificate) return NOT_FOUND_METADATA
 
   return buildMetadata({
-    title: certificate.title,
-    description: certificate.learned || `Certificación de ${certificate.issuer}.`,
+    title: pickLocalized(certificate, locale, "title"),
+    description:
+      pickLocalized(certificate, locale, "learned") ||
+      `Certificación de ${pickLocalized(certificate, locale, "issuer")}.`,
     path: `/certificates/${slug}`,
     image: certificate.image,
     locale,
@@ -31,17 +35,27 @@ export default async function CertificateDetailPage({
 }) {
   const { slug, locale } = await params
   const certificate = await getCertificateBySlug(slug)
+  const st = getServerT(locale)
+  const locTitle = certificate ? pickLocalized(certificate, locale, "title") : ""
 
   return (
     <>
       {certificate && (
         <>
-          <CertificateJsonLd certificate={certificate} />
+          <CertificateJsonLd
+            locale={locale}
+            certificate={{
+              ...certificate,
+              title: locTitle,
+              issuer: pickLocalized(certificate, locale, "issuer"),
+              learned: pickLocalized(certificate, locale, "learned"),
+            }}
+          />
           <BreadcrumbJsonLd
             items={[
-              { name: "Inicio", path: "/" },
-              { name: "Certificaciones", path: "/certificates" },
-              { name: certificate.title },
+              { name: st("nav.home"), path: `/${locale}` },
+              { name: st("seo.certificates.title"), path: `/${locale}/certificates` },
+              { name: locTitle },
             ]}
           />
         </>

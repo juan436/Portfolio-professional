@@ -20,11 +20,13 @@ const KIND_ROUTE: Record<string, string> = {
 export function WorkJsonLd({
   item,
   kind,
+  locale = "es",
 }: {
   item: { title: string; slug: string; description?: string; image?: string; techStack?: any; tags?: string[]; createdAt?: string }
   kind: "project" | "automation" | "agent" | "laboratory"
+  locale?: string
 }) {
-  const url = `${SITE_URL}${KIND_ROUTE[kind]}/${item.slug}`
+  const url = `${SITE_URL}/${locale}${KIND_ROUTE[kind]}/${item.slug}`
   const keywords = getProjectTechnologies(item)
 
   const isSoftware = kind === "project" || kind === "agent"

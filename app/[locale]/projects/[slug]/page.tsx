@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { pickLocalized } from "@/lib/i18n/pick-localized"
+import { getServerT } from "@/lib/i18n/server-dict"
 import { getProjectDetail } from "@/lib/data/project-detail"
 import { ProjectDetailView } from "@/components/projects/project-detail-view"
 import { WorkJsonLd } from "@/components/seo/work-json-ld"
@@ -31,18 +32,19 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string; locale: string }>
 }) {
   const { slug, locale } = await params
+  const st = getServerT(locale)
   const data = await getProjectDetail(slug)
 
   return (
     <>
       {data?.project && (
         <>
-          <WorkJsonLd item={data.project} kind="project" />
+          <WorkJsonLd item={{ ...data.project, title: pickLocalized(data.project, locale, "title"), description: pickLocalized(data.project, locale, "description") }} kind="project" locale={locale} />
           <BreadcrumbJsonLd
             items={[
-              { name: "Inicio", path: "/" },
-              { name: "Trabajo", path: "/work" },
-              { name: data.project.title },
+              { name: st("nav.home"), path: `/${locale}` },
+              { name: st("nav.work"), path: `/${locale}/work` },
+              { name: pickLocalized(data.project, locale, "title") },
             ]}
           />
         </>

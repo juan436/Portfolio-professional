@@ -10,10 +10,15 @@ import { SITE_URL, AUTHOR_NAME, AUTHOR_PHOTO } from "@/lib/site-config"
 
 export function BlogPostingJsonLd({
   post,
+  locale = "es",
+  homeLabel = "Inicio",
 }: {
   post: { title: string; excerpt: string; slug: string; coverImage?: string; publishedAt?: string; updatedAt?: string }
+  locale?: string
+  homeLabel?: string
 }) {
-  const url = `${SITE_URL}/blog/${post.slug}`
+  const base = `${SITE_URL}/${locale}`
+  const url = `${base}/blog/${post.slug}`
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -23,6 +28,7 @@ export function BlogPostingJsonLd({
         headline: post.title,
         description: post.excerpt,
         url,
+        inLanguage: locale,
         mainEntityOfPage: { "@type": "WebPage", "@id": url },
         ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
         dateModified: post.updatedAt || post.publishedAt || undefined,
@@ -43,8 +49,8 @@ export function BlogPostingJsonLd({
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITE_URL}/` },
-          { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+          { "@type": "ListItem", position: 1, name: homeLabel, item: base },
+          { "@type": "ListItem", position: 2, name: "Blog", item: `${base}/blog` },
           { "@type": "ListItem", position: 3, name: post.title, item: url },
         ],
       },

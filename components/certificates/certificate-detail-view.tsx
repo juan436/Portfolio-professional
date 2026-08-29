@@ -8,6 +8,13 @@ import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page
 import { FadeIn } from "@/components/common/fade-in"
 import { localeFor } from "@/lib/i18n/locales"
 
+interface CertLocale {
+  title?: string
+  issuer?: string
+  learned?: string
+  applied?: string
+}
+
 interface RawCertificate {
   _id: string
   title: string
@@ -20,6 +27,7 @@ interface RawCertificate {
   techStack?: string[]
   learned?: string
   applied?: string
+  translations?: { en?: CertLocale; fr?: CertLocale; it?: CertLocale }
 }
 
 
@@ -49,17 +57,24 @@ export function CertificateDetailView({ certificate }: CertificateDetailViewProp
     return <DetailNotFound message={notFoundLabel} backHref="/certificates" backLabel={backLabel} />
   }
 
+  // Campo en el idioma activo: base para "es", `translations[lang]` con fallback para el resto.
+  const tr = language.code === "es" ? undefined : certificate.translations?.[language.code as "en" | "fr" | "it"]
+  const title = tr?.title || certificate.title
+  const issuer = tr?.issuer || certificate.issuer
+  const learned = tr?.learned || certificate.learned
+  const applied = tr?.applied || certificate.applied
+
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString(localeFor(language.code), { year: "numeric", month: "long" })
 
   return (
     <DetailPageShell maxWidthClass="max-w-6xl">
-      <ProjectHeader title={certificate.title} description={certificate.issuer} hideHeader nav={{ backHref: "/certificates" }} />
+      <ProjectHeader title={title} description={issuer} hideHeader nav={{ backHref: "/certificates" }} />
 
       <div className="grid grid-cols-1 lg:grid-cols-9 gap-8 mb-12 items-start">
         {certificate.image && (
           <FadeIn className="lg:col-span-7 rounded-xl overflow-hidden border border-white/10 bg-white">
-            <img src={certificate.image} alt={certificate.title} loading="lazy" decoding="async" className="w-full h-auto" />
+            <img src={certificate.image} alt={title} loading="lazy" decoding="async" className="w-full h-auto" />
           </FadeIn>
         )}
 
@@ -77,7 +92,7 @@ export function CertificateDetailView({ certificate }: CertificateDetailViewProp
                   <Award className="h-3.5 w-3.5 text-blue-500" />
                   {issuerLabel}
                 </p>
-                <p className="text-sm font-bold text-white break-words">{certificate.issuer}</p>
+                <p className="text-sm font-bold text-white break-words">{issuer}</p>
               </div>
               <div className="px-3 py-2 rounded-xl bg-zinc-900/40 border border-white/5">
                 <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-slate-500 font-bold mb-1">
@@ -118,23 +133,23 @@ export function CertificateDetailView({ certificate }: CertificateDetailViewProp
           </div>
 
           <div className="space-y-8">
-            {certificate.learned && (
+            {learned && (
               <div className="p-6 rounded-xl bg-zinc-900/40 border border-white/5">
                 <h3 className="text-sm font-bold uppercase tracking-wide text-blue-400 mb-3 flex items-center gap-2">
                   <Lightbulb className="h-4 w-4" />
                   {learnedHeading}
                 </h3>
-                <p className="text-slate-300 leading-relaxed text-sm">{certificate.learned}</p>
+                <p className="text-slate-300 leading-relaxed text-sm">{learned}</p>
               </div>
             )}
 
-            {certificate.applied && (
+            {applied && (
               <div className="p-6 rounded-xl bg-zinc-900/40 border border-white/5">
                 <h3 className="text-sm font-bold uppercase tracking-wide text-blue-400 mb-3 flex items-center gap-2">
                   <Briefcase className="h-4 w-4" />
                   {appliedHeading}
                 </h3>
-                <p className="text-slate-300 leading-relaxed text-sm">{certificate.applied}</p>
+                <p className="text-slate-300 leading-relaxed text-sm">{applied}</p>
               </div>
             )}
           </div>

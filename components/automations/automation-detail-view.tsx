@@ -14,6 +14,8 @@ import { TestimonialMetrics } from "@/components/projects/testimonial-metrics"
 import { DetailPageShell, DetailNotFound } from "@/components/common/detail-page-shell"
 import { FadeIn } from "@/components/common/fade-in"
 import { SimilarWorkCTA } from "@/components/common/similar-work-cta"
+import { ShareRow } from "@/components/common/share-row"
+import { SITE_URL } from "@/lib/site-config"
 
 interface RawAutomation {
   _id: string
@@ -250,6 +252,7 @@ export function AutomationDetailView({ automation, testimonials, resultsMetrics,
               </div>
             </FadeIn>
           )}
+          <ShareRow url={`${SITE_URL}/${locale}/automations/${automation.slug}`} />
           <SimilarWorkCTA reference={{ slug: automation.slug, title }} />
     </DetailPageShell>
   )

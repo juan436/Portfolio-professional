@@ -324,7 +324,10 @@
     "previous": "Previous",
     "next": "Next",
     "seeMore": "See more",
-    "seeLess": "See less"
+    "seeLess": "See less",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied"
   },
   "wolf": {
     "welcome": "Hello! I'm Juan Villegas. Welcome to my virtual space where technology and creativity meet.",
@@ -469,6 +472,13 @@
     "contact": {
       "title": "Let's Talk",
       "description": "Get in touch with Juan Villegas for your next development, infrastructure, automation or AI integration project."
+    },
+    "ogLabel": {
+      "web": "Web project",
+      "mobile": "Mobile app",
+      "infra_backend": "Infrastructure & backend",
+      "automatizacion": "Automation",
+      "agente": "AI Agent"
     }
   }
 }

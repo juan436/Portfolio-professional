@@ -5,6 +5,13 @@ import mongoose, { Document } from 'mongoose';
  * Recibe: title/slug/issuer/date/duration/credentialUrl/techStack/learned/applied.
  * Produce: `Certificate`, listo para `find`/`create` contra la colección `certificates`.
  */
+interface CertificateLocale {
+  title?: string;
+  issuer?: string;
+  learned?: string;
+  applied?: string;
+}
+
 export interface ICertificate extends Document {
   title: string;
   slug: string;
@@ -17,6 +24,11 @@ export interface ICertificate extends Document {
   techStack?: string[];
   learned?: string;
   applied?: string;
+  translations?: {
+    en?: CertificateLocale;
+    fr?: CertificateLocale;
+    it?: CertificateLocale;
+  };
   createdAt: Date;
 }
 
@@ -48,6 +60,11 @@ const CertificateSchema = new mongoose.Schema({
   },
   learned: String,
   applied: String,
+  translations: {
+    en: { title: String, issuer: String, learned: String, applied: String },
+    fr: { title: String, issuer: String, learned: String, applied: String },
+    it: { title: String, issuer: String, learned: String, applied: String },
+  },
   createdAt: {
     type: Date,
     default: Date.now,

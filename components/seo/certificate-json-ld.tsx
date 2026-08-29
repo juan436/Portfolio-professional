@@ -9,14 +9,16 @@ import { SITE_URL } from "@/lib/site-config"
 
 export function CertificateJsonLd({
   certificate,
+  locale = "es",
 }: {
   certificate: { title: string; slug: string; issuer?: string; date?: string; credentialUrl?: string; learned?: string }
+  locale?: string
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOccupationalCredential",
     name: certificate.title,
-    url: `${SITE_URL}/certificates/${certificate.slug}`,
+    url: `${SITE_URL}/${locale}/certificates/${certificate.slug}`,
     credentialCategory: "certificate",
     ...(certificate.learned ? { description: certificate.learned } : {}),
     ...(certificate.date ? { dateCreated: certificate.date } : {}),
