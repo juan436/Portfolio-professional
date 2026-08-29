@@ -1,9 +1,9 @@
 "use client"
 
-import { createContext, useState, useContext, useEffect, useMemo, type ReactNode } from "react"
+import { createContext, useState, useContext, useMemo, type ReactNode } from "react"
 import { createInstance, type i18n as I18nInstance } from "i18next"
 import { I18nextProvider, initReactI18next, useTranslation } from "react-i18next"
-import { useParams, usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import esTranslation from "@/public/locales/es/translation.json"
 import enTranslation from "@/public/locales/en/translation.json"
 import frTranslation from "@/public/locales/fr/translation.json"
@@ -80,20 +80,32 @@ export const LanguageProvider = ({
   children: ReactNode
   serverLocale?: string
 }) => {
-  const params = useParams()
   const router = useRouter()
   const pathname = usePathname() || "/"
 
+  // El locale se saca del primer segmento del pathname (el middleware garantiza
+  // el prefijo `/es|en|fr|it/...`). Se usaba `useParams().locale`, pero este
+  // provider vive en el layout raíz —por encima del segmento `[locale]`— y ahí
+  // `useParams()` no siempre reacciona al navegar entre valores hermanos del
+  // segmento; `usePathname()` sí. `serverLocale` (header `x-locale`) es el
+  // fallback para el primer render en server.
   const locale: LanguageCode =
-    normalizeLocale(params?.locale) ?? normalizeLocale(serverLocale) ?? DEFAULT_LOCALE
+    normalizeLocale(pathname.split("/")[1]) ?? normalizeLocale(serverLocale) ?? DEFAULT_LOCALE
 
-  // Una instancia por vida del provider (por render en server, por mount en cliente).
-  const [i18nInstance] = useState(() => buildI18n(locale))
-
-  // Navegación entre idiomas en cliente: el locale de la URL cambió → sincronizar.
-  useEffect(() => {
-    if (i18nInstance.language !== locale) i18nInstance.changeLanguage(locale)
-  }, [locale, i18nInstance])
+  // El locale lo manda la URL. Cambiar de idioma es una navegación que remonta
+  // el subárbol de `[locale]` pero NO este provider (vive en el layout raíz).
+  // Antes se hacía `changeLanguage` en un `useEffect`: ese efecto corre DESPUÉS
+  // de que los hijos ya memoizaron su texto con el `t` viejo → traducciones un
+  // paso atrás (bug real: cambiar EN→ES no hacía nada y el siguiente cambio
+  // mostraba el idioma anterior). Con los 4 idiomas embebidos `buildI18n` es
+  // síncrono, así que se recrea la instancia para el locale actual en el render
+  // (patrón de React para resetear estado cuando cambia una prop) — `t` ya sale
+  // bien en este mismo render, sin lag.
+  const [i18nState, setI18nState] = useState(() => ({ locale, instance: buildI18n(locale) }))
+  if (i18nState.locale !== locale) {
+    setI18nState({ locale, instance: buildI18n(locale) })
+  }
+  const i18nInstance = i18nState.instance
 
   const language = useMemo(
     () => languages.find((l) => l.code === locale) ?? languages[0],
@@ -115,8 +127,15 @@ export const LanguageProvider = ({
     router.push(`/${newLanguage.code}${rest || ""}`)
   }
 
+  // `key={locale}`: al cambiar de idioma la instancia de i18next se recrea
+  // (arriba), pero `useTranslation` de react-i18next actualiza su `t` interno
+  // por un `useEffect` — va un render atrás cuando la instancia cambia en
+  // caliente. Con la key, todo el subárbol (incluido el navbar del layout raíz,
+  // que si no nunca remonta) se re-monta con la instancia nueva y el `t`
+  // correcto de una. El subárbol de `[locale]` ya remonta por navegación; esto
+  // solo agrega el chrome del layout raíz.
   return (
-    <I18nextProvider i18n={i18nInstance}>
+    <I18nextProvider i18n={i18nInstance} key={locale}>
       <LanguageBridge language={language} setLanguage={setLanguage}>
         {children}
       </LanguageBridge>

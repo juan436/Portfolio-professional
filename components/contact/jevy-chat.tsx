@@ -4,31 +4,12 @@ import { useState, useEffect, useRef } from "react"
 import { Send, Paperclip, Check, Loader2 } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
+import { useJevyChatSession } from "@/hooks/use-jevy-chat-session"
 import type { UseAttachmentsReturn } from "@/hooks/use-attachments"
 import { ACCEPTED_ATTACHMENT_TYPES } from "@/hooks/use-attachments"
-import { SchedulingWidget, type SchedulingData } from "@/components/contact/scheduling-widget"
-import { ProjectMatchCard, type ProjectMatch } from "@/components/contact/project-match-card"
+import { SchedulingWidget } from "@/components/contact/scheduling-widget"
+import { ProjectMatchCard } from "@/components/contact/project-match-card"
 import { FormattedText } from "@/components/common/formatted-text"
-
-const CHAT_STORAGE_KEY = "jevy-chat-state"
-// 5 min sin actividad real (mensaje enviado/recibido): se manda un aviso
-// automático ("¿sigues ahí?", sin pasar por DeepSeek). Si pasan otros 30s más
-// sin actividad después de ese aviso, se cierra la charla y arranca una nueva.
-const INACTIVITY_WARNING_MS = 5 * 60 * 1000
-const INACTIVITY_CLOSE_MS = 30 * 1000
-
-interface ChatLine {
-  id: number
-  role: "jevy" | "lead"
-  text: string
-  matches?: ProjectMatch[]
-  schedulingData?: SchedulingData
-}
-
-interface DeepSeekMessage {
-  role: "system" | "user" | "assistant"
-  content: string
-}
 
 const CHIP_KEYS = ["app", "automation", "recruiter"] as const
 const SERVICES_WITH_GREETING = ["web", "mobile", "automation", "infra"] as const
@@ -123,69 +104,33 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     [initialService]
   )
 
-  const [lines, setLines] = useState<ChatLine[]>([])
-  const [history, setHistory] = useState<DeepSeekMessage[]>([])
   const [input, setInput] = useState("")
-  const [chipsVisible, setChipsVisible] = useState(true)
   const [isTyping, setIsTyping] = useState(false)
-  const [isClosed, setIsClosed] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const bottomSentinelRef = useRef<HTMLDivElement>(null)
-  // Un id por charla — agrupa los adjuntos guardados en disco y evita
-  // guardar el Lead/JobOffer más de una vez al cerrar.
-  const [sessionId, setSessionId] = useState(() => crypto.randomUUID())
 
-  // Restaurar la charla completa desde localStorage al montar — antes de
-  // recargar la página se perdía todo. Corre antes de que el efecto del
-  // saludo inicial dispare (mismo mount), así si hay algo guardado el saludo
-  // no lo pisa. isFirstSaveRef evita que el efecto de guardado de abajo
-  // sobreescriba lo recién leído con el estado vacío por defecto de este
-  // primer render (las actualizaciones de estado de acá no son sincrónicas).
-  const isFirstSaveRef = useRef(true)
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(CHAT_STORAGE_KEY)
-      if (raw) {
-        const saved = JSON.parse(raw)
-        const isStale = typeof saved?.updatedAt !== "number" || Date.now() - saved.updatedAt > INACTIVITY_WARNING_MS
-        // Una charla guardada pertenece al idioma en que se creó. Si el visitante
-        // está ahora en otro idioma (o la entrada es de un formato viejo sin
-        // `locale`), se descarta y arranca de cero en el idioma actual — si no,
-        // el saludo y los mensajes viejos quedan en el idioma equivocado.
-        const wrongLocale = saved?.locale !== language.code
-        if (isStale || wrongLocale) {
-          localStorage.removeItem(CHAT_STORAGE_KEY)
-        } else if (saved?.sessionId && Array.isArray(saved.lines) && saved.lines.length > 0) {
-          setSessionId(saved.sessionId)
-          setLines(saved.lines)
-          setHistory(Array.isArray(saved.history) ? saved.history : [])
-          setIsClosed(Boolean(saved.isClosed))
-          setChipsVisible(Boolean(saved.chipsVisible))
-          if (!saved.isClosed) scheduleInactivityWarning()
-        }
-      }
-    } catch {
-      // localStorage corrupto o inaccesible — arranca de cero, no rompe el chat
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    if (isFirstSaveRef.current) {
-      isFirstSaveRef.current = false
-      return
-    }
-    try {
-      localStorage.setItem(
-        CHAT_STORAGE_KEY,
-        JSON.stringify({ sessionId, lines, history, isClosed, chipsVisible, locale: language.code, updatedAt: Date.now() }),
-      )
-    } catch {
-      // localStorage lleno o inaccesible — no rompe el chat
-    }
-  }, [sessionId, lines, history, isClosed, chipsVisible])
+  // Ciclo de vida de la charla (mensajes + persistencia + timers de inactividad)
+  // — ver hooks/use-jevy-chat-session.ts. Este componente conserva el render y
+  // `pushLeadLine` (el fetch a /api/contact/chat).
+  const {
+    lines,
+    setLines,
+    history,
+    setHistory,
+    sessionId,
+    isClosed,
+    setIsClosed,
+    chipsVisible,
+    setChipsVisible,
+    scheduleInactivityWarning,
+    clearInactivityTimers,
+  } = useJevyChatSession({
+    greeting: translatedTexts.greeting,
+    areYouThere: translatedTexts.areYouThere,
+    localeCode: language.code,
+    onReset: () => setInput(""),
+  })
 
   // Auto-scroll al fondo dirigido por el tamaño real del contenido (ResizeObserver),
   // no por una lista de dependencias de estado — así cualquier cosa que haga crecer
@@ -218,99 +163,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
       resizeObserver.disconnect()
     }
   }, [])
-
-  // Arranca la conversación en cuanto el saludo traducido está listo (solo una vez)
-  useEffect(() => {
-    if (translatedTexts.greeting && lines.length === 0) {
-      setLines([{ id: 0, role: "jevy", text: translatedTexts.greeting }])
-      setHistory([{ role: "assistant", content: translatedTexts.greeting }])
-      scheduleInactivityWarning()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [translatedTexts.greeting])
-
-  // Si el idioma cambia ANTES de que el lead escriba nada, re-pintar el saludo
-  // en el idioma nuevo — lines[0] se guarda como string literal (estado +
-  // localStorage), un t() no lo re-traduce solo. Una vez que arrancó la charla
-  // (lines.length > 1), lo viejo queda como está: el idioma se elige antes de chatear.
-  useEffect(() => {
-    const greeting = translatedTexts.greeting
-    if (!greeting) return
-    setLines((prev) =>
-      prev.length === 1 && prev[0].role === "jevy" && prev[0].text !== greeting
-        ? [{ ...prev[0], text: greeting }]
-        : prev,
-    )
-    setHistory((prev) =>
-      prev.length === 1 && prev[0].role === "assistant" && prev[0].content !== greeting
-        ? [{ role: "assistant", content: greeting }]
-        : prev,
-    )
-  }, [translatedTexts.greeting])
-
-  // Refs para leer el valor más reciente desde dentro de los setTimeout —
-  // los closures de scheduleInactivityWarning/resetChat se crean una sola vez
-  // por llamada y si leyeran `isClosed`/`translatedTexts` directo, quedarían
-  // pegados al valor que tenían en ese render (podría ser texto vacío antes
-  // de que carguen las traducciones, o un isClosed viejo).
-  const isClosedRef = useRef(isClosed)
-  useEffect(() => {
-    isClosedRef.current = isClosed
-  }, [isClosed])
-  const translatedTextsRef = useRef(translatedTexts)
-  useEffect(() => {
-    translatedTextsRef.current = translatedTexts
-  }, [translatedTexts])
-
-  const warnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const clearInactivityTimers = () => {
-    if (warnTimerRef.current) {
-      clearTimeout(warnTimerRef.current)
-      warnTimerRef.current = null
-    }
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current)
-      closeTimerRef.current = null
-    }
-  }
-
-  // Charla vieja sin actividad: aviso automático (sin pasar por DeepSeek) y,
-  // si tampoco hay respuesta 30s después, se cierra y arranca una nueva —
-  // ver constantes INACTIVITY_WARNING_MS / INACTIVITY_CLOSE_MS arriba.
-  const resetChat = () => {
-    clearInactivityTimers()
-    try {
-      localStorage.removeItem(CHAT_STORAGE_KEY)
-    } catch {
-      // localStorage inaccesible — igual arranca de cero en memoria
-    }
-    setSessionId(crypto.randomUUID())
-    setIsClosed(false)
-    setChipsVisible(true)
-    setInput("")
-    const greeting = translatedTextsRef.current.greeting
-    setLines([{ id: 0, role: "jevy", text: greeting }])
-    setHistory([{ role: "assistant", content: greeting }])
-    scheduleInactivityWarning()
-  }
-
-  const scheduleInactivityWarning = () => {
-    clearInactivityTimers()
-    warnTimerRef.current = setTimeout(() => {
-      if (isClosedRef.current) return
-      const warningText = translatedTextsRef.current.areYouThere
-      setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: warningText }])
-      setHistory((prev) => [...prev, { role: "assistant", content: warningText }])
-      closeTimerRef.current = setTimeout(() => {
-        if (isClosedRef.current) return
-        resetChat()
-      }, INACTIVITY_CLOSE_MS)
-    }, INACTIVITY_WARNING_MS)
-  }
-
-  useEffect(() => clearInactivityTimers, [])
 
   const pushLeadLine = async (text: string, contextOverride?: string) => {
     if (!text.trim() || isTyping || isClosed) return
