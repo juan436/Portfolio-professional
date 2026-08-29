@@ -115,14 +115,13 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
   // `pushLeadLine` (el fetch a /api/contact/chat).
   const {
     lines,
-    setLines,
     history,
-    setHistory,
     sessionId,
     isClosed,
-    setIsClosed,
     chipsVisible,
-    setChipsVisible,
+    sendLeadLine,
+    receiveJevyLine,
+    receiveJevyError,
     scheduleInactivityWarning,
     clearInactivityTimers,
   } = useJevyChatSession({
@@ -167,10 +166,8 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
   const pushLeadLine = async (text: string, contextOverride?: string) => {
     if (!text.trim() || isTyping || isClosed) return
     scheduleInactivityWarning()
-    setLines((prev) => [...prev, { id: prev.length, role: "lead", text }])
-    setChipsVisible(false)
     const nextHistory = [...history, { role: "user" as const, content: text }]
-    setHistory(nextHistory)
+    sendLeadLine(text)
     setIsTyping(true)
 
     try {
@@ -197,18 +194,16 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
 
       const replyText = data.limited ? translatedTexts.limitReached : data.reply
 
-      setLines((prev) => [
-        ...prev,
-        { id: prev.length, role: "jevy", text: replyText, matches: data.matches, schedulingData: data.schedulingData || undefined },
-      ])
-      setHistory((prev) => [...prev, { role: "assistant", content: replyText }])
-      if (data.closed) {
-        setIsClosed(true)
-        clearInactivityTimers()
-      }
+      receiveJevyLine({
+        text: replyText,
+        matches: data.matches,
+        schedulingData: data.schedulingData || undefined,
+        closed: data.closed,
+      })
+      if (data.closed) clearInactivityTimers()
     } catch (error) {
       console.error("Error al hablar con Jevy:", error)
-      setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: translatedTexts.errorFallback }])
+      receiveJevyError(translatedTexts.errorFallback)
     } finally {
       setIsTyping(false)
     }

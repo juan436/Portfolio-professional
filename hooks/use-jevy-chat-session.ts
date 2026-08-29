@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react"
+import { useCallback, useEffect, useReducer, useRef } from "react"
 import type { ProjectMatch } from "@/components/contact/project-match-card"
 import type { SchedulingData } from "@/components/contact/scheduling-widget"
 
@@ -8,20 +8,26 @@ import type { SchedulingData } from "@/components/contact/scheduling-widget"
  * Ciclo de vida de una charla de Jevy (`/contact`): qué mensajes existen,
  * persistencia en localStorage y timers de inactividad. Extraído de
  * `components/contact/jevy-chat.tsx` (auditoría 2026-08-27 §2.3 — era el
- * componente con más estado del sitio, ~30 hooks).
+ * componente con más estado del sitio).
  *
- * El componente conserva el render + `pushLeadLine` (el fetch a la API): este
- * hook NO conoce `/api/contact/chat`, adjuntos, ni `initialService`. Solo sabe
- * de `lines` / `history` / `sessionId` / `isClosed` / `chipsVisible` y de los
- * dos timers (aviso a los 5 min, cierre 30 s después).
+ * El estado de la charla es un `useReducer`: cada transición tiene nombre y la
+ * regla de "cuando pasa X, estos campos cambian juntos" vive solo en el
+ * reducer. El componente conserva el render + `pushLeadLine` (el fetch a la
+ * API): este hook NO conoce `/api/contact/chat`, adjuntos ni `initialService`.
  *
- * Comportamiento preservado 1:1 respecto de la versión inline anterior.
+ * Notas de arquitectura:
+ * - Cambiar de idioma remonta este componente (navega a `/[locale]/contact`),
+ *   así que `greeting` es constante durante la vida del hook — no hace falta
+ *   re-traducir el saludo en vivo.
+ * - Los `setTimeout` de inactividad no pueden leer estado de React; para eso
+ *   quedan tres refs espejo (`isClosedRef` / `textsRef` / `onResetRef`). El
+ *   resto de refs son de coordinación de efectos o handles de timer.
  */
 
 const CHAT_STORAGE_KEY = "jevy-chat-state"
-// 5 min sin actividad real (mensaje enviado/recibido): se manda un aviso
-// automático ("¿sigues ahí?", sin pasar por DeepSeek). Si pasan otros 30s más
-// sin actividad después de ese aviso, se cierra la charla y arranca una nueva.
+// 5 min sin actividad real (mensaje enviado/recibido): aviso automático
+// ("¿sigues ahí?", sin pasar por DeepSeek). Si pasan otros 30s más sin
+// actividad, se cierra la charla y arranca una nueva.
 const INACTIVITY_WARNING_MS = 5 * 60 * 1000
 const INACTIVITY_CLOSE_MS = 30 * 1000
 
@@ -38,6 +44,101 @@ export interface DeepSeekMessage {
   content: string
 }
 
+interface SessionState {
+  lines: ChatLine[]
+  history: DeepSeekMessage[]
+  chipsVisible: boolean
+  isClosed: boolean
+  /** Un id por charla — agrupa adjuntos en disco y evita guardar el Lead más de una vez. */
+  sessionId: string
+}
+
+interface JevyLinePayload {
+  text: string
+  matches?: ProjectMatch[]
+  schedulingData?: SchedulingData
+  /** El server decidió cerrar la charla (agenda confirmada, etc.). */
+  closed?: boolean
+}
+
+type SessionAction =
+  | { type: "restore"; state: SessionState }
+  | { type: "bootstrap"; greeting: string }
+  | { type: "leadLine"; text: string }
+  | ({ type: "jevyLine" } & JevyLinePayload)
+  | { type: "jevyError"; text: string }
+  | { type: "inactivityWarning"; text: string }
+  | { type: "resetForInactivity"; greeting: string }
+
+function initialState(): SessionState {
+  return { lines: [], history: [], chipsVisible: true, isClosed: false, sessionId: crypto.randomUUID() }
+}
+
+function greetingState(greeting: string, base: SessionState): SessionState {
+  return {
+    ...base,
+    lines: [{ id: 0, role: "jevy", text: greeting }],
+    history: [{ role: "assistant", content: greeting }],
+  }
+}
+
+function reducer(state: SessionState, action: SessionAction): SessionState {
+  switch (action.type) {
+    case "restore":
+      return action.state
+
+    case "bootstrap":
+      return greetingState(action.greeting, state)
+
+    case "leadLine":
+      return {
+        ...state,
+        lines: [...state.lines, { id: state.lines.length, role: "lead", text: action.text }],
+        history: [...state.history, { role: "user", content: action.text }],
+        chipsVisible: false,
+      }
+
+    case "jevyLine":
+      return {
+        ...state,
+        lines: [
+          ...state.lines,
+          {
+            id: state.lines.length,
+            role: "jevy",
+            text: action.text,
+            matches: action.matches,
+            schedulingData: action.schedulingData,
+          },
+        ],
+        history: [...state.history, { role: "assistant", content: action.text }],
+        isClosed: action.closed ? true : state.isClosed,
+      }
+
+    // El fallback de error se ve pero NO entra al historial de DeepSeek — así el
+    // modelo no "recuerda" un turno que en realidad falló.
+    case "jevyError":
+      return {
+        ...state,
+        lines: [...state.lines, { id: state.lines.length, role: "jevy", text: action.text }],
+      }
+
+    case "inactivityWarning":
+      if (state.isClosed) return state
+      return {
+        ...state,
+        lines: [...state.lines, { id: state.lines.length, role: "jevy", text: action.text }],
+        history: [...state.history, { role: "assistant", content: action.text }],
+      }
+
+    case "resetForInactivity":
+      return greetingState(action.greeting, {
+        ...initialState(),
+        sessionId: crypto.randomUUID(),
+      })
+  }
+}
+
 interface UseJevyChatSessionOptions {
   /** Saludo inicial ya traducido al idioma activo. */
   greeting: string
@@ -51,15 +152,16 @@ interface UseJevyChatSessionOptions {
 
 export interface JevyChatSession {
   lines: ChatLine[]
-  setLines: Dispatch<SetStateAction<ChatLine[]>>
   history: DeepSeekMessage[]
-  setHistory: Dispatch<SetStateAction<DeepSeekMessage[]>>
-  /** Un id por charla — agrupa adjuntos en disco y evita guardar el Lead más de una vez. */
   sessionId: string
   isClosed: boolean
-  setIsClosed: Dispatch<SetStateAction<boolean>>
   chipsVisible: boolean
-  setChipsVisible: Dispatch<SetStateAction<boolean>>
+  /** El lead mandó un mensaje: se agrega la línea + al historial, se ocultan los chips. */
+  sendLeadLine: (text: string) => void
+  /** Llegó la respuesta de Jevy (con matches / widget de agenda / cierre opcionales). */
+  receiveJevyLine: (payload: JevyLinePayload) => void
+  /** El fetch falló: se muestra el fallback sin tocar el historial. */
+  receiveJevyError: (text: string) => void
   /** Reprograma los timers de inactividad — llamar en cada actividad real. */
   scheduleInactivityWarning: () => void
   clearInactivityTimers: () => void
@@ -71,20 +173,13 @@ export function useJevyChatSession({
   localeCode,
   onReset,
 }: UseJevyChatSessionOptions): JevyChatSession {
-  const [lines, setLines] = useState<ChatLine[]>([])
-  const [history, setHistory] = useState<DeepSeekMessage[]>([])
-  const [chipsVisible, setChipsVisible] = useState(true)
-  const [isClosed, setIsClosed] = useState(false)
-  const [sessionId, setSessionId] = useState(() => crypto.randomUUID())
+  const [state, dispatch] = useReducer(reducer, undefined, initialState)
 
-  // Refs para leer el valor más reciente desde dentro de los setTimeout — los
-  // closures de scheduleInactivityWarning/resetChat se crean una vez por llamada
-  // y si leyeran el estado directo quedarían pegados al valor de ese render
-  // (texto vacío antes de que carguen las traducciones, o un isClosed viejo).
-  const isClosedRef = useRef(isClosed)
+  // Refs espejo para los `setTimeout` (no pueden leer estado de React).
+  const isClosedRef = useRef(state.isClosed)
   useEffect(() => {
-    isClosedRef.current = isClosed
-  }, [isClosed])
+    isClosedRef.current = state.isClosed
+  }, [state.isClosed])
 
   const textsRef = useRef({ greeting, areYouThere })
   useEffect(() => {
@@ -96,15 +191,10 @@ export function useJevyChatSession({
     onResetRef.current = onReset
   })
 
-  const localeRef = useRef(localeCode)
-  useEffect(() => {
-    localeRef.current = localeCode
-  }, [localeCode])
-
   const warnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const clearInactivityTimers = () => {
+  const clearInactivityTimers = useCallback(() => {
     if (warnTimerRef.current) {
       clearTimeout(warnTimerRef.current)
       warnTimerRef.current = null
@@ -113,74 +203,65 @@ export function useJevyChatSession({
       clearTimeout(closeTimerRef.current)
       closeTimerRef.current = null
     }
-  }
+  }, [])
 
-  // Charla vieja sin actividad: aviso automático (sin pasar por DeepSeek) y, si
-  // tampoco hay respuesta 30s después, se cierra y arranca una nueva.
-  const resetChat = () => {
-    clearInactivityTimers()
-    try {
-      localStorage.removeItem(CHAT_STORAGE_KEY)
-    } catch {
-      // localStorage inaccesible — igual arranca de cero en memoria
-    }
-    setSessionId(crypto.randomUUID())
-    setIsClosed(false)
-    setChipsVisible(true)
-    onResetRef.current?.()
-    const nextGreeting = textsRef.current.greeting
-    setLines([{ id: 0, role: "jevy", text: nextGreeting }])
-    setHistory([{ role: "assistant", content: nextGreeting }])
-    scheduleInactivityWarning()
-  }
-
-  const scheduleInactivityWarning = () => {
+  const scheduleInactivityWarning = useCallback(() => {
     clearInactivityTimers()
     warnTimerRef.current = setTimeout(() => {
       if (isClosedRef.current) return
-      const warningText = textsRef.current.areYouThere
-      setLines((prev) => [...prev, { id: prev.length, role: "jevy", text: warningText }])
-      setHistory((prev) => [...prev, { role: "assistant", content: warningText }])
+      dispatch({ type: "inactivityWarning", text: textsRef.current.areYouThere })
       closeTimerRef.current = setTimeout(() => {
         if (isClosedRef.current) return
-        resetChat()
+        clearInactivityTimers()
+        try {
+          localStorage.removeItem(CHAT_STORAGE_KEY)
+        } catch {
+          // localStorage inaccesible — igual arranca de cero en memoria
+        }
+        dispatch({ type: "resetForInactivity", greeting: textsRef.current.greeting })
+        onResetRef.current?.()
+        scheduleInactivityWarning()
       }, INACTIVITY_CLOSE_MS)
     }, INACTIVITY_WARNING_MS)
-  }
+  }, [clearInactivityTimers])
 
-  useEffect(() => clearInactivityTimers, [])
+  useEffect(() => clearInactivityTimers, [clearInactivityTimers])
 
-  // Restaurar la charla completa desde localStorage al montar. `restoredRef` se
-  // marca en el mismo tick (síncrono, es un ref) para que el efecto del saludo
-  // inicial de abajo NO lo pise: `useTranslatedTexts` es síncrono, así que el
-  // saludo ya está listo en el primer render y su efecto correría en el mismo
-  // flush que este, antes de que el `setLines(guardado)` se aplique.
-  // isFirstSaveRef evita que el efecto de guardado sobreescriba lo recién leído
-  // con el estado vacío por defecto de este primer render.
-  const isFirstSaveRef = useRef(true)
+  // --- Persistencia -------------------------------------------------------
+  // `restoredRef`: si el efecto de restaurar recuperó una charla, el de saludo
+  // no debe pisarla. `useTranslatedTexts` es síncrono → el saludo ya está en el
+  // primer render y su efecto correría en el mismo flush que el de restaurar,
+  // antes de que el dispatch se aplique. `isFirstSaveRef` evita que el efecto
+  // de guardado sobreescriba lo recién leído con el estado inicial vacío.
   const restoredRef = useRef(false)
+  const isFirstSaveRef = useRef(true)
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(CHAT_STORAGE_KEY)
-      if (raw) {
-        const saved = JSON.parse(raw)
-        const isStale = typeof saved?.updatedAt !== "number" || Date.now() - saved.updatedAt > INACTIVITY_WARNING_MS
-        // Una charla guardada pertenece al idioma en que se creó. Si el visitante
-        // está ahora en otro idioma (o la entrada es de un formato viejo sin
-        // `locale`), se descarta y arranca de cero en el idioma actual.
-        const wrongLocale = saved?.locale !== localeRef.current
-        if (isStale || wrongLocale) {
-          localStorage.removeItem(CHAT_STORAGE_KEY)
-        } else if (saved?.sessionId && Array.isArray(saved.lines) && saved.lines.length > 0) {
-          restoredRef.current = true
-          setSessionId(saved.sessionId)
-          setLines(saved.lines)
-          setHistory(Array.isArray(saved.history) ? saved.history : [])
-          setIsClosed(Boolean(saved.isClosed))
-          setChipsVisible(Boolean(saved.chipsVisible))
-          if (!saved.isClosed) scheduleInactivityWarning()
-        }
+      if (!raw) return
+      const saved = JSON.parse(raw)
+      const isStale = typeof saved?.updatedAt !== "number" || Date.now() - saved.updatedAt > INACTIVITY_WARNING_MS
+      // Una charla guardada pertenece al idioma en que se creó. Si el visitante
+      // está en otro idioma (o es un formato viejo sin `locale`), se descarta.
+      const wrongLocale = saved?.locale !== localeCode
+      if (isStale || wrongLocale) {
+        localStorage.removeItem(CHAT_STORAGE_KEY)
+        return
+      }
+      if (saved?.sessionId && Array.isArray(saved.lines) && saved.lines.length > 0) {
+        restoredRef.current = true
+        dispatch({
+          type: "restore",
+          state: {
+            lines: saved.lines,
+            history: Array.isArray(saved.history) ? saved.history : [],
+            isClosed: Boolean(saved.isClosed),
+            chipsVisible: Boolean(saved.chipsVisible),
+            sessionId: saved.sessionId,
+          },
+        })
+        if (!saved.isClosed) scheduleInactivityWarning()
       }
     } catch {
       // localStorage corrupto o inaccesible — arranca de cero, no rompe el chat
@@ -196,54 +277,39 @@ export function useJevyChatSession({
     try {
       localStorage.setItem(
         CHAT_STORAGE_KEY,
-        JSON.stringify({ sessionId, lines, history, isClosed, chipsVisible, locale: localeRef.current, updatedAt: Date.now() }),
+        JSON.stringify({ ...state, locale: localeCode, updatedAt: Date.now() }),
       )
     } catch {
       // localStorage lleno o inaccesible — no rompe el chat
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionId, lines, history, isClosed, chipsVisible])
+  }, [state, localeCode])
 
-  // Arranca la conversación con el saludo — salvo que el efecto de restaurar de
-  // arriba ya haya recuperado una charla guardada (restoredRef).
+  // Arranca la conversación con el saludo — salvo que ya se haya restaurado una
+  // charla guardada (restoredRef).
   useEffect(() => {
-    if (greeting && lines.length === 0 && !restoredRef.current) {
-      setLines([{ id: 0, role: "jevy", text: greeting }])
-      setHistory([{ role: "assistant", content: greeting }])
+    if (greeting && state.lines.length === 0 && !restoredRef.current) {
+      dispatch({ type: "bootstrap", greeting })
       scheduleInactivityWarning()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [greeting])
 
-  // Si el idioma cambia ANTES de que el lead escriba nada, re-pintar el saludo
-  // en el idioma nuevo — lines[0] se guarda como string literal (estado +
-  // localStorage), un t() no lo re-traduce solo. Una vez que arrancó la charla
-  // (lines.length > 1), lo viejo queda como está.
-  useEffect(() => {
-    if (!greeting) return
-    setLines((prev) =>
-      prev.length === 1 && prev[0].role === "jevy" && prev[0].text !== greeting
-        ? [{ ...prev[0], text: greeting }]
-        : prev,
-    )
-    setHistory((prev) =>
-      prev.length === 1 && prev[0].role === "assistant" && prev[0].content !== greeting
-        ? [{ role: "assistant", content: greeting }]
-        : prev,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [greeting])
+  const sendLeadLine = useCallback((text: string) => dispatch({ type: "leadLine", text }), [])
+  const receiveJevyLine = useCallback(
+    (payload: JevyLinePayload) => dispatch({ type: "jevyLine", ...payload }),
+    [],
+  )
+  const receiveJevyError = useCallback((text: string) => dispatch({ type: "jevyError", text }), [])
 
   return {
-    lines,
-    setLines,
-    history,
-    setHistory,
-    sessionId,
-    isClosed,
-    setIsClosed,
-    chipsVisible,
-    setChipsVisible,
+    lines: state.lines,
+    history: state.history,
+    sessionId: state.sessionId,
+    isClosed: state.isClosed,
+    chipsVisible: state.chipsVisible,
+    sendLeadLine,
+    receiveJevyLine,
+    receiveJevyError,
     scheduleInactivityWarning,
     clearInactivityTimers,
   }
