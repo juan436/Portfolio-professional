@@ -12,6 +12,7 @@ export type Hero = {
   subtitle: string
   description: string
   profileImage: string
+  aboutImage?: string
   translations?: {
     [key in TranslationLanguages]?: {
       title?: string

@@ -40,6 +40,7 @@ desing.mermaid
 # db dumps / tools (no deben vivir en el repo)
 mongorestore.exe
 portfolio_prod.gz
+*.ejson.gz
 
 # adjuntos de leads guardados en disco (lib/uploads.ts) — necesita volumen
 # persistente en el VPS, no se versiona
@@ -48,3 +49,5 @@ portfolio_prod.gz
 # docs internos de estrategia/roadmap - viven solo en dev-local, no en production (repo público)
 docs/roadmap/
 docs/seo-marketing/
+# backups puntuales de datos (no versionar)
+scripts/_backups/

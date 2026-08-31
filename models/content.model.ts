@@ -20,6 +20,7 @@ interface IHero {
   subtitle: string;
   description: string;
   profileImage: string;
+  aboutImage?: string;
   translations?: LocaleTranslations<{
     title: string;
     subtitle: string;
@@ -70,6 +71,7 @@ const ContentSchema = new mongoose.Schema({
     subtitle: String,
     description: String,
     profileImage: String,
+    aboutImage: String,
     translations: localeSchemaFields(() => ({
       title: String,
       subtitle: String,

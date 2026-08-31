@@ -10,6 +10,12 @@ import { revalidatePath, updateTag } from "next/cache"
  */
 export type ProjectCategoryValue = "web" | "mobile" | "infra_backend" | "laboratorio" | "automatizacion" | "agente"
 
+export function revalidateHomeTestimonials() {
+  updateTag("testimonials")
+  updateTag("home")
+  revalidatePath("/")
+}
+
 export function revalidateForCategory(category: ProjectCategoryValue, id?: string) {
   updateTag("projects")
   updateTag("home")

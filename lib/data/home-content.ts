@@ -5,6 +5,7 @@ import Project from "@/models/project.model"
 import Experience from "@/models/experience.model"
 import Skill from "@/models/skill.model"
 import OtherSkill from "@/models/other-skills.model"
+import Testimonial from "@/models/testimonial.model"
 import type { Content as ContentShape } from "@/contexts/content/types"
 
 /**
@@ -111,5 +112,28 @@ async function fetchContactInfo(): Promise<ContentShape["contact"] | null> {
 
 export const getContactInfo = unstable_cache(fetchContactInfo, ["contact-info"], {
   tags: ["home"],
+  revalidate: 3600,
+})
+
+export interface HomeTestimonial {
+  content: string
+  author: string
+  role: string
+  avatar: string
+}
+
+async function fetchApprovedTestimonials(): Promise<HomeTestimonial[]> {
+  await dbConnect()
+  const docs = await Testimonial.find({ status: "approved" }).sort({ createdAt: -1 }).lean()
+  return (docs as any[]).map((t) => ({
+    content: t.content,
+    author: t.author,
+    role: t.role || "",
+    avatar: t.photo || "",
+  }))
+}
+
+export const getApprovedTestimonials = unstable_cache(fetchApprovedTestimonials, ["approved-testimonials"], {
+  tags: ["home", "testimonials"],
   revalidate: 3600,
 })

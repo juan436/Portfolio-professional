@@ -37,6 +37,7 @@ export function AboutProfile({ profileImage, heroTitle, role, engineer, universi
           }}
         >
           <motion.div
+            className="absolute inset-0"
             whileHover={{
               scale: 1.05,
               transition: { duration: 0.4 },
@@ -49,8 +50,8 @@ export function AboutProfile({ profileImage, heroTitle, role, engineer, universi
                 "/placeholder.svg"
               }
               alt="Juan Villegas"
-              width={400}
-              height={500}
+              fill
+              sizes="(max-width: 768px) 100vw, 400px"
               className="object-cover object-top transition-all duration-300"
             />
           </motion.div>

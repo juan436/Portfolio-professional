@@ -16,6 +16,7 @@ export interface HeroContent {
   subtitle: string
   description: string
   profileImage: string
+  aboutImage?: string
   _modifiedFields?: string[]
 }
 
@@ -77,7 +78,21 @@ export default function HeroForm({ content, onChange }: HeroFormProps) {
             placeholder="https://tu-dominio.com/images/profile/tu-imagen.jpg"
           />
           <p className="text-xs text-slate-400">
-            URL de la imagen de perfil que se mostrará en las secciones Hero y About.
+            URL de la imagen de perfil del Hero (círculo). Si no defines una imagen de About, esta se usa también ahí.
+          </p>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="aboutImage">Imagen de About (URL)</Label>
+          <Input
+            id="aboutImage"
+            name="aboutImage"
+            value={localContent.aboutImage ?? ""}
+            onChange={handleChange}
+            className="bg-black/40 border-blue-700/20"
+            placeholder="https://tu-dominio.com/images/profile/about.jpg"
+          />
+          <p className="text-xs text-slate-400">
+            URL de la imagen de la sección "Sobre mí" (retrato vertical 4:5). Opcional.
           </p>
         </div>
       </CardContent>
