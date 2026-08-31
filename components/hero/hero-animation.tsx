@@ -4,19 +4,14 @@ import { useRef } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
 import Image from "next/image"
 import { useContent } from "@/contexts/content"
-import {
-  HexagonalField,
-  QuantumRays,
-  QuantumParticles,
-  FloatingTechWords,
-  EnergyWaves,
-  CodeCard
-} from "./animations"
+import { QuantumParticles, CodeCard } from "./animations"
 
 /**
- * Avatar animado del Hero — foto de perfil con 5 fondos animados + flip a `CodeCard` al hacer click.
+ * Avatar animado del Hero — foto de perfil con partículas de fondo + flip a `CodeCard` al hacer click.
  * Recibe: `showAnimation`/`toggleAnimation` (estado del flip, del padre) + `codeLines` (para `CodeCard`).
- * Procesa: pausa los 5 fondos (48 animaciones infinitas) cuando el contenedor sale del viewport (`useInView`).
+ * Procesa: las partículas solo corren mientras el contenedor está en viewport (`useInView`).
+ *   Antes había 5 capas (hexágonos/rayos/palabras/ondas/partículas, ~48 nodos animados
+ *   infinitos) — se quitaron todas menos las partículas por el costo en el hilo principal.
  * Produce: círculo con la foto de perfil o `CodeCard`, según `showAnimation`.
  */
 interface HeroAnimationProps {
@@ -28,8 +23,8 @@ interface HeroAnimationProps {
 export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: HeroAnimationProps) {
   const { content } = useContent()
   const containerRef = useRef<HTMLDivElement>(null)
-  // Los 5 fondos de abajo suman 48 elementos con animaciones infinitas — no
-  // hay razón para que sigan corriendo cuando ya scrolleaste lejos del Hero.
+  // Las partículas animan en loop infinito — no hay razón para que sigan
+  // corriendo cuando ya scrolleaste lejos del Hero.
   const isInView = useInView(containerRef)
 
   return (
@@ -40,24 +35,7 @@ export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: Her
       className="flex justify-center"
     >
       <div ref={containerRef} className="relative w-80 h-80 md:w-96 md:h-96">
-        {isInView && (
-          <>
-            {/* Campo de fuerza hexagonal */}
-            <HexagonalField />
-
-            {/* Rayos de energía */}
-            <QuantumRays />
-
-            {/* Partículas */}
-            <QuantumParticles />
-
-            {/* Palabras tecnológicas */}
-            <FloatingTechWords />
-
-            {/* Ondas de energía */}
-            <EnergyWaves />
-          </>
-        )}
+        {isInView && !showAnimation && <QuantumParticles />}
 
         {/* Imagen del perfil con animación */}
         <div className="absolute inset-0 rounded-full overflow-hidden z-20">

@@ -1,10 +1,6 @@
 /**
- * Punto de entrada de los 5 fondos animados del Hero + `CodeCard`.
- * Recibe: nada. Produce: re-exporta los 6 componentes.
+ * Punto de entrada de los fondos animados del Hero.
+ * Recibe: nada. Produce: re-exporta `QuantumParticles` (partículas de fondo) y `CodeCard` (cara "código" del flip).
  */
-export { HexagonalField } from './HexagonalField'
-export { QuantumRays } from './QuantumRays'
 export { QuantumParticles } from './QuantumParticles'
-export { FloatingTechWords } from './FloatingTechWords'
-export { EnergyWaves } from './EnergyWaves'
 export { CodeCard } from './CodeCard'

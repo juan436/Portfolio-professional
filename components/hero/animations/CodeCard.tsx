@@ -1,92 +1,57 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Code, Server, Database, Layers, RotateCcw } from "lucide-react"
 
 /**
  * Cara "código" del avatar del Hero — flip 3D al hacer click sobre la foto de perfil.
  * Recibe: `codeLines: string[]` (líneas ya armadas por el caller) + `onClose`.
- * Produce: card animada con partículas de fondo, líneas de código y botón "volver".
+ * Produce: card animada con líneas de código, iconos de stack y botón "volver".
+ *
+ * Optimización (2026-08-31): se quitaron las 20 partículas de fondo que se
+ * montaban en el flip (el click "laggeaba" al renderizar) y los `type: "spring"`
+ * (rebotes caros + rompían el tipo `Variants` de TS). Entrada por tween corto.
  */
 interface CodeCardProps {
   codeLines: string[]
   onClose: () => void
 }
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.2 },
+  },
+}
+
+const itemVariants: Variants = {
+  hidden: { y: 12, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.25, ease: "easeOut" } },
+}
+
 export function CodeCard({ codeLines, onClose }: CodeCardProps) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 24 },
-    },
-  }
-
   return (
     <motion.div
-      initial={{ rotateY: 90 }}
-      animate={{ rotateY: 0 }}
-      exit={{ rotateY: 90 }}
-      transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+      initial={{ rotateY: 90, opacity: 0 }}
+      animate={{ rotateY: 0, opacity: 1 }}
+      exit={{ rotateY: 90, opacity: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
       className="absolute inset-0 bg-gradient-to-br from-slate-900 to-blue-900 rounded-full flex flex-col items-center justify-center overflow-hidden"
-      style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+      style={{ willChange: "transform" }}
     >
-      {/* Partículas de fondo */}
-      {[...Array(20)].map((_, i) => (
+      <div className="absolute inset-0 flex flex-col justify-center items-center p-8 z-10">
         <motion.div
-          key={i}
-          initial={{
-            x: Math.random() * 200 - 100,
-            y: Math.random() * 200 - 100,
-            opacity: 0,
-          }}
-          animate={{
-            x: Math.random() * 300 - 150,
-            y: Math.random() * 300 - 150,
-            opacity: [0, 0.5, 0],
-            scale: [0, 1, 0.5],
-          }}
-          transition={{
-            repeat: Number.POSITIVE_INFINITY,
-            duration: 3 + Math.random() * 5,
-            delay: Math.random() * 2,
-          }}
-          className="absolute w-1 h-1 bg-blue-400 rounded-full"
-        />
-      ))}
-
-      {/* Líneas de código */}
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center p-8 z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15, duration: 0.3 }}
           className="text-xs md:text-sm font-mono text-blue-300 mb-4 w-full max-w-[85%]"
         >
           {codeLines.map((line, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              className="whitespace-nowrap overflow-hidden text-center"
-              style={{ textOverflow: "ellipsis" }}
-            >
+            <div key={index} className="whitespace-nowrap overflow-hidden text-ellipsis text-center">
               {line}
-            </motion.div>
+            </div>
           ))}
         </motion.div>
 
@@ -97,24 +62,17 @@ export function CodeCard({ codeLines, onClose }: CodeCardProps) {
           animate="visible"
           className="flex justify-center space-x-4 mt-2"
         >
-          <motion.div variants={itemVariants} className="p-2 bg-blue-800/50 rounded-full">
-            <Code className="h-4 w-4 text-blue-300" />
-          </motion.div>
-          <motion.div variants={itemVariants} className="p-2 bg-blue-800/50 rounded-full">
-            <Server className="h-4 w-4 text-blue-300" />
-          </motion.div>
-          <motion.div variants={itemVariants} className="p-2 bg-blue-800/50 rounded-full">
-            <Database className="h-4 w-4 text-blue-300" />
-          </motion.div>
-          <motion.div variants={itemVariants} className="p-2 bg-blue-800/50 rounded-full">
-            <Layers className="h-4 w-4 text-blue-300" />
-          </motion.div>
+          {[Code, Server, Database, Layers].map((Icon, i) => (
+            <motion.div key={i} variants={itemVariants} className="p-2 bg-blue-800/50 rounded-full">
+              <Icon className="h-4 w-4 text-blue-300" />
+            </motion.div>
+          ))}
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.6, duration: 0.3 }}
           className="mt-4"
         >
           <Button
