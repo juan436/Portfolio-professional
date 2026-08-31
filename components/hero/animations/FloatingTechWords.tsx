@@ -5,27 +5,26 @@ import { motion } from "framer-motion"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
 /**
- * Fondo animado del Hero — palabras del stack flotando alrededor de la foto,
- * igual que `QuantumParticles` pero con texto.
+ * Fondo animado del Hero — palabras del stack orbitando en el anillo ALREDEDOR
+ * de la foto (igual que `QuantumParticles`, con texto).
  * Recibe: `words?` (default: React/Next.js/Node.js/Python/Docker/API).
  * Produce: `null` hasta el mount (evita mismatch de hidratación, usa `Math.random()`).
  *
- * Optimización (2026-08-31): trayectorias calculadas una sola vez (`useMemo`),
- * solo `transform`/`opacity` + `willChange`. Cada palabra nace en el centro del
- * contenedor (`left-1/2 top-1/2`) y se mueve `± RANGE` — no se escapa hacia el
- * header (el caller además recorta con `overflow-hidden`). Rango más corto que
- * las partículas porque el texto tiene ancho.
+ * Coordenadas polares desde el centro del contenedor: radio mayor que el de la
+ * foto → la palabra nunca queda por debajo ni en el medio. `useMemo` para no
+ * recalcular `Math.random()` por render; solo `transform`/`opacity`.
  */
 interface FloatingTechWordsProps {
   words?: string[]
 }
 
 const DEFAULT_WORDS = ["REACT", "NEXT.JS", "NODE.JS", "PYTHON", "DOCKER", "API"]
-const RANGE_X = 95
-const RANGE_Y = 120
+const R_MIN = 200
+const R_MAX = 245
 
 interface Track {
-  path: { x: number[]; y: number[] }
+  x: number[]
+  y: number[]
   duration: number
   delay: number
 }
@@ -36,12 +35,16 @@ export function FloatingTechWords({ words = DEFAULT_WORDS }: FloatingTechWordsPr
   const tracks = useMemo<Track[]>(
     () =>
       words.map((_, i) => {
-        const rx = () => Math.random() * RANGE_X * 2 - RANGE_X
-        const ry = () => Math.random() * RANGE_Y * 2 - RANGE_Y
+        // reparte las palabras por el anillo (una franja de ángulo cada una) y
+        // deja que cada una oscile un poco dentro de su franja
+        const base = (i / words.length) * Math.PI * 2
+        const angles = [base, base + (Math.random() - 0.5) * 0.9, base + (Math.random() - 0.5) * 0.9]
+        const radii = [0, 1, 2].map(() => R_MIN + Math.random() * (R_MAX - R_MIN))
         return {
-          path: { x: [rx(), rx(), rx()], y: [ry(), ry(), ry()] },
-          duration: 9 + Math.random() * 5,
-          delay: i * 1.2,
+          x: angles.map((a, k) => Math.cos(a) * radii[k]),
+          y: angles.map((a, k) => Math.sin(a) * radii[k]),
+          duration: 11 + Math.random() * 6,
+          delay: i * 0.8,
         }
       }),
     [words]
@@ -54,19 +57,15 @@ export function FloatingTechWords({ words = DEFAULT_WORDS }: FloatingTechWordsPr
       {words.map((word, i) => (
         <motion.div
           key={word}
-          initial={{ x: tracks[i].path.x[0], y: tracks[i].path.y[0], opacity: 0 }}
-          animate={{
-            x: tracks[i].path.x,
-            y: tracks[i].path.y,
-            opacity: [0, 0.7, 0],
-          }}
+          initial={{ x: tracks[i].x[0], y: tracks[i].y[0], opacity: 0 }}
+          animate={{ x: tracks[i].x, y: tracks[i].y, opacity: [0, 0.7, 0.7, 0] }}
           transition={{
             duration: tracks[i].duration,
             repeat: Number.POSITIVE_INFINITY,
             delay: tracks[i].delay,
             ease: "easeInOut",
           }}
-          className="absolute left-1/2 top-1/2 text-xs font-mono font-bold tracking-wider text-blue-400/40 pointer-events-none"
+          className="absolute left-1/2 top-1/2 text-xs font-mono font-bold tracking-wider text-blue-400/40 pointer-events-none whitespace-nowrap"
           style={{ willChange: "transform, opacity", textShadow: "0 0 10px rgba(59, 130, 246, 0.5)" }}
         >
           {word}

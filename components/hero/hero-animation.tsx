@@ -36,9 +36,11 @@ export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: Her
       className="flex justify-center"
     >
       <div ref={containerRef} className="relative w-80 h-80 md:w-96 md:h-96">
-        {/* Fondos recortados al recuadro del avatar — nunca deben llegar al header */}
+        {/* Fondos en un anillo ALREDEDOR de la foto (no debajo ni en el medio).
+            El contenedor se agranda para dar espacio al orbitar; queda muy por
+            debajo del header. */}
         {isInView && !showAnimation && (
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="pointer-events-none absolute -inset-24">
             <QuantumParticles />
             <FloatingTechWords />
           </div>

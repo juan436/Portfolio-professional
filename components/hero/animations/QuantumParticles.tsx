@@ -5,49 +5,46 @@ import { motion } from "framer-motion"
 import { useIsMounted } from "@/hooks/use-is-mounted"
 
 /**
- * Fondo animado del Hero — 12 partículas flotando alrededor de la foto de perfil.
+ * Fondo animado del Hero — 16 partículas orbitando en un anillo ALREDEDOR de la
+ * foto de perfil (nunca por debajo ni en el centro).
  * Recibe: nada.
- * Produce: `null` hasta el mount (evita mismatch de hidratación, usa `Math.random()`); después, las partículas.
- *
- * Optimización (2026-08-31): antes eran 20 partículas con doble `box-shadow`
- * difuminado y `Math.random()` recalculado en cada render dentro del array de
- * keyframes — repintado caro por frame. Ahora: 12 partículas, trayectorias
- * fijas calculadas una sola vez (`useMemo`), solo `transform`/`opacity`
- * (compuesto en GPU), `willChange`, glow de una sola capa.
+ * Produce: `null` hasta el mount (evita mismatch de hidratación, usa `Math.random()`).
  *
  * Cada partícula nace en el centro del contenedor (`left-1/2 top-1/2`) y se
- * mueve `± RANGE` desde ahí — el enjambre queda pegado a la foto y no se escapa
- * hacia el header. El caller además lo recorta con `overflow-hidden`.
+ * mueve por coordenadas polares: radio en `[R_MIN, R_MAX]` (mayor que el radio
+ * de la foto, ~160-192px) → siempre queda en el borde exterior del círculo.
+ * El ángulo va derivando suave para que parezca que orbita.
+ *
+ * Optimización (2026-08-31): trayectorias fijas calculadas una sola vez
+ * (`useMemo`), solo `transform`/`opacity` (GPU), `willChange`, glow de 1 capa.
  */
-const COUNT = 12
-const RANGE = 140
-
-const rand = () => Math.random() * RANGE * 2 - RANGE
+const COUNT = 16
+const R_MIN = 195
+const R_MAX = 245
 
 interface Particle {
-  fromX: number
-  fromY: number
-  toX: number
-  toY: number
+  x: number[]
+  y: number[]
   duration: number
   delay: number
 }
 
+function orbit(): Particle {
+  const a0 = Math.random() * Math.PI * 2
+  const dir = Math.random() < 0.5 ? 1 : -1
+  const angles = [a0, a0 + dir * (0.5 + Math.random()), a0 + dir * (1 + Math.random() * 1.5)]
+  const radii = [0, 1, 2].map(() => R_MIN + Math.random() * (R_MAX - R_MIN))
+  return {
+    x: angles.map((a, i) => Math.cos(a) * radii[i]),
+    y: angles.map((a, i) => Math.sin(a) * radii[i]),
+    duration: 10 + Math.random() * 6,
+    delay: Math.random() * 4,
+  }
+}
+
 export function QuantumParticles() {
   const isMounted = useIsMounted()
-
-  const particles = useMemo<Particle[]>(
-    () =>
-      Array.from({ length: COUNT }, () => ({
-        fromX: rand(),
-        fromY: rand(),
-        toX: rand(),
-        toY: rand(),
-        duration: 7 + Math.random() * 4,
-        delay: Math.random() * 3,
-      })),
-    []
-  )
+  const particles = useMemo<Particle[]>(() => Array.from({ length: COUNT }, orbit), [])
 
   if (!isMounted) return null
 
@@ -56,12 +53,8 @@ export function QuantumParticles() {
       {particles.map((p, i) => (
         <motion.div
           key={i}
-          initial={{ x: p.fromX, y: p.fromY, opacity: 0 }}
-          animate={{
-            x: [p.fromX, p.toX, p.fromX],
-            y: [p.fromY, p.toY, p.fromY],
-            opacity: [0, 1, 0],
-          }}
+          initial={{ x: p.x[0], y: p.y[0], opacity: 0 }}
+          animate={{ x: p.x, y: p.y, opacity: [0, 1, 1, 0] }}
           transition={{
             duration: p.duration,
             repeat: Number.POSITIVE_INFINITY,
