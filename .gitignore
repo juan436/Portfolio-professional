@@ -49,3 +49,5 @@ portfolio_prod.gz
 # docs internos de estrategia/roadmap - viven solo en dev-local, no en production (repo público)
 docs/roadmap/
 docs/seo-marketing/
+# backups puntuales de datos (no versionar)
+scripts/_backups/
