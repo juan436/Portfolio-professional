@@ -4,14 +4,15 @@ import { useRef } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
 import Image from "next/image"
 import { useContent } from "@/contexts/content"
-import { QuantumParticles, CodeCard } from "./animations"
+import { QuantumParticles, FloatingTechWords, CodeCard } from "./animations"
 
 /**
- * Avatar animado del Hero — foto de perfil con partículas de fondo + flip a `CodeCard` al hacer click.
+ * Avatar animado del Hero — foto de perfil con partículas + palabras del stack
+ * flotando de fondo, y flip a `CodeCard` al hacer click.
  * Recibe: `showAnimation`/`toggleAnimation` (estado del flip, del padre) + `codeLines` (para `CodeCard`).
- * Procesa: las partículas solo corren mientras el contenedor está en viewport (`useInView`).
- *   Antes había 5 capas (hexágonos/rayos/palabras/ondas/partículas, ~48 nodos animados
- *   infinitos) — se quitaron todas menos las partículas por el costo en el hilo principal.
+ * Procesa: los fondos solo corren mientras el contenedor está en viewport (`useInView`) y se
+ *   desmontan durante el flip. Antes había 5 capas (hexágonos/rayos/ondas incluidas, ~48 nodos
+ *   animados infinitos) — se quitaron las 3 caras por el costo en el hilo principal.
  * Produce: círculo con la foto de perfil o `CodeCard`, según `showAnimation`.
  */
 interface HeroAnimationProps {
@@ -35,7 +36,12 @@ export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: Her
       className="flex justify-center"
     >
       <div ref={containerRef} className="relative w-80 h-80 md:w-96 md:h-96">
-        {isInView && !showAnimation && <QuantumParticles />}
+        {isInView && !showAnimation && (
+          <>
+            <QuantumParticles />
+            <FloatingTechWords />
+          </>
+        )}
 
         {/* Imagen del perfil con animación */}
         <div className="absolute inset-0 rounded-full overflow-hidden z-20">
