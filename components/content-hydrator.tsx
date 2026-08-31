@@ -5,23 +5,20 @@ import { useContent } from "@/contexts/content"
 import type { Content } from "@/contexts/content/types"
 
 /**
- * Inyecta datos ya resueltos server-side al ContentProvider antes del primer
- * paint (useLayoutEffect corre antes que el useEffect de fetch del Provider,
- * dentro del mismo commit — ver content-provider.tsx). Sin esto, cada página
- * que usa useContent() ve el estado vacío hasta que el fetch client-side
- * termina.
- * Recibe: `full` (Content completo, home) o `partial` (solo una sección, ej. /contact).
- * Produce: `null` — solo dispara `hydrateContent`/`hydratePartial` una vez, no renderiza nada.
+ * Inyecta al `ContentProvider` el contenido ya resuelto server-side, antes del
+ * primer paint (`useLayoutEffect`). Se monta una vez en `app/[locale]/layout.tsx`
+ * (sitio público) y en `app/admin/layout.tsx` (preview de imágenes).
+ * Recibe: `full` (Content completo).
+ * Produce: `null` — solo dispara `hydrateContent` una vez.
  */
-export function ContentHydrator({ full, partial }: { full?: Content; partial?: Partial<Content> }) {
-  const { hydrateContent, hydratePartial } = useContent()
+export function ContentHydrator({ full }: { full: Content }) {
+  const { hydrateContent } = useContent()
   const done = useRef(false)
 
   useLayoutEffect(() => {
     if (done.current) return
     done.current = true
-    if (full) hydrateContent(full)
-    else if (partial) hydratePartial(partial)
+    hydrateContent(full)
   }, [])
 
   return null

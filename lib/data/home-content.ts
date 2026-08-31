@@ -7,28 +7,19 @@ import Skill from "@/models/skill.model"
 import OtherSkill from "@/models/other-skills.model"
 import Testimonial from "@/models/testimonial.model"
 import type { Content as ContentShape } from "@/contexts/content/types"
+import { emptyContent } from "@/contexts/content/empty-content"
 
 /**
- * Lectura server-only del contenido de home directo a Mongo (sin round-trip HTTP).
+ * Lectura server-only del contenido del sitio, directo a Mongo. Es el ÚNICO
+ * camino de lectura del contenido público: `app/[locale]/layout.tsx` llama a
+ * `getHomeContent()` y lo inyecta con `<ContentHydrator>` para todas las páginas.
  * Recibe: nada.
- * Produce: `getHomeContent()` (Content completo, mismo shape que `ContentProvider`)
- * y `getContactInfo()` (solo el sub-objeto `contact`, para `/contact`).
+ * Produce: `getHomeContent()` (Content completo) + `getApprovedTestimonials()`.
  */
-const emptyContent: ContentShape = {
-  hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
-  about: { paragraph1: "", paragraph2: "", paragraph3: "", translations: {} },
-  services: [],
-  projects: { web: [], mobile: [], infra_backend: [] },
-  skills: { frontend: [], backend: [], database: [], devops: [] },
-  otherSkills: [],
-  contact: { email: "", phone: "", location: "", translations: {} },
-  experience: [],
-}
 
-// Mismo mapeo que content-provider.tsx (mapProject) — server-only, sin
-// round-trip HTTP. `id` guarda el _id de Mongo (tipo preexistente, no se toca).
-// `slug` es imprescindible: las cards enlazan a `/projects/${slug || id}` y sin
-// slug el link cae al _id, que la página de detalle (busca por slug) no resuelve.
+// `id` guarda el _id de Mongo (tipo preexistente, no se toca). `slug` es
+// imprescindible: las cards enlazan a `/projects/${slug || id}` y sin slug el
+// link cae al _id, que la página de detalle (busca por slug) no resuelve.
 function mapProject(p: any) {
   return {
     id: p._id,
@@ -52,11 +43,8 @@ function mapProject(p: any) {
   }
 }
 
-// Server-only: mismos datos que ContentProvider pedía en 7 fetches client-side
-// (fetchContent + fetchProjects x3 + fetchExperiences + fetchSkills +
-// fetchOtherSkills), consultados directo a Mongo en paralelo. Usado para
-// hidratar el Context antes del primer paint en las páginas que lo necesitan
-// completo (home).
+// Todo el contenido del sitio en paralelo, directo a Mongo. Antes esto lo hacía
+// el navegador con 7 fetches + assembleContent; se unificó acá (2026-08-31).
 async function fetchHomeContent(): Promise<ContentShape> {
   await dbConnect()
 
@@ -107,29 +95,10 @@ async function fetchHomeContent(): Promise<ContentShape> {
   return JSON.parse(JSON.stringify(result))
 }
 
-// Cacheado (unstable_cache) para no pegarle a Mongo en cada request — el sitio
-// está en `force-dynamic` (build sin acceso a DB) así que la ruta igual se
-// re-renderiza, pero el dato se reusa. Se invalida con `revalidateTag("home")`
-// desde las Server Actions del Admin (además del `revalidatePath` que ya hacen).
-// `revalidate: 3600` = red de seguridad por si algún tag se olvida.
-// Ver portfolio: planes/seo-jevy-2026-08-27 (Tanda 5) + planes/i18n-... (Stage 5).
+// Cacheado (unstable_cache): una sola consulta a Mongo por hora, reusada por
+// todas las páginas. Se invalida con `revalidateTag("home")` desde las Server
+// Actions del Admin. `revalidate: 3600` = red de seguridad.
 export const getHomeContent = unstable_cache(fetchHomeContent, ["home-content"], {
-  tags: ["home"],
-  revalidate: 3600,
-})
-
-// Server-only, liviano: solo el sub-objeto `contact` (email/teléfono/ubicación)
-// — lo único que /contact necesita (Footer y JevyGuidePanel), sin traer
-// proyectos/skills/experiencia que esa página nunca usa.
-async function fetchContactInfo(): Promise<ContentShape["contact"] | null> {
-  await dbConnect()
-  const contentDoc = await Content.findOne().sort({ createdAt: -1 }).select("contact").lean()
-  const contact = (contentDoc as any)?.contact
-  if (!contact) return null
-  return JSON.parse(JSON.stringify({ ...contact, translations: contact.translations || {} }))
-}
-
-export const getContactInfo = unstable_cache(fetchContactInfo, ["contact-info"], {
   tags: ["home"],
   revalidate: 3600,
 })
