@@ -27,15 +27,11 @@ export async function generateMetadata({
 
 export default async function AgentDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string; locale: string }>
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const { slug, locale } = await params
   const st = getServerT(locale)
-  const sp = await searchParams
-  const cameFromWork = sp.from === "work"
   const agent = await getProjectBySlug(slug)
 
   return (
@@ -52,7 +48,7 @@ export default async function AgentDetailPage({
           />
         </>
       )}
-      <AgentDetailView agent={agent} cameFromWork={cameFromWork} />
+      <AgentDetailView agent={agent} />
     </>
   )
 }

@@ -28,6 +28,7 @@ const emptyContent: ContentShape = {
 function mapProject(p: any) {
   return {
     id: p._id,
+    slug: p.slug,
     title: p.title,
     description: p.description,
     image: p.image,
