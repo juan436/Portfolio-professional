@@ -7,23 +7,15 @@ import Skill from "@/models/skill.model"
 import OtherSkill from "@/models/other-skills.model"
 import Testimonial from "@/models/testimonial.model"
 import type { Content as ContentShape } from "@/contexts/content/types"
+import { emptyContent } from "@/contexts/content/empty-content"
 
 /**
- * Lectura server-only del contenido de home directo a Mongo (sin round-trip HTTP).
+ * Lectura server-only del contenido del sitio, directo a Mongo. Es el ÚNICO
+ * camino de lectura del contenido público: `app/[locale]/layout.tsx` llama a
+ * `getHomeContent()` y lo inyecta con `<ContentHydrator>` para todas las páginas.
  * Recibe: nada.
- * Produce: `getHomeContent()` (Content completo, mismo shape que `ContentProvider`)
- * y `getContactInfo()` (solo el sub-objeto `contact`, para `/contact`).
+ * Produce: `getHomeContent()` (Content completo) + `getApprovedTestimonials()`.
  */
-const emptyContent: ContentShape = {
-  hero: { title: "", subtitle: "", description: "", profileImage: "", translations: {} },
-  about: { paragraph1: "", paragraph2: "", paragraph3: "", translations: {} },
-  services: [],
-  projects: { web: [], mobile: [], infra_backend: [] },
-  skills: { frontend: [], backend: [], database: [], devops: [] },
-  otherSkills: [],
-  contact: { email: "", phone: "", location: "", translations: {} },
-  experience: [],
-}
 
 function mapProject(p: any) {
   return {
@@ -99,19 +91,6 @@ async function fetchHomeContent(): Promise<ContentShape> {
 }
 
 export const getHomeContent = unstable_cache(fetchHomeContent, ["home-content"], {
-  tags: ["home"],
-  revalidate: 3600,
-})
-
-async function fetchContactInfo(): Promise<ContentShape["contact"] | null> {
-  await dbConnect()
-  const contentDoc = await Content.findOne().sort({ createdAt: -1 }).select("contact").lean()
-  const contact = (contentDoc as any)?.contact
-  if (!contact) return null
-  return JSON.parse(JSON.stringify({ ...contact, translations: contact.translations || {} }))
-}
-
-export const getContactInfo = unstable_cache(fetchContactInfo, ["contact-info"], {
   tags: ["home"],
   revalidate: 3600,
 })

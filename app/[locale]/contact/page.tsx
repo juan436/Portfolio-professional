@@ -1,7 +1,5 @@
 import type { Metadata } from "next"
 import { getServerT } from "@/lib/i18n/server-dict"
-import { getContactInfo } from "@/lib/data/home-content"
-import { ContentHydrator } from "@/components/content-hydrator"
 import Contact from "@/components/contact"
 import { buildMetadata } from "@/lib/seo/metadata"
 
@@ -16,12 +14,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   })
 }
 
-export default async function ContactPage() {
-  const contact = await getContactInfo()
-
+export default function ContactPage() {
   return (
     <main className="min-h-screen bg-black flex flex-col">
-      {contact && <ContentHydrator partial={{ contact }} />}
       <div className="flex-grow">
         <Contact />
       </div>

@@ -4,7 +4,7 @@ import ContentContext from './content-context';
 /**
  * Hook para acceder al contexto de contenido.
  * Recibe: nada (lee el `ContentContext` del árbol de componentes).
- * Produce: `{ content, isLoading, hydrateContent, hydratePartial }`; lanza si se usa fuera de `ContentProvider`.
+ * Produce: `{ content, isLoading, hydrateContent }`; lanza si se usa fuera de `ContentProvider`.
  */
 export const useContent = () => {
   const context = useContext(ContentContext);
