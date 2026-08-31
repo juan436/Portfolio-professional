@@ -8,6 +8,7 @@ import { SITE_URL, AUTHOR_NAME, AUTHOR_DISPLAY_NAME } from "@/lib/site-config"
  * con que los crawlers hoy solo ven ES). Autodescubrible vía `<link rel="alternate">`
  * en el `<head>` del layout raíz.
  */
+export const dynamic = 'force-dynamic'
 
 function escapeXml(text: string): string {
   return (text || "")

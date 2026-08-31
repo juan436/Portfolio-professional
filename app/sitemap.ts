@@ -13,6 +13,8 @@ import { SITE_URL } from '@/lib/site-config'
  * `/projects` y `/agents` (redirects).
  * Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Stage 3).
  */
+export const dynamic = 'force-dynamic'
+
 const BASE = SITE_URL
 const LOCALES = ['es', 'en', 'fr', 'it'] as const
 
