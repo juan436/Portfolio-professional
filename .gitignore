@@ -40,6 +40,7 @@ desing.mermaid
 # db dumps / tools (no deben vivir en el repo)
 mongorestore.exe
 portfolio_prod.gz
+*.ejson.gz
 
 # adjuntos de leads guardados en disco (lib/uploads.ts) — necesita volumen
 # persistente en el VPS, no se versiona
