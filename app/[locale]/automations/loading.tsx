@@ -1,4 +1,6 @@
-/** Loading state de /automations. Recibe: nada. Produce: `null` (sin skeleton propio todavía). */
+import { ListPageSkeleton } from "@/components/skeletons/page-skeletons"
+
+/** Skeleton de `/automations` (header + grilla de cards). */
 export default function Loading() {
-  return null
+  return <ListPageSkeleton cols="md:grid-cols-2" count={4} cardClass="h-72" />
 }
