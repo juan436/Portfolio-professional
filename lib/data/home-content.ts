@@ -27,9 +27,12 @@ const emptyContent: ContentShape = {
 
 // Mismo mapeo que content-provider.tsx (mapProject) — server-only, sin
 // round-trip HTTP. `id` guarda el _id de Mongo (tipo preexistente, no se toca).
+// `slug` es imprescindible: las cards enlazan a `/projects/${slug || id}` y sin
+// slug el link cae al _id, que la página de detalle (busca por slug) no resuelve.
 function mapProject(p: any) {
   return {
     id: p._id,
+    slug: p.slug,
     title: p.title,
     description: p.description,
     image: p.image,

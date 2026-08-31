@@ -51,15 +51,14 @@ interface LocaleContent {
 
 /**
  * Vista de detalle de un agente (`/agents/[slug]`).
- * Recibe: `agent` (crudo, con traducciones) + `cameFromWork` (si vino desde /work, muestra "ver todos").
+ * Recibe: `agent` (crudo, con traducciones).
  * Produce: qué hace / capacidades / demo en vivo (`JevyChatDemo` si `liveDemo === "jevy-chat"`) / tools+canales+setup / CTA.
  */
 interface AgentDetailViewProps {
   agent: RawAgent | null
-  cameFromWork: boolean
 }
 
-export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
+export function AgentDetailView({ agent }: AgentDetailViewProps) {
   const locale = useLocale()
   const handleBack = useBackNavigation(`/${locale}/work#agents`)
   const { language, t } = useLanguage()
@@ -70,7 +69,6 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
   const liveDemoUnavailable = String(t("agents.detail.liveDemoUnavailable") || "")
   const notFoundLabel = String(t("agents.detail.notFound") || "")
   const backToList = String(t("agents.detail.backToList") || "Volver")
-  const viewMoreLabel = String(t("agents.viewMore") || "Ver todos los agentes")
   const toolsHeading = String(t("agents.detail.toolsHeading") || "Construido con")
   const channelsHeading = String(t("agents.detail.channelsHeading") || "Canales soportados")
   const setupTimeHeading = String(t("agents.detail.setupTimeHeading") || "Tiempo de puesta en marcha")
@@ -100,10 +98,6 @@ export function AgentDetailView({ agent, cameFromWork }: AgentDetailViewProps) {
           <ProjectHeader
             title={title}
             description={description}
-            nav={{
-              viewMoreHref: cameFromWork ? "/work#agents" : undefined,
-              viewMoreLabel: cameFromWork ? viewMoreLabel : undefined,
-            }}
             subtype={subtype}
             hideHeader
             onBackClick={handleBack}
