@@ -2,8 +2,8 @@
 
 import { useRef } from "react"
 import { motion, AnimatePresence, useInView } from "framer-motion"
-import Image from "next/image"
 import { useContent } from "@/contexts/content"
+import { DbImage } from "@/components/common/db-image"
 import { QuantumParticles, FloatingTechWords, CodeCard } from "./animations"
 
 /**
@@ -45,15 +45,12 @@ export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: Her
           <div className="relative w-full h-full cursor-pointer" onClick={toggleAnimation}>
             <AnimatePresence>
               {!showAnimation ? (
-                <Image
-                  src={
-                    content.hero.profileImage ||
-                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/profile-E9YRocD6o4olhnzraHWCjLmKjCbspw.jpeg"
-                  }
+                <DbImage
+                  src={content.hero.profileImage}
                   alt="Juan Villegas"
-                  width={400}
-                  height={400}
-                  className="w-full h-full object-cover object-center rounded-full"
+                  className="w-full h-full rounded-full"
+                  imgClassName="object-cover object-center"
+                  sizes="384px"
                   priority
                 />
               ) : (

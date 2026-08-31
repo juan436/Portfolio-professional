@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import Image from "next/image"
+import { DbImage } from "@/components/common/db-image"
 
 /**
  * Tarjeta de foto + título/rol/estudios de la sección About.
@@ -43,16 +43,12 @@ export function AboutProfile({ profileImage, heroTitle, role, engineer, universi
               transition: { duration: 0.4 },
             }}
           >
-            <Image
-              src={
-                profileImage ||
-                "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/profile-E9YRocD6o4olhnzraHWCjLmKjCbspw.jpeg" ||
-                "/placeholder.svg"
-              }
+            <DbImage
+              src={profileImage}
               alt="Juan Villegas"
-              fill
+              className="absolute inset-0"
+              imgClassName="object-cover object-top transition-all duration-300"
               sizes="(max-width: 768px) 100vw, 400px"
-              className="object-cover object-top transition-all duration-300"
             />
           </motion.div>
         </motion.div>

@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react"
 import { useLanguage } from "@/hooks/use-language"
 import { ShareRow } from "@/components/common/share-row"
+import { DbImage } from "@/components/common/db-image"
 import { SITE_URL, AUTHOR_PHOTO, AUTHOR_DISPLAY_NAME } from "@/lib/site-config"
 import { slugify } from "@/lib/slug"
 import type { BlogPostView as BlogPost } from "@/lib/blog/types"
@@ -81,7 +82,13 @@ export function BlogDetailView({
             <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-6">{title}</h1>
 
             <div className="flex items-center gap-3 mb-8">
-              <img src={AUTHOR_PHOTO} alt={AUTHOR_NAME} width={44} height={44} loading="lazy" decoding="async" className="w-11 h-11 rounded-full object-cover border border-blue-500/30" />
+              <DbImage
+                src={AUTHOR_PHOTO}
+                alt={AUTHOR_NAME}
+                className="h-11 w-11 shrink-0 rounded-full border border-blue-500/30"
+                imgClassName="object-cover"
+                sizes="44px"
+              />
               <div>
                 <p className="text-sm font-semibold text-white leading-tight">{AUTHOR_NAME}</p>
                 <p className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500 leading-tight mt-0.5">
@@ -111,9 +118,13 @@ export function BlogDetailView({
             )}
 
             {post.coverImage && (
-              <div className="rounded-xl overflow-hidden border border-white/10 mb-10">
-                <img src={post.coverImage} alt={title} loading="lazy" decoding="async" className="w-full h-auto" />
-              </div>
+              <DbImage
+                src={post.coverImage}
+                alt={title}
+                className="mb-10 aspect-[1200/630] w-full rounded-xl border border-white/10"
+                imgClassName="object-cover"
+                sizes="(max-width: 768px) 100vw, 768px"
+              />
             )}
 
             <div className="blog-content" dangerouslySetInnerHTML={{ __html: renderedBody }} />
