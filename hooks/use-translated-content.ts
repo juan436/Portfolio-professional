@@ -14,7 +14,6 @@ export const useTranslatedContent = () => {
   const { language } = useLanguage();
   const { content } = useContent();
   
-  // Función para obtener el texto traducido o el texto original si no hay traducción
   const getTranslatedText = (
     originalText: string | undefined,
     translations: Record<string, any> | undefined,
@@ -27,7 +26,6 @@ export const useTranslatedContent = () => {
     return translations[langCode][field];
   };
 
-  // Traducir el contenido del hero
   const translatedHero = {
     ...content.hero,
     title: language.code !== 'es' 
@@ -41,7 +39,6 @@ export const useTranslatedContent = () => {
       : content.hero.description,
   };
 
-  // Traducir el contenido del about
   const translatedAbout = {
     ...content.about,
     paragraph1: language.code !== 'es' 
@@ -55,7 +52,6 @@ export const useTranslatedContent = () => {
       : content.about.paragraph3,
   };
 
-  // Traducir el contenido de contacto
   const translatedContact = {
     ...content.contact,
     location: language.code !== 'es' 
@@ -63,7 +59,6 @@ export const useTranslatedContent = () => {
       : content.contact.location,
   };
 
-  // Función para traducir experiencias
   const translateExperience = (exp: Experience): Experience => {
     if (language.code === 'es' || !exp.translations || !exp.translations[language.code]) {
       return exp;
@@ -79,10 +74,8 @@ export const useTranslatedContent = () => {
     };
   };
 
-  // Traducir experiencias
   const translatedExperience = content.experience.map(translateExperience);
 
-  // Función para traducir proyectos
   const translateProject = (proj: Project): Project => {
     if (language.code === 'es' || !proj.translations || !proj.translations[language.code]) {
       return proj;
@@ -97,14 +90,12 @@ export const useTranslatedContent = () => {
     };
   };
 
-  // Traducir proyectos
   const translatedProjects = {
     web: content.projects.web.map(translateProject),
     mobile: content.projects.mobile.map(translateProject),
     infra_backend: content.projects.infra_backend.map(translateProject),
   };
 
-  // Función para traducir otras habilidades
   const translateOtherSkill = (skill: OtherSkill): OtherSkill => {
     if (language.code === 'es' || !skill.translations || !skill.translations[language.code]) {
       return skill;
@@ -118,10 +109,8 @@ export const useTranslatedContent = () => {
     };
   };
 
-  // Traducir otras habilidades
   const translatedOtherSkills = content.otherSkills.map(translateOtherSkill);
 
-  // Traducir servicios
   const translatedServices = content.services.map(service => {
     if (language.code === 'es' || !service.translations || !service.translations[language.code]) {
       return service;
@@ -136,7 +125,6 @@ export const useTranslatedContent = () => {
     };
   });
 
-  // Crear el contenido traducido completo
   const translatedContent: Content = {
     ...content,
     hero: translatedHero,

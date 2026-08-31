@@ -31,7 +31,6 @@ export const languages: Language[] = [
   { code: "fr", name: "Français", flag: "🇫🇷" },
 ]
 
-// Idiomas con rutas reales.
 export const ROUTABLE_LOCALES: LanguageCode[] = ["es", "en", "fr", "it"]
 const DEFAULT_LOCALE: LanguageCode = "es"
 
@@ -71,9 +70,7 @@ export const LanguageProvider = ({
       try {
         document.cookie = `NEXT_LOCALE=${newLanguage.code}; path=/; max-age=31536000; samesite=lax`
       } catch {
-        /* cookies bloqueadas: igual navega */
       }
-      // Misma ruta, otro prefijo de idioma.
       const seg = pathname.split("/")[1]
       const rest = ROUTABLE_LOCALES.includes(seg as LanguageCode) ? pathname.slice(seg.length + 1) : pathname
       router.push(`/${newLanguage.code}${rest || ""}`)

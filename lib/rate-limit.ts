@@ -20,7 +20,6 @@ export function isRateLimited(key: string, limit: number, windowMs: number): boo
   recent.push(now);
   hits.set(key, recent);
 
-  // Poda oportunista para no crecer sin límite con IPs que ya no vuelven.
   if (hits.size > 5000) {
     for (const [k, timestamps] of hits) {
       if (timestamps.every((t) => now - t > windowMs)) hits.delete(k);

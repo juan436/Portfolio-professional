@@ -10,7 +10,6 @@ export const metadata: Metadata = buildMetadata({
   path: "/automations",
 })
 
-/** Página `/automations` (Server Component). Recibe: nada. Produce: lista de proyectos categoría "automatizacion". */
 export default async function AutomationsPage() {
   const automations = await getProjectsByCategory("automatizacion")
   return <AutomationsListView automations={automations} />

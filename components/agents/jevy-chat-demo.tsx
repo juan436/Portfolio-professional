@@ -90,8 +90,6 @@ const SCRIPT: Record<"es" | "en" | "fr" | "it", ScriptStep[]> = {
   ],
 }
 
-// Días/horas ficticios pero calculados sobre "hoy" para que el calendario de
-// ejemplo no se vea con fechas viejas — nunca golpea /api/contact/schedule.
 function buildDemoDays() {
   const today = new Date()
   const dayOffsets = [2, 3, 5]
@@ -199,8 +197,6 @@ function DemoSchedulingWidget({ locale, texts }: { locale: string; texts: { load
   )
 }
 
-// Ver `ScriptedChatDemo` (components/agents/scripted-chat-demo.tsx) para la
-// máquina de estados y los timings — acá solo se arma el guion y el widget.
 const LOCALE_MAP: Record<string, string> = { es: "es-VE", en: "en-US", fr: "fr-FR", it: "it-IT" }
 
 export function JevyChatDemo() {

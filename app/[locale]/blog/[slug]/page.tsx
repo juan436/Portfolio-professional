@@ -12,7 +12,6 @@ import { AUTHOR_NAME } from "@/lib/site-config"
 const pick = (post: any, locale: string, field: string): string =>
   (locale !== "es" && post.translations?.[locale]?.[field]) || post[field]
 
-/** Cuerpo con resaltado de sintaxis por idioma (el switch de idioma es client-side). */
 function highlightAllBodies(post: any): Record<string, string> {
   const map: Record<string, string> = { es: highlightBlogHtml(post.body) }
   for (const lang of ["en", "fr", "it"] as const) {

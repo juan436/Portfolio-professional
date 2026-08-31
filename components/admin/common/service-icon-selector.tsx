@@ -11,7 +11,6 @@ import { getServiceIconComponent } from "@/lib/service-icon-map"
  * Recibe: `selectedIcon`/`onSelectIcon`.
  * Produce: popover con grid de íconos; al elegir uno llama `onSelectIcon`.
  */
-// Lista de iconos disponibles para servicios
 const serviceIcons = [
   { value: "Code", label: "Código" },
   { value: "Server", label: "Servidor" },
@@ -42,7 +41,6 @@ export default function ServiceIconSelector({
 }: ServiceIconSelectorProps) {
   const [isOpen, setIsOpen] = useState(false)
 
-  // Renderizar el ícono correspondiente
   const renderIcon = (iconName: string) => {
     const Icon = getServiceIconComponent(iconName)
     return <Icon className="h-5 w-5 text-blue-500" />

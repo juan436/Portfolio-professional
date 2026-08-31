@@ -7,7 +7,6 @@ import type { ComponentProps } from "react"
 const LOCALES = ["es", "en", "fr", "it"]
 const DEFAULT_LOCALE = "es"
 
-/** Locale actual leído del segmento `/[locale]/` de la ruta. */
 export function useLocale(): string {
   const params = useParams()
   const raw = params?.locale
@@ -22,7 +21,6 @@ export function usePathWithoutLocale(): string {
   return LOCALES.includes(seg) ? pathname.slice(seg.length + 1) || "/" : pathname
 }
 
-/** Prefija un href absoluto (`/work`) con el locale, si no lo tiene ya. */
 export function localizeHref(href: string, locale: string): string {
   if (!href.startsWith("/")) return href
   const firstSeg = href.split("/")[1]?.split(/[?#]/)[0] ?? ""
@@ -30,11 +28,6 @@ export function localizeHref(href: string, locale: string): string {
   return `/${locale}${href === "/" ? "" : href}`
 }
 
-/**
- * Drop-in de `next/link` que prefija los href absolutos con el locale actual
- * (`/work` → `/es/work`). Href externos, anclas sueltas (`#x`) o ya prefijados
- * pasan sin tocar. Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28.
- */
 export function LocalizedLink({ href, ...props }: ComponentProps<typeof Link>) {
   const locale = useLocale()
   const finalHref = typeof href === "string" ? localizeHref(href, locale) : href

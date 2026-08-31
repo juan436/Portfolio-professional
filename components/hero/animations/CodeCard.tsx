@@ -44,7 +44,6 @@ export function CodeCard({ codeLines, onClose }: CodeCardProps) {
       className="absolute inset-0 bg-gradient-to-br from-slate-900 to-blue-900 rounded-full flex flex-col items-center justify-center overflow-hidden"
       style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
     >
-      {/* Partículas de fondo */}
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
@@ -68,7 +67,6 @@ export function CodeCard({ codeLines, onClose }: CodeCardProps) {
         />
       ))}
 
-      {/* Líneas de código */}
       <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center p-8 z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -90,7 +88,6 @@ export function CodeCard({ codeLines, onClose }: CodeCardProps) {
           ))}
         </motion.div>
 
-        {/* Iconos de tecnologías */}
         <motion.div
           variants={containerVariants}
           initial="hidden"

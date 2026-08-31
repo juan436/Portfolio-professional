@@ -34,16 +34,11 @@ const getPublishedPostBySlug = unstable_cache(
 
 export async function getBlogPostBySlug(slug: string, options: { includeDrafts?: boolean } = {}) {
   if (!options.includeDrafts) return getPublishedPostBySlug(slug)
-  // Vista previa de borrador (Admin) — sin caché, siempre fresco.
   await dbConnect()
   const post = await BlogPost.findOne({ slug }).lean()
   return post ? JSON.parse(JSON.stringify(post)) : null
 }
 
-/**
- * Posts relacionados: publicados, distintos al actual, priorizando los que
- * comparten más `tags`; rellena con los más recientes si no alcanza.
- */
 export const getRelatedPosts = unstable_cache(
   async (slug: string, tags: string[] = [], limit = 3) => {
     await dbConnect()
@@ -57,7 +52,7 @@ export const getRelatedPosts = unstable_cache(
         post,
         shared: (post.tags || []).filter((tag: string) => tagSet.has(tag)).length,
       }))
-      .sort((a, b) => b.shared - a.shared) // el sort de Mongo (fecha desc) se mantiene entre empates
+      .sort((a, b) => b.shared - a.shared)
 
     return JSON.parse(JSON.stringify(scored.slice(0, limit).map((entry) => entry.post)))
   },

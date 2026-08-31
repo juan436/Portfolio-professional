@@ -5,10 +5,8 @@
  * usados por `ContentProvider`/`useContent` y por los componentes de lectura del sitio público.
  */
 
-// Tipo para traducciones
 export type TranslationLanguages = 'en' | 'fr' | 'it';
 
-// Hero
 export type Hero = {
   title: string
   subtitle: string
@@ -23,7 +21,6 @@ export type Hero = {
   }
 }
 
-// About
 export type About = {
   paragraph1: string
   paragraph2: string
@@ -37,7 +34,6 @@ export type About = {
   }
 }
 
-// Service
 export type Service = {
   _id?: string
   title: string
@@ -52,7 +48,6 @@ export type Service = {
   }
 }
 
-// Project
 export type Project = {
   id: number
   slug?: string
@@ -104,7 +99,6 @@ export type Projects = {
   infra_backend: Project[]
 }
 
-// Skill
 export type Skill = {
   _id?: string
   name: string
@@ -125,7 +119,6 @@ export type Skills = {
   devops: Skill[]
 }
 
-// Contact
 export type Contact = {
   email: string
   phone: string
@@ -137,7 +130,6 @@ export type Contact = {
   }
 }
 
-// OtherSkill
 export type OtherSkill = {
   _id?: string;
   name: string;
@@ -148,7 +140,6 @@ export type OtherSkill = {
   }
 };
 
-// Experience
 export type Experience = {
   _id?: string;
   position: string
@@ -169,7 +160,6 @@ export type Experience = {
   }
 }
 
-// Contenido general
 export type Content = {
   hero: Hero
   about: About

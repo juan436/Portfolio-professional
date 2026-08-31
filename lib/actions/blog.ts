@@ -32,10 +32,6 @@ async function translateBody(body: string) {
   return translations
 }
 
-/**
- * Traducciones que el usuario editó a mano en el Admin — solo los campos con
- * contenido real. Ganan sobre la autotraducción al mergear. El body se sanitiza.
- */
 function manualTranslations(raw: any): Record<string, any> | undefined {
   if (!raw || typeof raw !== "object") return undefined
   const out: Record<string, any> = {}
@@ -171,11 +167,6 @@ export async function getBlogPostByIdAction(id: string) {
   return JSON.parse(JSON.stringify(post))
 }
 
-/**
- * Retraduce un solo idioma desde el español (title/excerpt/body) — para el
- * botón "Retraducir este idioma" del editor. No guarda nada: devuelve los
- * campos para que el form los cargue y el usuario los revise antes de guardar.
- */
 export async function retranslateBlogLocaleAction(
   lang: SupportedLanguage,
   source: { title?: string; excerpt?: string; body?: string }

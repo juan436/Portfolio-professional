@@ -1,4 +1,3 @@
-// portfolio/services/api/projects.ts
 import { API_URL } from './index';
 import { translateAndAddToObject } from '../client/translation';
 
@@ -25,9 +24,6 @@ export const fetchProjects = async (category?: string) => {
   }
 };
 
-/**
- * Obtiene un proyecto por su id
- */
 export const fetchProjectById = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/projects/${id}`);
@@ -44,9 +40,6 @@ export const fetchProjectById = async (id: string) => {
   }
 };
 
-/**
- * Crea un nuevo proyecto con traducciones automáticas
- */
 export const createProject = async (project: any) => {
   try {
     const fieldsToTranslate = ['title', 'description'];
@@ -78,18 +71,12 @@ export const createProject = async (project: any) => {
   }
 };
 
-/**
- * Actualiza un proyecto existente con traducciones automáticas
- * Solo traduce los campos que realmente han sido modificados
- */
 export const updateProject = async (id: string, project: any) => {
   try {
-    // 1. Verificar qué campos modificados necesitan traducción
     const fieldsRequiringTranslation = ['title', 'description'];
     const fieldsToTranslate = Object.keys(project).filter(field => 
       fieldsRequiringTranslation.includes(field)
     );
-    // 2. Si no hay campos que requieran traducción, actualizar sin traducir
     if (fieldsToTranslate.length === 0) {
       const response = await fetch(`${API_URL}/projects/${id}`, {
         method: 'PATCH',
@@ -103,14 +90,12 @@ export const updateProject = async (id: string, project: any) => {
       }
       return await response.json();
     }
-    // 3. Solo traducir los campos que están en la actualización y requieren traducción
     const projectWithTranslations = await translateAndAddToObject(
       project,
       'es',
       ['en', 'fr', 'it'],
       fieldsToTranslate
     );
-    // 4. Enviar al backend el objeto con traducciones
     const response = await fetch(`${API_URL}/projects/${id}`, {
       method: 'PATCH',
       headers: {
@@ -133,9 +118,6 @@ export const updateProject = async (id: string, project: any) => {
   }
 };
 
-/**
- * Elimina un proyecto
- */
 export const deleteProject = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/projects/${id}`, {

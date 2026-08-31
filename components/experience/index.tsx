@@ -34,9 +34,7 @@ export default function Experience() {
     { title: "", subtitle: "", viewExperience: "", pause: "", autoplay: "" }
   )
 
-  // Asegurarse de que la experiencia esté ordenada por fecha (más reciente primero)
   const sortedExperience = [...content.experience].sort((a, b) => {
-    // Extraer el año más reciente de cada período
     const getLatestYear = (period: string) => {
       const years = period.match(/\d{4}/g)
       if (!years) return 0
@@ -49,18 +47,15 @@ export default function Experience() {
     return yearB - yearA
   })
 
-  // Extraer años para la línea de tiempo
   const timelineYears = sortedExperience.map((exp) => {
     const match = exp.period.match(/\d{4}/g)
     return match ? match[match.length - 1] : ""
   })
 
-  // Navegación
   const handleNext = () => {
     if (activeIndex < sortedExperience.length - 1) {
       setActiveIndex(activeIndex + 1)
     } else {
-      // Opcional: volver al principio cuando llegue al final
       setActiveIndex(0)
     }
   }
@@ -69,7 +64,6 @@ export default function Experience() {
     if (activeIndex > 0) {
       setActiveIndex(activeIndex - 1)
     } else {
-      // Opcional: ir al final cuando esté en el principio
       setActiveIndex(sortedExperience.length - 1)
     }
   }
@@ -78,7 +72,6 @@ export default function Experience() {
     setActiveIndex(index)
   }
 
-  // Autoplay
   const toggleAutoPlay = () => {
     setIsAutoPlaying(!isAutoPlaying)
   }
@@ -87,7 +80,7 @@ export default function Experience() {
     if (isAutoPlaying) {
       autoPlayRef.current = setInterval(() => {
         handleNext()
-      }, 5000) // Cambiar cada 5 segundos
+      }, 5000)
     } else if (autoPlayRef.current) {
       clearInterval(autoPlayRef.current)
     }
@@ -99,7 +92,6 @@ export default function Experience() {
     }
   }, [isAutoPlaying, activeIndex])
 
-  // Manejo de gestos táctiles para el carrusel
   const handleMouseDown = (e: React.MouseEvent | TouchEvent) => {
     setIsDragging(true)
     const clientX = "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX
@@ -125,7 +117,6 @@ export default function Experience() {
     setIsDragging(false)
   }
 
-  // Agregar event listeners para gestos táctiles
   useEffect(() => {
     const timeline = timelineRef.current
     if (timeline) {
@@ -158,7 +149,6 @@ export default function Experience() {
           <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
         </motion.div>
 
-        {/* Línea de tiempo horizontal con animación */}
         <ExperienceTimeline
           timelineRef={timelineRef}
           activeIndex={activeIndex}
@@ -167,9 +157,7 @@ export default function Experience() {
           handleDotClick={handleDotClick}
         />
 
-        {/* Carrusel de experiencia */}
         <div className="relative max-w-4xl mx-auto">
-          {/* Botones de navegación */}
           <div className="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-16 z-10">
             <Button
               variant="outline"
@@ -194,7 +182,6 @@ export default function Experience() {
             </Button>
           </div>
 
-          {/* Tarjetas de experiencia */}
           <ExperienceCard
             sortedExperience={sortedExperience}
             activeIndex={activeIndex}
@@ -204,7 +191,6 @@ export default function Experience() {
           />
         </div>
 
-        {/* Indicadores de posición con animación */}
         <motion.div
           className="flex justify-center mt-8 space-x-2"
           initial={{ opacity: 0, y: 20 }}
@@ -222,7 +208,6 @@ export default function Experience() {
           ))}
         </motion.div>
 
-        {/* Botón de autoplay */}
         <motion.div
           className="flex justify-center mt-6"
           initial={{ opacity: 0 }}
@@ -241,7 +226,6 @@ export default function Experience() {
         </motion.div>
       </div>
 
-      {/* Estilos adicionales para la perspectiva 3D */}
       <style jsx global>{`
         .perspective-3d {
           perspective: 1000px;

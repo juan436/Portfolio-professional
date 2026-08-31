@@ -1,5 +1,3 @@
-// remove-lab-test-data.ts
-// Borra los experimentos [TEST] creados por seed-lab-details-test.ts.
 
 import dbConnect from '../lib/db/conection'
 import Project from '../models/project.model'

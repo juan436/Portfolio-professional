@@ -20,9 +20,6 @@ const metricsData: Metric[] = [
   { id: "AUTONOMOUS_OPERATION", value: "24/7", gradient: "from-blue-600 to-blue-800" },
 ]
 
-// Combina la data fija de marketing con el total real acumulado (si ya hay
-// alguna métrica de proyecto/automatización marcada con esa categoría) —
-// mientras no haya datos reales, se ve exactamente igual que siempre.
 function applyRealTotals(base: Metric[], summary: StatTypeSummary[]): Metric[] {
   return base.map((metric) => {
     const real = summary.find((s) => s.key === metric.id && s.count > 0)
@@ -56,7 +53,6 @@ export default function MetricsSection() {
 
   return (
     <section className="py-24 relative overflow-hidden bg-black border-y border-white/5">
-      {/* Luz de fondo sutil */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-blue-900/5 blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto px-6">
@@ -75,13 +71,8 @@ export default function MetricsSection() {
   )
 }
 
-/** Card individual de métrica — animación de conteo (número) desde 0 al entrar en viewport. */
 function MetricCard({ metric, label, index }: { metric: Metric; label: string; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null)
-  // Sin `once`: las animaciones infinitas (float/rotate/spotlight, abajo) se
-  // apagan solas al salir de vista, igual que hero-animation.tsx. El conteo
-  // sigue disparando una sola vez via `hasCountedRef` (si no, reiniciaría el
-  // número cada vez que la card vuelve a entrar en pantalla).
   const isInView = useInView(cardRef, { margin: "-100px" })
   const hasCountedRef = useRef(false)
   const [displayValue, setDisplayValue] = useState<string | number>(typeof metric.value === 'string' ? "" : 0)
@@ -110,7 +101,6 @@ function MetricCard({ metric, label, index }: { metric: Metric; label: string; i
         }
         requestAnimationFrame(animate)
       } else {
-        // Para valores tipo string como "24/7"
         setDisplayValue(metric.value)
       }
     }
@@ -135,7 +125,6 @@ function MetricCard({ metric, label, index }: { metric: Metric; label: string; i
       style={{ perspective: 1000 }}
       className="relative group p-10 rounded-3xl bg-white/[0.02] border border-white/10 backdrop-blur-3xl overflow-hidden select-none cursor-default"
     >
-      {/* Spotlight Automático Suave */}
       <motion.div
         animate={isInView ? {
           background: [

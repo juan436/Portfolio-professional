@@ -6,7 +6,6 @@ import { Globe } from "lucide-react"
 import { languages, ROUTABLE_LOCALES } from "@/contexts/language-context"
 import { useLanguage } from "@/hooks/use-language"
 
-// Fase 1: solo se ofrecen los idiomas con rutas reales (ES + EN). FR/IT en Fase 2.
 const availableLanguages = languages.filter((l) => ROUTABLE_LOCALES.includes(l.code))
 
 /**
@@ -19,7 +18,6 @@ export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Cerrar el dropdown cuando se hace clic fuera de él
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -33,9 +31,7 @@ export default function LanguageSwitcher() {
     }
   }, [])
 
-  // Manejar el cambio de idioma
   const handleLanguageChange = (newLang: typeof language) => {
-    // Si el idioma seleccionado es el mismo que ya está activo, no hacer nada
     if (newLang.code === language.code) {
       setIsOpen(false)
       return

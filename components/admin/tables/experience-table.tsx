@@ -21,7 +21,6 @@ interface ExperienceTableProps {
   description: string
 }
 
-// Función para truncar texto si excede cierta longitud
 const truncateText = (text: string, maxLength: number) => {
   if (!text) return '';
   return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
@@ -35,17 +34,14 @@ export default function ExperienceTable({
   title,
   description
 }: ExperienceTableProps) {
-  // Ordenar experiencias (más recientes primero)
   const sortedExperiences = [...experiences].sort((a, b) => {
-    // Si hay experiencias nuevas (isNew), ponerlas al principio
     if (a.isNew && !b.isNew) return -1;
     if (!a.isNew && b.isNew) return 1;
     
-    // Ordenar por período (asumiendo formato "YYYY - YYYY" o "YYYY - Presente")
     const aYear = a.period?.split(' - ')[0]?.trim() || '';
     const bYear = b.period?.split(' - ')[0]?.trim() || '';
     
-    return bYear.localeCompare(aYear); // Orden descendente
+    return bYear.localeCompare(aYear);
   });
 
   return (
@@ -57,9 +53,8 @@ export default function ExperienceTable({
       <CardContent className="p-4">
         <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
           {sortedExperiences.length > 0 && sortedExperiences.some(exp => exp._id) ? (
-            // Solo mostrar experiencias que tengan un _id (que ya están guardadas en la base de datos)
             sortedExperiences
-              .filter(experience => experience._id) // Filtrar solo experiencias con _id
+              .filter(experience => experience._id)
               .map((experience, index) => (
               <motion.div
                 key={experience._id}
@@ -97,7 +92,6 @@ export default function ExperienceTable({
                       className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto"
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Asegurarse de que experience._id existe antes de llamar a la función
                         if (experience._id && typeof onDeleteExperience === 'function') {
                           onDeleteExperience(experience._id);
                         }

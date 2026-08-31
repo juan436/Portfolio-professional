@@ -27,10 +27,6 @@ export function DetailPageShell({
   )
 }
 
-/**
- * Pantalla "no encontrado" de las páginas de detalle. Idéntica en los 5 archivos
- * salvo el `href` de vuelta y los textos.
- */
 export function DetailNotFound({
   message,
   backHref,

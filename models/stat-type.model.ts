@@ -5,10 +5,6 @@ import mongoose, { Document } from 'mongoose';
  * Recibe: key/label/prefix/suffix/gradient de un tipo de métrica.
  * Produce: `StatType`, referenciado por `ProjectStats.metrics[].statType` para sumar al total del home.
  */
-// La base de "tipos de estadística" reutilizables. Una métrica de ProjectStats
-// puede referenciar una de estas (por su key) para sumar al total acumulado
-// que se muestra en el home — o no referenciar ninguna y quedar solo en su
-// propio proyecto.
 export interface IStatType extends Document {
   key: string;
   label: string;

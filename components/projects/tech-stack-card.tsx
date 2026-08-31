@@ -58,7 +58,6 @@ interface SidebarListCardProps {
   icon: LucideIcon
   heading: string
   items: string[]
-  /** Icono por ítem. Si se omite, se usa el punto azul (`•`). */
   itemIcon?: LucideIcon
 }
 

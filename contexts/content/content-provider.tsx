@@ -21,9 +21,6 @@ import {
 export const ContentProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState<Content>(emptyContent)
   const [isLoading, setIsLoading] = useState(true)
-  // Puesto en true por hydrateContent (llamado desde un ContentHydrator hijo,
-  // vía useLayoutEffect — corre antes que este useEffect en el mismo commit).
-  // Evita repetir los 7 fetches cuando la página ya trajo todo server-side.
   const hydratedRef = useRef(false)
 
   useEffect(() => {
@@ -37,8 +34,6 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true)
 
       try {
-        // Antes: 7 awaits en cadena (uno detrás del otro) — son fetches
-        // independientes entre sí, no hay razón para esperarlos en serie.
         const [
           contentData,
           webProjects,
@@ -80,19 +75,12 @@ export const ContentProvider = ({ children }: { children: ReactNode }) => {
     loadData()
   }, [])
 
-  // Reemplazo completo — usado por páginas que ya traen TODO el contenido
-  // resuelto server-side (home). Marca hydratedRef para que el useEffect de
-  // arriba no dispare los 7 fetches de nuevo.
   const hydrateContent = (initial: Content) => {
     hydratedRef.current = true
     setContent(initial)
     setIsLoading(false)
   }
 
-  // Merge parcial — usado por páginas que solo necesitan una sección (ej.
-  // /contact con `contact.email`). No toca hydratedRef: el fetch completo de
-  // fondo sigue corriendo normal, así el resto del sitio no se queda vacío
-  // si el usuario navega desde acá a otra página.
   const hydratePartial = (partial: Partial<Content>) => {
     setContent((prev) => ({ ...prev, ...partial }))
   }

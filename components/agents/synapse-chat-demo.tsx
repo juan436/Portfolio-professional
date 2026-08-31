@@ -120,8 +120,6 @@ function GitSyncWidget({ texts }: { texts: { syncing: string; synced: string; co
   )
 }
 
-// Ver `ScriptedChatDemo` (components/agents/scripted-chat-demo.tsx) para la
-// máquina de estados y los timings — acá solo se arma el guion y el widget.
 export function SynapseChatDemo() {
   const { language, t } = useLanguage()
   const localeCode = (language.code as "es" | "en" | "fr" | "it") in SCRIPT ? (language.code as "es" | "en" | "fr" | "it") : "es"

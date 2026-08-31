@@ -42,8 +42,6 @@ function contentTypeForFilename(filename: string): string {
 }
 
 function safeSegment(segment: string): string {
-  // Sin '..' ni separadores de ruta — evita path traversal en sessionId/filename,
-  // que vienen del cliente.
   return segment.replace(/[/\\]/g, '_').replace(/\.\./g, '_');
 }
 
@@ -51,8 +49,6 @@ function leadKey(sessionId: string, filename: string): string {
   return `${LEADS_PREFIX}/${safeSegment(sessionId)}/${safeSegment(filename)}`;
 }
 
-// Expuesto para `lib/closing-actions.ts` — arma la URL pública sin subir
-// nada, para adjuntos que `listSessionFiles` ya confirmó que existen.
 export function leadFileUrl(sessionId: string, filename: string): string {
   return publicUrlForKey(leadKey(sessionId, filename));
 }
@@ -75,8 +71,6 @@ export async function readLeadFile(sessionId: string, filename: string): Promise
   const result = await getR2Client().send(new GetObjectCommand({ Bucket: getR2BucketName(), Key: key }));
   const body = result.Body;
   if (!body) throw new Error(`Archivo no encontrado en R2: ${key}`);
-  // El SDK v3 agrega helpers de conversión (`transformToByteArray`) al Body
-  // en runtime Node — no es un Buffer plano.
   const bytes = await (body as unknown as { transformToByteArray: () => Promise<Uint8Array> }).transformToByteArray();
   return Buffer.from(bytes);
 }

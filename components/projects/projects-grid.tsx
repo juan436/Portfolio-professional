@@ -47,8 +47,6 @@ export function ProjectsGrid({ localProjects, isLoading, translatedTexts }: Proj
     setPage(1)
   }, [activeFilter, activeSubtype])
 
-  // El subtype seleccionado puede no existir más en la categoría nueva —
-  // volver a "all" en vez de dejar un filtro que ya no aplica a nada.
   useEffect(() => {
     setActiveSubtype("all")
   }, [activeFilter])
@@ -68,10 +66,6 @@ export function ProjectsGrid({ localProjects, isLoading, translatedTexts }: Proj
 
   const projectsInCategory = activeFilter === "all" ? allProjects : allProjects.filter((p) => p.category === activeFilter)
 
-  // Bar de subtype: dependiente de la categoría activa. "Todas" -> subtypes de
-  // todo el catálogo; una categoría puntual -> solo los subtypes que existen
-  // ahí. Calculado de los datos reales, no de una lista fija — crece solo a
-  // medida que los proyectos traigan subtypes nuevos.
   const subtypeCounts = new Map<string, number>()
   for (const p of projectsInCategory) {
     if (p.subtype) subtypeCounts.set(p.subtype, (subtypeCounts.get(p.subtype) ?? 0) + 1)

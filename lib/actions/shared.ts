@@ -16,7 +16,6 @@ export async function requireAdminSession() {
   if (!ok) throw new Error("No autorizado")
 }
 
-/** Versión no lanzante — para gatear la vista previa de borradores en `/blog/[slug]`. */
 export async function isAdminSession(): Promise<boolean> {
   const store = await cookies()
   const token = store.get("authToken")?.value

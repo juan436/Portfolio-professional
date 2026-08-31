@@ -6,13 +6,11 @@ import { Button } from "@/components/ui/button"
 import { User, FileText, Code, Cpu, Save } from "lucide-react"
 import Script from "next/script"
 
-// Importar componentes extraídos
 import HeroForm from "@/components/admin/forms/hero-form"
 import AboutForm from "@/components/admin/forms/about-form"
 import ServicesForm from "@/components/admin/forms/services-form"
 import ContactForm from "@/components/admin/forms/contact-form"
 
-// Importar hook personalizado
 import { useContentEditor } from "@/hooks/admin/entities/content/use-content-editor"
 
 /**
@@ -22,7 +20,6 @@ import { useContentEditor } from "@/hooks/admin/entities/content/use-content-edi
  */
 export default function ContentEditor() {
   const {
-    // Estados
     activeTab,
     isLoading,
     heroContent,
@@ -31,20 +28,17 @@ export default function ContentEditor() {
     contactContent,
     hasChanges,
     
-    // Setters
     setActiveTab,
     setHeroContent,
     setAboutContent,
     setServicesContent,
     setContactContent,
     
-    // Acciones
     handleSave
   } = useContentEditor();
 
   return (
     <>
-      {/* Script para cargar los iconos de Devicon (necesario para las habilidades) */}
       <Script src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.js" />
 
       <motion.div
@@ -100,7 +94,6 @@ export default function ContentEditor() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Contenido de las tabs usando los componentes refactorizados */}
           <TabsContent value="hero" className="mt-0">
             <HeroForm content={heroContent} onChange={setHeroContent} />
           </TabsContent>

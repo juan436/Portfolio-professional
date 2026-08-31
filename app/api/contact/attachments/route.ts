@@ -43,9 +43,6 @@ async function convertOne(file: File, baseUrl: string, apiKey: string, sessionId
 
     const data = await response.json();
 
-    // Guarda el archivo original en disco (además de convertirlo) — se
-    // asocia al Lead/JobOffer cuando la charla cierra. Si esto falla, la
-    // conversión igual sirvió de contexto para la charla, no se corta nada.
     let url: string | undefined;
     try {
       const buffer = Buffer.from(await file.arrayBuffer());
@@ -58,9 +55,6 @@ async function convertOne(file: File, baseUrl: string, apiKey: string, sessionId
     const markdown = data.markdown as string;
     const type = file.type || 'application/octet-stream';
 
-    // El markdown va a Mongo para que /api/contact/chat lo arme por sessionId
-    // (así sobrevive un reload). Si esto falla, la conversión igual sirve para
-    // ESTE turno vía el fallback del body — no se corta nada.
     try {
       await SessionAttachment.findOneAndUpdate(
         { sessionId, filename: file.name },

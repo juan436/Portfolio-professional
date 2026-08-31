@@ -3,12 +3,6 @@ import Project from '../models/project.model';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolioNew';
 
-// Primer caso real de la categoría 'agente' (ver plan en el vault:
-// portfolio: planes/seccion-agentes-work). Jevy es el propio agente
-// conversacional de este sitio (components/contact/jevy-chat.tsx +
-// app/api/contact/chat/route.ts), ya en producción — no una demo.
-// EN/FR/IT con posicionamiento Europa, mismo criterio que el resto de la
-// identidad (ver juan-villegas-ing: identidad/plan-de-accion, 2026-08-17).
 
 const jevyAgent = {
   title: 'Jevy',
@@ -34,9 +28,6 @@ const jevyAgent = {
     setupTime: 'Depende del negocio — este caso completo (chat + agenda + notificaciones) tomó semanas de iteración real',
     liveDemo: 'jevy-chat' as const,
   },
-  // Nomenclatura propia del motor de matching (lib/matching.ts), separada de
-  // category/subtype de arriba — sin esto, Jevy nunca puede salir como match
-  // para un lead que describe querer un agente/bot conversacional.
   jevyProfile: {
     categoria: 'agente',
     subtype: 'bot_conversacional',

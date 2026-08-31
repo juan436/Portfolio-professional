@@ -29,7 +29,6 @@ export default function Navbar() {
     []
   )
 
-  // Detectar scroll para cambiar el estilo de la barra de navegación
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
@@ -52,10 +51,8 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           <Logo />
 
-          {/* Desktop Navigation */}
           <DesktopNav navItems={navItems} />
 
-          {/* Mobile Navigation Toggle and Menu */}
           <MobileNav isOpen={isOpen} setIsOpen={setIsOpen} navItems={navItems} />
         </div>
       </nav>

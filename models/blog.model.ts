@@ -5,11 +5,6 @@ import mongoose, { Document } from 'mongoose';
  * Recibe: title/slug/excerpt/body (HTML)/tags/status, traducciones opcionales.
  * Produce: `BlogPost`, listo para `find`/`create` contra la colección `blogposts`.
  */
-// body como HTML producido por un editor rich text (Tiptap) — reemplaza la
-// decisión original del 2026-08-19 de usar bloques tipados {kind, text,
-// items} para evitar una librería de rich-text. Revisión consciente de esa
-// decisión (0 posts existentes al momento del cambio, sin migración de
-// datos). Ver dev-aguila-azul/vault/portfolio: sesión del blog rich-text.
 export interface IBlogPost extends Document {
   title: string;
   slug: string;

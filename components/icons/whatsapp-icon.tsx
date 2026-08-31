@@ -1,4 +1,3 @@
-/** Ícono de WhatsApp (SVG inline, no viene de lucide-react). Recibe: `className?`. Produce: el `<svg>`. */
 export function WhatsappIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>

@@ -25,7 +25,6 @@ export async function generateMetadata({
   })
 }
 
-/** Página `/automations/[slug]` (Server Component). Recibe: `params.slug` + `?from=work`. Produce: detalle de la automatización + testimonios + métricas. */
 export default async function AutomationDetailPage({
   params,
   searchParams,

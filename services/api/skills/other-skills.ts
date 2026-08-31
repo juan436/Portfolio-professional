@@ -9,20 +9,14 @@ export const fetchOtherSkills = async () => {
   return await response.json();
 };
 
-/**
- * Crea una nueva habilidad adicional con traducciones automáticas
- */
 export const createOtherSkill = async (skill: any) => {
   try {
-    // Preparar el objeto base
     const skillBase = {
       name: skill.name
     };
     
-    // Campos a traducir para otras habilidades
     const fieldsToTranslate: Array<keyof typeof skillBase> = ['name'];
     
-    // Generar traducciones automáticamente
     const skillWithTranslations = await translateAndAddToObject(
       skillBase,
       'es',
@@ -53,15 +47,10 @@ export const createOtherSkill = async (skill: any) => {
   }
 };
 
-/**
- * Actualiza una habilidad adicional existente con traducciones automáticas
- */
 export const updateOtherSkill = async (id: string, skill: any) => {
   try {
-    // Campos a traducir para otras habilidades
     const fieldsToTranslate: Array<keyof typeof skill> = ['name'];
     
-    // Generar traducciones automáticamente
     const skillWithTranslations = await translateAndAddToObject(
       skill,
       'es',
@@ -91,9 +80,6 @@ export const updateOtherSkill = async (id: string, skill: any) => {
   }
 };
 
-/**
- * Elimina una habilidad adicional
- */
 export const deleteOtherSkill = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/other-skills/${id}`, {

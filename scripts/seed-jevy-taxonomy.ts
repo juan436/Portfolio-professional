@@ -1,7 +1,3 @@
-// seed-jevy-taxonomy.ts
-// Carga la semilla inicial del vocabulario de Jevy (lib/jevy-taxonomy.ts) al
-// documento singleton de Mongo. Desde acá en adelante, editar el documento en
-// Mongo es la forma real de agregar valores nuevos — no re-correr este script.
 
 import dbConnect from '../lib/db/conection'
 import JevyTaxonomy from '../models/jevy-taxonomy.model'

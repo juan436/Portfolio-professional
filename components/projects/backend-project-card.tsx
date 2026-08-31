@@ -40,7 +40,6 @@ export function BackendProjectCard({ project, index }: BackendProjectCardProps) 
         className="h-full"
       >
         <Card className="bg-zinc-900/40 border border-white/10 backdrop-blur-md hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(37,99,235,0.15)] transition-all duration-500 h-full relative group cursor-pointer">
-          {/* Efecto Inner Glow */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent pointer-events-none rounded-xl" />
 
           <CardContent className="p-6 relative z-10 flex flex-col h-full">

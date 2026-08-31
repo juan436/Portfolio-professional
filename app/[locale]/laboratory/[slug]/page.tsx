@@ -25,7 +25,6 @@ export async function generateMetadata({
   })
 }
 
-/** Página `/laboratory/[slug]` (Server Component). Recibe: `params.slug`. Produce: detalle del proyecto de Laboratorio. */
 export default async function LaboratoryDetailPage({
   params,
 }: {

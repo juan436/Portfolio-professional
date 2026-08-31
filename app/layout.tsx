@@ -67,8 +67,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // El middleware setea `x-locale` según el prefijo de la ruta (`/en/...` → en).
-  // `/admin`, `/api` y demás rutas sin prefijo caen en "es".
   const locale = (await headers()).get("x-locale") || "es"
 
   return (

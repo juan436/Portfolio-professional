@@ -16,9 +16,7 @@ import { renderDevIcon } from "@/lib/devicon-utils"
  * Recibe: `isOpen`/`onClose`/`onSave`/`currentSkill`/`category`.
  * Produce: llama `onSave` con el `Skill` armado (mantiene `_id` si es edición).
  */
-// Lista de iconos disponibles en Devicon
 const availableIcons = [
-  // Frontend
   "react",
   "nextjs",
   "typescript",
@@ -38,7 +36,6 @@ const availableIcons = [
   "flutter",
   "svelte",
   
-  // Backend
   "nodejs",
   "express",
   "php",
@@ -59,7 +56,6 @@ const availableIcons = [
   "graphql",
   "nestjs",
   
-  // Database
   "mongodb",
   "mysql",
   "postgresql",
@@ -74,7 +70,6 @@ const availableIcons = [
   "cassandra",
   "neo4j",
   
-  // DevOps
   "git",
   "github",
   "gitlab",
@@ -110,12 +105,10 @@ export default function SkillForm({ isOpen, onClose, onSave, currentSkill, categ
   const [useColored, setUseColored] = useState(false)
   const [iconSearchTerm, setIconSearchTerm] = useState("")
 
-  // Filtrar iconos según el término de búsqueda
   const filteredIcons = availableIcons.filter((iconName) =>
     iconName.toLowerCase().includes(iconSearchTerm.toLowerCase())
   )
 
-  // Cargar datos de la habilidad actual si existe
   useEffect(() => {
     if (currentSkill) {
       setName(currentSkill.name || "")
@@ -126,22 +119,16 @@ export default function SkillForm({ isOpen, onClose, onSave, currentSkill, categ
     }
   }, [currentSkill, isOpen])
 
-  // Renderizar el ícono de Devicon
   const renderIcon = (iconName: string) => {
     return renderDevIcon(iconName, useColored)
   }
 
-  // Manejar el guardado de la habilidad
   const handleSave = () => {
-    // Validar que se haya ingresado un nombre y un ícono
     if (!name || !icon) {
-      // Mostrar mensaje de error
       return
     }
 
-    // Crear objeto de habilidad con los datos del formulario
     const skillData: Skill = {
-      // Solo incluir el _id si existe (es decir, si estamos editando)
       ...(currentSkill?._id ? { _id: currentSkill._id } : {}),
       name,
       icon,
@@ -149,10 +136,8 @@ export default function SkillForm({ isOpen, onClose, onSave, currentSkill, categ
       colored: useColored
     }
 
-    // Llamar a la función de guardado
     onSave(skillData)
 
-    // Limpiar el formulario y cerrar el diálogo
     setName("")
     setIcon("")
     onClose()

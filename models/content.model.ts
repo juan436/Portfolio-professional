@@ -5,11 +5,6 @@ import mongoose, { Document, Model } from 'mongoose';
  * Recibe: hero/about/services[]/contact, con traducciones opcionales en/fr/it por sección.
  * Produce: `Content`, listo para `findOne`/`save` contra la colección `contents`.
  */
-// El bloque translations: { en, fr, it } se repetía 4 veces (interfaz TS y
-// schema Mongoose) — colapsado acá, mismo espíritu que localeContentFields()
-// en project.model.ts. `build()` se llama 3 veces a propósito (no se reusa
-// un solo objeto para en/fr/it) para no compartir la misma referencia de
-// definición de schema entre los 3 paths, igual que ya hace project.model.ts.
 type LocaleTranslations<T> = {
   en?: T;
   fr?: T;
@@ -20,7 +15,6 @@ function localeSchemaFields<T>(build: () => T) {
   return { en: build(), fr: build(), it: build() };
 }
 
-// Interfaces para los subdocumentos
 interface IHero {
   title: string;
   subtitle: string;
@@ -63,7 +57,6 @@ interface IService {
   }>;
 }
 
-// Interfaz para el documento principal
 export interface IContent extends Document {
   hero: IHero;
   about: IAbout;

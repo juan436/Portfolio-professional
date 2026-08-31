@@ -16,13 +16,6 @@ export interface ProjectDetailData {
   metrics: { label: string; value: string }[]
 }
 
-// Server-only: consulta Mongo directo, sin round-trip HTTP a la propia API.
-// Reemplaza el waterfall client-side (fetchProjectById -> then testimonials+stats)
-// que corría en cada navegación a /projects/[slug]. Busca por slug (URL
-// pública) — el _id de Mongo sigue siendo la clave interna para
-// Testimonial/ProjectStats, nunca se expone en la URL.
-// Cacheado (unstable_cache) — tags "projects" + "testimonials", invalidados
-// desde las Server Actions del Admin con `revalidateTag`.
 export const getProjectDetail = unstable_cache(
   async (slug: string): Promise<ProjectDetailData | null> => {
     await dbConnect()
@@ -31,7 +24,6 @@ export const getProjectDetail = unstable_cache(
     try {
       project = await Project.findOne({ slug }).lean()
     } catch {
-      // Error de consulta -> mismo tratamiento que "no encontrado"
       return null
     }
 

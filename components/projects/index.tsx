@@ -16,7 +16,6 @@ export default function Projects() {
   const { content, isLoading } = useContent()
   const { translatedContent } = useTranslatedContent()
 
-  // Combinar proyectos traducidos con las etiquetas e imágenes del contenido original
   const combinedProjects = {
     web: translatedContent.projects?.web?.map(project => {
       const originalProject = content.projects.web.find(p => p.id === project.id);

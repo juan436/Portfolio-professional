@@ -10,11 +10,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * Fuente única para "tecnologías usadas" en un proyecto: aplana techStack
- * (frontend/backend/database/infra) si existe. Cae a tags solo para proyectos
- * viejos que todavía no tienen techStack clasificado.
- */
 export function getProjectTechnologies(project: {
   techStack?: {
     frontend?: string[]
@@ -37,11 +32,6 @@ export function getProjectTechnologies(project: {
   return flattened.length > 0 ? flattened : project.tags || []
 }
 
-/**
- * Entradas no vacías de `techStack` (`[categoría, items[]]`), para renderizar la
- * tarjeta de stack en las vistas de detalle. Idéntico en project- y
- * laboratory-detail-view (auditoría 2026-08-27 §4.14).
- */
 export function techStackEntries(techStack?: Record<string, unknown>): [string, string[]][] {
   return Object.entries(techStack || {}).filter(
     ([, items]) => Array.isArray(items) && items.length > 0,

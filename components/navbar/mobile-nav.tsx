@@ -33,7 +33,6 @@ export function MobileNav({ isOpen, setIsOpen, navItems }: MobileNavProps) {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </Button>
 
-      {/* Mobile Navigation Menu */}
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}

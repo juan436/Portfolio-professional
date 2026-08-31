@@ -13,7 +13,6 @@ import { toHtml } from "hast-util-to-html"
  */
 const lowlight = createLowlight(common)
 
-// Alias → lenguaje registrado en el set `common` de lowlight.
 const LANG_ALIASES: Record<string, string> = {
   ts: "typescript",
   tsx: "typescript",
@@ -43,7 +42,6 @@ function highlightCode(rawInner: string, langHint: string): string {
     const tree = lang && lowlight.registered(lang) ? lowlight.highlight(lang, code) : lowlight.highlightAuto(code)
     return toHtml(tree)
   } catch {
-    // Si el resaltado falla, devolver el texto re-escapado (sin romper el HTML).
     return code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
   }
 }

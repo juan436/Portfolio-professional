@@ -164,9 +164,6 @@ export default function TestimonialsManager() {
     }
   }
 
-  // "Rechazar" un pending no tiene estado propio en el modelo — nunca llegó
-  // a mostrarse en el sitio, así que rechazar es borrarlo directo (sin el
-  // diálogo de confirmación del delete normal, ya es una acción de moderación).
   const handleReject = async (id: string) => {
     try {
       await deleteTestimonialAction(id)

@@ -27,7 +27,6 @@ export function SimilarWorkCTA({ reference }: { reference?: { slug: string; titl
     try {
       sessionStorage.setItem("jevy_reference_project", JSON.stringify(reference))
     } catch {
-      // sessionStorage inaccesible — el chat arranca sin contexto, no rompe nada
     }
   }
 

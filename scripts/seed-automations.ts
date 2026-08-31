@@ -1,7 +1,3 @@
-// seed-automations.ts
-// Migra las 3 automatizaciones reales desde public/locales/{es,en,fr,it}/translation.json
-// (automations.items[]) hacia la colección Project (category: 'automation').
-// Contenido copiado tal cual del JSON existente, sin inventar nada nuevo.
 
 import dbConnect from '../lib/db/conection';
 import Project from '../models/project.model';

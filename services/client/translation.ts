@@ -4,16 +4,8 @@
  */
 import { getApiUrl } from '@/utils/url';
 
-// Códigos de idioma soportados
 export type SupportedLanguage = 'es' | 'en' | 'fr' | 'it';
 
-/**
- * Traduce un texto de un idioma a otro
- * @param text Texto a traducir
- * @param source Idioma de origen (código ISO)
- * @param target Idioma de destino (código ISO)
- * @returns Texto traducido
- */
 export async function translateText(
   text: string,
   source: SupportedLanguage | 'auto',
@@ -40,14 +32,6 @@ export async function translateText(
   }
 }
 
-/**
- * Traduce un objeto con campos de texto a múltiples idiomas
- * @param obj Objeto con campos de texto
- * @param sourceLanguage Idioma de origen
- * @param targetLanguages Lista de idiomas destino
- * @param fieldsToTranslate Lista de campos a traducir
- * @returns Objeto con traducciones
- */
 export async function translateObject<T extends Record<string, any>>(
   obj: T,
   sourceLanguage: SupportedLanguage,
@@ -87,14 +71,6 @@ export async function translateObject<T extends Record<string, any>>(
   return translations;
 }
 
-/**
- * Traduce un objeto y añade las traducciones en el campo 'translations'
- * @param obj Objeto a traducir
- * @param sourceLanguage Idioma de origen
- * @param targetLanguages Idiomas destino
- * @param fieldsToTranslate Campos a traducir
- * @returns Objeto con campo translations añadido
- */
 export async function translateAndAddToObject<T extends Record<string, any>>(
   obj: T,
   sourceLanguage: SupportedLanguage = 'es',

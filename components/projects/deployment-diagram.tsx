@@ -46,7 +46,7 @@ interface DeploymentStep {
 type InfraNodeData = {
   label: string
   icon: DeploymentIconKey
-  isEdge: boolean // primer o último nodo (Internet / almacenamiento) vs. servicio propio
+  isEdge: boolean
 }
 
 const handleDot = "!w-3 !h-3 !bg-blue-500 !border-2 !border-black"

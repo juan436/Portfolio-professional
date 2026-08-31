@@ -34,16 +34,10 @@ export async function logout() {
     }
   }
   
-  /**
-   * Redirige al usuario a la página de login
-   */
   export function redirectToLogin() {
     window.location.href = '/admin/login';
   }
   
-  /**
-   * Redirige al usuario al dashboard
-   */
   export function redirectToDashboard() {
     window.location.href = '/admin/dashboard';
   }

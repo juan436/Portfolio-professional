@@ -15,18 +15,12 @@ import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation
  * Procesa: revalida la ficha pública de cada proyecto citado en `links[]`.
  * Produce: el testimonio creado/actualizado/aprobado (plano) / `true` al borrar / listado completo (todos los status, Admin).
  */
-// El GET público (/api/testimonials) solo devuelve `status: 'approved'` — el
-// Admin necesita ver también los `pending`, así que la lectura completa vive
-// como Server Action (mismo patrón que listProjectStatsAction).
 export async function listTestimonialsAction() {
   await requireAdminSession()
   await dbConnect()
   const testimonials = await Testimonial.find().sort({ createdAt: -1 }).lean()
   return JSON.parse(JSON.stringify(testimonials))
 }
-// Un testimonio puede citar varios proyectos/automatizaciones (links[]) —
-// revalida la ficha pública de cada uno según su categoría real (no todos
-// los "proyecto" son /projects/[id]: puede ser laboratorio/agente también).
 async function revalidateLinks(links: { type: "proyecto" | "automatizacion"; ref: string }[] | undefined) {
   if (!links) return
   for (const link of links) {
@@ -41,9 +35,6 @@ export async function createTestimonialAction(data: Record<string, any>) {
   await requireAdminSession()
   await dbConnect()
 
-  // Lo que Juan carga a mano desde el Admin es curado por él mismo — nace
-  // 'approved' directo, sin pasar por la cola de moderación (a diferencia
-  // del form público, que siempre fuerza 'pending').
   const testimonial = new Testimonial({ status: "approved", ...data })
   await testimonial.save()
   await revalidateLinks(testimonial.links)
@@ -76,10 +67,6 @@ export async function deleteTestimonialAction(id: string) {
   return true
 }
 
-// Aprobar un testimonio pending (llegado por el form público) lo hace visible
-// en el GET público. "Rechazar" un pending no tiene un estado propio en el
-// modelo — se resuelve borrándolo (deleteTestimonialAction), nunca llegó a
-// mostrarse en el sitio.
 export async function approveTestimonialAction(id: string) {
   await requireAdminSession()
   await dbConnect()
@@ -91,10 +78,6 @@ export async function approveTestimonialAction(id: string) {
   return JSON.parse(JSON.stringify(updated))
 }
 
-// Promueve una métrica sugerida (Step 2 del form público, sin verificar) a
-// ProjectStats real — la suma al proyecto/automatización del primer link del
-// testimonio y, si trae `statType`, al acumulado del home. La quita de
-// `suggestedMetrics` para no promoverla dos veces.
 export async function promoteSuggestedMetricAction(testimonialId: string, metricIndex: number) {
   await requireAdminSession()
   await dbConnect()

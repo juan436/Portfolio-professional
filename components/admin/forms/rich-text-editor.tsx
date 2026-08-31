@@ -52,8 +52,6 @@ const EMOJIS = [
   "🧠", "🤖", "🛠️", "🔍", "🔗", "✅", "❌", "⚠️", "💬", "➡️",
 ]
 
-// Lenguajes para el selector del bloque de código — todos registrados en el
-// set `common` de lowlight (mismo set que usa el resaltado server-side).
 const CODE_LANGUAGES = [
   { value: "plaintext", label: "Texto plano" },
   { value: "javascript", label: "JavaScript" },
@@ -163,12 +161,9 @@ export function RichTextEditor({
       const url = await uploadImage(file)
       editor.chain().focus().setImage({ src: url }).run()
     } catch {
-      // useMediaActions ya mostró el toast de error.
     }
   }
 
-  // Aplica el interlineado al bloque donde está el cursor (párrafo/título/cita) —
-  // no a todo el documento. `updateAttributes` necesita el nombre del nodo activo.
   const setBlockLineSpacing = (value: string | null) => {
     if (!editor) return
     const nodeType = editor.state.selection.$from.parent.type.name

@@ -8,22 +8,6 @@ import type { Spec } from '@json-render/core';
  * Procesa: parsea el markdown a secciones, arma un `Spec` de @json-render y lo valida.
  * Produce: `Buffer` del PDF renderizado.
  */
-// Convierte el markdown del levantamiento a PDF — mismo contenido que el
-// markdown (ese queda aparte, para que Juan lo siga trabajando). Construido
-// con @json-render/react-pdf (layout flexbox real sobre @react-pdf/renderer)
-// en vez de pdfkit a mano — decisión 2026-08-14 después de que la primera
-// versión con coordenadas manuales salió con overlaps reales. Ver
-// dev-aguila-azul/vault/portfolio: planes/pdf-informe-jevy-diseno.
-//
-// Prioridad de contenido (2026-08-14): el informe lleva el levantamiento
-// completo, no son "campitos" — los campos narrativos (cualquier respuesta
-// larga, sea de cliente o de reclutador) se renderizan como bloque de texto
-// propio, no como fila de tabla apretada. La decisión es por longitud real
-// del valor, no por una lista fija de qué campo es de qué tipo de lead.
-//
-// Parser de markdown deliberadamente simple — el formato de lib/report.ts es
-// predecible (encabezados, líneas "**Label:** valor", bullets), no hace
-// falta un parser general.
 
 const LABEL_LINE = /^\*\*(.+?):\*\*\s*(.*)$/;
 const ITALIC_LINE = /^_(.+)_$/;
@@ -113,7 +97,6 @@ function buildSpec(markdown: string): Spec {
   const { kicker, subject, sections } = parseMarkdown(markdown);
   const b = new SpecBuilder();
 
-  // Banda de encabezado
   const kickerText = b.add('Text', { text: 'JEVY — ASISTENTE DEL ING. JUAN VILLEGAS', fontSize: 9, color: '#DCE8FF' });
   const subjectHeading = b.add('Heading', { text: subject, level: 'h1', color: '#FFFFFF' });
   const dateText = b.add('Text', {
@@ -127,7 +110,6 @@ function buildSpec(markdown: string): Spec {
     [kickerText, subjectHeading, dateText],
   );
 
-  // Cuerpo: una sección a la vez
   const sectionIds: string[] = [];
   for (const section of sections) {
     sectionIds.push(...buildSection(b, section));
@@ -153,9 +135,6 @@ function buildSection(b: SpecBuilder, section: ParsedSection): string[] {
   const divider = b.add('Divider', { color: BLUE, thickness: 1.5, marginBottom: 10 });
   blockIds.push(b.add('View', {}, [heading, divider]));
 
-  // Campos: los cortos se agrupan en tabla, los narrativos se cortan aparte
-  // como bloque propio — la tabla se "corta" y se retoma si hay que
-  // intercalar un bloque narrativo en el medio.
   let tableRows: string[][] = [];
 
   const flushTable = () => {
@@ -177,10 +156,6 @@ function buildSection(b: SpecBuilder, section: ParsedSection): string[] {
     tableRows = [];
   };
 
-  // Decisión por SECCIÓN completa, no campo por campo — si algún campo es
-  // narrativo, toda la sección va en párrafos (hasta los campos cortos como
-  // "Quién lo usa: _sin dato_"). Mezclar tabla y párrafo en la misma sección
-  // se ve inconsistente (feedback 2026-08-15).
   const values = section.fields.map((f) => f.value.trim() || '_sin dato_');
   const sectionIsNarrative = values.some((v) => v.length > NARRATIVE_THRESHOLD);
 

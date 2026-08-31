@@ -44,15 +44,12 @@ export default function Services() {
 
   const getServiceIcon = (iconName: string) => {
     const iconClass = "h-10 w-10 text-blue-500 filter drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
-    // "Code" y cualquier nombre no mapeado usan Code2 (no Code) — discrepancia
-    // ya existente en producción, documentada en lib/service-icon-map.ts.
     const Icon = iconName !== "Code" && iconName in serviceIconMap ? getServiceIconComponent(iconName) : Code2
     return <Icon className={iconClass} />
   }
 
   return (
     <section id="services" className="py-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black relative overflow-hidden">
-      {/* Decorative background element */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-6xl pointer-events-none -z-10 opacity-30">
         <div className="w-full h-full bg-gradient-to-r from-blue-500/5 via-transparent to-blue-500/5 blur-3xl rounded-full" />
       </div>
@@ -101,7 +98,6 @@ export default function Services() {
                   className="h-full relative group"
                 >
                   <Card className="bg-zinc-900/40 border border-white/10 backdrop-blur-md hover:border-blue-500/50 transition-colors duration-200 flex flex-col h-full relative z-10 overflow-visible">
-                    {/* Glow con opacidad fija animada (compositor) en vez de animar el blur del shadow (repaint) */}
                     <div className="absolute inset-0 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.2)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10 pointer-events-none" />
                     <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-colors duration-200 -z-10 rounded-xl" />
                     <CardContent className="pt-6 flex flex-col h-full">

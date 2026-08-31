@@ -7,7 +7,6 @@ import ProjectStats from '@/models/project-stats.model';
  * Nota: el Admin ya usa Server Actions (lib/actions/project-stats.ts); esta ruta la consume
  * el sitio público para leer métricas de un proyecto/automatización.
  */
-// GET: Obtener las estadísticas de un proyecto o automatización puntual
 export async function GET(request: Request) {
   await dbConnect();
 
@@ -37,7 +36,6 @@ export async function GET(request: Request) {
   }
 }
 
-// POST: Crear o reemplazar las estadísticas de un proyecto/automatización (upsert por ref)
 export async function POST(request: Request) {
   await dbConnect();
 

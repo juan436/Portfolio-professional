@@ -67,18 +67,6 @@ export interface DeepSeekToolFunction {
   parameters: Record<string, unknown>;
 }
 
-/**
- * Function calling (formato compatible OpenAI, soportado nativo por DeepSeek
- * desde V3.2). `tool_choice` fuerza que SIEMPRE devuelva la función — esto es
- * extracción, no charla, no tiene sentido dejarle la opción de no llamarla.
- * `temperature` baja (no la 0.6 del chat narrativo): es clasificación, no
- * creatividad — menos variabilidad es mejor acá, no peor.
- *
- * Nota: DeepSeek documenta un modo `strict` (beta, endpoint aparte) que
- * garantiza cumplimiento exacto del schema. No se activa todavía — requiere
- * confirmar el endpoint beta exacto contra la doc antes de prender esto en
- * producción. Sin `strict`, function calling estándar ya es confiable.
- */
 export interface DeepSeekToolReply {
   result: Record<string, unknown> | null;
   usage: DeepSeekUsage;

@@ -11,14 +11,12 @@ import { useIsMounted } from "@/hooks/use-is-mounted"
 export function EnergyWaves() {
   const isMounted = useIsMounted()
 
-  // No renderizar nada durante SSR
   if (!isMounted) {
     return null
   }
   
   return (
     <>
-      {/* Ondas de energía cuántica */}
       {[...Array(3)].map((_, i) => (
         <motion.div
           key={`quantum-wave-${i}`}

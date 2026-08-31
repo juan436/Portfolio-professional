@@ -29,7 +29,6 @@ interface TestimonialSubmission {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// GET: Obtener testimonios aprobados, filtrados opcionalmente por tipo y/o a qué proyecto/automatización están vinculados
 export async function GET(request: Request) {
   await dbConnect();
 
@@ -38,7 +37,6 @@ export async function GET(request: Request) {
     const type = searchParams.get('type');
     const ref = searchParams.get('ref');
 
-    // Público: solo lo que Juan ya aprobó. La moderación pending vive en el Admin.
     const query: Record<string, unknown> = { status: 'approved' };
     if (type) query.type = type;
     if (ref) query['links.ref'] = ref;
@@ -58,12 +56,6 @@ export async function GET(request: Request) {
   }
 }
 
-// POST: form público de testimonios. Recibe un solo testimonio "lógico" con
-// 1-2 `links[]` (2 solo cuando el proyecto elegido tiene ficha hermana
-// web+API y el cliente aceptó enviarlo también para esa) — se traduce en un
-// documento `Testimonial` separado por cada link (el modelo real nunca tiene
-// 2 refs en un mismo testimonio). Siempre nace `status: 'pending'`, sin
-// importar lo que venga en el body.
 export async function POST(request: Request) {
   if (isRateLimited(`testimonials:${getClientIp(request)}`, SUBMIT_IP_LIMIT, SUBMIT_IP_WINDOW_MS)) {
     return NextResponse.json({ success: false, message: 'Demasiadas solicitudes, intenta de nuevo en unos minutos' }, { status: 429 });
@@ -102,9 +94,6 @@ export async function POST(request: Request) {
           .map((m) => ({ label: String(m.label || '').trim(), value: String(m.value).trim(), statType: m.statType }))
       : [];
 
-    // Ignora cualquier `status`/`type` que venga en el body — nunca se
-    // confía en el cliente para eso. El form público siempre linkea a un
-    // proyecto/automatización, así que el tipo real siempre es "resultado".
     const created = await Testimonial.create(
       links.map((link) => ({
         author,

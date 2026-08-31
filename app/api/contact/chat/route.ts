@@ -22,11 +22,6 @@ import { isRateLimited, getClientIp } from '@/lib/rate-limit';
  * pide la respuesta charlada a DeepSeek y registra tokens/llamadas (JevyChatStat).
  * Produce: `{ success, reply, matches, closed, schedulingData }`.
  */
-// Tope por IP: una charla real hace ~1 request por turno, con reintentos de
-// adjuntos/errores incluidos esto da margen de sobra sin dejar la puerta
-// abierta a flood. Tope por sesión: evita que una sola charla (aunque venga
-// de IPs distintas, ej. detrás de un proxy) se alargue indefinido pagando
-// DeepSeek turno tras turno.
 const CHAT_IP_LIMIT = 40;
 const CHAT_IP_WINDOW_MS = 10 * 60 * 1000;
 const CHAT_TURN_LIMIT = 30;
@@ -140,11 +135,6 @@ export async function POST(request: Request) {
     await dbConnect();
     const projects = await Project.find({}).select('title slug description category image demo jevyProfile').limit(50);
 
-    // El lead viene del CTA "¿Necesitas algo similar?" de una ficha concreta —
-    // se sabe EXACTO cuál es (por slug: clave exacta, sin acentos, igual en
-    // todos los idiomas). NO se toca el motor de matching ni la tarjeta — solo
-    // se le pasa a Jevy el nombre + pitch por el system prompt para que
-    // reconozca el proyecto en su primera respuesta, breve y sin link.
     const referenceSlug = typeof referenceProjectSlug === 'string' ? referenceProjectSlug.trim() : '';
     const referenceMatchDoc = referenceSlug ? projects.find((p) => p.slug === referenceSlug) : undefined;
     const referenceInfo = referenceMatchDoc
@@ -155,21 +145,11 @@ export async function POST(request: Request) {
         }
       : undefined;
 
-    // Estadísticas de tokens del turno — un doc por request que sí llegó a
-    // llamar a DeepSeek, ver models/jevy-chat-stat.model.ts.
     const calls: IJevyChatStatCall[] = [];
     const recordCall = (type: JevyCallType, usage: DeepSeekUsage) => {
       calls.push({ type, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, totalTokens: usage.totalTokens });
     };
 
-    // Extracción por function calling — recién con algo de charla acumulada
-    // (nunca en el primer mensaje). Si falla, Jevy sigue sin match, no rompe
-    // la conversación. Ver planes/matching-catalogo-function-calling. Una vez
-    // que el frontend ya mostró un match (alreadyMatched), no se vuelve a
-    // calcular — evita que la misma tarjeta se reenvíe en cada turno siguiente.
-    // Si el lead vino del CTA de una ficha (referenceInfo), el "match" ya lo
-    // eligió él al tocar "quiero algo parecido a esto" — no se corre el motor
-    // difuso: la conversación entera está anclada a ese proyecto.
     let matchResult: MatchResult | null = null;
 
     if (userMessageCount >= 2 && !alreadyMatched && !referenceInfo) {
@@ -189,15 +169,6 @@ export async function POST(request: Request) {
         const leadProfile = normalizeLeadProfile(rawProfile);
         matchResult = findBestMatch(leadProfile, projects);
 
-        // Reintento único si no hubo match — ni temperature 0 garantiza
-        // determinismo exacto en un modelo MoE como DeepSeek (probado: incluso
-        // 1 solo eje mal clasificado alcanza para tirar el score debajo del
-        // piso). Pero solo vale la pena si vino ALGO de señal (1-3 ejes
-        // definidos) — con los 4 en no_definido (charla de reclutador, o
-        // recién arrancando) no hay nada que reintentar recupere; probado:
-        // 4/4 no_definido siempre, nunca 1-3 (eso es harina de otro costal).
-        // Sin este chequeo, cada turno de una charla de reclutador pagaba
-        // 2 llamadas a la API en vez de 1, siempre sin encontrar nada.
         const definedAxes = Object.values(leadProfile).filter((v) => v !== 'no_definido').length;
         if (!matchResult && definedAxes > 0) {
           const { result: retryRaw, usage: retryUsage } = await askDeepSeekTool(extractionMessages, tool);
@@ -210,11 +181,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // Extracción de cierre — todos los campos del levantamiento, no solo los
-    // de matching. Se intenta más tarde en la charla (contacto suele venir
-    // al final) y solo actúa (guarda + notifica) si ya hay contacto completo.
-    // Ver planes/levantamiento-informacion-jevy. Un solo cierre por charla:
-    // una vez guardado, el frontend deja de mandar mensajes nuevos.
     let closed = false;
     let schedulingData: SchedulingData | null = null;
     if (userMessageCount >= 3 && typeof sessionId === 'string' && sessionId) {
@@ -232,10 +198,6 @@ export async function POST(request: Request) {
         recordCall('closing', closingUsage);
         let closing = normalizeClosing(rawClosing);
 
-        // Mismo reintento que ya endurecimos en el matching — ni temperature 0
-        // garantiza determinismo exacto en un modelo MoE. Acá pesa más: es la
-        // extracción que decide si guardamos el contacto del lead. Reintenta
-        // solo si hay señal parcial (algún campo capturado, no los 4/4 vacíos).
         if (!isReadyToClose(closing) && (closing.name || closing.email || closing.channelContact)) {
           const { result: retryRaw, usage: retryUsage } = await askDeepSeekTool(closingMessages, closingTool);
           recordCall('closing_retry', retryUsage);
@@ -259,9 +221,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // Contexto de adjuntos: se arma desde `SessionAttachment` (Mongo, por
-    // sessionId) para que sobreviva un reload. `attachmentsContext` del body
-    // queda solo como fallback si el guardado en Mongo falló.
     let attachmentsCtx: string | undefined =
       typeof attachmentsContext === 'string' && attachmentsContext ? attachmentsContext : undefined;
     if (typeof sessionId === 'string' && sessionId) {
@@ -304,9 +263,6 @@ export async function POST(request: Request) {
         ]
       : [];
 
-    // "Ing." es un tratamiento solo del español. En EN/FR/IT el modelo lo
-    // arrastra igual (todo el prompt repite "el Ing. Juan Villegas") — se limpia
-    // acá de forma determinística en vez de pelear con el prompt.
     const stripIngForLocale = (text: string) =>
       typeof locale === 'string' && locale !== 'es'
         ? text.replace(/\b(?:the|le|la|il|lo|del|du|de la|dell'|dello)?\s*ing\.\s+(juan\s+villegas)/gi, 'Juan Villegas')

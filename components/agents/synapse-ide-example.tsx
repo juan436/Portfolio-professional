@@ -124,7 +124,6 @@ export function SynapseIdeExample() {
         </div>
 
         <div className="flex flex-col md:flex-row">
-          {/* Panel izquierdo: archivo */}
           <div className="md:w-3/5 border-b md:border-b-0 md:border-r border-blue-700/20">
             <div className="px-4 py-2 text-xs text-slate-500 font-mono border-b border-blue-700/10 bg-[#0e1013]">
               {copy.filePath}
@@ -139,7 +138,6 @@ export function SynapseIdeExample() {
             </div>
           </div>
 
-          {/* Panel derecho: chat del agente */}
           <div className="md:w-2/5 flex flex-col">
             <div className="px-4 py-2 text-xs text-slate-500 font-mono border-b border-blue-700/10 bg-[#0e1013]">
               {copy.chatLabel}

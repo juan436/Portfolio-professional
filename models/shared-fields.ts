@@ -10,8 +10,6 @@ export interface IAttachment {
   type: string;
   url: string;
   extractedNote?: string;
-  /** Contenido del archivo convertido a Markdown (por `markdown-transformer`). Copiado
-   *  desde `SessionAttachment` al cerrar la charla, para que el Lead sea autocontenido. */
   markdown?: string;
 }
 

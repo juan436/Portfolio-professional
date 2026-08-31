@@ -16,7 +16,6 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
  * Procesa: estado local propio (no usa `useModifiedFieldsForm` — maneja el array `skills` aparte), valida position/company/period antes de guardar.
  * Produce: llama `onSave` con los datos procesados (+ `_modifiedFields` si es edición).
  */
-// Definir la interfaz para una experiencia laboral
 export interface Experience {
   _id?: string
   position: string
@@ -56,7 +55,6 @@ export default function ExperienceForm({
   const [emptyFields, setEmptyFields] = useState<Record<string, boolean>>({})
   const [modifiedFields, setModifiedFields] = useState<Record<string, boolean>>({})
 
-  // Actualizar el formData cuando cambia la experiencia seleccionada
   useEffect(() => {
     if (isNewExperience && experience) {
       const emptyExperience = { ...experience };
@@ -70,12 +68,10 @@ export default function ExperienceForm({
       setFormData(experience);
     }
     
-    // Resetear los campos vacíos y modificados cuando cambia la experiencia
     setEmptyFields({});
     setModifiedFields({});
   }, [experience, isNewExperience]);
 
-  // Manejar cambios en los inputs
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     
@@ -84,7 +80,6 @@ export default function ExperienceForm({
       [name]: value.trim() === ''
     }))
     
-    // Marcar el campo como modificado
     setModifiedFields(prev => ({
       ...prev,
       [name]: true
@@ -93,21 +88,17 @@ export default function ExperienceForm({
     setFormData((prev) => prev ? { ...prev, [name]: value } : null)
   }
 
-  // Guardar los cambios
   const handleSave = () => {
     if (formData) {
       const processedData = { 
         ...formData,
-        // Asegurar que skills siempre sea un array
         skills: formData.skills || []
       };
       
-      // Si estamos editando (no es nueva experiencia), añadir información sobre campos modificados
       if (!isNewExperience) {
         processedData._modifiedFields = Object.keys(modifiedFields).filter(field => modifiedFields[field]);
       }
       
-      // Validar datos mínimos
       if (!processedData.position.trim() || !processedData.company.trim() || !processedData.period.trim()) {
         toastNotifications.showErrorToast(
           "Datos incompletos",
@@ -119,7 +110,6 @@ export default function ExperienceForm({
     }
   }
 
-  // Cancelar la edición
   const handleCancel = () => {
     if (onCancel) {
       onCancel()
@@ -128,11 +118,9 @@ export default function ExperienceForm({
     }
   }
 
-  // Agregar tecnología a la experiencia actual
   const addTechnology = () => {
     if (!newTechnology.trim() || !formData) return;
     const currentSkills = formData.skills || [];
-    // Verificar si la tecnología ya existe
     if (currentSkills.includes(newTechnology.trim())) {
       toastNotifications.showErrorToast(
         "Tecnología duplicada",
@@ -148,7 +136,6 @@ export default function ExperienceForm({
     setNewTechnology("");
   }
 
-  // Eliminar tecnología de la experiencia actual
   const removeTechnology = (tech: string) => {
     if (!formData) return;
     const currentSkills = formData.skills || [];
@@ -157,7 +144,6 @@ export default function ExperienceForm({
       skills: currentSkills.filter((t) => t !== tech),
     });
   }
-  // Si no hay experiencia seleccionada, mostrar mensaje
   if (!formData) {
     return (
       <Card className="bg-black/40 border-blue-700/20">

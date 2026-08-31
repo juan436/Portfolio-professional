@@ -13,7 +13,6 @@ const getInitials = (name: string) =>
     .join("")
     .toUpperCase()
 
-/** Card individual del carrusel — rating + cita + autor. Recibe: `testimonial: RawTestimonial`. */
 function TestimonialCard({ testimonial }: { testimonial: RawTestimonial }) {
   return (
     <div className="flex-shrink-0 w-[88%] sm:w-[47%] min-h-[360px] p-8 rounded-3xl bg-zinc-900/40 backdrop-blur-xl border border-white/5 flex flex-col justify-between transition-all duration-300 hover:border-blue-500/30 hover:bg-zinc-800/50">
@@ -73,8 +72,6 @@ export function TestimonialCarousel({ testimonials }: { testimonials: RawTestimo
     }
   }, [duplicated])
 
-  // Auto-scroll continuo sobre el mismo motion value que usa el drag — al soltar
-  // un arrastre, sigue desde ahí en vez de saltar de vuelta al inicio del keyframe.
   useAnimationFrame((_, delta) => {
     if (isPaused || halfWidthRef.current === 0) return
     let next = x.get() - (delta / 1000) * 40
@@ -85,7 +82,6 @@ export function TestimonialCarousel({ testimonials }: { testimonials: RawTestimo
 
   if (!testimonials || testimonials.length === 0) return null
 
-  // Con 1 solo testimonio no tiene sentido loopear — se muestra estático, centrado.
   if (testimonials.length === 1) {
     return (
       <div className="flex justify-center">

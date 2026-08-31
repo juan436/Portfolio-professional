@@ -1,4 +1,3 @@
-// portfolio/services/api/skills/regular-skills.ts
 import { API_URL } from '../index';
 
 /**
@@ -23,9 +22,6 @@ export const fetchSkills = async () => {
   }
 };
 
-/**
- * Obtiene habilidades por categoría
- */
 export const fetchSkillsByCategory = async (category: string) => {
   try {
     const response = await fetch(`${API_URL}/skills?category=${category}`);
@@ -38,9 +34,6 @@ export const fetchSkillsByCategory = async (category: string) => {
   }
 };
 
-/**
- * Crea una nueva habilidad
- */
 export const createSkill = async (skill: any) => {
   try {
     const skillToCreate = {
@@ -73,9 +66,6 @@ export const createSkill = async (skill: any) => {
   }
 };
 
-/**
- * Actualiza una habilidad existente
- */
 export const updateSkill = async (id: string, skill: any) => {
   try {
     const skillToUpdate = {
@@ -108,9 +98,6 @@ export const updateSkill = async (id: string, skill: any) => {
   }
 };
 
-/**
- * Elimina una habilidad
- */
 export const deleteSkill = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/skills/${id}`, {

@@ -29,7 +29,6 @@ export default function ProjectsTable({
   title,
   description
 }: ProjectsTableProps) {
-  // Ordenar proyectos por fecha de creación (más reciente primero)
   const sortedProjects = [...projects].sort(
     (a, b) => new Date(b.createdAt as any || "").getTime() - new Date(a.createdAt as any || "").getTime()
   )

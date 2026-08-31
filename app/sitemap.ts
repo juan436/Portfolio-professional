@@ -16,7 +16,6 @@ import { SITE_URL } from '@/lib/site-config'
 const BASE = SITE_URL
 const LOCALES = ['es', 'en', 'fr', 'it'] as const
 
-/** Una entrada por idioma para un path base (`/work`, `/projects/x`), cada una con hreflang a las 4. */
 function localizedEntries(
   path: string,
   lastModified: Date,
@@ -36,7 +35,6 @@ function localizedEntries(
   }))
 }
 
-// category del modelo Project → prefijo de ruta pública de detalle
 const CATEGORY_ROUTES: Record<string, string> = {
   web: '/projects',
   infra_backend: '/projects',

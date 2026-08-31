@@ -24,8 +24,6 @@ const emptyContent: ContentShape = {
   experience: [],
 }
 
-// Mismo mapeo que content-provider.tsx (mapProject) — server-only, sin
-// round-trip HTTP. `id` guarda el _id de Mongo (tipo preexistente, no se toca).
 function mapProject(p: any) {
   return {
     id: p._id,
@@ -48,11 +46,6 @@ function mapProject(p: any) {
   }
 }
 
-// Server-only: mismos datos que ContentProvider pedía en 7 fetches client-side
-// (fetchContent + fetchProjects x3 + fetchExperiences + fetchSkills +
-// fetchOtherSkills), consultados directo a Mongo en paralelo. Usado para
-// hidratar el Context antes del primer paint en las páginas que lo necesitan
-// completo (home).
 async function fetchHomeContent(): Promise<ContentShape> {
   await dbConnect()
 
@@ -103,20 +96,11 @@ async function fetchHomeContent(): Promise<ContentShape> {
   return JSON.parse(JSON.stringify(result))
 }
 
-// Cacheado (unstable_cache) para no pegarle a Mongo en cada request — el sitio
-// está en `force-dynamic` (build sin acceso a DB) así que la ruta igual se
-// re-renderiza, pero el dato se reusa. Se invalida con `revalidateTag("home")`
-// desde las Server Actions del Admin (además del `revalidatePath` que ya hacen).
-// `revalidate: 3600` = red de seguridad por si algún tag se olvida.
-// Ver portfolio: planes/seo-jevy-2026-08-27 (Tanda 5) + planes/i18n-... (Stage 5).
 export const getHomeContent = unstable_cache(fetchHomeContent, ["home-content"], {
   tags: ["home"],
   revalidate: 3600,
 })
 
-// Server-only, liviano: solo el sub-objeto `contact` (email/teléfono/ubicación)
-// — lo único que /contact necesita (Footer y JevyGuidePanel), sin traer
-// proyectos/skills/experiencia que esa página nunca usa.
 async function fetchContactInfo(): Promise<ContentShape["contact"] | null> {
   await dbConnect()
   const contentDoc = await Content.findOne().sort({ createdAt: -1 }).select("contact").lean()

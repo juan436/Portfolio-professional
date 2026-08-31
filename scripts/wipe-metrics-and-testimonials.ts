@@ -1,11 +1,3 @@
-// wipe-metrics-and-testimonials.ts
-// Vacía por completo `ProjectStats` y `Testimonial`. Toda la data que había era
-// semilla huérfana (apuntaba a _id de proyectos de una generación anterior) o
-// pruebas de tecleo. Se vuelven a cargar a mano poco a poco desde el Admin, ya
-// contra el schema con foreign key real (ref: ObjectId).
-//
-// Uso:  npx tsx --env-file=.env scripts/wipe-metrics-and-testimonials.ts        (dry-run)
-//       npx tsx --env-file=.env scripts/wipe-metrics-and-testimonials.ts --go   (borra)
 
 import dbConnect from '../lib/db/conection'
 import ProjectStats from '../models/project-stats.model'

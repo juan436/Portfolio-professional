@@ -6,11 +6,6 @@ import type { DeepSeekToolFunction } from '@/lib/deepseek';
  * Produce: `buildClosingTool()` (schema DeepSeek), `normalizeClosing(raw)` (→ `ClosingExtraction`),
  * `isReadyToClose(c)` (mínimo indispensable para cerrar: nombre/email/contacto).
  */
-// Extracción de cierre — todos los campos del levantamiento (cliente o
-// reclutador) en una sola función. Se dispara más tarde que la extracción de
-// matching (esa es rápida y liviana; esta es la foto completa antes de
-// guardar). Ver dev-aguila-azul/vault/portfolio: planes/levantamiento-
-// informacion-jevy.
 
 export interface ClosingExtraction {
   type: 'client' | 'recruiter' | 'no_definido';
@@ -20,7 +15,6 @@ export interface ClosingExtraction {
   preferredChannel: 'email' | 'whatsapp' | 'no_definido';
   interestLevel: 'high' | 'medium' | 'low' | 'no_definido';
 
-  // cliente
   problem: string;
   whatTheyWant: string;
   stakeholders: string;
@@ -31,7 +25,6 @@ export interface ClosingExtraction {
   estimatedAmount: string;
   expectedTimeline: string;
 
-  // reclutador
   companyName: string;
   role: string;
   techStack: string;
@@ -40,10 +33,6 @@ export interface ClosingExtraction {
   offeredAmount: string;
   selectionProcess: string;
 
-  // Cualquier otro dato relevante que Jevy identifique en la charla, no
-  // limitado a una lista fija — reemplaza tener que anticipar cada campo
-  // posible con un schema cerrado. Ver dev-aguila-azul/vault/portfolio:
-  // planes/levantamiento-informacion-jevy (registro 2026-08-15).
   additionalDetails: { topic: string; detail: string }[];
 }
 
@@ -143,7 +132,6 @@ function pickAdditionalDetails(v: unknown): { topic: string; detail: string }[] 
     .filter((item) => item.topic && item.detail);
 }
 
-/** Listo para cerrar: tenemos contacto completo — lo mínimo indispensable. */
 export function isReadyToClose(c: ClosingExtraction): boolean {
   return Boolean(c.name && c.email && c.channelContact);
 }

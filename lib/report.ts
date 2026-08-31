@@ -7,18 +7,11 @@ import type { IJobOffer } from '@/models/joboffer.model';
  * Produce: `buildLeadMarkdown`/`buildJobOfferMarkdown` (string markdown) y los labels
  * `modalityLabel`/`contractTypeLabel` para traducir los enums de reclutador.
  */
-// Arma el markdown completo del levantamiento — el mismo contenido que se
-// convierte a PDF (lib/pdf.ts) y se manda por correo a Juan. Ver
-// dev-aguila-azul/vault/portfolio: planes/levantamiento-informacion-jevy.
 
 function field(label: string, value: string | undefined | null, fallback = '_sin dato_'): string {
   return `**${label}:** ${value && value.trim() ? value : fallback}`;
 }
 
-// Los enums de reclutador (schema/BD en inglés, ver dev-aguila-azul/vault/
-// portfolio: planes/agente-intake-conversacional-deepseek) no son legibles
-// para un humano — se traducen acá antes de mostrarse, tanto en el markdown
-// como en el correo de n8n (ver lib/closing-actions.ts).
 const MODALITY_LABELS: Record<string, string> = {
   remote: 'Remoto',
   onsite: 'Presencial',
@@ -45,10 +38,6 @@ function attachmentsList(attachments: IAttachment[]): string {
   return attachments.map((a) => `- ${a.filename}${a.extractedNote ? ` — ${a.extractedNote}` : ''}`).join('\n');
 }
 
-// Sección de largo variable — lo que Jevy identificó como relevante en esta
-// charla puntual, sin schema fijo (ver lib/closing.ts, additionalDetails).
-// Se omite del todo si no hay nada, en vez de mostrar "_ninguno_": a
-// diferencia de Adjuntos, no es un campo esperado siempre.
 function additionalDetailsSection(details: IAdditionalDetail[]): string {
   if (!details.length) return '';
   const fields = details.map((d) => field(d.topic, d.detail)).join('\n');

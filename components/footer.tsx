@@ -34,7 +34,6 @@ export default function Footer() {
     })
   }
 
-  // Función para abrir WhatsApp con mensaje traducido
   const handleWhatsAppClick = () => {
     const message = String(t('social.whatsapp_message'));
     openWhatsAppWithMessage(message);

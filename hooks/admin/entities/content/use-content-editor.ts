@@ -78,7 +78,6 @@ export function useContentEditor() {
     load();
   }, [load]);
 
-  // Detectar cambios en el contenido
   useEffect(() => {
     const currentContent = { hero: heroContent, about: aboutContent, services: servicesContent, contact: contactContent };
     setHasChanges(JSON.stringify(currentContent) !== JSON.stringify(initialContent.current));

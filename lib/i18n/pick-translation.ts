@@ -11,14 +11,12 @@ interface Translatable {
   [key: string]: unknown
 }
 
-/** Un solo campo. */
 export function pickField<T extends Translatable>(entity: T, langCode: string, field: string): unknown {
   if (langCode === "es") return entity[field]
   const tr = entity.translations?.[langCode as Exclude<Lang, "es">]
   return (tr && tr[field] != null ? tr[field] : entity[field])
 }
 
-/** Varios campos a la vez → objeto `{ [field]: valor }`. */
 export function pickTranslation<T extends Translatable>(
   entity: T,
   langCode: string,

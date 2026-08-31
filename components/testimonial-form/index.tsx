@@ -38,9 +38,6 @@ const STEP_CATEGORY: Record<number, string> = {
 }
 const TIME_UNITS = ["minutos", "horas", "días"] as const
 
-// Fallback si /api/stat-types no responde: mismos 2 tipos reales que el form le pide al
-// cliente (ver plan form-testimonios-2-steps.md). Disponibilidad/Autonomía las carga Juan
-// directo en Admin, el cliente no puede saberlas.
 const FALLBACK_STAT_TYPES: StatType[] = [
   { _id: "hours-saved", key: "HOURS_SAVED", label: "Horas Ahorradas", prefix: "+", suffix: "h" },
   { _id: "process-acceleration", key: "PROCESS_ACCELERATION", label: "Aceleración de Procesos", suffix: "x" },
@@ -102,8 +99,6 @@ function linkTypeForCategory(category: string): "proyecto" | "automatizacion" {
   return category === "automatizacion" ? "automatizacion" : "proyecto"
 }
 
-// Antes/después → múltiplo redondeado a 1 decimal ("3x", "2.5x"). null = faltan datos,
-// 'invalid' = "ahora" tardó más que "antes" (no hay aceleración que reportar).
 function computeAcceleration(beforeRaw: string, afterRaw: string): number | "invalid" | null {
   const before = parseFloat(beforeRaw)
   const after = parseFloat(afterRaw)

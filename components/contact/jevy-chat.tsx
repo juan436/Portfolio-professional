@@ -110,9 +110,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
   const contentRef = useRef<HTMLDivElement>(null)
   const bottomSentinelRef = useRef<HTMLDivElement>(null)
 
-  // Ciclo de vida de la charla (mensajes + persistencia + timers de inactividad)
-  // — ver hooks/use-jevy-chat-session.ts. Este componente conserva el render y
-  // `pushLeadLine` (el fetch a /api/contact/chat).
   const {
     lines,
     history,
@@ -131,14 +128,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     onReset: () => setInput(""),
   })
 
-  // Auto-scroll al fondo dirigido por el tamaño real del contenido (ResizeObserver),
-  // no por una lista de dependencias de estado — así cualquier cosa que haga crecer
-  // el contenido (mensaje nuevo, imagen que termina de cargar, tarjeta que se expande)
-  // dispara el scroll sin que haya que acordarse de sumarla a mano. "¿Está cerca del
-  // fondo?" se mide con un IntersectionObserver sobre un sentinel al final de la lista
-  // — no restando scrollTop/scrollHeight en un instante, porque esa resta se contamina
-  // con nuestra propia animación de scroll en curso (scroll-smooth) y da falsos negativos
-  // mientras el scroll previo todavía está terminando de bajar.
   useEffect(() => {
     const scrollEl = scrollRef.current
     const contentEl = contentRef.current
@@ -163,9 +152,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     }
   }, [])
 
-  // Repoblar la lista de adjuntos desde el server cuando cambia la sesión
-  // (mount con charla restaurada → trae los que había; reset por inactividad →
-  // sesión nueva, lista vacía).
   const { loadForSession } = attachments
   useEffect(() => {
     loadForSession(sessionId)
@@ -180,8 +166,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
 
     try {
       const alreadyMatched = lines.some((line) => (line.matches?.length ?? 0) > 0)
-      // El contexto de los adjuntos lo arma el server desde Mongo por sessionId
-      // (ver /api/contact/attachments + /api/contact/chat) — el cliente no lo manda.
       const response = await fetch("/api/contact/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -217,9 +201,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     }
   }
 
-  // Si se llegó desde una tarjeta de Servicios (?servicio=X), manda automáticamente
-  // el mensaje por defecto de ese servicio como si el lead lo hubiera escrito —
-  // apenas aparece el saludo inicial, sin esperar que toque nada. Una sola vez.
   const autoSentServiceMessageRef = useRef(false)
   useEffect(() => {
     if (autoSentServiceMessageRef.current) return
@@ -231,10 +212,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines.length, initialService, t])
 
-  // Si se llegó desde el CTA "¿Necesitas algo similar?" de una ficha, manda
-  // automáticamente "quiero algo parecido a X" como si lo hubiera escrito el
-  // lead — mismo mecanismo que el de Servicios de arriba. Mutuamente exclusivo
-  // con initialService (vienen de páginas distintas). Una sola vez.
   const autoSentReferenceRef = useRef(false)
   useEffect(() => {
     if (autoSentReferenceRef.current) return
@@ -260,8 +237,6 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
   const processFiles = async (files: File[]) => {
     const processed = await attachments.handleFileSelect(files, sessionId)
     if (processed) {
-      // El markdown ya quedó guardado en Mongo por `handleFileSelect` — el
-      // server lo va a ver en este mismo turno vía sessionId.
       const notice = `${translatedTexts.attachedNotice}: ${processed.succeeded.map((r) => r.filename).join(", ")}`
       await pushLeadLine(notice)
     }
@@ -269,7 +244,7 @@ export function JevyChat({ initialService, referenceProject, attachments }: Jevy
 
   const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || [])
-    e.target.value = "" // permite volver a elegir el mismo archivo si se saca y se vuelve a adjuntar
+    e.target.value = ""
     await processFiles(selected)
   }
 

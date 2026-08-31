@@ -43,7 +43,6 @@ export function MediaUploader({ kind, value, onChange, disabled, label }: MediaU
         onChange(url)
         if (previousValue) removeMedia(previousValue)
       } catch {
-        // El hook ya mostró el toast de error — nada más que hacer acá.
       }
     },
     [kind, onChange, uploadImage, uploadVideo, removeMedia, value]

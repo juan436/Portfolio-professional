@@ -16,15 +16,12 @@ interface Metric {
 
 const CAROUSEL_THRESHOLD = 5
 
-// El valor puede ser corto ("40%", "24h") o una frase más larga — el tamaño
-// de letra se adapta al largo real para que nunca desborde ni tape la card.
 function valueSizeClass(value: string): string {
   if (value.length <= 10) return "text-3xl md:text-4xl"
   if (value.length <= 20) return "text-lg md:text-xl"
   return "text-sm md:text-base"
 }
 
-/** Tile de una métrica — el tamaño de fuente se adapta al largo del valor. */
 function BigNumberTile({ label, value, index }: { label: string; value: string; index: number }) {
   return (
     <motion.div
@@ -57,8 +54,6 @@ function BigNumberTile({ label, value, index }: { label: string; value: string; 
 export function TestimonialMetrics({ metrics }: { metrics: Metric[] }) {
   if (!metrics || metrics.length === 0) return null
 
-  // Pocas estadísticas: se muestran centradas, sin carrusel (no tiene sentido
-  // arrastrar 2-3 cards). Solo a partir de 6 aparece el carrusel con flechas.
   if (metrics.length <= CAROUSEL_THRESHOLD) {
     return (
       <div className="flex flex-wrap justify-center gap-6">

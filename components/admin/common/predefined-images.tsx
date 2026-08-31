@@ -24,7 +24,6 @@ export default function PredefinedImages({ images }: PredefinedImagesProps) {
   const { toast } = useToast()
   const [copiedUrl, setCopiedUrl] = useState("")
 
-  // Función para copiar al portapapeles
   const copyToClipboard = (url: string) => {
     navigator.clipboard.writeText(url).then(
       () => {
@@ -35,7 +34,6 @@ export default function PredefinedImages({ images }: PredefinedImagesProps) {
           variant: "default",
         })
 
-        // Resetear el estado después de 2 segundos
         setTimeout(() => {
           setCopiedUrl("")
         }, 2000)

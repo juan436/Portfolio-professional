@@ -1,4 +1,3 @@
-// portfolio/services/api/experience.ts
 import { API_URL } from './index';
 import { translateAndAddToObject } from '../client/translation';
 
@@ -17,9 +16,6 @@ export const fetchExperiences = async () => {
   }
 };
 
-/**
- * Crea una nueva experiencia con traducciones automáticas
- */
 export const createExperience = async (experience: any) => {
   try {
     const fieldsToTranslate = ['position', 'location', 'description'];
@@ -51,19 +47,13 @@ export const createExperience = async (experience: any) => {
   }
 };
 
-/**
- * Actualiza una experiencia existente con traducciones automáticas
- * Solo traduce los campos que realmente han sido modificados
- */
 export const updateExperience = async (id: string, experience: any) => {
   try {
-    // 1. Verificar qué campos modificados necesitan traducción
     const fieldsRequiringTranslation = ['position', 'location', 'description'];
     const fieldsToTranslate = Object.keys(experience).filter(field => 
       fieldsRequiringTranslation.includes(field)
     );
     
-    // 2. Si no hay campos que requieran traducción, actualizar sin traducir
     if (fieldsToTranslate.length === 0) {
       const response = await fetch(`${API_URL}/experience/${id}`, {
         method: 'PATCH',
@@ -80,7 +70,6 @@ export const updateExperience = async (id: string, experience: any) => {
       return await response.json();
     }
     
-    // 3. Solo traducir los campos que están en la actualización y requieren traducción
     const experienceWithTranslations = await translateAndAddToObject(
       experience,
       'es',
@@ -88,7 +77,6 @@ export const updateExperience = async (id: string, experience: any) => {
       fieldsToTranslate as any[]
     );
     
-    // 4. Enviar al backend el objeto con traducciones
     const response = await fetch(`${API_URL}/experience/${id}`, {
       method: 'PATCH',
       headers: {
@@ -111,9 +99,6 @@ export const updateExperience = async (id: string, experience: any) => {
   }
 };
 
-/**
- * Elimina una experiencia
- */
 export const deleteExperience = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/experience/${id}`, {

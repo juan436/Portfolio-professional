@@ -27,7 +27,6 @@ export async function generateMetadata({
   })
 }
 
-/** Página `/certificates/[slug]` (Server Component). Recibe: `params.slug`. Produce: detalle de la certificación. */
 export default async function CertificateDetailPage({
   params,
 }: {

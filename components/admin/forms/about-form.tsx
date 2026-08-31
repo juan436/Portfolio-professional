@@ -10,12 +10,11 @@ import { useModifiedFieldsForm } from "@/hooks/use-modified-fields-form"
  * Recibe: `content: AboutContent` + `onChange`.
  * Produce: campos controlados vía `useModifiedFieldsForm` (dedupe de `_modifiedFields`).
  */
-// Definir la interfaz para la estructura de datos de About
 export interface AboutContent {
   paragraph1: string
   paragraph2: string
   paragraph3: string
-  _modifiedFields?: string[] // Campo para rastrear campos modificados
+  _modifiedFields?: string[]
 }
 
 interface AboutFormProps {

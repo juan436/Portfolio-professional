@@ -31,18 +31,15 @@ export default function Skills() {
     { title: "", subtitle: "", frontend: "", backend: "", database: "", devops: "", other: "", viewExperience: "" }
   )
 
-  // Actualizar cuando cambia el contenido global
   useEffect(() => {
     setSkills(content.skills)
     setOtherSkills(content.otherSkills)
   }, [content])
 
-  // Mejorar la escucha de eventos para actualizar correctamente el componente
   useEffect(() => {
     const handleContentUpdated = (event: Event) => {
       const customEvent = event as CustomEvent
       if (customEvent.detail) {
-        // Actualizar solo si hay cambios en las habilidades
         if (customEvent.detail.skills) {
           setSkills(customEvent.detail.skills)
         }
@@ -60,9 +57,6 @@ export default function Skills() {
 
   return (
     <section id="skills" className="py-20 bg-black/50 relative">
-      {/* Fuente de íconos Devicon: solo se carga acá (no en app/layout.tsx),
-          esta es la única sección pública que la usa (vía SkillCard).
-          `precedence` hace que React la suba a <head> y la dedupe. */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/devicon.min.css" precedence="default" />
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-20" />

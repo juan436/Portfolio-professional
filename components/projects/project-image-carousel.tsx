@@ -36,8 +36,6 @@ export function ProjectImageCarousel({ media, alt }: ProjectImageCarouselProps) 
   const goNext = () => goTo(index + 1, 1)
   const goPrev = () => goTo(index - 1, -1)
 
-  // Flechas del teclado solo mientras el lightbox está abierto — en la vista
-  // normal del carrusel no tiene sentido capturar el teclado de toda la página.
   useEffect(() => {
     if (!lightboxOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -149,9 +147,6 @@ export function ProjectImageCarousel({ media, alt }: ProjectImageCarouselProps) 
             {current.type === "video" ? (
               <video src={current.url} controls autoPlay className="max-h-[90vh] max-w-[92vw]" />
             ) : zoomed ? (
-              // Zoom a resolución nativa (sin tope de tamaño) dentro de un contenedor con
-              // scroll — para imágenes muy altas/anchas, se navega con rueda/trackpad/touch
-              // en vez de quedar recortadas por el viewport.
               <div className="h-full w-full overflow-auto cursor-zoom-out" onClick={() => setZoomed(false)}>
                 <img
                   src={current.url}

@@ -18,9 +18,7 @@ import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateA
  */
 
 interface Options<T> {
-  /** Trae la lista. Se llama una vez al montar y en cada `reload()`. */
   list: () => Promise<T[]>
-  /** Registro vacío para "crear nuevo". */
   empty: () => T
 }
 
@@ -42,11 +40,8 @@ export interface EntityManager<T, D> {
   isLoading: boolean
   setIsLoading: Dispatch<SetStateAction<boolean>>
 
-  /** Selecciona un registro para ver su detalle (sale de edición). */
   selectItem: (item: T) => void
-  /** Arranca la creación de un registro nuevo (entra en edición). */
   startNew: () => void
-  /** Cancela la edición; si era nuevo, limpia la selección. */
   cancelEdit: () => void
 
   deleteTarget: D | null
@@ -65,10 +60,6 @@ export function useEntityManager<T, D = string>({ list, empty }: Options<T>): En
   const [isLoading, setIsLoading] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<D | null>(null)
 
-  // `list` / `empty` suelen cerrar sobre estado del manager (setProjectOptions,
-  // categoría activa…), así que su identidad cambia cada render. Se guardan en
-  // refs para que el efecto de carga corra una sola vez, igual que los managers
-  // originales (`useEffect(..., [])`).
   const listRef = useRef(list)
   listRef.current = list
   const emptyRef = useRef(empty)

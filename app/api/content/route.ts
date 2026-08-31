@@ -9,7 +9,6 @@ import Content from '@/models/content.model';
  * Nota: las mutaciones reales del Admin ya viven en Server Actions (lib/actions/content.ts);
  * esta ruta queda como API pública/legacy de solo lectura en la práctica (GET).
  */
-// GET: Obtener todo el contenido
 export async function GET() {
   await dbConnect();
   
@@ -36,7 +35,6 @@ export async function GET() {
   }
 }
 
-// POST: Crear contenido
 export async function POST(request: Request) {
   await dbConnect();
   
@@ -59,7 +57,6 @@ export async function POST(request: Request) {
   }
 }
 
-// PATCH: Actualizar contenido parcialmente de forma dinámica
 export async function PATCH(request: Request) {
   await dbConnect();
   
@@ -78,56 +75,43 @@ export async function PATCH(request: Request) {
       }, { status: 201 });
     }
     
-    // Función recursiva para actualizar campos anidados
     const updateNestedFields = (source: any, target: any) => {
       Object.keys(source).forEach(key => {
-        // Caso especial para arrays (como services)
         if (source[key] && Array.isArray(source[key])) {
-          // Si es la sección de servicios, manejar de forma especial
           if (key === 'services') {
-            // Si no existe el array en el target, crearlo
             if (!target[key]) target[key] = [];
             
-            // Para cada elemento en el array fuente
             source[key].forEach((item: any) => {
-              // Si el item tiene ID, buscar y actualizar
               if (item._id) {
                 const existingIndex = target[key].findIndex(
                   (existing: any) => existing._id?.toString() === item._id.toString()
                 );
                 
                 if (existingIndex >= 0) {
-                  // Actualizar el item existente
                   target[key][existingIndex] = {
                     ...target[key][existingIndex],
                     ...item
                   };
                 } else {
-                  // Agregar como nuevo si no existe
                   target[key].push(item);
                 }
               } else {
-                // Si no tiene ID, es un nuevo item
                 target[key].push(item);
               }
             });
           } else {
-            // Para otros arrays, reemplazar directamente
             target[key] = source[key];
           }
         } 
-        // Si es un objeto y no un array, actualiza recursivamente
         else if (source[key] && typeof source[key] === 'object') {
           if (!target[key]) target[key] = {};
           updateNestedFields(source[key], target[key]);
         } else {
-          // Actualiza el valor
           target[key] = source[key];
         }
       });
     };
     
-    // Actualizar campos de manera dinámica
     updateNestedFields(body, existingContent);
     
     await existingContent.save();

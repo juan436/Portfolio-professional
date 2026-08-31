@@ -1,12 +1,3 @@
-// upload-project-gallery.ts
-// Sube TODAS las imágenes de una carpeta local a R2 (sharp -> webp q82, máx
-// 1920px) y las setea como galería del proyecto: la primera va a `image`
-// (hero), el resto a `images[]`. Orden por prefijo numérico del nombre
-// (1-, 2-, ... 10-, 11-), no alfabético.
-//
-// Uso:
-//   npx tsx --env-file=.env scripts/upload-project-gallery.ts <slug> <carpeta> [--go]
-//   (sin --go: dry-run, comprime y muestra el plan pero no sube ni toca Mongo)
 
 import { readdir, readFile } from 'fs/promises'
 import path from 'path'

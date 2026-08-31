@@ -11,13 +11,12 @@ import { useModifiedFieldsForm } from "@/hooks/use-modified-fields-form"
  * Recibe: `content: HeroContent` + `onChange`.
  * Produce: campos controlados vía `useModifiedFieldsForm`.
  */
-// Definir la interfaz para la estructura de datos de Hero
 export interface HeroContent {
   title: string
   subtitle: string
   description: string
   profileImage: string
-  _modifiedFields?: string[] // Campo para rastrear campos modificados
+  _modifiedFields?: string[]
 }
 
 interface HeroFormProps {

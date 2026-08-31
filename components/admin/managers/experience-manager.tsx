@@ -15,7 +15,6 @@ import { ConfirmationDialog } from "@/components/admin/common/confirmation-dialo
  * Produce: `ExperienceTable` (selector) + `ExperienceForm` (detalle/edición) + diálogo de borrado.
  */
 export default function ExperienceManager() {
-  // Usar el hook específico para experiencias que contiene toda la lógica
   const {
     experienceContent,
     selectedExperience,

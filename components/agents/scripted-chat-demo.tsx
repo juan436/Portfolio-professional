@@ -29,14 +29,10 @@ interface ScriptedLine {
 
 interface ScriptedChatDemoProps {
   script: ScriptStep[]
-  /** Prefijos de línea, ej. `{ bot: "jevy>", user: "tú>" }`. */
   prefixes: { bot: string; user: string }
   texts: { windowTitle: string; typing: string; badge: string; replay: string }
-  /** Cómo renderizar el texto de cada línea (FormattedText vs renderInline). */
   renderText: (text: string) => ReactNode
-  /** Widget que se pinta debajo de la última línea del bot al llegar al paso `widget`. */
   widget: ReactNode
-  /** ms tras montar el widget antes de mostrar el botón "repetir". */
   widgetFinishDelay: number
 }
 
@@ -62,9 +58,6 @@ export function ScriptedChatDemo({
     const step = script[index]
 
     if ("widget" in step) {
-      // widget: se marca en la última línea del bot para que se renderice debajo.
-      // El botón de repetir espera a que el widget termine su propia animación
-      // para no aparecer mientras todavía "trabaja".
       setLines((prev) => {
         const next = [...prev]
         if (next.length > 0) next[next.length - 1] = { ...next[next.length - 1], widget: true }

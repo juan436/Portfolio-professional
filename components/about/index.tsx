@@ -18,7 +18,6 @@ export default function About() {
   const { language } = useLanguage()
   const { content } = useContent()
   const { translatedContent } = useTranslatedContent()
-  // Usamos el estado local para manejar el contenido actualizado
   const [localContent, setLocalContent] = useState(content)
   const translatedTexts = useTranslatedTexts(
     (t) => ({
@@ -32,17 +31,14 @@ export default function About() {
     { aboutTitle: "", role: "", engineer: "", university: "", downloadCV: "", heroTitle: "" }
   )
 
-  // Actualizar el estado local cuando cambia el contenido global
   useEffect(() => {
     setLocalContent(content)
   }, [content])
 
-  // Escuchar el evento contentUpdated para actualizar el componente
   useEffect(() => {
     const handleContentUpdate = (event: Event) => {
       const customEvent = event as CustomEvent
       if (customEvent.detail) {
-        // Actualizar todo el contenido local con los datos del evento
         setLocalContent((prev) => ({
           ...prev,
           ...customEvent.detail,
@@ -50,15 +46,12 @@ export default function About() {
       }
     }
 
-    // Añadir el event listener
     window.addEventListener("contentUpdated", handleContentUpdate)
 
-    // Limpiar el event listener cuando el componente se desmonte
     return () => {
       window.removeEventListener("contentUpdated", handleContentUpdate)
     }
   }, [])
-  // Función para obtener la ruta del CV según el idioma actual
   const getCvPath = () => {
     switch (language.code) {
       case 'en':
@@ -117,7 +110,6 @@ export default function About() {
             className="md:col-span-7 flex flex-col justify-center"
           >
             <div className="space-y-6 text-slate-300">
-              {/* Usar translatedAbout para mostrar los párrafos traducidos */}
               <p className="leading-relaxed">{translatedContent.about.paragraph1}</p>
               <p className="leading-relaxed">{translatedContent.about.paragraph2}</p>
               <p className="leading-relaxed">{translatedContent.about.paragraph3}</p>

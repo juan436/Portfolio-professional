@@ -5,12 +5,6 @@ import mongoose, { Document } from 'mongoose';
  * Recibe: sessionId + conteo de tokens/llamadas a DeepSeek de ese turno (`calls[]`).
  * Produce: `JevyChatStat`, un documento por turno, para reportes de costo/uso.
  */
-// Un documento por turno de charla (una llamada POST a /api/contact/chat que
-// sí llegó a llamar a DeepSeek) — no por cada llamada individual. Un turno
-// puede disparar hasta 5 llamadas reales (reply + matching + reintento +
-// closing + reintento, ver app/api/contact/chat/route.ts), `calls` guarda el
-// detalle de cada una y los 3 campos de arriba ya vienen sumados, listos
-// para reportes sin tener que agregarlos después.
 
 export type JevyCallType = 'reply' | 'matching' | 'matching_retry' | 'closing' | 'closing_retry';
 

@@ -71,8 +71,6 @@ export function FlowDiagram({
     setActiveStep(0)
   }
 
-  // Modo archivo: no hay input que escribir, así que el flujo se dispara
-  // solo (sin interacción) apenas se monta o tras un replay.
   useEffect(() => {
     if (!isFileMode || isRunning || output || activeStep >= 0) return
     const t = setTimeout(runFlow, 900)
@@ -103,9 +101,6 @@ export function FlowDiagram({
     setIsRunning(false)
   }
 
-  // Posiciones en zigzag: cada nodo alterna arriba/abajo para que el
-  // canvas no se lea como una lista recta, más parecido a un editor de
-  // workflows (n8n/Zapier) que a un checklist.
   const stagger = (i: number) => (i % 2 === 0 ? 0 : Y_STAGGER)
 
   const nodes: Node[] = useMemo(() => {

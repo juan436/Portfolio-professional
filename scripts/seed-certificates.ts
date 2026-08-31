@@ -1,11 +1,3 @@
-// seed-certificates.ts
-// Contenido REAL, extraído directamente de los PDFs de certificados en
-// cursos-y-certificados/CERTIFICADOS (fechas, instructores/emisores y URLs de
-// verificación tal cual figuran en cada documento). La imagen es la primera
-// página real del PDF, convertida a PNG (public/images/certificates/).
-// `learned`/`applied` son un borrador inicial a ajustar por el usuario — para
-// los Cisco, `learned` resume las capacidades oficiales listadas en el propio
-// certificado; para el resto, se redactó a partir del título/contenido del curso.
 
 import dbConnect from '../lib/db/conection';
 import Certificate from '../models/certificate.model';

@@ -25,7 +25,6 @@ export function ShareRow({ url, className }: { url: string; className?: string }
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      /* clipboard bloqueado: sin acción */
     }
   }
 

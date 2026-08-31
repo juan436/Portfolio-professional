@@ -15,7 +15,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   })
 }
 
-/** Página `/laboratory` (Server Component). Recibe: nada. Produce: lista de proyectos categoría "laboratorio". */
 export default async function LaboratoryPage() {
   const labProjects = await getProjectsByCategory("laboratorio")
   return <LaboratoryListView labProjects={labProjects} />

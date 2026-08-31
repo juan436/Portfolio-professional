@@ -3,7 +3,6 @@
 import { motion } from "framer-motion"
 import { WolfBase } from "@/components/wolf/wolf-base"
 
-/** Ilustración SVG animada del lobo, para el overlay de bienvenida. Recibe: nada. Produce: el SVG. */
 export function RobotWolf() {
   return (
     <motion.div
@@ -27,17 +26,14 @@ export function RobotWolf() {
           <WolfBase
             chestPulse
             head={
-              // Head + Eyes (blinking) + Snout (smiling)
               <>
                 <rect x="42" y="25" width="26" height="22" rx="8" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
 
-                {/* Ears */}
                 <polygon points="42,30 35,15 45,25" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
                 <polygon points="68,30 75,15 65,25" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
                 <polygon points="42,28 38,20 45,25" fill="#F39C12" />
                 <polygon points="68,28 72,20 65,25" fill="#F39C12" />
 
-                {/* Eyes - blinking */}
                 <circle cx="48" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
                 <circle cx="62" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
                 <motion.g
@@ -57,7 +53,6 @@ export function RobotWolf() {
                   <circle cx="62" cy="35" r="3" fill="white" />
                 </motion.g>
 
-                {/* Snout - smiling */}
                 <rect x="47" y="40" width="16" height="10" rx="5" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
                 <motion.g
                   animate={{ y: [0, 0.5, 0] }}
@@ -74,7 +69,6 @@ export function RobotWolf() {
               </>
             }
             arms={
-              // Right Arm (waving) + Left Hand (estático)
               <>
                 <motion.g
                   animate={{ rotate: [0, -20, 0, -20, 0] }}
@@ -89,7 +83,6 @@ export function RobotWolf() {
               </>
             }
             tail={
-              // Tail - wagging enthusiastically
               <motion.g
                 animate={{ rotate: [0, 30, 0, -30, 0] }}
                 transition={{ repeat: 2, duration: 1 }}

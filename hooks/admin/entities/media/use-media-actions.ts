@@ -11,7 +11,7 @@ export type MediaUploadStatus = "idle" | "uploading" | "confirming" | "error";
 
 export interface MediaUploadState {
   status: MediaUploadStatus;
-  progress: number; // 0-100
+  progress: number;
   error?: string;
 }
 
@@ -29,9 +29,6 @@ function base64ToBlob(base64: string, contentType: string): Blob {
   return new Blob([bytes], { type: contentType });
 }
 
-// `fetch` no expone progreso de subida — XHR sí, y la barra de progreso es
-// justamente el feedback que pide A4 del plan (CORS del bucket puede fallar
-// silenciosamente si no está configurado, ver A5).
 function putToR2(uploadUrl: string, body: Blob, contentType: string, onProgress: (pct: number) => void): Promise<void> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -104,9 +101,6 @@ export function useMediaActions() {
     [toastNotifications]
   );
 
-  // No deja huérfanos en R2 al reemplazar/quitar — si la URL no es del
-  // bucket configurado (ej. path viejo de `public/`), `deleteMediaAction`
-  // no hace nada y no lanza, así que este catch es solo para errores reales.
   const removeMedia = useCallback(async (url: string) => {
     try {
       await deleteMediaAction({ url });

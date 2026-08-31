@@ -21,7 +21,6 @@ import Script from "next/script"
  * Produce: CRUD de ambos tipos de skill, con sus propios diálogos de confirmación/edición.
  */
 export default function SkillsManager() {
-  // Usar los hooks personalizados
   const {
     skills,
     currentSkill,
@@ -49,34 +48,28 @@ export default function SkillsManager() {
     isLoading
   } = useOtherSkillsActions();
 
-  // Estado para los diálogos de confirmación
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleteOtherSkillDialogOpen, setIsDeleteOtherSkillDialogOpen] = useState(false);
   const [skillToDelete, setSkillToDelete] = useState<Skill | null>(null);
   const [otherSkillToDelete, setOtherSkillToDelete] = useState<any>(null);
 
-  // Renderizador de iconos de Devicon usando la utilidad centralizada
   const renderIconWithStyle = (iconName: string, colored = true) => {
     return renderDevIcon(iconName, colored, "text-2xl")
   }
 
-  // Crear una nueva skill técnica
   const handleCreateSkill = () => {
     openNewSkillForm(activeTab);
   }
 
-  // Editar una skill existente
   const handleEditSkill = (skill: Skill) => {
     openEditSkillForm(skill);
   }
 
-  // Confirmar eliminación de una skill
   const handleDeleteSkillConfirm = (skill: Skill) => {
     setSkillToDelete(skill);
     setIsDeleteDialogOpen(true);
   }
 
-  // Eliminar una skill
   const handleDeleteSkill = async () => {
     if (skillToDelete && skillToDelete._id) {
       deleteSkill(skillToDelete._id);
@@ -85,23 +78,19 @@ export default function SkillsManager() {
     }
   }
 
-  // Crear una nueva habilidad adicional
   const handleCreateOtherSkill = () => {
     openNewOtherSkillDialog();
   }
 
-  // Editar una habilidad adicional existente
   const handleEditOtherSkill = (skill: any) => {
     openEditOtherSkillDialog(skill);
   }
 
-  // Confirmar eliminación de una habilidad adicional
   const handleDeleteOtherSkillConfirm = (skill: any) => {
     setOtherSkillToDelete(skill);
     setIsDeleteOtherSkillDialogOpen(true);
   }
 
-  // Eliminar una habilidad adicional
   const handleDeleteOtherSkill = async () => {
     if (otherSkillToDelete && otherSkillToDelete._id) {
       deleteOtherSkill(otherSkillToDelete._id);
@@ -112,7 +101,6 @@ export default function SkillsManager() {
 
   return (
     <>
-      {/* Script para cargar los iconos de Devicon */}
       <Script src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.js" />
 
       <motion.div
@@ -129,7 +117,6 @@ export default function SkillsManager() {
           </Button>
         </div>
 
-        {/* Tabs para las diferentes categorías de habilidades técnicas */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="bg-black/40 border border-blue-700/20">
             <TabsTrigger
@@ -162,7 +149,6 @@ export default function SkillsManager() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Contenido para cada tab */}
           <TabsContent value="frontend" className="mt-0">
             <SkillsTable
               skills={skills.frontend || []}
@@ -205,7 +191,6 @@ export default function SkillsManager() {
           </TabsContent>
         </Tabs>
 
-        {/* Sección de otras habilidades */}
         <div className="mt-12 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Otras Habilidades</h2>
@@ -223,7 +208,6 @@ export default function SkillsManager() {
         </div>
       </motion.div>
 
-      {/* Formulario para añadir/editar habilidad técnica */}
       <SkillForm
         isOpen={isSkillFormOpen}
         onClose={closeSkillForm}
@@ -232,7 +216,6 @@ export default function SkillsManager() {
         category={activeTab}
       />
 
-      {/* Dialog para confirmar eliminación de habilidad técnica */}
       <ConfirmationDialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
@@ -242,7 +225,6 @@ export default function SkillsManager() {
         confirmLabel="Eliminar"
       />
 
-      {/* Dialog para añadir/editar otra habilidad */}
       <FormDialog
         isOpen={isOtherSkillDialogOpen}
         onClose={closeOtherSkillDialog}
@@ -265,7 +247,6 @@ export default function SkillsManager() {
         </div>
       </FormDialog>
 
-      {/* Dialog para confirmar eliminación de otra habilidad */}
       <ConfirmationDialog
         isOpen={isDeleteOtherSkillDialogOpen}
         onClose={() => setIsDeleteOtherSkillDialogOpen(false)}

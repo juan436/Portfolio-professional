@@ -1,6 +1,3 @@
-// seed-lab-details-test.ts
-// SOLO PARA PROBAR EL CARRUSEL VISUALMENTE — datos 100% inventados, no reales.
-// Borrar estos registros (o correr scripts/remove-lab-test-data.ts) antes de cualquier deploy.
 
 import dbConnect from '../lib/db/conection'
 import Project from '../models/project.model'

@@ -21,7 +21,6 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true }
 }, { timestamps: true });
 
-// Hash de contraseña
 UserSchema.pre('save', async function(next) {
   if (this.isModified('password') || this.isNew) {
     const salt = await bcrypt.genSalt(10);
@@ -30,7 +29,6 @@ UserSchema.pre('save', async function(next) {
   next();
 });
 
-// Método para comparar contraseña
 UserSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
   return bcrypt.compare(candidatePassword, this.password);
 };

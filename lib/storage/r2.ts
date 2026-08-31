@@ -8,9 +8,6 @@ import { S3Client } from '@aws-sdk/client-s3';
  * Recibe: nada (lee `process.env` directo).
  * Produce: `getR2Client()` (singleton), `isR2Configured()`, `publicUrlForKey(key)`.
  */
-// Acceso público decidido: r2.dev (no dominio propio) — R2_PUBLIC_URL ya
-// viene completo (ej. https://pub-xxxx.r2.dev) hasta el "PENDIENTE" que el
-// usuario reemplaza a mano, mismo patrón que MARKDOWN_TRANSFORMER_API_KEY.
 const REQUIRED_VARS = ['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET_NAME', 'R2_PUBLIC_URL'] as const;
 
 export function isR2Configured(): boolean {
@@ -32,9 +29,6 @@ export function publicUrlForKey(key: string): string {
   return `${getR2PublicBaseUrl()}/${key}`;
 }
 
-// `undefined` si la URL no viene del bucket R2 configurado (ej. un path
-// viejo de `public/` que quedó en el campo de un proyecto) — quien llama
-// decide qué hacer (típicamente: no intentar borrar nada).
 export function keyFromPublicUrl(url: string): string | undefined {
   const base = getR2PublicBaseUrl();
   if (!base || !url.startsWith(`${base}/`)) return undefined;

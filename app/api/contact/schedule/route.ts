@@ -10,17 +10,6 @@ const SCHEDULE_IP_WINDOW_MS = 10 * 60 * 1000;
  * Procesa: rate-limit por IP, agrega el secreto `x-javy-secret` (nunca llega al navegador), reenvía tal cual.
  * Produce: la respuesta del webhook de n8n pasada directo (slots disponibles, o confirmación/409/500 del booking).
  */
-// Proxy server-side al webhook real de n8n (flujo-agenda-cita-leads,
-// "Jevy — Agenda"). El secreto (x-javy-secret) nunca llega al navegador.
-// Contrato exacto sacado de arquitectura/workflow-agenda.json en ese vault:
-//
-// { action: 'availability' } -> { slots: [{ startISO, endISO, label }] }
-// { action: 'book', name, email, type, preferredChannel, channelContact,
-//   problem, whatTheyWant, estimatedAmount, expectedTimeline, projectMatch,
-//   interestLevel, transcript, startISO, endISO }
-//   -> 200 { success: true, eventId, meetLink }
-//   -> 409 { success: false, error: 'slot_taken', message }
-//   -> 500 { success: false, error: 'booking_failed', requestId, message }
 
 export async function POST(request: Request) {
   if (isRateLimited(`schedule:${getClientIp(request)}`, SCHEDULE_IP_LIMIT, SCHEDULE_IP_WINDOW_MS)) {

@@ -36,7 +36,6 @@ const SessionAttachmentSchema = new mongoose.Schema<ISessionAttachment>(
   { versionKey: false },
 );
 
-// Un markdown por (sesión, archivo) — re-adjuntar el mismo nombre lo reemplaza.
 SessionAttachmentSchema.index({ sessionId: 1, filename: 1 }, { unique: true });
 
 export default (mongoose.models.SessionAttachment as mongoose.Model<ISessionAttachment>) ||

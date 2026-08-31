@@ -84,7 +84,6 @@ export default function JsonLd() {
   return (
     <script
       type="application/ld+json"
-      // JSON generado en build/servidor, sin datos de usuario — seguro.
       dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
     />
   )

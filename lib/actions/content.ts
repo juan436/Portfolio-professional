@@ -12,9 +12,6 @@ import { translateAndAddToObject } from "@/lib/translate"
  * Procesa: crea el documento único si no existe, traduce los campos que cambiaron, mergea `services[]` por `_id`.
  * Produce: la sección actualizada (plana) / lista de servicios / `true` al borrar un servicio.
  */
-// Content es un documento único (Content.findOne()) — hero/about/contact son
-// sub-objetos anidados, no colecciones propias. Si todavía no existe (primera
-// vez), se crea.
 async function getOrCreateContent() {
   await dbConnect()
   let doc = await Content.findOne()
@@ -26,9 +23,6 @@ function plainOf(sub: any) {
   return sub && typeof sub.toObject === "function" ? sub.toObject() : sub || {}
 }
 
-// Página home ya no depende del ContentProvider client-fetch (hidratación
-// server-side, ver ContentHydrator) — igual hay que revalidar el caché de
-// Next para que el cambio se vea sin esperar el próximo deploy/restart.
 function revalidateHome() {
   updateTag("home")
   revalidatePath("/")
@@ -70,9 +64,6 @@ export async function updateContactAction(data: Record<string, any>) {
   return updateSection("contact", data, ["location"])
 }
 
-// services es un array embebido — cada item se matchea por _id (existente =
-// merge, sin _id = nuevo). Mismo criterio que el PATCH viejo de /api/content
-// (updateNestedFields), reescrito acá sin la recursión genérica.
 export async function updateServicesAction(services: Record<string, any>[]) {
   await requireAdminSession()
   const doc = await getOrCreateContent()

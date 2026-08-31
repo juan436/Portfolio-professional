@@ -22,7 +22,6 @@ interface ExperienceCardProps {
   handleMouseUp?: () => void
 }
 
-// Número máximo de caracteres para mostrar en la descripción resumida
 const MAX_DESCRIPTION_LENGTH = 350;
 
 export function ExperienceCard({
@@ -45,7 +44,6 @@ export function ExperienceCard({
     { seeMore: "", seeLess: "", technologies: "" }
   )
 
-  // Función para obtener el texto traducido o el original si no hay traducción
   const getTranslatedField = (experience: Experience, field: "position" | "description" | "location") => {
     if (language.code === "es" || !experience.translations || !experience.translations[language.code]) {
       return experience[field] ?? ""
@@ -53,7 +51,6 @@ export function ExperienceCard({
     return experience.translations[language.code]?.[field] ?? experience[field] ?? ""
   }
 
-  // Función para alternar la expansión de la descripción
   const toggleDescription = (experienceId: string, e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
@@ -63,12 +60,10 @@ export function ExperienceCard({
     }))
   }
 
-  // Función para verificar si la descripción debe truncarse
   const shouldTruncate = (description: string) => {
     return description.length > MAX_DESCRIPTION_LENGTH
   }
 
-  // Función para obtener la descripción formateada (completa o truncada)
   const getFormattedDescription = (experience: Experience) => {
     const description = getTranslatedField(experience, "description")
     const experienceId = experience._id || ""
@@ -85,7 +80,6 @@ export function ExperienceCard({
     <div
       className="overflow-hidden perspective-3d"
       onMouseDown={(e) => {
-        // Solo activar el arrastre cuando se hace clic directamente en el contenedor
         if (e.target === e.currentTarget && handleMouseDown) {
           handleMouseDown(e)
         }
@@ -129,7 +123,6 @@ export function ExperienceCard({
                     ref={contentRef}
                     className="bg-gray-900/60 rounded-lg border border-blue-900/30 shadow-xl backdrop-blur-md overflow-hidden"
                   >
-                    {/* Header Section */}
                     <div className="p-6 sm:p-8 pb-0">
                       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
                         <div className="flex-1 min-w-0">
@@ -149,7 +142,6 @@ export function ExperienceCard({
                       </div>
                     </div>
 
-                    {/* Description Section */}
                     <div className="px-6 sm:px-8">
                       <motion.div
                         className="mb-6"
@@ -200,11 +192,9 @@ export function ExperienceCard({
                         )}
                       </motion.div>
 
-                      {/* Divider */}
                       <div className="border-t border-blue-900/30 mb-6"></div>
                     </div>
 
-                    {/* Technologies Section */}
                     <div 
                       ref={techContainerRef}
                       className="px-6 sm:px-8 pb-6 sm:pb-8"

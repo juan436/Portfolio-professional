@@ -8,7 +8,6 @@ import mongoose from 'mongoose';
  * Recibe: `params.id` (ObjectId del sub-documento a borrar).
  * Produce: `{ success, message }`; 400 si el id es inválido, 404 si no existe.
  */
-// DELETE: Eliminar un servicio específico por su ID
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -18,7 +17,6 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Validar que el ID sea un ObjectId válido de MongoDB
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ 
         success: false, 
@@ -26,7 +24,6 @@ export async function DELETE(
       }, { status: 400 });
     }
     
-    // Buscar el documento de contenido
     const content = await Content.findOne();
     
     if (!content) {
@@ -36,7 +33,6 @@ export async function DELETE(
       }, { status: 404 });
     }
     
-    // Verificar si el servicio existe
     const serviceIndex = content.services.findIndex(
       (service: any) => service._id.toString() === id
     );
@@ -49,10 +45,8 @@ export async function DELETE(
       }, { status: 404 });
     }
     
-    // Eliminar el servicio del array
     content.services.splice(serviceIndex, 1);
     
-    // Guardar los cambios
     await content.save();
     
     return NextResponse.json({ 

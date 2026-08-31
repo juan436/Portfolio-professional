@@ -1,9 +1,3 @@
-// seed-project-details.ts
-// Mock/placeholder para los campos nuevos de detalle de proyecto (images, techStack, challenge, technicalDecisions,
-// duration, sector). techStack se deriva de los tags reales (no es mock). challenge.solution reutiliza la
-// descripción real ya escrita del proyecto. challenge.problem, technicalDecisions, duration y sector son
-// placeholder explícito, a reemplazar con contenido real más adelante (ver consideraciones/testimonio-mock-en-mongo,
-// mismo patrón).
 
 const SUBTYPE_BY_TITLE: Record<string, string> = {
   'Portafolio Profesional': 'Landing Admin',
@@ -53,7 +47,6 @@ const DURATION_BY_TITLE: Record<string, string> = {
   'System-date': '3 meses de desarrollo + 1 mes de testing',
 }
 
-// Placeholder explícito por proyecto — a reemplazar con contenido real dictado por el usuario.
 const INFRA_DETAILS_BY_TITLE: Record<string, { uptime?: string; capacity?: string; monitoring?: string[]; backupStrategy?: string; costOptimized?: string }> = {
   'FreePBX Dockerizada': {
     uptime: '99.5% uptime en los últimos 3 meses',
@@ -248,9 +241,6 @@ async function seed() {
     console.log(`✔ ${project.title}`)
   }
 
-  // Admin Money AI: recategorizado de laboratory a mobile (es el único proyecto React Native real).
-  // image original ("/images/lab/lab-finance.png") no existe físicamente en public/ — reemplazada
-  // por placeholders de prueba, igual que el resto del contenido de este bloque.
   const mobileProject = await Project.findOne({ title: 'Admin Money AI' }) as any
   if (mobileProject) {
     mobileProject.category = 'mobile'

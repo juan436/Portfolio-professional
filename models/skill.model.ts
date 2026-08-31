@@ -5,7 +5,6 @@ import mongoose, { Document } from 'mongoose';
  * Recibe: name/icon/colored/category + traducciones opcionales en/fr/it.
  * Produce: `Skill`, listo para `find`/`create` contra la colección `skills`.
  */
-// Interfaz para el documento de habilidad
 export interface ISkill extends Document {
   name: string;
   icon: string;

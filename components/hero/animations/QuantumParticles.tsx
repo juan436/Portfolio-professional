@@ -11,14 +11,12 @@ import { useIsMounted } from "@/hooks/use-is-mounted"
 export function QuantumParticles() {
   const isMounted = useIsMounted()
 
-  // No renderizar nada durante SSR
   if (!isMounted) {
     return null
   }
   
   return (
     <>
-      {/* Partículas cuánticas */}
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={`quantum-particle-${i}`}

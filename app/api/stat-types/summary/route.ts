@@ -9,16 +9,12 @@ import ProjectStats from '@/models/project-stats.model';
  * Procesa: por cada `StatType`, suma la parte numérica de todas las métricas que lo referencian.
  * Produce: solo los tipos con al menos una métrica real (`count > 0`).
  */
-// Saca la parte numérica de un valor libre ("24h", "-40%", "1,200+") para poder sumarlo.
 function extractNumber(value: string): number | null {
   const cleaned = value.replace(/,/g, '');
   const match = cleaned.match(/-?\d+(\.\d+)?/);
   return match ? parseFloat(match[0]) : null;
 }
 
-// GET: Para cada tipo de estadística base, suma todas las métricas de todos los
-// proyectos/automatizaciones que la referencian. Solo devuelve tipos con al
-// menos una métrica real cargada — el home decide qué hacer si un tipo no tiene nada.
 export async function GET() {
   await dbConnect();
 

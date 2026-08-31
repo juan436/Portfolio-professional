@@ -19,8 +19,6 @@ export async function getProjectById(id: string) {
   }
 }
 
-// Búsqueda por slug — usada por las rutas públicas de detalle
-// (/agents/[slug], /laboratory/[slug]). El _id sigue siendo la clave interna.
 export const getProjectBySlug = unstable_cache(
   async (slug: string) => {
     await dbConnect()

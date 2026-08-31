@@ -16,13 +16,6 @@ type ServiceKey = (typeof VALID_SERVICES)[number]
  * Produce: `JevyAboutPanel` + `AttachmentsCard` + `JevyChat` + `JevyGuidePanel`.
  */
 export default function Contact() {
-  // No usamos query string (?servicio=...) a propósito: la URL de /contact
-  // debe quedar limpia al venir desde una card de Servicio. El dato viaja
-  // por sessionStorage, seteado por el onClick de la card. Se lee de forma
-  // síncrona (lazy initializer, no useEffect) para que esté disponible desde
-  // el primer render en cliente — si no, JevyChat ya habría pintado el saludo
-  // genérico antes de que initialService llegara, y el saludo contextual
-  // nunca lo reemplaza (solo se pinta una vez, cuando lines.length === 0).
   const [initialService] = useState<ServiceKey | undefined>(() => {
     if (typeof window === "undefined") return undefined
     try {
@@ -32,9 +25,6 @@ export default function Contact() {
       return undefined
     }
   })
-  // Ficha ({slug, title}) de la que viene el visitante al tocar "¿Necesitas algo
-  // similar?" — mismo mecanismo y misma razón (URL limpia + lectura síncrona)
-  // que `jevy_initial_service`. Lo escribe el onClick de `SimilarWorkCTA`.
   const [referenceProject] = useState<{ slug: string; title: string } | undefined>(() => {
     if (typeof window === "undefined") return undefined
     try {
@@ -61,7 +51,6 @@ export default function Contact() {
     { title: "", attachTooLarge: "", attachError: "" }
   )
 
-  // Estado de adjuntos compartido entre el chat y la card de la columna izquierda
   const attachments = useAttachments(translatedTexts.attachTooLarge, translatedTexts.attachError)
 
   return (
@@ -85,8 +74,6 @@ export default function Contact() {
         </motion.div>
       </div>
 
-      {/* Fuera del `container` sitewide (max 1024-1400px según breakpoint) a propósito:
-          las 3 columnas (240+1000+240+gaps) necesitan más ancho del que ese contenedor da. */}
       <div className="w-full max-w-[1600px] mx-auto px-4 lg:px-8 mt-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,240px)_minmax(0,1000px)_minmax(0,240px)] gap-6 items-start justify-center">
           <motion.div

@@ -7,12 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { User, Laptop, ImageIcon, FileImage } from "lucide-react"
 import { useContent } from "@/contexts/content"
 
-// Importar componentes extraídos
 import ImageGuide, { ImageType } from "@/components/admin/common/image-guide"
 import PredefinedImages, { PredefinedImage } from "@/components/admin/common/predefined-images"
 import ImageServices, { ImageService } from "@/components/admin/common/image-services"
 
-// Tipos de imágenes con información y recomendaciones
 const imageTypes: ImageType[] = [
   {
     id: "profile",
@@ -42,7 +40,6 @@ const imageTypes: ImageType[] = [
   },
 ]
 
-// Imágenes predefinidas para usar en el portafolio
 const predefinedImagesData: { category: string; images: PredefinedImage[] }[] = [
   {
     category: "Fondos",
@@ -88,7 +85,6 @@ const predefinedImagesData: { category: string; images: PredefinedImage[] }[] = 
   },
 ]
 
-// Servicios recomendados para imágenes
 const imageServicesData: ImageService[] = [
   {
     name: "Cloudinary",
@@ -127,14 +123,9 @@ export default function ImageManager() {
   const { content } = useContent()
   const [activeTab, setActiveTab] = useState("profile")
 
-  // Obtener las imágenes actuales del contenido
   const profileImage =
     content.hero.profileImage ||
     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/profile-E9YRocD6o4olhnzraHWCjLmKjCbspw.jpeg"
-  // Antes leía content.projects.fullstack, categoría que nunca existió en el
-  // contenido real (web/mobile/infra_backend) — crasheaba al abrir esta
-  // pestaña (auditoría 2026-08-18 §8). Esta sección es un vistazo general a
-  // las imágenes de proyecto que ya existen, no un filtro real por categoría.
   const projectImages = [
     ...content.projects.web,
     ...content.projects.mobile,
@@ -151,7 +142,6 @@ export default function ImageManager() {
         <h2 className="text-2xl font-bold">Imágenes del Portafolio</h2>
       </div>
 
-      {/* Información general sobre imágenes */}
       <Card className="bg-black/40 border-blue-700/20">
         <CardHeader>
           <CardTitle className="flex items-center">
@@ -200,7 +190,6 @@ export default function ImageManager() {
         </CardContent>
       </Card>
 
-      {/* Tabs para diferentes tipos de imágenes */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="bg-black/40 border border-blue-700/20 mb-6 grid grid-cols-2">
           {imageTypes.map((type) => (
@@ -215,7 +204,6 @@ export default function ImageManager() {
           ))}
         </TabsList>
 
-        {/* Contenido para cada tipo de imagen usando componentes extraídos */}
         <TabsContent value="profile" className="mt-0 space-y-6">
           <ImageGuide imageType={imageTypes.find(type => type.id === "profile")!} />
           
@@ -286,7 +274,6 @@ export default function ImageManager() {
                 )}
               </div>
 
-              {/* Imágenes predefinidas */}
               <div className="mt-8">
                 <h3 className="text-sm font-medium mb-4">Imágenes Predefinidas Sugeridas</h3>
                 <p className="text-sm text-slate-300 mb-4">
@@ -302,7 +289,6 @@ export default function ImageManager() {
         </TabsContent>
       </Tabs>
 
-      {/* Servicios recomendados para imágenes */}
       <ImageServices services={imageServicesData} />
     </motion.div>
   )

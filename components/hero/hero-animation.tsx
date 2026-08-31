@@ -28,8 +28,6 @@ interface HeroAnimationProps {
 export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: HeroAnimationProps) {
   const { content } = useContent()
   const containerRef = useRef<HTMLDivElement>(null)
-  // Los 5 fondos de abajo suman 48 elementos con animaciones infinitas — no
-  // hay razón para que sigan corriendo cuando ya scrolleaste lejos del Hero.
   const isInView = useInView(containerRef)
 
   return (
@@ -42,24 +40,18 @@ export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: Her
       <div ref={containerRef} className="relative w-80 h-80 md:w-96 md:h-96">
         {isInView && (
           <>
-            {/* Campo de fuerza hexagonal */}
             <HexagonalField />
 
-            {/* Rayos de energía */}
             <QuantumRays />
 
-            {/* Partículas */}
             <QuantumParticles />
 
-            {/* Palabras tecnológicas */}
             <FloatingTechWords />
 
-            {/* Ondas de energía */}
             <EnergyWaves />
           </>
         )}
 
-        {/* Imagen del perfil con animación */}
         <div className="absolute inset-0 rounded-full overflow-hidden z-20">
           <div className="relative w-full h-full cursor-pointer" onClick={toggleAnimation}>
             <AnimatePresence>

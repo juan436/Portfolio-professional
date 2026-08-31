@@ -16,7 +16,6 @@ export function Toaster() {
   return (
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
-        // Extraer el título y la descripción si son objetos
         const displayTitle = typeof title === 'object' && title !== null 
           ? (title.title || title.message || JSON.stringify(title)) 
           : title;

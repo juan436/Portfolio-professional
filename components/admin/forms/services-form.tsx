@@ -18,13 +18,12 @@ import { deleteServiceAction } from "@/lib/actions/content"
  * Procesa: `deleteService` llama directo a `deleteServiceAction` si el servicio ya tiene `_id` en Mongo.
  * Produce: llama `onChange` con el array actualizado en cada alta/edición/baja.
  */
-// Definir la interfaz para un servicio
 export interface Service {
   title: string
   description: string
   icon: string
   _id?: string
-  _modifiedFields?: string[] // Campo para rastrear campos modificados
+  _modifiedFields?: string[]
 }
 
 interface ServicesFormProps {
@@ -36,70 +35,55 @@ export default function ServicesForm({ services, onChange }: ServicesFormProps) 
   const { toast } = useToast()
   const [activeServiceIndex, setActiveServiceIndex] = useState(0)
 
-  // Verificar que el índice activo sea válido cuando cambian los servicios
   useEffect(() => {
     if (services.length === 0) {
-      setActiveServiceIndex(-1); // No hay servicios seleccionados
+      setActiveServiceIndex(-1);
     } else if (activeServiceIndex >= services.length) {
-      // Si el índice activo es mayor que la longitud del array, seleccionar el último
       setActiveServiceIndex(services.length - 1);
     }
   }, [services, activeServiceIndex]);
 
-  // Agregar nuevo servicio
   const addNewService = () => {
-    // Crear un nuevo servicio con valores por defecto
     const newService: Service = {
       title: "Nuevo Servicio",
       description: "Descripción del servicio",
       icon: "Code",
-      _modifiedFields: ["title", "description", "icon"] // Marcar todos los campos como modificados
+      _modifiedFields: ["title", "description", "icon"]
     }
     
-    // Añadir el nuevo servicio y actualizar el estado
     const updatedServices = [...services, newService]
     onChange(updatedServices)
     
-    // Seleccionar el nuevo servicio
     setActiveServiceIndex(updatedServices.length - 1)
     
-    // Mostrar notificación
     toast({
       title: "Servicio añadido",
       description: "Se ha añadido un nuevo servicio. Edita sus detalles.",
     })
   }
 
-  // Eliminar servicio
   const deleteService = async (index: number, e?: React.MouseEvent) => {
-    // Evitar la propagación del evento si existe
     if (e) {
       e.stopPropagation()
     }
 
     const serviceToDelete = services[index];
     
-    // Crear una copia del array sin el servicio a eliminar
     const updatedServices = [...services];
     updatedServices.splice(index, 1);
     
-    // Ajustar el índice activo si es necesario
     if (updatedServices.length === 0) {
       setActiveServiceIndex(-1);
     } else if (index === activeServiceIndex) {
-      // Si eliminamos el servicio activo, seleccionar el anterior o el primero
       const newIndex = index > 0 ? index - 1 : 0;
       setActiveServiceIndex(newIndex);
     } else if (index < activeServiceIndex) {
-      // Si eliminamos un servicio antes del activo, ajustar el índice
       const newIndex = activeServiceIndex - 1;
       setActiveServiceIndex(newIndex);
     }
 
-    // Actualizar el estado local primero (para todos los casos)
     onChange(updatedServices);
 
-    // Si el servicio tiene un ID válido (ya existe en la BD), eliminarlo del backend
     if (serviceToDelete._id && serviceToDelete._id.trim() !== '') {
       try {
         await deleteServiceAction(serviceToDelete._id);
@@ -125,11 +109,9 @@ export default function ServicesForm({ services, onChange }: ServicesFormProps) 
     }
   }
 
-  // Manejar cambios en el servicio activo
   const handleServiceChange = (field: keyof Service, value: string) => {
     const updatedServices = services.map((service, index) => {
       if (index === activeServiceIndex) {
-        // Crear o actualizar el array _modifiedFields
         const currentModifiedFields = service._modifiedFields || [];
         const updatedModifiedFields = currentModifiedFields.includes(field) 
           ? currentModifiedFields 
@@ -146,7 +128,6 @@ export default function ServicesForm({ services, onChange }: ServicesFormProps) 
     onChange(updatedServices)
   }
 
-  // Renderizar el ícono correspondiente
   const renderIcon = (iconName: string) => {
     const Icon = getServiceIconComponent(iconName)
     return <Icon className="h-6 w-6 mx-auto text-blue-500" />

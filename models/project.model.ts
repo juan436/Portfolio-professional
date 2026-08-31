@@ -6,7 +6,6 @@ import mongoose, { Document } from 'mongoose';
  * categoría (labDetails/automationDetails/agentDetails/infraDetails/etc.) + `jevyProfile` (matching, no se renderiza).
  * Produce: `Project`, listo para `find`/`create` contra la colección `projects`.
  */
-// Interfaz para el documento de proyecto
 export interface IProject extends Document {
   title: string;
   slug: string;
@@ -134,9 +133,6 @@ export interface IProject extends Document {
     setupTime?: string;
     liveDemo?: 'jevy-chat' | 'synapse-chat' | 'none';
   };
-  // Objeto dedicado a Jevy (motor de matching) — nunca se renderiza en el front.
-  // Nomenclatura propia para la IA, separada de category/subtype/sector (esos son
-  // para el visitante humano). Ver dev-aguila-azul/vault/portfolio: planes/matching-catalogo-function-calling.
   jevyProfile?: {
     categoria?: string;
     subtype?: string;
@@ -377,10 +373,6 @@ const ProjectSchema = new mongoose.Schema({
     setupTime: String,
     liveDemo: { type: String, enum: ['jevy-chat', 'synapse-chat', 'none'] },
   },
-  // Sin `enum` de Mongoose a propósito: el vocabulario vive en Mongo (colección
-  // JevyTaxonomy, dinámico, ver lib/jevy-taxonomy.ts), no se puede fijar acá en
-  // tiempo de arranque del proceso. Validación real contra la lista vigente a
-  // nivel de aplicación (admin form / seed scripts), no del schema.
   jevyProfile: {
     categoria: String,
     subtype: String,

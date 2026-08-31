@@ -61,14 +61,9 @@ interface SchedulingWidgetProps {
   }
 }
 
-// El horario real vive en n8n (Config: Jevy), acá nunca se hardcodea — el
-// rango de horas a mostrar por día se deriva de los slots que ya llegaron.
 const LOCALE_MAP: Record<string, string> = { es: "es-VE", en: "en-US", fr: "fr-FR", it: "it-IT" }
 const CALENDAR_TZ = "America/Caracas"
 
-// Clave de día y hora en la zona horaria real del negocio, sin importar en
-// qué zona esté el navegador del lead (evita que un slot de las 8am en
-// Caracas aparezca en el día equivocado para alguien en otro huso horario).
 function dayKey(iso: string): string {
   return new Date(iso).toLocaleDateString("en-CA", { timeZone: CALENDAR_TZ })
 }
@@ -134,8 +129,6 @@ export function SchedulingWidget({ schedulingData, texts }: SchedulingWidgetProp
     return map
   }, [slots])
 
-  // Rango de horas a mostrar por día, derivado de los slots reales — nunca
-  // asumido, así se acomoda solo si el horario laboral cambia del lado de n8n.
   const hourRange = useMemo(() => {
     if (!slots.length) return null
     let min = 23
@@ -220,13 +213,12 @@ export function SchedulingWidget({ schedulingData, texts }: SchedulingWidgetProp
     )
   }
 
-  // picking / conflict — calendario en 2 pasos (día -> hora)
   const monthLabel = new Date(cursorMonth.year, cursorMonth.month, 1).toLocaleDateString(locale, { month: "long", year: "numeric" })
   const monthKeyPrefix = `${cursorMonth.year}-${pad(cursorMonth.month + 1)}`
   const atMinMonth = minDayKey !== null && monthKeyPrefix <= minDayKey.slice(0, 7)
   const atMaxMonth = maxDayKey !== null && monthKeyPrefix >= maxDayKey.slice(0, 7)
 
-  const firstWeekday = (new Date(cursorMonth.year, cursorMonth.month, 1).getDay() + 6) % 7 // lunes=0
+  const firstWeekday = (new Date(cursorMonth.year, cursorMonth.month, 1).getDay() + 6) % 7
   const daysInMonth = new Date(cursorMonth.year, cursorMonth.month + 1, 0).getDate()
   const weekdayLabels = ["L", "M", "X", "J", "V", "S", "D"]
 

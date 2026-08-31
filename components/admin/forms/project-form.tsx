@@ -31,12 +31,6 @@ interface ProjectFormProps {
   category?: ProjectCategoryValue
 }
 
-// Rediseño 2026-08-19: el form viejo solo editaba título/descripción/imagen/
-// tags/github/demo (6 de ~25 campos del modelo real — auditoría del Admin).
-// Este cubre todo el schema, organizado en secciones plegables. `set()`
-// actualiza por path (soporta anidados tipo "techStack.frontend") y marca el
-// campo de primer nivel como modificado, para que el guardado solo mande lo
-// que realmente cambió.
 export default function ProjectForm({
   project,
   editMode,

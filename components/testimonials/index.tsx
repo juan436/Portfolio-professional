@@ -26,7 +26,6 @@ export default function Testimonials() {
   const halfWidthRef = useRef(0)
   const x = useMotionValue(0)
 
-  // Usamos returnObjects: true para obtener el array de testimonios desde i18n
   const testimonials = useMemo(() => {
     const items = t("testimonials.items", { returnObjects: true });
     return Array.isArray(items) ? items as Testimonial[] : [];
@@ -35,7 +34,6 @@ export default function Testimonials() {
   const title = String(t("testimonials.title") || "CASOS DE ÉXITO VERIFICADOS")
   const subtitle = String(t("testimonials.subtitle") || "Lo que dicen los líderes que han confiado en mi arquitectura técnica.")
 
-  // Duplicamos los testimonios para lograr el efecto de carrusel infinito (seamless loop)
   const duplicatedTestimonials = useMemo(() => [...testimonials, ...testimonials], [testimonials])
 
   useEffect(() => {
@@ -44,8 +42,6 @@ export default function Testimonials() {
     }
   }, [duplicatedTestimonials])
 
-  // Auto-scroll continuo sobre el mismo motion value que usa el drag — al soltar
-  // un arrastre, sigue desde ahí en vez de saltar de vuelta al inicio del keyframe.
   useAnimationFrame((_, delta) => {
     if (isPaused || halfWidthRef.current === 0) return
     let next = x.get() - (delta / 1000) * 40
@@ -62,11 +58,8 @@ export default function Testimonials() {
       .toUpperCase()
   }
 
-  // Siempre renderizamos la sección para evitar saltos en la hidratación (Hydration Mismatch)
-  // Pero el contenido dinámico solo se muestra cuando está montado
   return (
     <section id="testimonials" className="py-24 relative overflow-hidden bg-black">
-      {/* Background Glows (Blue Spectrum) */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full z-0 pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-900/10 blur-[120px] rounded-full z-0 pointer-events-none" />
 
@@ -88,7 +81,6 @@ export default function Testimonials() {
         </motion.div>
       </div>
 
-      {/* Infinite Marquee Carousel - Solo renderiza si hay testimonios */}
       {testimonials.length > 0 && (
         <div
           ref={constraintsRef}
@@ -141,7 +133,6 @@ export default function Testimonials() {
             ))}
           </motion.div>
 
-          {/* Side Fades para suavizar la transición visual en los bordes del contenedor */}
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-20 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-20 pointer-events-none" />
         </div>

@@ -5,15 +5,6 @@ import { askDeepSeek } from "@/lib/deepseek"
  * Recibe: `translateObject`/`translateAndAddToObject(obj, sourceLanguage, targetLanguages, fieldsToTranslate)`.
  * Produce: mapa idioma→campos traducidos, o el objeto original con `translations` agregado.
  */
-// Versión server-only de services/client/translation.ts — para usar desde
-// Server Actions (lib/actions/*.ts), sin el salto HTTP a /api/translate
-// (ese endpoint existe solo porque el navegador no puede llamar a DeepSeek
-// directo, TOKEN_DEEPSEEK es secreto de servidor). Acá ya estamos en el
-// servidor, así que se llama askDeepSeek() directo.
-//
-// Además paraleliza: la versión cliente traducía campo por campo, uno detrás
-// de otro (`for` con `await` adentro) — acá se dispara todo junto con
-// Promise.all, mismo resultado, sin la espera secuencial.
 
 export type SupportedLanguage = "es" | "en" | "fr" | "it"
 
@@ -45,12 +36,6 @@ async function translateText(text: string, source: SupportedLanguage | "auto", t
 
 const HTML_MAX_TOKENS = 4000
 
-/**
- * Traduce el texto visible de un fragmento HTML preservando etiquetas y
- * atributos exactos — para `body` de blog (HTML generado por Tiptap).
- * `max_tokens` del chat normal (400) alcanza para title/excerpt pero no para
- * el cuerpo completo de un post, por eso usa un límite propio más alto.
- */
 export async function translateHtml(html: string, targetLang: SupportedLanguage): Promise<string> {
   if (!html || html.trim() === "") return html
   try {
@@ -72,10 +57,6 @@ export async function translateHtml(html: string, targetLang: SupportedLanguage)
   }
 }
 
-/**
- * Traduce un objeto con campos de texto a varios idiomas destino, en
- * paralelo (todos los campos x todos los idiomas a la vez).
- */
 export async function translateObject<T extends Record<string, any>>(
   obj: T,
   sourceLanguage: SupportedLanguage,
@@ -120,11 +101,6 @@ export async function translateObject<T extends Record<string, any>>(
   return translations
 }
 
-/**
- * Traduce un objeto y le agrega el campo `translations` — misma forma que
- * la versión cliente (translateAndAddToObject), para no romper el shape que
- * ya esperan los modelos de Mongo.
- */
 export async function translateAndAddToObject<T extends Record<string, any>>(
   obj: T,
   sourceLanguage: SupportedLanguage = "es",

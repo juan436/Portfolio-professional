@@ -74,11 +74,6 @@ export function useAttachments(tooLargeMessage: string, genericErrorMessage: str
     }
   }
 
-  // Repuebla la lista tras un reload: pregunta al server qué adjuntos ya tiene
-  // esta sesión. Se llama cuando cambia el `sessionId` (mount con charla
-  // restaurada, o reset por inactividad → lista vacía). `lastLoadRef` descarta
-  // la respuesta si mientras tanto salió una carga para otra sesión (en el
-  // mount hay un id fresco que enseguida lo reemplaza el restaurado).
   const lastLoadRef = useRef("")
   const loadForSession = useCallback(async (sessionId: string) => {
     if (!sessionId) return

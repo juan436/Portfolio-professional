@@ -9,7 +9,6 @@ export interface StatType {
   gradient?: string;
 }
 
-/** Lista completa de tipos de estadística (sin filtrar) — usado por el form público de testimonios para mostrar prefix/suffix reales de cada métrica plantilla. */
 export const fetchStatTypes = async (): Promise<StatType[]> => {
   try {
     const response = await fetch(`${API_URL}/stat-types`);

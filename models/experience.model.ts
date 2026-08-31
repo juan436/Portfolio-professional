@@ -5,7 +5,6 @@ import mongoose, { Document } from 'mongoose';
  * Recibe: datos de un puesto (position/company/period/description) con traducciones opcionales en/fr/it.
  * Produce: `Experience`, modelo listo para `find`/`create` contra la colección `experiences`.
  */
-// Interfaz para el documento de experiencia
 export interface IExperience extends Document {
   position: string;
   company: string;

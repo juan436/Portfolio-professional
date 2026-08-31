@@ -18,19 +18,14 @@ export default function WelcomeAnimation() {
   const [showAnimation, setShowAnimation] = useState(false)
   const { t } = useLanguage()
 
-  // Solo mostrar la animación en la primera visita
   useEffect(() => {
-    // Verificar si es la primera visita
     const hasVisitedBefore = sessionStorage.getItem("hasVisitedBefore")
 
     if (!hasVisitedBefore) {
-      // Primera visita, mostrar animación
       setShowAnimation(true)
-      // Marcar que ya ha visitado el sitio
       sessionStorage.setItem("hasVisitedBefore", "true")
       welcomeOverlaySignal.activeUntil = Date.now() + 5000
 
-      // Ocultar la animación después de completarse
       const timer = setTimeout(() => {
         setShowAnimation(false)
       }, 5000)

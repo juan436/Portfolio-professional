@@ -14,7 +14,6 @@ import { verifyAdminToken } from '@/lib/auth/jwt'
 const LOCALES = ['es', 'en', 'fr', 'it'] as const
 const DEFAULT_LOCALE = 'es'
 
-// Rutas de API que requieren autenticación (mutaciones de datos)
 const PROTECTED_API_ROUTES = [
   '/api/content',
   '/api/experience',
@@ -28,7 +27,6 @@ function localeFromPath(pathname: string): string | null {
   return (LOCALES as readonly string[]).includes(seg) ? seg : null
 }
 
-// Rutas que NO llevan prefijo de idioma y NO se redirigen
 function isNonLocalizedPath(pathname: string): boolean {
   return (
     pathname.startsWith('/_next') ||
@@ -37,7 +35,7 @@ function isNonLocalizedPath(pathname: string): boolean {
     pathname === '/feed.xml' ||
     pathname === '/manifest.webmanifest' ||
     pathname.startsWith('/opengraph-image') ||
-    pathname.includes('.') // icon.png, archivos estáticos
+    pathname.includes('.')
   )
 }
 
@@ -45,7 +43,6 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const method = request.method
 
-  // ── /admin (UI) ───────────────────────────────────────────────────
   if (pathname.startsWith('/admin')) {
     const isLoginPath = pathname === '/admin/login'
     const authToken = request.cookies.get('authToken')?.value
@@ -60,7 +57,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // ── /api (escrituras protegidas) ─────────────────────────────────
   if (pathname.startsWith('/api')) {
     const isProtectedApi = PROTECTED_API_ROUTES.some((route) => pathname.startsWith(route))
     const isWriteMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
@@ -78,21 +74,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // ── Archivos / rutas especiales sin idioma ───────────────────────
   if (isNonLocalizedPath(pathname)) {
     return NextResponse.next()
   }
 
-  // ── i18n: rutas públicas ────────────────────────────────────────
   const pathLocale = localeFromPath(pathname)
   if (pathLocale) {
-    // ya tiene prefijo — propagar el locale al layout raíz
     const headers = new Headers(request.headers)
     headers.set('x-locale', pathLocale)
     return NextResponse.next({ request: { headers } })
   }
 
-  // sin prefijo → redirigir a la versión con locale
   const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value
   const target = (LOCALES as readonly string[]).includes(cookieLocale || '') ? (cookieLocale as string) : DEFAULT_LOCALE
   const url = request.nextUrl.clone()
@@ -101,6 +93,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Corre en todo salvo assets de _next. La lógica de arriba filtra /api, /admin y estáticos.
   matcher: ['/((?!_next/static|_next/image).*)'],
 }

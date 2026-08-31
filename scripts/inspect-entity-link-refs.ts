@@ -1,7 +1,3 @@
-// inspect-entity-link-refs.ts
-// Solo lectura: reporta el estado de `link.ref` / `links[].ref` en ProjectStats
-// y Testimonial contra la colección Project. Sirve de dry-run antes de la
-// migración a ObjectId real.
 
 import mongoose from 'mongoose'
 import dbConnect from '../lib/db/conection'

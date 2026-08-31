@@ -55,8 +55,6 @@ export function useProjectsActions(initialCategory: ProjectCategoryValue = "web"
     setLastSelectedByCategory((prev) => ({ ...prev, [activeCategory]: project }));
   }, [activeCategory]);
 
-  // Carga inicial: todos los proyectos de una sola vez, agrupados en cliente
-  // por categoría (1 request en vez de 6).
   useEffect(() => {
     let cancelled = false;
     const load = async () => {

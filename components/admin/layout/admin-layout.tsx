@@ -30,9 +30,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
-      {/* Fuente de íconos Devicon: la usan las tabs de Skills del panel
-          (tabla/manager/form/selector), no todo Admin. Se carga acá en vez
-          de en app/layout.tsx para no pagarla en el sitio público. */}
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/devicon.min.css" precedence="default" />
       <header className="bg-black/80 backdrop-blur-md border-b border-blue-700/20 sticky top-0 z-40">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">

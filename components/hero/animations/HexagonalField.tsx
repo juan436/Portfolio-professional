@@ -11,14 +11,12 @@ import { useIsMounted } from "@/hooks/use-is-mounted"
 export function HexagonalField() {
   const isMounted = useIsMounted()
 
-  // No renderizar nada durante SSR
   if (!isMounted) {
     return null
   }
   
   return (
     <div className="absolute inset-0 flex items-center justify-center">
-      {/* Hexágonos concéntricos */}
       {[...Array(4)].map((_, i) => (
         <motion.div
           key={`hex-${i}`}

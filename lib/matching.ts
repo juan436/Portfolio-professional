@@ -10,12 +10,9 @@ import type { IJevyTaxonomyEntry } from '@/models/jevy-taxonomy.model';
  * Produce: `findBestMatch` → mejor candidato o `null`; `buildExtractionTool` → schema DeepSeek;
  * `normalizeLeadProfile`/`countNoDefinido` para la extracción cruda.
  */
-// Motor de matching determinístico — reemplaza el criterio libre del LLM.
-// Jevy no decide si hay parecido: este código lo calcula, Jevy solo narra
-// el resultado. Ver dev-aguila-azul/vault/portfolio: planes/matching-catalogo-function-calling.
 
 export interface LeadProfile {
-  categoria: string; // 'no_definido' permitido — nunca es 'laboratorio', un lead no lo pide
+  categoria: string;
   subtype: string;
   problema_core: string;
   sector: string;
@@ -27,10 +24,6 @@ export interface MatchResult {
   score: number;
 }
 
-// Pesos tentativos (charla 2026-08-12) — punto de partida, se ajustan con
-// pruebas reales una vez conectado, mismo método que el ajuste del prompt
-// de catálogo del 2026-08-11. `categoria` solo suma en la pasada 1 (entregado):
-// en la pasada 2 (Laboratorio) no aplica, un lead nunca pide esa categoría.
 const WEIGHTS = {
   categoria: 20,
   subtype: 35,
@@ -46,15 +39,6 @@ function axisMatches(leadValue: string | undefined, catalogValue: string | undef
   return leadValue === catalogValue;
 }
 
-/**
- * `problema_core` es una condición obligatoria, no solo un eje que suma.
- * Probado en vivo (2026-08-13): un lead sin problema_core claro (`no_definido`,
- * taxonomía sin ese valor todavía) igual cruzaba el piso solo con
- * categoria+subtype (20+35=55) y matcheaba algo sin relación real. Categoria y
- * subtype pueden coincidir por casualidad entre proyectos distintos — el
- * problema de fondo, no. Sin ese eje coincidiendo, no hay candidato válido,
- * sin importar cuánto sumen los demás.
- */
 function scoreCandidate(lead: LeadProfile, project: IProject, includeCategoria: boolean): number {
   const profile = project.jevyProfile;
   if (!profile) return 0;
@@ -67,12 +51,6 @@ function scoreCandidate(lead: LeadProfile, project: IProject, includeCategoria: 
   return score;
 }
 
-/**
- * Empate en el score más alto entre 2+ candidatos = ambiguo. No es adivinable
- * de forma confiable cuál mostrar, así que no se muestra ninguno — mismo
- * criterio que "sin match": silencio es mejor que un parecido forzado, y un
- * empate resuelto por orden de query no es una decisión, es azar.
- */
 function bestAbove(candidates: { project: IProject; score: number }[], floor: number) {
   const passing = candidates.filter((c) => c.score >= floor).sort((a, b) => b.score - a.score);
   if (passing.length === 0) return null;
@@ -84,12 +62,6 @@ function bestAbove(candidates: { project: IProject; score: number }[], floor: nu
   return passing[0];
 }
 
-/**
- * Pasada 1: catálogo entregado (categoria del proyecto === categoria del lead,
- * nunca 'laboratorio'). Pasada 2, solo si la 1 no encontró nada por encima del
- * piso: catálogo en Laboratorio (categoria no se compara, es un estado, no un
- * eje pedible por el lead).
- */
 export function findBestMatch(lead: LeadProfile, catalog: IProject[]): MatchResult | null {
   const entregadoPool = catalog.filter(
     (p) => p.jevyProfile?.categoria && p.jevyProfile.categoria !== 'laboratorio' && p.jevyProfile.categoria === lead.categoria,
@@ -126,12 +98,6 @@ function enumProperty(entries: IJevyTaxonomyEntry[], excludeValues: string[] = [
   };
 }
 
-/**
- * Arma la función de function calling a partir del vocabulario vigente (Mongo,
- * dinámico) — mismo enum que usa el catálogo, ver dev-aguila-azul/vault/portfolio:
- * planes/matching-catalogo-function-calling. `categoria` excluye 'laboratorio':
- * es un estado del catálogo, ningún lead lo pide.
- */
 export function buildExtractionTool(taxonomy: Taxonomy): DeepSeekToolFunction {
   return {
     name: 'extraer_perfil_lead',
@@ -160,14 +126,6 @@ export function normalizeLeadProfile(raw: Record<string, unknown> | null): LeadP
   };
 }
 
-/**
- * Cuenta ejes en 'no_definido'. Incluso con temperature 0, DeepSeek (modelo
- * MoE) puede devolver una clasificación "confundida" por el ruteo de expertos
- * en el servidor — no es 100% determinístico pese a temperature 0 (probado:
- * 1/15 corridas idénticas). 3+ ejes sin definir en la misma charla que antes
- * sí los clasificó es señal de esa confusión puntual, no de falta real de
- * información — vale la pena un reintento antes de darse por vencido.
- */
 export function countNoDefinido(profile: LeadProfile): number {
   return Object.values(profile).filter((v) => v === 'no_definido').length;
 }

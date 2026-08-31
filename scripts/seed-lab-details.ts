@@ -1,6 +1,3 @@
-// seed-lab-details.ts
-// Contenido MOCK/placeholder explícito para experimentos de Laboratorio — a reemplazar con
-// contenido real cuando el experimento avance (mismo patrón que seed-project-details.ts).
 
 import dbConnect from '../lib/db/conection';
 import Project from '../models/project.model';

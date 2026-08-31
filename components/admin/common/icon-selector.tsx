@@ -15,9 +15,7 @@ import { renderDevIcon } from "@/lib/devicon-utils"
  * Recibe: `selectedIcon`/`onSelectIcon` + `category?` (filtra el catálogo fijo de abajo).
  * Produce: popover con grid de íconos; al elegir uno llama `onSelectIcon`.
  */
-// Lista completa de iconos de Devicon organizados por categoría
 const deviconIcons = [
-  // Frontend
   { value: "react", label: "React", category: "frontend" },
   { value: "nextjs", label: "Next.js", category: "frontend" },
   { value: "typescript", label: "TypeScript", category: "frontend" },
@@ -37,7 +35,6 @@ const deviconIcons = [
   { value: "flutter", label: "Flutter", category: "frontend" },
   { value: "svelte", label: "Svelte", category: "frontend" },
 
-  // Backend
   { value: "nodejs", label: "Node.js", category: "backend" },
   { value: "express", label: "Express", category: "backend" },
   { value: "php", label: "PHP", category: "backend" },
@@ -56,7 +53,6 @@ const deviconIcons = [
   { value: "graphql", label: "GraphQL", category: "backend" },
   { value: "nestjs", label: "NestJS", category: "backend" },
 
-  // Database
   { value: "mongodb", label: "MongoDB", category: "database" },
   { value: "mysql", label: "MySQL", category: "database" },
   { value: "postgresql", label: "PostgreSQL", category: "database" },
@@ -70,7 +66,6 @@ const deviconIcons = [
   { value: "cassandra", label: "Cassandra", category: "database" },
   { value: "neo4j", label: "Neo4j", category: "database" },
 
-  // DevOps
   { value: "git", label: "Git", category: "devops" },
   { value: "github", label: "GitHub", category: "devops" },
   { value: "gitlab", label: "GitLab", category: "devops" },
@@ -101,14 +96,11 @@ export default function IconSelector({ selectedIcon, onSelectIcon, category }: I
   const [useColored, setUseColored] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  // Filtrar iconos por categoría si se proporciona
   const filteredIcons = deviconIcons.filter((icon) => {
-    // Filtrar por categoría si está especificada
     if (category && icon.category !== category) {
       return false
     }
 
-    // Filtrar por término de búsqueda
     if (searchTerm) {
       return (
         icon.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -119,7 +111,6 @@ export default function IconSelector({ selectedIcon, onSelectIcon, category }: I
     return true
   })
 
-  // Enfocar el input de búsqueda cuando se abre el popover
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
       setTimeout(() => {
@@ -128,7 +119,6 @@ export default function IconSelector({ selectedIcon, onSelectIcon, category }: I
     }
   }, [isOpen])
 
-  // Renderizar el ícono de Devicon
   const renderDevIconWrapper = (iconName: string) => {
     return renderDevIcon(iconName, useColored, "text-xl")
   }

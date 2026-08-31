@@ -31,9 +31,6 @@ const EXT_TYPES: Record<string, string> = {
 
 async function collectAttachments(sessionId: string): Promise<IAttachment[]> {
   const filenames = await listSessionFiles(sessionId);
-  // El markdown convertido vive en `SessionAttachment` (caché con TTL). Se copia
-  // al Lead/JobOffer para que el registro sea autocontenido cuando el TTL borre
-  // la caché.
   const converted = await SessionAttachment.find({ sessionId }).select('filename markdown').lean();
   const markdownByName = new Map(converted.map((c) => [c.filename, c.markdown]));
   return filenames.map((filename) => ({
@@ -44,13 +41,6 @@ async function collectAttachments(sessionId: string): Promise<IAttachment[]> {
   }));
 }
 
-/**
- * Campos que necesita `action:'book'` del webhook real de flujo-agenda-cita-
- * leads (contrato sacado de arquitectura/workflow-agenda.json en ese vault,
- * verificado 2026-08-13 — no es un webhook genérico de "avisar a Juan", es
- * específicamente el que crea el evento de Calendar). El frontend le agrega
- * `action:'book'` + `startISO`/`endISO` una vez que el lead elige un horario.
- */
 export interface SchedulingData {
   name: string;
   email: string;
@@ -64,30 +54,15 @@ export interface SchedulingData {
   projectMatch: string;
   interestLevel: 'high' | 'medium' | 'low';
   transcript: string;
-  // Datos crudos de reclutador (solo type:'recruiter') — antes se aplastaban
-  // dentro de problem/whatTheyWant para encajar en el contrato de cliente;
-  // ahora van también como campos propios para que n8n arme una plantilla
-  // real de reclutador en vez de reusar las etiquetas de cliente.
   companyName?: string;
   role?: string;
   techStack?: string;
   modality?: string;
   contractType?: string;
   selectionProcess?: string;
-  // Informe generado (markdown/PDF, siempre; ZIP solo si hubo adjuntos) como
-  // URL pública de R2 (antes iban en base64 dentro del payload — decisión
-  // 2026-08-24, ver dev-aguila-azul/vault/portfolio: planes/admin-upload-
-  // media-cloudflare-r2.md, Parte B). n8n (flujo-agenda-cita-leads) descarga
-  // cada URL y adjunta el binario al correo a Juan — ajuste pendiente del
-  // lado de n8n (2 nodos: el Code que arma los adjuntos y el IF que hoy mira
-  // `attachmentsZipBase64`), lo hace el usuario manualmente cuando esto ya
-  // esté probado.
   reportMarkdownUrl: string;
   reportPdfUrl: string;
   attachmentsZipUrl?: string;
-  // Renderizado ya como HTML (mismo estilo "jevy> cat" del resto del correo
-  // a Juan) — n8n solo lo inserta en un placeholder, no arma nada. Vacío si
-  // Jevy no identificó ningún tema fuera de los campos fijos.
   additionalDetailsHtml: string;
 }
 
@@ -106,12 +81,6 @@ function transcriptToText(transcript: { role: 'jevy' | 'lead'; text: string }[])
   return transcript.map((m) => `${m.role === 'lead' ? 'Lead' : 'Jevy'}: ${m.text}`).join('\n');
 }
 
-// Sube un archivo generado (informe/zip) a R2 sin tumbar el cierre completo
-// si R2 todavía no está configurado (PENDIENTE en .env) — el Lead/JobOffer
-// en Mongo es lo crítico de guardar, la URL del reporte puede faltar sin
-// que se pierda el contacto. `saveLeadFile` antes escribía a disco local y
-// nunca fallaba por esto; con R2 sí puede fallar mientras el usuario no haya
-// cargado las credenciales reales.
 async function trySaveReportFile(sessionId: string, filename: string, buffer: Buffer): Promise<string> {
   try {
     return (await saveLeadFile(sessionId, filename, buffer)).url;
@@ -185,9 +154,6 @@ export async function closeConversation(params: {
         type: 'recruiter',
         preferredChannel: c.preferredChannel === 'no_definido' ? 'email' : c.preferredChannel,
         channelContact: c.channelContact,
-        // Se mantienen aplastados como respaldo (por si n8n todavia no usa
-        // los campos propios de abajo), pero la plantilla de reclutador real
-        // usa companyName/role/techStack/etc. directo.
         problem: `${c.role || 'Vacante'} en ${c.companyName || 'empresa sin nombre'}`,
         whatTheyWant: c.techStack || 'N/D',
         estimatedAmount: c.offeredAmount || 'N/D',

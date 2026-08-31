@@ -57,7 +57,6 @@ export function CertificateDetailView({ certificate }: CertificateDetailViewProp
     return <DetailNotFound message={notFoundLabel} backHref="/certificates" backLabel={backLabel} />
   }
 
-  // Campo en el idioma activo: base para "es", `translations[lang]` con fallback para el resto.
   const tr = language.code === "es" ? undefined : certificate.translations?.[language.code as "en" | "fr" | "it"]
   const title = tr?.title || certificate.title
   const issuer = tr?.issuer || certificate.issuer

@@ -17,20 +17,11 @@ import { getR2Client, getR2BucketName, isR2Configured, publicUrlForKey, keyFromP
  * Produce: `{ uploadUrl, key, publicUrl, ... }` para que el cliente haga el
  * `PUT` directo a R2, o `{ url }`/`{ success }` según la acción.
  */
-// Imágenes: se comprimen server-side con sharp ANTES de firmar (el navegador
-// no puede correr sharp) — por eso el flujo de imagen es un solo Server
-// Action que recibe el archivo original, lo comprime, y devuelve junto con
-// la URL firmada el buffer ya comprimido (base64) para que el cliente haga
-// el PUT directo a R2 con ESE buffer. El servidor nunca sube el archivo él
-// mismo a R2 — solo procesa y firma, sigue siendo "navegador sube directo".
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"])
 const ALLOWED_VIDEO_TYPES = new Set(["video/mp4", "video/webm", "video/quicktime"])
 
-// Límites elegidos para no volar la capa gratis de R2 (10GB storage / mes) —
-// sin credenciales reales para calibrar contra uso real, valor conservador
-// a revisar por el usuario si hace falta.
-const MAX_IMAGE_RAW_BYTES = 15 * 1024 * 1024 // 15MB antes de comprimir
-const MAX_VIDEO_BYTES = 200 * 1024 * 1024 // 200MB, sin transcodificar (fuera de alcance)
+const MAX_IMAGE_RAW_BYTES = 15 * 1024 * 1024
+const MAX_VIDEO_BYTES = 200 * 1024 * 1024
 
 const IMAGE_MAX_DIMENSION = 1920
 
@@ -57,16 +48,10 @@ export interface PreparedUpload {
   key: string
   publicUrl: string
   contentType: string
-  /** Solo para imágenes: el buffer ya comprimido, en base64, listo para el PUT del cliente. */
   fileBase64?: string
   size: number
 }
 
-/**
- * Imagen: valida, comprime/redimensiona con sharp (máx. 1920px, WebP calidad
- * 82) y firma el PUT contra la key resultante. El cliente hace el `fetch`
- * PUT directo a R2 con el `fileBase64` devuelto (decodificado a Blob).
- */
 export async function prepareImageUploadAction(formData: FormData): Promise<PreparedUpload> {
   await requireAdminSession()
   assertConfigured()
@@ -104,10 +89,6 @@ export async function prepareImageUploadAction(formData: FormData): Promise<Prep
   }
 }
 
-/**
- * Video: sin transcodificar (fuera de alcance) — solo valida tipo/tamaño y
- * firma el PUT. El cliente sube el archivo original directo a R2.
- */
 export async function prepareVideoUploadAction(params: { filename: string; contentType: string; size: number }): Promise<PreparedUpload> {
   await requireAdminSession()
   assertConfigured()
@@ -127,12 +108,6 @@ export async function prepareVideoUploadAction(params: { filename: string; conte
   return { uploadUrl, key, publicUrl: publicUrlForKey(key), contentType, size }
 }
 
-/**
- * Confirma que el objeto realmente llegó a R2 (HeadObjectCommand) — el PUT
- * presigned puede fallar en el navegador (típicamente CORS del bucket, ver
- * A5 del plan) sin que el Admin se entere si no se confirma. Devuelve la URL
- * pública final para guardar en el campo del proyecto.
- */
 export async function confirmMediaUploadAction(params: { key: string }): Promise<{ url: string }> {
   await requireAdminSession()
   assertConfigured()
@@ -141,13 +116,6 @@ export async function confirmMediaUploadAction(params: { key: string }): Promise
   return { url: publicUrlForKey(params.key) }
 }
 
-/**
- * Borra un objeto de R2 dado su URL pública ya guardada en el proyecto — se
- * usa al reemplazar o quitar media desde el Admin, para no dejar huérfanos.
- * Si la URL no pertenece al bucket configurado (ej. un path viejo de
- * `public/`), no hace nada y devuelve éxito igual — nunca se migran esos
- * archivos, así que no hay nada que borrar en R2.
- */
 export async function deleteMediaAction(params: { url: string }): Promise<{ success: true; skipped?: boolean }> {
   await requireAdminSession()
 

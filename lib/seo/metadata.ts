@@ -14,13 +14,10 @@ const OG_LOCALE: Record<string, string> = { es: "es_ES", en: "en_US", fr: "fr_FR
 interface BuildMetadataInput {
   title: string
   description: string
-  /** Path relativo SIN prefijo de idioma (`/work`, `/projects/x`). `buildMetadata` lo prefija. */
   path: string
   locale?: string
-  /** `true` = el título va tal cual, sin el template `%s | Juan Villegas` del layout raíz (para la home). */
   titleAbsolute?: boolean
   image?: string
-  /** `"article"` para posts de blog — agrega `article:published_time`/`author` al OG. Default `"website"`. */
   type?: "website" | "article"
   publishedTime?: string
   authorName?: string
@@ -56,8 +53,6 @@ export function buildMetadata({ title, description, path, locale = "es", titleAb
       ...(image ? { images: [{ url: image }] } : {}),
     },
     twitter: {
-      // Siempre `summary_large_image`: cada ficha tiene imagen real o, si no, la
-      // OG generada de respaldo (`opengraph-image.tsx`, 1200×630 de marca).
       card: "summary_large_image",
       title,
       description,
@@ -66,8 +61,6 @@ export function buildMetadata({ title, description, path, locale = "es", titleAb
   }
 }
 
-// Para slugs que no existen: metadata propia (no la del layout) y `noindex`,
-// así una URL fantasma nunca compite por posicionar con la real.
 export const NOT_FOUND_METADATA: Metadata = {
   title: "No encontrado",
   description: "El contenido que buscás no existe o fue movido.",

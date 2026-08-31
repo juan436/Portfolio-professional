@@ -22,9 +22,6 @@ export default function WolfGuide() {
   const [visible, setVisible] = useState(false)
   const [showGreeting, setShowGreeting] = useState(false)
 
-  // Esperar a que termine la superposición de bienvenida (primera visita)
-  // antes de mostrarse. Si nunca hubo superposición (visita repetida, o el
-  // primer load no fue en "/"), activeUntil sigue en 0 y se muestra ya.
   useEffect(() => {
     const remaining = welcomeOverlaySignal.activeUntil - Date.now()
     if (remaining > 0) {
@@ -34,7 +31,6 @@ export default function WolfGuide() {
     setVisible(true)
   }, [])
 
-  // Al aparecer, saluda un momento y después queda quieto hasta el hover
   useEffect(() => {
     if (!visible) return
     setShowGreeting(true)
@@ -42,7 +38,6 @@ export default function WolfGuide() {
     return () => clearTimeout(timer)
   }, [visible])
 
-  // No renderizar en rutas del panel administrativo ni en /contact
   if (
     pathname?.includes("/admin") ||
     pathname?.includes("/dashboard") ||

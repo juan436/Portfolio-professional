@@ -1,12 +1,3 @@
-// upload-project-image.ts
-// Sube una imagen local a R2 (misma convención que prepareImageUploadAction:
-// sharp -> webp q82, máx 1920px, key projects/images/YYYY/MM/...) y la setea
-// como `image` del proyecto con ese slug. Reemplazo temporal del uploader del
-// Admin para cargar las fichas que faltan (sistema-auditoria, vamos-crm, etc.).
-//
-// Uso:
-//   npx tsx --env-file=.env scripts/upload-project-image.ts <slug> <ruta-local> [--go]
-//   (sin --go: dry-run, comprime y muestra key/URL pero no sube ni toca Mongo)
 
 import { readFile } from 'fs/promises'
 import path from 'path'

@@ -21,12 +21,6 @@ interface ListHandlersOptions {
   createSuccessMessage?: string;
 }
 
-/**
- * GET (lista, con sort/filtro por categoría opcionales) + POST (crear).
- * Reemplaza el mismo find/create/try-catch copiado en 5 pares de rutas
- * (auditoría 2026-08-18 §6.4). Cada dominio conserva su propio sort,
- * validación de creación y mensajes — no es un genérico ciego.
- */
 export function createListHandlers({
   Model,
   sort,
@@ -95,11 +89,6 @@ interface ItemHandlersOptions {
   includeErrorDetail?: boolean;
 }
 
-/**
- * GET-por-id + PATCH + DELETE. Mismo reemplazo que createListHandlers,
- * para el otro archivo del par (`[id]/route.ts`). `other-skills` no exporta
- * GET (nunca lo tuvo) — cada route.ts elige qué handlers reexportar.
- */
 export function createItemHandlers({
   Model,
   entityErrorLabel,
@@ -143,9 +132,6 @@ export function createItemHandlers({
         if (!item) {
           return NextResponse.json({ success: false, message: notFoundMessage }, { status: 404 });
         }
-        // .set() en vez de asignar campo por campo con cast a any — misma
-        // actualización parcial (solo los campos presentes en body), API
-        // nativa de Mongoose para esto.
         item.set(body);
         await item.save();
       }

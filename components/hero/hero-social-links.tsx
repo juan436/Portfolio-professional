@@ -15,7 +15,6 @@ import { LocalizedLink as Link } from "@/components/common/localized-link"
 export function HeroSocialLinks() {
   const { t } = useLanguage();
 
-  // Función para abrir WhatsApp con mensaje traducido
   const handleWhatsAppClick = () => {
     const message = String(t('social.whatsapp_message'));
     openWhatsAppWithMessage(message);

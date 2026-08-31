@@ -25,7 +25,6 @@ export async function generateMetadata({
   })
 }
 
-/** Página `/agents/[slug]` (Server Component). Recibe: `params.slug` + `?from=work`. Produce: detalle del agente. */
 export default async function AgentDetailPage({
   params,
   searchParams,

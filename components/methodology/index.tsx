@@ -13,7 +13,6 @@ interface Phase {
   range: [number, number]
 }
 
-/** Card de una fase de metodología, con glow/elevación derivados de `elevatorY` (scroll del contenedor padre). */
 function MethodologyCard({
   phase, 
   index, 
@@ -28,7 +27,6 @@ function MethodologyCard({
   
   const center = (phase.range[0] + phase.range[1]) / 2
   
-  // Efectos impulsados por el scroll (automáticos)
   const glowOpacity = useTransform(
     elevatorY,
     [phase.range[0], center, phase.range[1]],
@@ -162,10 +160,8 @@ export default function Methodology() {
         </motion.div>
 
         <div className="relative max-w-5xl mx-auto">
-          {/* Track */}
           <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-blue-900/30 hidden md:block" />
 
-          {/* Orb */}
           <motion.div 
             style={{ top: yPercent }}
             className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full shadow-[0_0_40px_10px_#3b82f6] z-30 hidden md:block"

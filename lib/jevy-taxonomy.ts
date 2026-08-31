@@ -8,15 +8,6 @@ import JevyTaxonomyModel, { type IJevyTaxonomyEntry } from '@/models/jevy-taxono
  * Produce: `getJevyTaxonomy()` (4 listas categorias/subtypes/problemasCore/sectores,
  * de Mongo o semilla si el doc no tiene datos) y `invalidateJevyTaxonomyCache()`.
  */
-// Semilla inicial del vocabulario de Jevy — se carga a Mongo una sola vez
-// (scripts/seed-jevy-taxonomy.ts). Desde ahí, la colección manda: agregar un
-// valor nuevo es editar el documento, no tocar código ni redeployar.
-//
-// `no_definido` es válido en los 4 ejes: Jevy nunca fuerza una clasificación
-// insegura, y el motor de scoring no penaliza un eje que vino así.
-//
-// Semilla real tomada de los 11 proyectos verificados en juan-villegas-ing
-// (2026-08-12) — no es una lista cerrada para siempre, crece con el catálogo.
 
 export const JEVY_CATEGORIAS_SEED: IJevyTaxonomyEntry[] = [
   { value: 'web', label: 'Solución web', definicion: 'Sistema o app con un panel que alguien ABRE y USA activamente para gestionar algo (ver pedidos, cargar datos, revisar reportes). DEFAULT para casi cualquier pedido de un negocio, aunque el lead no diga "panel" — el silencio sobre eso NO significa que sea infra_backend NI automatizacion' },
@@ -90,7 +81,7 @@ interface CachedTaxonomy {
   sectores: IJevyTaxonomyEntry[];
 }
 
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 min — balance entre "editable sin redeploy" y no pegarle a Mongo cada mensaje
+const CACHE_TTL_MS = 5 * 60 * 1000;
 let cache: { data: CachedTaxonomy; expiresAt: number } | null = null;
 
 export async function getJevyTaxonomy(): Promise<CachedTaxonomy> {

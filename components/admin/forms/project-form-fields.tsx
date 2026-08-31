@@ -136,9 +136,6 @@ interface PairRow {
   [key: string]: string
 }
 
-// Repeater genérico para arrays de objetos con 2 campos de texto
-// ({title, description} para technicalDecisions, {icon, label} para
-// deploymentDiagram).
 export function PairListEditor<T extends PairRow>({
   label,
   rows,

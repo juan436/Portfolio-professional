@@ -29,7 +29,6 @@ function resolveKey(dict: Record<string, unknown>, key: string): unknown {
   )
 }
 
-/** `t()` — string por defecto; el objeto/array crudo con `{ returnObjects: true }`. */
 export interface TranslateFn {
   (key: string): string
   (key: string, options: { returnObjects: true }): unknown

@@ -10,7 +10,6 @@ export const LOCALES: Record<string, string> = {
   it: "it-IT",
 }
 
-/** Locale de `Intl` para un código de idioma; cae a `es-ES`. */
 export function localeFor(langCode: string): string {
   return LOCALES[langCode] || "es-ES"
 }

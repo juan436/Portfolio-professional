@@ -10,7 +10,6 @@ export interface ITestimonial extends Document {
   role?: string;
   email?: string;
   photo?: string;
-  // Meta: apuntar a 350-400 caracteres — corto se siente vacío, muy largo cansa.
   content: string;
   type: 'personal' | 'resultado';
   rating: number;
@@ -18,15 +17,7 @@ export interface ITestimonial extends Document {
     type: 'proyecto' | 'automatizacion';
     ref: string;
   }[];
-  // Moderación: los testimonios cargados por Juan desde el Admin pueden entrar
-  // directo en 'approved'; los que llegan por el form público SIEMPRE nacen
-  // 'pending' (forzado en app/api/testimonials/route.ts, no confía en el body).
-  // El GET público solo devuelve 'approved'.
   status: 'pending' | 'approved';
-  // Métricas que el cliente sugiere en el form público — candidatas sin
-  // verificar. Mismo shape que ProjectStats.metrics para que promoverlas sea
-  // directo, pero viven acá hasta que Juan las revisa y las promueve a mano
-  // (ProjectStats nunca se escribe directo desde este modelo).
   suggestedMetrics: {
     label: string;
     value: string;
@@ -59,10 +50,6 @@ const TestimonialSchema = new mongoose.Schema({
     default: 5
   },
   links: {
-    // `ref` es una foreign key real a la colección Project (los proyectos,
-    // automatizaciones y agentes viven todos ahí, distinguidos por `category`).
-    // Antes era `String` libre y se llenó de refs huérfanas al re-sembrar
-    // proyectos — ver scripts/wipe-metrics-and-testimonials.ts.
     type: [
       {
         type: { type: String, enum: ['proyecto', 'automatizacion'] },

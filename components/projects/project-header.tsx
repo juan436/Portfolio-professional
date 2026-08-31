@@ -1,4 +1,3 @@
-// components/projects/project-header.tsx
 import { LocalizedLink as Link } from "@/components/common/localized-link"
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -31,7 +30,6 @@ export function ProjectHeader({ title, description, subtype, hideHeader, onBackC
 
   return (
     <>
-      {/* Header simplificado */}
       {!hideHeader && (
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md shadow-lg">
         <nav className="container mx-auto px-6 py-4">

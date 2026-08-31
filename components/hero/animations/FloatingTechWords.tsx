@@ -15,14 +15,12 @@ interface FloatingTechWordsProps {
 export function FloatingTechWords({ words = ["REACT", "NODE.JS", "API", "DATABASE", "DOCKER"] }: FloatingTechWordsProps) {
   const isMounted = useIsMounted()
 
-  // No renderizar nada durante SSR
   if (!isMounted) {
     return null
   }
   
   return (
     <>
-      {/* Datos de desarrollo web flotantes */}
       {words.map((data, index) => (
         <motion.div
           key={`webdev-data-${index}`}

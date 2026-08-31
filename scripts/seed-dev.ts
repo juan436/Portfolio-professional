@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 import Content from '../models/content.model';
 import Project from '../models/project.model';
 
-// Intentar cargar variables de entorno manualmente si es posible, 
-// o usar el fallback de la conexión
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolioNew';
 
 async function seed() {
@@ -12,7 +10,6 @@ async function seed() {
     await mongoose.connect(MONGODB_URI);
     console.log('Connected to MongoDB');
 
-    // ... (heroUpdate and servicesUpdate remain the same)
     const heroUpdate = {
       title: "Estrategia Visual & Automatización Inteligente",
       subtitle: "Desarrollador Full Stack | Mobile (React Native) | Experto n8n",

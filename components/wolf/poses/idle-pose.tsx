@@ -1,13 +1,11 @@
 import { motion } from "framer-motion"
 import { WolfBase } from "@/components/wolf/wolf-base"
 
-/** Pose SVG "idle" (quieto, respirando) del lobo — usada por `WolfGuide`. Recibe: nada. Produce: el grupo SVG. */
 export const IdlePose = () => {
   return (
     <motion.g animate={{ y: [0, -3, 0] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}>
       <WolfBase
         head={
-          // Head - slightly tilted down looking at laptop
           <motion.g
             animate={{ rotate: [-2, 2, -2] }}
             transition={{ repeat: Number.POSITIVE_INFINITY, duration: 4 }}
@@ -16,13 +14,11 @@ export const IdlePose = () => {
           >
             <rect x="42" y="25" width="26" height="22" rx="8" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
 
-            {/* Ears */}
             <polygon points="42,30 35,15 45,25" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
             <polygon points="68,30 75,15 65,25" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
             <polygon points="42,28 38,20 45,25" fill="#F39C12" />
             <polygon points="68,28 72,20 65,25" fill="#F39C12" />
 
-            {/* Eyes - focused on screen */}
             <circle cx="48" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
             <circle cx="62" cy="35" r="5" fill="#1A3E4C" stroke="#1A3E4C" strokeWidth="1" />
             <motion.g
@@ -38,7 +34,6 @@ export const IdlePose = () => {
               <circle cx="62" cy="35" r="3" fill="white" />
             </motion.g>
 
-            {/* Snout */}
             <rect x="48" y="40" width="14" height="10" rx="5" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
             <rect x="51" y="45" width="8" height="2" rx="1" fill="#1A3E4C" />
             <circle cx="50" cy="42" r="1" fill="#1A3E4C" />
@@ -47,7 +42,6 @@ export const IdlePose = () => {
         }
         neck={<rect x="50" y="47" width="10" height="3" rx="1" fill="#1A3E4C" />}
         arms={
-          // Arms - typing on laptop
           <>
             <motion.g animate={{ y: [0, -1, 0] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 0.5 }}>
               <rect x="30" y="55" width="10" height="15" rx="3" fill="#2A7B9B" stroke="#1A3E4C" strokeWidth="2" />
@@ -63,7 +57,6 @@ export const IdlePose = () => {
           </>
         }
         tail={
-          // Tail - gentle wagging
           <motion.g
             animate={{ rotate: [0, 10, 0, -10, 0] }}
             transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3 }}
@@ -88,7 +81,6 @@ export const IdlePose = () => {
           </motion.g>
         }
         extra={
-          // Laptop
           <>
             <rect x="40" y="75" width="30" height="2" fill="#1A3E4C" />
             <rect x="40" y="65" width="30" height="10" rx="1" fill="#3B82F6" />

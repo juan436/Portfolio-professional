@@ -11,7 +11,6 @@ import { useIsMounted } from "@/hooks/use-is-mounted"
 export function QuantumRays() {
   const isMounted = useIsMounted()
 
-  // No renderizar nada durante SSR
   if (!isMounted) {
     return null
   }
@@ -49,7 +48,6 @@ export function QuantumRays() {
                 delay: i * 0.25,
               }}
             />
-            {/* Nodos de energía en los extremos */}
             <motion.circle
               fill="rgba(59, 130, 246, 0.9)"
               initial={{

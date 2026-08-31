@@ -21,8 +21,6 @@ import { SITE_URL } from "@/lib/site-config"
 import { WorkBlocks } from "@/components/projects/work-blocks"
 import { TechStackCard, SidebarListCard } from "@/components/projects/tech-stack-card"
 
-// Claves editables desde el Admin (campo "icon" de cada fila de uiStructure).
-// Cualquier clave no reconocida cae en LayoutGrid.
 const uiIconMap = {
   home: Home,
   work: Briefcase,
@@ -149,13 +147,8 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const translated = project.translations?.[language.code as "en" | "fr" | "it"]
   const title = language.code === "es" ? project.title : translated?.title || project.title
   const description = language.code === "es" ? project.description : translated?.description || project.description
-  // Orden del carrusel (decisión del usuario): hero (`image`) primero, video segundo,
-  // el resto de la galería (`images[]`) después — antes, si `images[]` tenía contenido,
-  // el hero quedaba fuera del carrusel por completo.
   const hasHero = Boolean(project.image)
   const galleryImages = project.images || []
-  // Mobile nunca tiene el banner "Infraestructura & Backend" (no tiene sentido para una app cliente):
-  // si no hay imagen real, cae a un placeholder en vez del banner pensado para fichas API sin capturas.
   const noRealMedia = !hasHero && galleryImages.length === 0
   const fallbackImages = noRealMedia && project.category === 'mobile' ? ['/placeholder.svg'] : []
   const galleryMedia: MediaItem[] = [
@@ -168,8 +161,6 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const backendBannerLabel = String(t("projects.backendBanner") || "Infraestructura & Backend")
   const stackEntries = techStackEntries(project.techStack)
 
-  // "Infraestructura en producción" es un concepto de servidor: una app mobile no tiene la suya
-  // propia (vive en la ficha API hermana, si existe), así que esta card nunca aplica a `mobile`.
   const infraRows = project.category === 'mobile' ? [] : [
     project.infraDetails?.uptime,
     project.infraDetails?.capacity,
@@ -238,7 +229,6 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-4">
-            {/* Columna principal: reto, solución y decisiones técnicas */}
             <div className="lg:col-span-2 space-y-12">
               {project.challenge && (project.challenge.problem || project.challenge.solution) && (
                 <motion.div
@@ -445,7 +435,6 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
 
             </div>
 
-            {/* Sidebar: acciones + stack técnico clasificado */}
             <aside className="lg:col-span-1">
               <div className="lg:sticky lg:top-28 space-y-6">
                 {(project.demo || project.github) && (

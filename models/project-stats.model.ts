@@ -10,14 +10,9 @@ export interface IProjectStats extends Document {
     type: 'proyecto' | 'automatizacion';
     ref: string;
   };
-  // Solo datos medibles/verificables (%, tiempo, conteo, $). Nunca frases
-  // ambiguas ("24/7", "inmediato") — si no se puede medir, no es una métrica.
-  // Las carga el dueño del sitio, no depende de lo que escriba el cliente.
   metrics: {
     label: string;
     value: string;
-    // Opcional: si referencia una key de StatType, esta métrica suma al total
-    // acumulado que se muestra en el home. Si no tiene, queda solo en este proyecto.
     statType?: string;
   }[];
   createdAt: Date;
@@ -26,9 +21,6 @@ export interface IProjectStats extends Document {
 const ProjectStatsSchema = new mongoose.Schema({
   link: {
     type: { type: String, enum: ['proyecto', 'automatizacion'], required: true },
-    // Foreign key real a Project (proyectos/automatizaciones/agentes viven todos
-    // ahí). Antes era `String` libre → se llenó de refs huérfanas al re-sembrar
-    // proyectos, ver scripts/wipe-metrics-and-testimonials.ts.
     ref: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
   },
   metrics: {

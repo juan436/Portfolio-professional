@@ -41,7 +41,6 @@ export function ExperienceTimeline({
         />
       </div>
 
-      {/* Marcadores de años */}
       <div className="flex justify-between mt-2">
         {timelineYears.map((year, index) => (
           <motion.div

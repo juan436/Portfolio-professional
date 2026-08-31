@@ -6,9 +6,6 @@ import type { ProjectCategoryValue } from "@/lib/actions/revalidation"
  * Recibe: nada (tipos + una fábrica `emptyProject`).
  * Produce: `AdminProject`, `CATEGORY_LABELS`, `CATEGORY_ORDER`, `emptyProject(category)`.
  */
-// Derivado del schema real de Mongo (IProject) en vez de redefinir los ~25
-// campos a mano — se mantiene en sync solo. `import type` se borra en build,
-// no mete mongoose en el bundle del cliente.
 export type AdminProject = Omit<IProject, keyof import("mongoose").Document> & {
   _id: string
   category: ProjectCategoryValue

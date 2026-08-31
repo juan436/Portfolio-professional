@@ -1,4 +1,3 @@
-// portfolio/models/other-skills.model.ts
 import mongoose, { Document } from 'mongoose';
 
 /**

@@ -7,10 +7,6 @@ import { attachmentFields, type IAttachment } from '@/models/shared-fields';
  * Recibe: datos de contacto + oferta (companyName/role/modality/contractType/etc.), adjuntos y transcript.
  * Produce: `JobOffer`, listo para `find`/`create` contra la colección `jobOffers`.
  */
-// JobOffer = reclutador. Separado de Lead a propósito (charla 2026-08-13,
-// dev-aguila-azul/vault/portfolio: planes/levantamiento-informacion-jevy) —
-// no matchea contra el catálogo de proyectos, no tiene sentido compartir
-// schema con Lead.
 
 export interface IJobOffer extends Document {
   name: string;
