@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Next 16 ya no corre ESLint en el build (quitado el key `eslint`, tiraba
+  // "Unrecognized key"). El lint se corre aparte si hace falta.
   typescript: {
     ignoreBuildErrors: true,
   },

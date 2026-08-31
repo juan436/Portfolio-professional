@@ -8,6 +8,9 @@ import { SITE_URL, AUTHOR_NAME, AUTHOR_DISPLAY_NAME } from "@/lib/site-config"
  * con que los crawlers hoy solo ven ES). Autodescubrible vía `<link rel="alternate">`
  * en el `<head>` del layout raíz.
  */
+// Igual que el sitemap: se genera en cada request, no en el build (el build de
+// Docker no resuelve `server-mongodb`). `getBlogPosts` va por `unstable_cache`.
+export const dynamic = 'force-dynamic'
 
 function escapeXml(text: string): string {
   return (text || "")

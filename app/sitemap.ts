@@ -13,6 +13,13 @@ import { SITE_URL } from '@/lib/site-config'
  * `/projects` y `/agents` (redirects).
  * Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Stage 3).
  */
+// Se genera en cada request, no en el build. El build (Docker) corre sin la red
+// del compose, así que `server-mongodb` no resuelve y el prerender del sitemap
+// tira `ENOTFOUND`. Los datos van por `unstable_cache` (tags blog/projects/
+// certificates), así que en runtime se reusan 1h y el crawler no le pega a Mongo
+// en cada visita. Mismo criterio que el resto del sitio (`force-dynamic`).
+export const dynamic = 'force-dynamic'
+
 const BASE = SITE_URL
 const LOCALES = ['es', 'en', 'fr', 'it'] as const
 
