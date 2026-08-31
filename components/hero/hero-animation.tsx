@@ -36,11 +36,12 @@ export function HeroAnimation({ showAnimation, toggleAnimation, codeLines }: Her
       className="flex justify-center"
     >
       <div ref={containerRef} className="relative w-80 h-80 md:w-96 md:h-96">
+        {/* Fondos recortados al recuadro del avatar — nunca deben llegar al header */}
         {isInView && !showAnimation && (
-          <>
+          <div className="absolute inset-0 overflow-hidden">
             <QuantumParticles />
             <FloatingTechWords />
-          </>
+          </div>
         )}
 
         {/* Imagen del perfil con animación */}
