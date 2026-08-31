@@ -421,32 +421,7 @@
   "testimonials": {
     "title": "VERIFIED SUCCESS CASES",
     "subtitle": "What business leaders say about my technical architecture.",
-    "items": [
-      {
-        "content": "Juan transformed our legacy infrastructure into a modern, scalable cloud solution. His ability to understand the business is exceptional.",
-        "author": "Carlos Rodríguez",
-        "role": "CTO at TechFlow",
-        "avatar": ""
-      },
-      {
-        "content": "The process automation he implemented saved us over 20 hours a week. He's a developer who thinks about ROI.",
-        "author": "Elena Martínez",
-        "role": "Operations Manager at LogiCorp",
-        "avatar": ""
-      },
-      {
-        "content": "Excellent professional. He delivered our mobile App ahead of schedule and with impeccable code quality. 100% recommended.",
-        "author": "Roberto Gómez",
-        "role": "Founder at StartUp X",
-        "avatar": ""
-      },
-      {
-        "content": "The e-commerce system he developed for us handles thousands of daily transactions without a hitch. Solid engineering work.",
-        "author": "Marina Silva",
-        "role": "E-commerce Director at ModaExpress",
-        "avatar": ""
-      }
-    ]
+    "items": []
   },
   "seo": {
     "home": {

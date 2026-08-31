@@ -12,10 +12,11 @@ import { HeroAnimation } from "./hero-animation"
 
 /**
  * Sección Hero del home (primer bloque visible).
- * Recibe: nada (lee `content.hero`/`translatedContent.hero` de los contexts).
+ * Recibe: `hasTestimonials` (si hay testimonios aprobados — controla el CTA
+ * "Ver Casos de Éxito", que hace scroll a la sección Testimonios).
  * Produce: título/subtítulo/descripción + CTAs + `HeroSocialLinks` + `HeroAnimation`.
  */
-export default function Hero() {
+export default function Hero({ hasTestimonials = false }: { hasTestimonials?: boolean }) {
   const { t, language } = useLanguage()
   const { translatedContent } = useTranslatedContent()
   const [showAnimation, setShowAnimation] = useState(false)
@@ -83,13 +84,15 @@ export default function Hero() {
                 </Link>
               </Button>
 
-              <Button 
-                variant="outline" 
-                onClick={() => scrollToSection('testimonials')}
-                className="border-blue-600/50 text-blue-400 hover:bg-blue-600/10 font-bold px-8 py-6"
-              >
-                {translatedTexts.secondary}
-              </Button>
+              {hasTestimonials && (
+                <Button
+                  variant="outline"
+                  onClick={() => scrollToSection('testimonials')}
+                  className="border-blue-600/50 text-blue-400 hover:bg-blue-600/10 font-bold px-8 py-6"
+                >
+                  {translatedTexts.secondary}
+                </Button>
+              )}
             </div>
 
             <HeroSocialLinks />

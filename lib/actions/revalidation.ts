@@ -10,6 +10,15 @@ import { revalidatePath, updateTag } from "next/cache"
  */
 export type ProjectCategoryValue = "web" | "mobile" | "infra_backend" | "laboratorio" | "automatizacion" | "agente"
 
+// El carrusel "Casos de Éxito Verificados" del home sale de `Testimonial`
+// (status: approved) vía `getApprovedTestimonials` — tag "testimonials" +
+// "home". Crear/editar/borrar/aprobar un testimonio tiene que invalidarlo.
+export function revalidateHomeTestimonials() {
+  updateTag("testimonials")
+  updateTag("home")
+  revalidatePath("/")
+}
+
 export function revalidateForCategory(category: ProjectCategoryValue, id?: string) {
   // Invalida el caché de datos (unstable_cache) además del caché de rutas.
   updateTag("projects")

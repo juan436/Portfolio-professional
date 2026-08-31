@@ -6,7 +6,7 @@ import Testimonial from "@/models/testimonial.model"
 import Project from "@/models/project.model"
 import ProjectStats from "@/models/project-stats.model"
 import { requireAdminSession } from "@/lib/actions/shared"
-import { revalidateForCategory, type ProjectCategoryValue } from "./revalidation"
+import { revalidateForCategory, revalidateHomeTestimonials, type ProjectCategoryValue } from "./revalidation"
 
 /**
  * Server Actions CRUD de testimonios (Admin) + moderación de los que llegan por el form público
@@ -47,6 +47,7 @@ export async function createTestimonialAction(data: Record<string, any>) {
   const testimonial = new Testimonial({ status: "approved", ...data })
   await testimonial.save()
   await revalidateLinks(testimonial.links)
+  revalidateHomeTestimonials()
 
   return JSON.parse(JSON.stringify(testimonial))
 }
@@ -61,6 +62,7 @@ export async function updateTestimonialAction(id: string, data: Record<string, a
   existing.set(data)
   await existing.save()
   await revalidateLinks(existing.links)
+  revalidateHomeTestimonials()
 
   return JSON.parse(JSON.stringify(existing))
 }
@@ -72,6 +74,7 @@ export async function deleteTestimonialAction(id: string) {
   const deleted = await Testimonial.findByIdAndDelete(id)
   if (!deleted) throw new Error("Testimonio no encontrado")
   await revalidateLinks(deleted.links)
+  revalidateHomeTestimonials()
 
   return true
 }
@@ -87,6 +90,7 @@ export async function approveTestimonialAction(id: string) {
   const updated = await Testimonial.findByIdAndUpdate(id, { status: "approved" }, { new: true })
   if (!updated) throw new Error("Testimonio no encontrado")
   await revalidateLinks(updated.links)
+  revalidateHomeTestimonials()
 
   return JSON.parse(JSON.stringify(updated))
 }

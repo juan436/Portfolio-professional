@@ -13,7 +13,7 @@ export const SITE_NAME = "Jevy"
 export const AUTHOR_NAME = "Juan Villegas"
 export const AUTHOR_DISPLAY_NAME = "Ing. Juan Villegas"
 export const AUTHOR_PHOTO =
-  "https://pub-d91a1ed93264439dbe0ee07372704cca.r2.dev/profile/1788173117044-1uu5j5-perfil-jevy-og.webp"
+  "https://pub-d91a1ed93264439dbe0ee07372704cca.r2.dev/profile/1788178517277-22gr8l-perfil-jero.webp"
 
 export const SAME_AS = [
   "https://github.com/juan436",

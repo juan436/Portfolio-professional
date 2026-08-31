@@ -422,32 +422,7 @@
   "testimonials": {
     "title": "CAS DE RÉUSSITE VÉRIFIÉS",
     "subtitle": "Ce que disent les dirigeants qui ont fait confiance à mon architecture technique.",
-    "items": [
-      {
-        "content": "Juan a transformé notre infrastructure legacy en une solution cloud moderne et évolutive. Sa capacité à comprendre le métier est exceptionnelle.",
-        "author": "Carlos Rodríguez",
-        "role": "CTO chez TechFlow",
-        "avatar": ""
-      },
-      {
-        "content": "L'automatisation des processus qu'il a mise en place nous a fait gagner plus de 20 heures par semaine. C'est un développeur qui pense au ROI.",
-        "author": "Elena Martínez",
-        "role": "Operations Manager chez LogiCorp",
-        "avatar": ""
-      },
-      {
-        "content": "Excellent professionnel. Il a livré notre application mobile avant la date prévue, avec une qualité de code impeccable. 100% recommandé.",
-        "author": "Roberto Gómez",
-        "role": "Fondateur chez StartUp X",
-        "avatar": ""
-      },
-      {
-        "content": "Le système e-commerce qu'il a développé pour nous gère des milliers de transactions quotidiennes sans broncher. Un travail d'ingénierie solide.",
-        "author": "Marina Silva",
-        "role": "Directrice E-commerce chez ModaExpress",
-        "avatar": ""
-      }
-    ]
+    "items": []
   },
   "seo": {
     "home": {

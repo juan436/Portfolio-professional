@@ -5,6 +5,7 @@ import Project from "@/models/project.model"
 import Experience from "@/models/experience.model"
 import Skill from "@/models/skill.model"
 import OtherSkill from "@/models/other-skills.model"
+import Testimonial from "@/models/testimonial.model"
 import type { Content as ContentShape } from "@/contexts/content/types"
 
 /**
@@ -127,5 +128,34 @@ async function fetchContactInfo(): Promise<ContentShape["contact"] | null> {
 
 export const getContactInfo = unstable_cache(fetchContactInfo, ["contact-info"], {
   tags: ["home"],
+  revalidate: 3600,
+})
+
+// Server-only: testimonios aprobados para el carrusel "Casos de Éxito
+// Verificados" del home. Antes esa sección leía 4 testimonios ficticios
+// hardcodeados en los translation.json (`testimonials.items`); ahora sale de
+// la misma colección `Testimonial` que las fichas de proyecto — con la BD
+// vacía, la sección no se muestra (y el CTA del Hero se oculta). Se invalida
+// con `revalidateHomeTestimonials()` desde el CRUD de Admin.
+export interface HomeTestimonial {
+  content: string
+  author: string
+  role: string
+  avatar: string
+}
+
+async function fetchApprovedTestimonials(): Promise<HomeTestimonial[]> {
+  await dbConnect()
+  const docs = await Testimonial.find({ status: "approved" }).sort({ createdAt: -1 }).lean()
+  return (docs as any[]).map((t) => ({
+    content: t.content,
+    author: t.author,
+    role: t.role || "",
+    avatar: t.photo || "",
+  }))
+}
+
+export const getApprovedTestimonials = unstable_cache(fetchApprovedTestimonials, ["approved-testimonials"], {
+  tags: ["home", "testimonials"],
   revalidate: 3600,
 })

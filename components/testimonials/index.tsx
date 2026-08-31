@@ -15,10 +15,12 @@ interface Testimonial {
 
 /**
  * Sección "Testimonios" del home — carrusel infinito con drag + auto-scroll.
- * Recibe: nada (lee `testimonials.items` de i18next vía `returnObjects: true`).
- * Produce: carrusel arrastrable con loop (o nada si no hay testimonios en el idioma actual).
+ * Recibe: `items` (testimonios `approved` de Mongo, traídos server-side por
+ * `getApprovedTestimonials` en app/[locale]/page.tsx). Antes leía 4 testimonios
+ * ficticios de `testimonials.items` en los translation.json.
+ * Produce: carrusel arrastrable con loop, o `null` si no hay testimonios.
  */
-export default function Testimonials() {
+export default function Testimonials({ items }: { items: Testimonial[] }) {
   const { t } = useLanguage()
   const [isPaused, setIsPaused] = useState(false)
   const constraintsRef = useRef(null)
@@ -26,11 +28,7 @@ export default function Testimonials() {
   const halfWidthRef = useRef(0)
   const x = useMotionValue(0)
 
-  // Usamos returnObjects: true para obtener el array de testimonios desde i18n
-  const testimonials = useMemo(() => {
-    const items = t("testimonials.items", { returnObjects: true });
-    return Array.isArray(items) ? items as Testimonial[] : [];
-  }, [t])
+  const testimonials = items
 
   const title = String(t("testimonials.title") || "CASOS DE ÉXITO VERIFICADOS")
   const subtitle = String(t("testimonials.subtitle") || "Lo que dicen los líderes que han confiado en mi arquitectura técnica.")
@@ -62,8 +60,11 @@ export default function Testimonials() {
       .toUpperCase()
   }
 
-  // Siempre renderizamos la sección para evitar saltos en la hidratación (Hydration Mismatch)
-  // Pero el contenido dinámico solo se muestra cuando está montado
+  // Sin testimonios aprobados no hay sección: nada de encabezado huérfano
+  // "Casos de Éxito Verificados" sobre un carrusel vacío. El CTA del Hero que
+  // apunta acá también se oculta (prop `hasTestimonials`).
+  if (testimonials.length === 0) return null
+
   return (
     <section id="testimonials" className="py-24 relative overflow-hidden bg-black">
       {/* Background Glows (Blue Spectrum) */}

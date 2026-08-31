@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getHomeContent } from "@/lib/data/home-content"
+import { getHomeContent, getApprovedTestimonials } from "@/lib/data/home-content"
 import { buildMetadata } from "@/lib/seo/metadata"
 import { getServerT } from "@/lib/i18n/server-dict"
 import { ContentHydrator } from "@/components/content-hydrator"
@@ -32,21 +32,21 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export default async function Home() {
-  const homeContent = await getHomeContent()
+  const [homeContent, testimonials] = await Promise.all([getHomeContent(), getApprovedTestimonials()])
 
   return (
     <main className="min-h-screen">
       <ProfilePageJsonLd />
       <ContentHydrator full={homeContent} />
       <WelcomeAnimation />
-      <Hero />
+      <Hero hasTestimonials={testimonials.length > 0} />
       <Services />
       <Methodology />
       <MetricsSection />
       <About />
       <Experience />
       <Skills />
-      <Testimonials />
+      <Testimonials items={testimonials} />
     </main>
   )
 }
