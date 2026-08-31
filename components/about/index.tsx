@@ -101,7 +101,7 @@ export default function About() {
             className="md:col-span-5 flex justify-center items-center"
           >
             <AboutProfile 
-              profileImage={content.hero.profileImage} 
+              profileImage={content.hero.aboutImage || content.hero.profileImage}
               heroTitle={translatedTexts.heroTitle}
               role={translatedTexts.role}
               engineer={translatedTexts.engineer}
