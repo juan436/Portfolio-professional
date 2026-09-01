@@ -27,12 +27,11 @@ export function AgentCard({ slug, title, description, capabilities, subtype, ind
   const extraCount = capabilities.length - visibleCapabilities.length
 
   return (
-    <Link href={`/agents/${slug}?from=work`}>
+    <Link href={`/agents/${slug}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: index * 0.1 }}
-        viewport={{ once: true }}
         className="relative bg-zinc-900/40 border border-white/10 rounded-xl p-6 pt-8 backdrop-blur-sm hover:border-blue-500/50 transition-all cursor-pointer group h-full flex flex-col items-center text-center overflow-visible"
       >
         {subtype && (

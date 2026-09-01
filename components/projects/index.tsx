@@ -1,65 +1,42 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useContent } from "@/contexts/content"
-import { ProjectsGrid } from "./projects-grid"
-import { useTranslatedContent } from "@/hooks/use-translated-content"
+import { useLanguage } from "@/hooks/use-language"
 import { useTranslatedTexts } from "@/hooks/use-translated-texts"
+import { ProjectsGrid } from "./projects-grid"
+import type { Project, Projects as ProjectsShape } from "@/contexts/content/types"
 
 /**
- * Sección "Proyectos" del home (categorías web/mobile/infra_backend).
- * Recibe: nada (lee `content`/`translatedContent` de los contexts).
- * Procesa: combina el contenido traducido con tags/imagen del contenido original (que no viaja traducido).
+ * Sección "Proyectos" de /work (categorías web/mobile/infra_backend).
+ * Recibe: `projects` (crudo con traducciones, del Server Component `/work` —
+ *   mismo patrón que Automations/Agents). Antes leía del `ContentProvider`, que
+ *   se hidrata en el navegador (`useLayoutEffect`) → el grid mostraba un spinner
+ *   hasta que hidrataba. Con la data por prop ya viene en el HTML del server.
  * Produce: `ProjectsGrid` con tabs por categoría + contador total.
  */
-export default function Projects() {
-  const { content, isLoading } = useContent()
-  const { translatedContent } = useTranslatedContent()
+function localize(list: Project[], langCode: string): Project[] {
+  return list.map((p) => {
+    const tr = langCode !== "es" ? p.translations?.[langCode as "en" | "fr" | "it"] : undefined
+    let image = p.image || ""
+    if (image && !image.startsWith("/") && !image.startsWith("http")) image = `https://${image}`
+    return {
+      ...p,
+      title: tr?.title || p.title,
+      description: tr?.description || p.description,
+      image,
+      tags: p.tags || [],
+    }
+  })
+}
+
+export default function Projects({ projects }: { projects: ProjectsShape }) {
+  const { language } = useLanguage()
 
   const combinedProjects = {
-    web: translatedContent.projects?.web?.map(project => {
-      const originalProject = content.projects.web.find(p => p.id === project.id);
-
-      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
-      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
-        imageUrl = `https://${imageUrl}`;
-      }
-
-      return {
-        ...project,
-        tags: originalProject?.tags || [],
-        image: imageUrl
-      };
-    }) || [],
-    mobile: translatedContent.projects?.mobile?.map(project => {
-      const originalProject = content.projects.mobile.find(p => p.id === project.id);
-
-      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
-      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
-        imageUrl = `https://${imageUrl}`;
-      }
-
-      return {
-        ...project,
-        tags: originalProject?.tags || [],
-        image: imageUrl
-      };
-    }) || [],
-    infra_backend: translatedContent.projects?.infra_backend?.map(project => {
-      const originalProject = content.projects.infra_backend.find(p => p.id === project.id);
-
-      let imageUrl = originalProject?.image || "/placeholder.svg?height=400&width=600";
-      if (imageUrl && !imageUrl.startsWith("/") && !imageUrl.startsWith("http")) {
-        imageUrl = `https://${imageUrl}`;
-      }
-
-      return {
-        ...project,
-        tags: originalProject?.tags || [],
-        image: imageUrl
-      };
-    }) || []
-  };
+    web: localize(projects.web, language.code),
+    mobile: localize(projects.mobile, language.code),
+    infra_backend: localize(projects.infra_backend, language.code),
+  }
 
   const translatedTexts = useTranslatedTexts(
     (t) => ({
@@ -105,9 +82,8 @@ export default function Projects() {
         <div className="mb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
             className="flex items-center gap-3 mb-3"
           >
             <span className="text-xs font-black uppercase tracking-[0.3em] text-blue-500 shrink-0">01</span>
@@ -118,9 +94,8 @@ export default function Projects() {
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
             className="text-slate-500 text-sm max-w-xl"
           >
             {translatedTexts.subtitle}
@@ -129,7 +104,7 @@ export default function Projects() {
 
         <ProjectsGrid
           localProjects={combinedProjects}
-          isLoading={isLoading}
+          isLoading={false}
           translatedTexts={translatedTexts}
         />
       </div>

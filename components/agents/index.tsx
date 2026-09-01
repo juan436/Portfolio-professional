@@ -63,9 +63,8 @@ export default function Agents({ agents }: AgentsProps) {
         <div className="mb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
             className="flex items-center gap-3 mb-3"
           >
             <span className="text-xs font-black uppercase tracking-[0.3em] text-blue-500 shrink-0">03</span>
@@ -76,9 +75,8 @@ export default function Agents({ agents }: AgentsProps) {
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
             className="text-slate-500 text-sm max-w-xl"
           >
             {subtitle}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { getServerT } from "@/lib/i18n/server-dict"
+import { getHomeContent } from "@/lib/data/home-content"
 import { getProjectsByCategory } from "@/lib/data/projects"
 import WorkIntro from "@/components/work"
 import Projects from "@/components/projects"
@@ -19,13 +20,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /**
- * Página `/work` (Server Component) — resumen de las 3 categorías con lista fija (web/mobile/infra_backend leídas por `Projects`).
- * Recibe: nada.
- * Procesa: trae automatizaciones y agentes en paralelo.
+ * Página `/work` (Server Component). Trae las 5 listas server-side y las pasa por
+ * prop — proyectos (web/mobile/infra vía `getHomeContent`), automatizaciones y
+ * agentes. Así los 3 grids salen ya renderizados en el HTML (sin el pop-in que
+ * tenía `<Projects>` cuando leía del ContentProvider).
  * Produce: `WorkIntro` + `Projects` + `Automations` + `Agents`.
  */
 export default async function WorkPage() {
-  const [automations, agents] = await Promise.all([
+  const [{ projects }, automations, agents] = await Promise.all([
+    getHomeContent(),
     getProjectsByCategory("automatizacion"),
     getProjectsByCategory("agente"),
   ])
@@ -34,7 +37,7 @@ export default async function WorkPage() {
     <main className="min-h-screen bg-black flex flex-col">
       <div className="pt-28 flex-grow">
         <WorkIntro />
-        <Projects />
+        <Projects projects={projects} />
         <Automations automations={automations} />
         <Agents agents={agents} />
       </div>
