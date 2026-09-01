@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import BlogPost from "@/models/blog.model"
+import { buildSafe } from "@/lib/data/build-safe"
 
 /**
  * Lectura server-only de posts de blog, directo a Mongo.
@@ -13,21 +14,23 @@ import BlogPost from "@/models/blog.model"
  * NUNCA se cachea (siempre lee fresco).
  */
 export const getBlogPosts = unstable_cache(
-  async () => {
-    await dbConnect()
-    const posts = await BlogPost.find({ status: "published" }).sort({ publishedAt: -1 }).lean()
-    return JSON.parse(JSON.stringify(posts))
-  },
+  () =>
+    buildSafe(async () => {
+      await dbConnect()
+      const posts = await BlogPost.find({ status: "published" }).sort({ publishedAt: -1 }).lean()
+      return JSON.parse(JSON.stringify(posts))
+    }, [] as any[]),
   ["blog-posts"],
   { tags: ["blog"], revalidate: 3600 },
 )
 
 const getPublishedPostBySlug = unstable_cache(
-  async (slug: string) => {
-    await dbConnect()
-    const post = await BlogPost.findOne({ slug, status: "published" }).lean()
-    return post ? JSON.parse(JSON.stringify(post)) : null
-  },
+  (slug: string) =>
+    buildSafe(async () => {
+      await dbConnect()
+      const post = await BlogPost.findOne({ slug, status: "published" }).lean()
+      return post ? JSON.parse(JSON.stringify(post)) : null
+    }, null),
   ["blog-post-by-slug"],
   { tags: ["blog"], revalidate: 3600 },
 )
@@ -40,22 +43,23 @@ export async function getBlogPostBySlug(slug: string, options: { includeDrafts?:
 }
 
 export const getRelatedPosts = unstable_cache(
-  async (slug: string, tags: string[] = [], limit = 3) => {
-    await dbConnect()
-    const others = await BlogPost.find({ status: "published", slug: { $ne: slug } })
-      .sort({ publishedAt: -1 })
-      .lean()
+  (slug: string, tags: string[] = [], limit = 3) =>
+    buildSafe(async () => {
+      await dbConnect()
+      const others = await BlogPost.find({ status: "published", slug: { $ne: slug } })
+        .sort({ publishedAt: -1 })
+        .lean()
 
-    const tagSet = new Set(tags)
-    const scored = others
-      .map((post: any) => ({
-        post,
-        shared: (post.tags || []).filter((tag: string) => tagSet.has(tag)).length,
-      }))
-      .sort((a, b) => b.shared - a.shared)
+      const tagSet = new Set(tags)
+      const scored = others
+        .map((post: any) => ({
+          post,
+          shared: (post.tags || []).filter((tag: string) => tagSet.has(tag)).length,
+        }))
+        .sort((a, b) => b.shared - a.shared)
 
-    return JSON.parse(JSON.stringify(scored.slice(0, limit).map((entry) => entry.post)))
-  },
+      return JSON.parse(JSON.stringify(scored.slice(0, limit).map((entry) => entry.post)))
+    }, [] as any[]),
   ["blog-related-posts"],
   { tags: ["blog"], revalidate: 3600 },
 )

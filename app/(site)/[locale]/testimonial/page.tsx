@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { buildMetadata } from "@/lib/seo/metadata"
 import TestimonialForm from "@/components/testimonial-form"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   ...buildMetadata({
     title: "Dejar un testimonio",

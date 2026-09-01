@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db/conection"
 import Project from "@/models/project.model"
 import Testimonial from "@/models/testimonial.model"
 import ProjectStats from "@/models/project-stats.model"
+import { buildSafe } from "@/lib/data/build-safe"
 
 /**
  * Lectura server-only del detalle de un proyecto (project + testimonios + métricas).
@@ -17,16 +18,11 @@ export interface ProjectDetailData {
 }
 
 export const getProjectDetail = unstable_cache(
-  async (slug: string): Promise<ProjectDetailData | null> => {
+  (slug: string): Promise<ProjectDetailData | null> =>
+    buildSafe(async () => {
     await dbConnect()
 
-    let project: any
-    try {
-      project = await Project.findOne({ slug }).lean()
-    } catch {
-      return null
-    }
-
+    const project: any = await Project.findOne({ slug }).lean()
     if (!project) return null
 
     const projectId = project._id.toString()
@@ -43,7 +39,7 @@ export const getProjectDetail = unstable_cache(
         metrics: (stats as any)?.metrics || [],
       })
     )
-  },
+    }, null),
   ["project-detail"],
   { tags: ["projects", "testimonials"], revalidate: 3600 },
 )

@@ -5,6 +5,8 @@ import { BlogListView } from "@/components/blog/blog-list-view"
 import { BlogJsonLd } from "@/components/blog/blog-json-ld"
 import { buildMetadata } from "@/lib/seo/metadata"
 
+export const dynamic = "force-dynamic"
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const t = getServerT(locale)
