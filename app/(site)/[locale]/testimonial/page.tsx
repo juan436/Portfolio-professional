@@ -2,6 +2,9 @@ import type { Metadata } from "next"
 import { buildMetadata } from "@/lib/seo/metadata"
 import TestimonialForm from "@/components/testimonial-form"
 
+// Usa searchParams (?tag / ?project) -> dinámica, no ISR.
+export const dynamic = "force-dynamic"
+
 // Página no listada en el sitemap/nav a propósito — se comparte el link
 // directo con el cliente después de cerrar un proyecto (no tiene sentido
 // dejarla descubrible desde el menú público), de ahí el `robots: noindex`.

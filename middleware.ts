@@ -7,9 +7,9 @@ import { verifyAdminToken } from '@/lib/auth/jwt'
  *  1. Auth de `/admin/*` (UI) y de las escrituras de `/api/*` (JWT).
  *  2. i18n: prefijo de idioma en todas las rutas públicas (`/es/*`, `/en/*`).
  *     Rutas sin prefijo redirigen (307) a la versión con locale (cookie
- *     `NEXT_LOCALE` > default `es`). El locale resuelto se propaga al layout
- *     raíz por el header `x-locale` para el `<html lang>`.
- * Ver portfolio: planes/i18n-jevy-navegador-y-crawlers-2026-08-28 (Parte C).
+ *     `NEXT_LOCALE` > default `es`). El `<html lang>` lo resuelve el layout
+ *     `(site)/[locale]` desde `params.locale` (ya no por header — así el árbol
+ *     puede ser ISR). Ver portfolio: planes/force-dynamic-a-isr-2026-09-01.
  */
 const LOCALES = ['es', 'en', 'fr', 'it'] as const
 const DEFAULT_LOCALE = 'es'
@@ -86,10 +86,8 @@ export async function middleware(request: NextRequest) {
   // ── i18n: rutas públicas ────────────────────────────────────────
   const pathLocale = localeFromPath(pathname)
   if (pathLocale) {
-    // ya tiene prefijo — propagar el locale al layout raíz
-    const headers = new Headers(request.headers)
-    headers.set('x-locale', pathLocale)
-    return NextResponse.next({ request: { headers } })
+    // ya tiene prefijo — el layout lee el locale de `params`, nada que hacer acá
+    return NextResponse.next()
   }
 
   // sin prefijo → redirigir a la versión con locale

@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache"
 import dbConnect from "@/lib/db/conection"
 import Certificate from "@/models/certificate.model"
+import { buildSafe } from "@/lib/data/build-safe"
 
 /**
  * Lectura server-only de certificaciones, directo a Mongo.
@@ -20,21 +21,23 @@ export async function getCertificateById(id: string) {
 }
 
 export const getCertificateBySlug = unstable_cache(
-  async (slug: string) => {
-    await dbConnect()
-    const certificate = await Certificate.findOne({ slug }).lean()
-    return certificate ? JSON.parse(JSON.stringify(certificate)) : null
-  },
+  (slug: string) =>
+    buildSafe(async () => {
+      await dbConnect()
+      const certificate = await Certificate.findOne({ slug }).lean()
+      return certificate ? JSON.parse(JSON.stringify(certificate)) : null
+    }, null),
   ["certificate-by-slug"],
   { tags: ["certificates"], revalidate: 3600 },
 )
 
 export const getCertificatesList = unstable_cache(
-  async () => {
-    await dbConnect()
-    const certificates = await Certificate.find().sort({ date: -1 }).lean()
-    return JSON.parse(JSON.stringify(certificates))
-  },
+  () =>
+    buildSafe(async () => {
+      await dbConnect()
+      const certificates = await Certificate.find().sort({ date: -1 }).lean()
+      return JSON.parse(JSON.stringify(certificates))
+    }, [] as any[]),
   ["certificates-list"],
   { tags: ["certificates"], revalidate: 3600 },
 )

@@ -8,6 +8,7 @@ import OtherSkill from "@/models/other-skills.model"
 import Testimonial from "@/models/testimonial.model"
 import type { Content as ContentShape } from "@/contexts/content/types"
 import { emptyContent } from "@/contexts/content/empty-content"
+import { buildSafe } from "@/lib/data/build-safe"
 
 /**
  * Lectura server-only del contenido del sitio, directo a Mongo. Es el ÚNICO
@@ -98,7 +99,7 @@ async function fetchHomeContent(): Promise<ContentShape> {
 // Cacheado (unstable_cache): una sola consulta a Mongo por hora, reusada por
 // todas las páginas. Se invalida con `revalidateTag("home")` desde las Server
 // Actions del Admin. `revalidate: 3600` = red de seguridad.
-export const getHomeContent = unstable_cache(fetchHomeContent, ["home-content"], {
+export const getHomeContent = unstable_cache(() => buildSafe(fetchHomeContent, emptyContent), ["home-content"], {
   tags: ["home"],
   revalidate: 3600,
 })
@@ -127,7 +128,7 @@ async function fetchApprovedTestimonials(): Promise<HomeTestimonial[]> {
   }))
 }
 
-export const getApprovedTestimonials = unstable_cache(fetchApprovedTestimonials, ["approved-testimonials"], {
+export const getApprovedTestimonials = unstable_cache(() => buildSafe(fetchApprovedTestimonials, [] as HomeTestimonial[]), ["approved-testimonials"], {
   tags: ["home", "testimonials"],
   revalidate: 3600,
 })
