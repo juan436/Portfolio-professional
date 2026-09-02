@@ -15,6 +15,7 @@ export interface IProject extends Document {
   video?: string;
   github: string;
   demo: string;
+  demoKind?: 'demo' | 'site' | 'docs';
   category: 'web' | 'mobile' | 'infra_backend' | 'laboratorio' | 'automatizacion' | 'agente';
   subtype?: string;
   tags: string[];
@@ -199,6 +200,7 @@ const ProjectSchema = new mongoose.Schema({
   video: String,
   github: String,
   demo: String,
+  demoKind: { type: String, enum: ['demo', 'site', 'docs'] },
   category: { 
     type: String, 
     enum: ['web', 'mobile', 'infra_backend', 'laboratorio', 'automatizacion', 'agente'],

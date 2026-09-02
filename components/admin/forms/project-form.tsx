@@ -191,6 +191,19 @@ export default function ProjectForm({
                     <TextField label="URL de GitHub" value={formData.github} onChange={(v) => setTop("github", v)} disabled={disabled} />
                     <TextField label="URL de Demo/Docs" value={formData.demo} onChange={(v) => setTop("demo", v)} disabled={disabled} />
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Texto del botón del enlace</label>
+                    <Select value={formData.demoKind || "demo"} onValueChange={(v) => setTop("demoKind", v as AdminProject["demoKind"])} disabled={disabled}>
+                      <SelectTrigger className="bg-black/40 border-blue-700/20">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="demo">Demo (sandbox de prueba)</SelectItem>
+                        <SelectItem value="site">Visitar sitio (producto en vivo)</SelectItem>
+                        <SelectItem value="docs">Documentación</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </AccordionContent>
               </AccordionItem>
 

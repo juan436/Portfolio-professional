@@ -64,6 +64,7 @@ interface RawProject {
   category?: string
   github?: string
   demo?: string
+  demoKind?: "demo" | "site" | "docs"
   tags?: string[]
   duration?: string
   sector?: string
@@ -108,7 +109,13 @@ export function ProjectDetailView({ project, testimonials, resultsMetrics }: Pro
   const testimonialHeading = String(t("projects.testimonialHeading") || "Testimonio")
   const resultsHeading = String(t("projects.resultsHeading") || "Métricas y Resultados")
   const codeLabel = String(t("projects.code") || "Código")
-  const demoLabel = String(t("projects.demo") || "Demo")
+  const demoLabel = String(
+    project?.demoKind === "site"
+      ? t("projects.visitSite") || "Visitar sitio"
+      : project?.demoKind === "docs"
+        ? t("projects.docs") || "Documentación"
+        : t("projects.demo") || "Demo",
+  )
   const techStackHeading = String(t("projects.techStackHeading") || "Stack Técnico")
   const challengeHeading = String(t("projects.challengeHeading") || "El Reto")
   const solutionHeading = String(t("projects.solutionHeading") || "La Solución")
