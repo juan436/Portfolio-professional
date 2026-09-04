@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { getApprovedTestimonials } from "@/lib/data/home-content"
 import { buildMetadata } from "@/lib/seo/metadata"
+import { siteOgImage } from "@/lib/site-config"
 import { getServerT } from "@/lib/i18n/server-dict"
 import { ProfilePageJsonLd } from "@/components/seo/profile-page-json-ld"
 import Hero from "@/components/hero"
@@ -28,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     path: "/",
     locale,
     titleAbsolute: true,
+    image: siteOgImage(locale),
   })
 }
 

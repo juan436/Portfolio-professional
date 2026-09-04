@@ -37,6 +37,7 @@ function isNonLocalizedPath(pathname: string): boolean {
     pathname === '/feed.xml' ||
     pathname === '/manifest.webmanifest' ||
     pathname.startsWith('/opengraph-image') ||
+    pathname === '/og' || // route handler de la imagen OG por defecto
     pathname.includes('.') // icon.png, archivos estáticos
   )
 }
