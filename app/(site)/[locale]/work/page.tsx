@@ -7,6 +7,7 @@ import Projects from "@/components/projects"
 import Automations from "@/components/automations"
 import Agents from "@/components/agents"
 import { buildMetadata } from "@/lib/seo/metadata"
+import { siteOgImage } from "@/lib/site-config"
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t("seo.work.description"),
     path: "/work",
     locale,
+    image: siteOgImage(locale),
   })
 }
 

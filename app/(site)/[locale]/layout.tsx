@@ -12,7 +12,7 @@ import SiteChrome from "@/components/layout/site-chrome"
 import { Toaster } from "@/components/ui/toaster"
 import JsonLd from "@/app/components/json-ld"
 import { getHomeContent } from "@/lib/data/home-content"
-import { SITE_URL, SITE_NAME, AUTHOR_NAME, AUTHOR_DISPLAY_NAME } from "@/lib/site-config"
+import { SITE_URL, SITE_NAME, AUTHOR_NAME, AUTHOR_DISPLAY_NAME, siteOgImage } from "@/lib/site-config"
 
 /**
  * Root layout del sitio público (`/[locale]/*`). Es el root layout de este grupo
@@ -62,12 +62,14 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: "es_ES",
     type: "website",
+    images: [{ url: siteOgImage("es"), width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: HOME_TITLE,
     description: HOME_OG_DESCRIPTION,
     creator: "@juanvillegas",
+    images: [siteOgImage("es")],
   },
   robots: {
     index: true,

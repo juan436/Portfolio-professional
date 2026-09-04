@@ -35,6 +35,7 @@ function isNonLocalizedPath(pathname: string): boolean {
     pathname === '/feed.xml' ||
     pathname === '/manifest.webmanifest' ||
     pathname.startsWith('/opengraph-image') ||
+    pathname === '/og' ||
     pathname.includes('.')
   )
 }

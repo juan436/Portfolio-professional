@@ -19,3 +19,5 @@ export const SAME_AS = [
   "https://github.com/juan436",
   "https://www.linkedin.com/in/juan-villegas-aaa05b20a/",
 ]
+
+export const siteOgImage = (locale = "es") => `${SITE_URL}/og?l=${locale}`
